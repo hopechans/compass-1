@@ -47,7 +47,6 @@ class App extends React.Component {
 
   render() {
     const homeUrl = configStore.isClusterAdmin ? clusterURL() : workloadsURL();
-    console.log('--------------111')
     //const homeUrl = clusterURL()
     return (
       <div>

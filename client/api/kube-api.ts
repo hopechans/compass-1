@@ -133,7 +133,6 @@ export class KubeApi<T extends KubeObject = any> {
     // process items list response
     else if (KubeObject.isJsonApiDataList(data)) {
 
-      console.log('--------------90991')
       const { apiVersion, items, metadata } = data;
       this.setResourceVersion(namespace, metadata.resourceVersion);
       this.setResourceVersion("", metadata.resourceVersion);
@@ -145,7 +144,6 @@ export class KubeApi<T extends KubeObject = any> {
     }
     // custom apis might return array for list response, e.g. users, groups, etc.
     else if (Array.isArray(data)) {
-      console.log('--------------90992',data)
       return data.map(data => new KubeObjectConstructor(data));
 
     }

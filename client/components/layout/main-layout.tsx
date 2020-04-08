@@ -53,7 +53,6 @@ export class MainLayout extends React.Component<Props> {
   }
 
   render() {
-    console.log('---------------------3000')
     const { className, contentClass, headerClass, tabs, footer, footerClass, children } = this.props;
     const { clusterName, username, lensVersion, kubectlAccess } = configStore.config;
     const { pathname } = navigation.location;

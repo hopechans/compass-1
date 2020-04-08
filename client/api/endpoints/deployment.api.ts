@@ -159,7 +159,6 @@ export class Deployment extends WorkloadKubeObject {
   }
 
   getReplicas() {
-    console.log('---------------------------8899071',this)
     return this.spec.replicas || 0;
   }
 }
