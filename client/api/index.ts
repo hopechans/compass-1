@@ -9,6 +9,11 @@ export const apiBase = new JsonApi({
   debug: !clientVars.IS_PRODUCTION,
   apiPrefix: clientVars.API_PREFIX.BASE,
 });
+export const tenantBase = new JsonApi({
+  debug: !clientVars.IS_PRODUCTION,
+  apiPrefix: ''
+});
+
 export const apiKube = new KubeJsonApi({
   debug: !clientVars.IS_PRODUCTION,
   apiPrefix: clientVars.API_PREFIX.KUBE_BASE,

@@ -15,7 +15,7 @@ import { Trans } from "@lingui/macro";
 import { Badge } from "../badge";
 import { KubeEventIcon } from "../+events/kube-event-icon";
 import { apiManager } from "../../api/api-manager";
-import { ItemObject, ItemStore } from "../../item.store";
+import { Notifications } from "../notifications";
 enum sortBy {
   name = "name",
   namespace = "namespace",
@@ -39,7 +39,6 @@ export class DaemonSets extends React.Component<Props> {
   }
 
   render() {
-
     return (
       <KubeObjectListLayout
         className="DaemonSets" 

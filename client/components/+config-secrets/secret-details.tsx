@@ -77,6 +77,7 @@ export class SecretDetails extends React.Component<Props> {
                   decodedVal = "";
                 }
                 value = revealSecret ? decodedVal : value;
+
                 return (
                   <div key={name} className="data">
                     <div className="name">{name}</div>

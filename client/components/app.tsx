@@ -17,6 +17,7 @@ import { clusterRoute, clusterURL } from "./+cluster";
 import { KubeConfigDialog } from "./kubeconfig-dialog/kubeconfig-dialog";
 import { Nodes, nodesRoute } from "./+nodes";
 import { Workloads, workloadsRoute, workloadsURL } from "./+workloads";
+import { Tenant, tenantURL,tenantRoute } from "./+tenant";
 import { Namespaces, namespacesRoute } from "./+namespaces";
 import { Network, networkRoute } from "./+network";
 import { Storage, storageRoute } from "./+storage";
@@ -65,6 +66,7 @@ class App extends React.Component {
                     <Route component={CustomResources} {...crdRoute}/>
                     <Route component={UserManagement} {...usersManagementRoute}/> */}
                     <Route component={Apps} {...appsRoute}/> 
+                    <Route component={Tenant} {...tenantRoute}/> 
                     <Redirect exact from="/" to={homeUrl}/>
                     <Route path="*" component={NotFound}/>
                     {/* // <Route component={Cluster} {...clusterRoute}/>

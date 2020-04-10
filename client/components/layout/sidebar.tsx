@@ -17,6 +17,7 @@ import { storageRoute, storageURL } from "../+storage/storage.route";
 import { clusterURL } from "../+cluster";
 import { Config, configRoute, configURL } from "../+config";
 import { eventRoute, eventsURL } from "../+events";
+import { tenantRoute, tenantURL, Tenant } from "../+tenant";
 import { Apps, appsRoute, appsURL } from "../+apps";
 import { namespaceStore } from "../+namespaces/namespace.store";
 import { TabRoute } from "./main-layout";
@@ -143,6 +144,14 @@ export class Sidebar extends React.Component<Props> {
               routePath={eventRoute.path}
               icon={<Icon material="access_time"/>}
               text={<Trans>Events</Trans>}
+            />
+            <SidebarNavItem
+              id="tenant"
+              url={tenantURL({ query })}
+              routePath={tenantRoute.path}
+              subMenus={Tenant.tabRoutes}
+              text={<Trans>Tenant</Trans>}
+              icon={<Icon svg="user"/>}
             />
             <SidebarNavItem
               id="apps"
