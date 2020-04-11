@@ -1,6 +1,7 @@
 import { apiBase,tenantBase} from "../index";
 import { stringify } from "querystring";
 import { autobind } from "../../utils";
+import { resolve } from "dns";
 
 
 interface ITetantDepartmentList{
@@ -20,7 +21,15 @@ export const tetantDepartmentApi = {
             //   .reduce((allData, repoData) => allData.concat(Object.values(repoData)), [])
             //   .map(TetantDepartment.create);
             });
-        },
+    },
+
+    createApi(){
+        return new Promise((resolve,reject)=>{
+            setTimeout(()=>{
+                reject('dasfasd')
+            },2000)
+        })
+    }
 }
 
 @autobind()
@@ -45,5 +54,6 @@ export class TetantDepartment{
         return this.name;
     }
     
+   
 
 }

@@ -12,7 +12,7 @@ import { TetantDepartment } from "../../api/endpoints/tenant-department.api";
 import { DepartmentMenu } from './department-menu'
 import { computed } from "mobx";
 import { ItemListLayout, ItemListLayoutProps } from "../item-object-list/item-list-layout";
-
+import { AddDepartmentDialog } from './add-department-dialog'
 
 export interface DepartmentProps  {
     store: TetantDepartment;
@@ -29,6 +29,7 @@ export class Department extends React.Component<DepartmentProps>{
     componentDidMount() {
         tenantDepartmentStore.loadAll();
     }
+
 
     render(){
         return(
@@ -59,10 +60,11 @@ export class Department extends React.Component<DepartmentProps>{
                         return <DepartmentMenu object={item}/>
                     }}
                     addRemoveButtons={{
-                        onAdd: () => {},
+                        onAdd: () => AddDepartmentDialog.open(),
                         addTooltip: <Trans>Create new department</Trans>
                     }}
                 />
+                <AddDepartmentDialog/>
             </>
         )
     }

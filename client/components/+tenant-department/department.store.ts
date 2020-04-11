@@ -9,8 +9,13 @@ export class TenantDepartmentStore extends ItemStore<TetantDepartment> {
     loadAll() {
       return this.loadItems(() => tetantDepartmentApi.list());
     }
+
     getByName(name: string, repo: string) {
       return this.items.find(item => item.getName() === name);
+    }
+
+    async removeSelectedItems(){
+      console.log('---------delete',this.selectedItems)
     }
 }
 
