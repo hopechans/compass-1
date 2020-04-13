@@ -8,6 +8,11 @@ import { clientVars } from "../../server/config";
 export const apiBase = new JsonApi({
   debug: !clientVars.IS_PRODUCTION,
   apiPrefix: clientVars.API_PREFIX.BASE,
+  
+},{
+  headers:{
+    Authorization:'111111111111111111'
+  }
 });
 export const tenantBase = new JsonApi({
   debug: !clientVars.IS_PRODUCTION,

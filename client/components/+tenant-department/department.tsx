@@ -27,7 +27,7 @@ enum sortBy {
 export class Department extends React.Component<DepartmentProps>{
 
     componentDidMount() {
-        tenantDepartmentStore.loadAll();
+        // tenantDepartmentStore.loadAll();
     }
 
 
@@ -49,7 +49,7 @@ export class Department extends React.Component<DepartmentProps>{
                     renderHeaderTitle={<Trans>Department Manager</Trans>}
                     renderTableHeader={[
                         { title: <Trans>ID</Trans>, className: "id" },
-                        { title: <Trans>部门名称</Trans>, className: "name", sortBy:sortBy.name},
+                        { title: <Trans>name</Trans>, className: "name", sortBy:sortBy.name},
 
                     ]}
                     renderTableContents={(item: TetantDepartment) => [

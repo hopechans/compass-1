@@ -23,7 +23,6 @@ export class AddDepartmentDialog extends React.Component<Props>{
 
 
     static open(){
-        console.log('---open')
         AddDepartmentDialog.isOpen = true
     }
 
