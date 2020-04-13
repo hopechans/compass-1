@@ -24,6 +24,7 @@ import { Storage, storageRoute } from "./+storage";
 import { Cluster } from "./+cluster/cluster";
 import { Config, configRoute } from "./+config";
 import { Events } from "./+events/events";
+import { Ci,ciRoute } from "./+ci";
 import { eventRoute } from "./+events";
 import { ErrorBoundary } from "./error-boundary";
 import { Apps, appsRoute ,appsURL} from "./+apps";
@@ -49,8 +50,10 @@ class App extends React.Component {
   render() {
     const homeUrl = configStore.isClusterAdmin ? clusterURL() : workloadsURL();
     //const homeUrl = clusterURL()
+    console.log(workloadsRoute,tenantRoute,appsRoute, eventRoute)
     return (
       <div>
+
         <I18nProvider i18n={_i18n}>
           <Router history={browserHistory}>
               <ErrorBoundary>
@@ -63,6 +66,7 @@ class App extends React.Component {
                     <Route component={Storage} {...storageRoute}/>
                     <Route component={Namespaces} {...namespacesRoute}/>
                     <Route component={Events} {...eventRoute}/>
+                    <Route component={Ci} {...ciRoute}/>
                     <Route component={CustomResources} {...crdRoute}/>
                     <Route component={UserManagement} {...usersManagementRoute}/> */}
                     <Route component={Apps} {...appsRoute}/> 

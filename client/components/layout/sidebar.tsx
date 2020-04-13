@@ -15,6 +15,7 @@ import { usersManagementRoute, usersManagementURL } from "../+user-management/us
 import { networkRoute, networkURL } from "../+network/network.route";
 import { storageRoute, storageURL } from "../+storage/storage.route";
 import { clusterURL } from "../+cluster";
+import { ciURL,ciRoute } from "../+ci";
 import { Config, configRoute, configURL } from "../+config";
 import { eventRoute, eventsURL } from "../+events";
 import { tenantRoute, tenantURL, Tenant } from "../+tenant";
@@ -144,6 +145,13 @@ export class Sidebar extends React.Component<Props> {
               routePath={eventRoute.path}
               icon={<Icon material="access_time"/>}
               text={<Trans>Events</Trans>}
+            />
+            <SidebarNavItem
+              id="ci"
+              url={ciURL({ query })}
+              routePath={ciRoute.path}
+              icon={<Icon material="layers"/>}
+              text={<Trans>CI</Trans>}
             />
             <SidebarNavItem
               id="tenant"

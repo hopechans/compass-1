@@ -8,7 +8,7 @@ import { apiManager } from "../../api/api-manager";
 import { Menu, MenuItem, MenuProps } from "../menu";
 import { Icon, IconProps } from "../icon";
 import { _i18n } from "../../i18n";
-
+import { tetantDepartmentApi } from "../../api/endpoints";
 export interface DepartmentMenuProps<T extends Department = any> extends MenuActionsProps {
     object: T;
     editable?: boolean;
