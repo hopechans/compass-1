@@ -52,8 +52,15 @@ export class MainLayout extends React.Component<Props> {
     setTimeout(() => this.isAccessible = true, 250);
   }
 
+  renderUserMenu(){
+    return (
+      <div>
+        
+      </div>
+    )
+  }
+
   render() {
-    console.log('---------------------3000')
     const { className, contentClass, headerClass, tabs, footer, footerClass, children } = this.props;
     const { clusterName, username, lensVersion, kubectlAccess } = configStore.config;
     const { pathname } = navigation.location;

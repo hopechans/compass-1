@@ -17,6 +17,7 @@ import { storageRoute, storageURL } from "../+storage/storage.route";
 import { clusterURL } from "../+cluster";
 import { Config, configRoute, configURL } from "../+config";
 import { eventRoute, eventsURL } from "../+events";
+import { tenantRoute, tenantURL, Tenant } from "../+tenant";
 import { Apps, appsRoute, appsURL } from "../+apps";
 import { namespaceStore } from "../+namespaces/namespace.store";
 import { TabRoute } from "./main-layout";
@@ -74,7 +75,7 @@ export class Sidebar extends React.Component<Props> {
         <div className={cssNames("Sidebar flex column", className, { pinned: isPinned })}>
           <div className="header flex align-center">
             <NavLink exact to="/" className="box grow">
-              <Icon svg="logo-full" className="logo-icon"/> <div className="logo-text">Lens</div>
+              <Icon svg="logo-full" className="logo-icon"/> <div className="logo-text">Compass</div>
             </NavLink>
             <Icon
               className="pin-icon"
@@ -143,6 +144,14 @@ export class Sidebar extends React.Component<Props> {
               routePath={eventRoute.path}
               icon={<Icon material="access_time"/>}
               text={<Trans>Events</Trans>}
+            />
+            <SidebarNavItem
+              id="tenant"
+              url={tenantURL({ query })}
+              routePath={tenantRoute.path}
+              subMenus={Tenant.tabRoutes}
+              text={<Trans>Tenant</Trans>}
+              icon={<Icon svg="user"/>}
             />
             <SidebarNavItem
               id="apps"

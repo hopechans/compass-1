@@ -101,7 +101,6 @@ export class JsonApi<D = JsonApiData, P extends JsonApiParams = JsonApiParams> {
       } catch (e) {
         data = text;
       }
-      console.log(res,status)
       if (status >= 200 && status < 300) {
         this.onData.emit(data, res);
         this.writeLog({ ...log, data });

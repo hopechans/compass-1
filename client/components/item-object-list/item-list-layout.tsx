@@ -70,7 +70,6 @@ export interface ItemListLayoutProps<T extends ItemObject = ItemObject> {
   customizeRemoveDialog?: (selectedItems: T[]) => Partial<IConfirmDialogParams>;
   renderFooter?: (parent: ItemListLayout) => React.ReactNode;
 
-  fuxiTableData?:Array<object>;
 }
 
 const defaultProps: Partial<ItemListLayoutProps> = {
@@ -113,7 +112,6 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
   }
 
   async componentDidMount() {
-    console.log('---------------item-list-componentDidMount')
     const { store, dependentStores, isClusterScoped } = this.props;
     const stores = [store, ...dependentStores];
     if (!isClusterScoped) stores.push(namespaceStore);
@@ -161,7 +159,6 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
 
   @computed get isReady() {
     const { isReady, store } = this.props;
-    console.log('------------------item-list get store', store.isLoaded, store.items)
     return typeof isReady == "boolean" ? isReady : store.isLoaded;
   }
 
@@ -378,7 +375,7 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
   renderList() {
     const {
       isSelectable, tableProps = {}, renderTableHeader, renderItemMenu,
-      store, hasDetailsView, addRemoveButtons = {}, virtual, sortingCallbacks, detailsItem, fuxiTableData
+      store, hasDetailsView, addRemoveButtons = {}, virtual, sortingCallbacks, detailsItem
     } = this.props;
     const { isReady, removeItemsDialog, items } = this;
     const { selectedItems } = store;
@@ -436,7 +433,7 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
   }
 
   render() {
-    const { className,store} = this.props;
+    const { className } = this.props;
     return (
       <div className={cssNames("ItemListLayout flex column", className)}>
         {this.renderHeader()}

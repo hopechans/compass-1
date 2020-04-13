@@ -30,7 +30,7 @@ export class Storage extends React.Component<Props> {
       path: volumeClaimsRoute.path,
     })
 
-    if (isClusterAdmin) {
+    if (true) {
       tabRoutes.push({
         title: <Trans>Persistent Volumes</Trans>,
         component: PersistentVolumes,
@@ -39,7 +39,7 @@ export class Storage extends React.Component<Props> {
       });
     }
 
-    if (isClusterAdmin) {
+    if (true) {
       tabRoutes.push({
         title: <Trans>Storage Classes</Trans>,
         component: StorageClasses,

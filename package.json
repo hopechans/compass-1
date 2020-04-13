@@ -1,11 +1,11 @@
 {
-  "name": "kontena-lens",
+  "name": "compass",
   "version": "0.0.0",
   "scripts": {
-    "dev": "webpack-cli --watch --cache --progress --output-path ../static/build/client/",
-    "dev2": "set NODE_ENV=dev && webpack-dev-server --open",
-    "build": "webpack -p --progress --output-path ../static/build/client/",
-    "build2": "set NODE_ENV=prod && webpack",
+    "dev": "set NODE_ENV=dev && webpack-dev-server --open",
+    "build": "set NODE_ENV=prod && webpack",
+    "dev2": "webpack-cli --watch --cache --progress --output-path ../static/build/client/",
+    "build2": "webpack -p --progress --output-path ../static/build/client/",
     "test": "jest --config './test/jest.config.js'",
     "add-locale": "lingui add-locale",
     "lingui-extract": "lingui extract --clean",

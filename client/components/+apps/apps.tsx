@@ -12,29 +12,17 @@ export class Apps extends React.Component {
   static get tabRoutes(): TabRoute[] {
     const query = namespaceStore.getContextParams();
     return [
-      // {
-      //   title: <Trans>Charts</Trans>,
-      //   component: HelmCharts,
-      //   url: helmChartsURL(),
-      //   path: helmChartsRoute.path,
-      // },
-      // {
-      //   title: <Trans>Releases</Trans>,
-      //   component: HelmReleases,
-      //   url: releaseURL({ query }),
-      //   path: releaseRoute.path,
-      // },
       {
         title: <Trans>Charts</Trans>,
         component: HelmCharts,
-        url: '',
-        path: '',
+        url: helmChartsURL(),
+        path: helmChartsRoute.path,
       },
       {
         title: <Trans>Releases</Trans>,
         component: HelmReleases,
-        url:'',
-        path:'',
+        url: releaseURL({ query }),
+        path: releaseRoute.path,
       },
     ]
   }
