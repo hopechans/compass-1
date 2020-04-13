@@ -41,12 +41,12 @@ export class Tenant extends React.Component<Props>{
     };
     render(){
         const tabRoutes = Tenant.tabRoutes;
+        console.log(tabRoutes)
         return (
             <MainLayout className="tenant" tabs={tabRoutes}>
                 <Switch>
                     {tabRoutes.map((route, index) => <Route key={index} {...route}/>)}
-                    {/* <Redirect to={tenantURL({})}/> */}
-                    <Redirect to={tenantURL({ query: namespaceStore.getContextParams() })}/>
+                    <Redirect to={tabRoutes[0].url}/>
                 </Switch>
             </MainLayout>
         )

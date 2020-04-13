@@ -73,8 +73,8 @@ export class Workloads extends React.Component<Props> {
     return (
       <MainLayout className="Workloads" tabs={tabRoutes}>
         <Switch>
-          {tabRoutes.map((route, index) => <Route key={index} {...route}/>)}
-          <Redirect to={workloadsURL({ query: namespaceStore.getContextParams() })}/>
+            {tabRoutes.map((route, index) => <Route key={index} {...route}/>)}
+            <Redirect to={workloadsURL({ query: namespaceStore.getContextParams() })}/>
         </Switch>
       </MainLayout>
     )

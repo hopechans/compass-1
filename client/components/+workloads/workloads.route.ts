@@ -4,6 +4,7 @@ import { buildURL, IURLParams } from "../../navigation";
 
 export const workloadsRoute: RouteProps = {
   get path() {
+    console.log(Workloads.tabRoutes.map(({ path }) => path).flat())
     return Workloads.tabRoutes.map(({ path }) => path).flat()
   }
 }
