@@ -62,7 +62,7 @@ export class CustomResourceDefinition extends KubeObject {
 
   getResourceApiBase() {
     const { version, group } = this.spec;
-    return `/apis/${group}/${version}/${this.getPluralName()}`
+    return `/apis/crd/${group}/${version}/${this.getPluralName()}`
   }
 
   getPluralName() {
