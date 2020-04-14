@@ -5,7 +5,7 @@ import { ItemStore } from "../../item.store";
 import flatten from "lodash/flatten"
 
 @autobind()
-export class TenantDepartmentStore extends ItemStore<TetantDepartment> {
+export class DepartmentStore extends ItemStore<TetantDepartment> {
     loadAll() {
       return this.loadItems(() => tetantDepartmentApi.list());
     }
@@ -20,4 +20,4 @@ export class TenantDepartmentStore extends ItemStore<TetantDepartment> {
 }
 
 
-export const tenantDepartmentStore = new TenantDepartmentStore();
+export const departmentStore = new DepartmentStore();
