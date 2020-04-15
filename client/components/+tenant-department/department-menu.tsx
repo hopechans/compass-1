@@ -10,8 +10,10 @@ import { Menu, MenuItem, MenuProps } from "../menu";
 import { Icon, IconProps } from "../icon";
 import { _i18n } from "../../i18n";
 import { tetantDepartmentApi } from "../../api/endpoints";
-import { AddDepartmentDialog } from './add-department-dialog'
+import { AddDepartmentDialog } from './department-dialog-add'
 import { TetantDepartment } from "../../api/endpoints/tenant-department.api";
+import { departmentStore } from './department.store'
+
 
 export interface DepartmentMenuProps<T extends Department = any> extends MenuActionsProps {
     object: T;
@@ -39,8 +41,8 @@ export class DepartmentMenu extends React.Component<DepartmentMenuProps>{
     }
     
     editDepartment(item:TetantDepartment ){
-        AddDepartmentDialog.open('edit',item)
-        console.log(this.props)
+        AddDepartmentDialog.open()
+        departmentStore.changeItemName(item.name)
     }
 
     @autobind()

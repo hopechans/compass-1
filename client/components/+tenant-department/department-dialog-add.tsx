@@ -1,7 +1,7 @@
 
 import React from 'react'
 import { observer,inject} from 'mobx-react'
-import { observable, action} from 'mobx'
+import { observable, action, computed} from 'mobx'
 import { t, Trans } from "@lingui/macro";
 import { _i18n } from "../../i18n";
 import { Dialog, DialogProps } from "../dialog";
@@ -12,8 +12,8 @@ import { systemName } from "../input/input.validators";
 import { Notifications } from "../notifications";
 import { tetantDepartmentApi } from '../../api/endpoints/tenant-department.api'
 import { TetantDepartment } from "../../api/endpoints/tenant-department.api";
-
-
+import { departmentStore } from './department.store'
+import {autobind,prevDefault} from '../../utils'
 interface Props extends Partial<DialogProps> {
 }
 
@@ -21,12 +21,12 @@ interface Props extends Partial<DialogProps> {
 @observer
 export class AddDepartmentDialog extends React.Component<Props>{
     @observable static isOpen = false;
-    @observable deptname = "";
-
+    @observable deptname = "123";
 
     static open(type?:string,data?:TetantDepartment ){
         if(type === 'edit'){
             AddDepartmentDialog.isOpen = true
+
             
         }else{
             AddDepartmentDialog.isOpen = true
@@ -36,6 +36,7 @@ export class AddDepartmentDialog extends React.Component<Props>{
 
     static close(){
         AddDepartmentDialog.isOpen = false
+        departmentStore.clean()
     }
 
     reset = () => {
@@ -47,6 +48,7 @@ export class AddDepartmentDialog extends React.Component<Props>{
     }
 
     createDepartment = async () => {
+        console.log(departmentStore.deptName)
         const { deptname } = this;
         try {
             await tetantDepartmentApi.createApi()
@@ -57,14 +59,13 @@ export class AddDepartmentDialog extends React.Component<Props>{
         }
     }
 
-
-    @action fillBackData(item:TetantDepartment){
-        this.deptname = item.name
-    }
-
     render(){
         const { deptname } = this;
-        const header = <h5><Trans>Create Department</Trans></h5>;
+        const creatHeader = <h5 ><Trans >Create Department</Trans></h5>;
+        const editHeader = <h5 ><Trans >Edit Department</Trans></h5>;
+        const name = departmentStore.deptName ? departmentStore.deptName : ''
+        const header = departmentStore.deptName ? editHeader :creatHeader
+        
         return(
             <Dialog
                 className="AddDepartmentDialog"
@@ -79,7 +80,7 @@ export class AddDepartmentDialog extends React.Component<Props>{
                                 autoFocus required
                                 placeholder={_i18n._(t`Name`)}
                                 validators={systemName}
-                                value={deptname} onChange={v => this.deptname = v}
+                                value={name} onChange={v => departmentStore.changeItemName(v)}
                             />
                         </div>
                     
