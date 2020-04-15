@@ -9,7 +9,7 @@ import flatten from "lodash/flatten"
 export class DepartmentStore extends ItemStore<TetantDepartment> {
 
     @observable deptName:string
-
+    @observable dialogType:string
  
     @action
     changeItemName(name:string){
@@ -17,8 +17,14 @@ export class DepartmentStore extends ItemStore<TetantDepartment> {
     }
 
     @action
+    changeDialogType(type:string){
+      this.dialogType = type
+    }
+
+    @action
     clean(){
       this.deptName = ''
+      this.dialogType = 'add'
     }
 
     loadAll() {

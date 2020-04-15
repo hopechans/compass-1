@@ -43,6 +43,7 @@ export class DepartmentMenu extends React.Component<DepartmentMenuProps>{
     editDepartment(item:TetantDepartment ){
         AddDepartmentDialog.open()
         departmentStore.changeItemName(item.name)
+        departmentStore.changeDialogType('edit')
     }
 
     @autobind()

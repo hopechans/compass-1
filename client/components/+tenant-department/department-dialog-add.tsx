@@ -21,17 +21,10 @@ interface Props extends Partial<DialogProps> {
 @observer
 export class AddDepartmentDialog extends React.Component<Props>{
     @observable static isOpen = false;
-    @observable deptname = "123";
+    @observable deptname = "";
 
-    static open(type?:string,data?:TetantDepartment ){
-        if(type === 'edit'){
-            AddDepartmentDialog.isOpen = true
-
-            
-        }else{
-            AddDepartmentDialog.isOpen = true
-
-        }
+    static open(){
+        AddDepartmentDialog.isOpen = true
     }
 
     static close(){
@@ -64,7 +57,8 @@ export class AddDepartmentDialog extends React.Component<Props>{
         const creatHeader = <h5 ><Trans >Create Department</Trans></h5>;
         const editHeader = <h5 ><Trans >Edit Department</Trans></h5>;
         const name = departmentStore.deptName ? departmentStore.deptName : ''
-        const header = departmentStore.deptName ? editHeader :creatHeader
+        const dialogType = departmentStore.dialogType
+        const header = dialogType === 'edit' ? editHeader :creatHeader
         
         return(
             <Dialog
