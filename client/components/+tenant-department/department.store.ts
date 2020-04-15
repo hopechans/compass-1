@@ -1,11 +1,32 @@
-import { observable } from "mobx";
+import { observable,action, autorun,reaction} from "mobx";
+import { observer,disposeOnUnmount} from 'mobx-react'
 import { autobind } from "../../utils";
 import { TetantDepartment, tetantDepartmentApi } from "../../api/endpoints/tenant-department.api";
 import { ItemStore } from "../../item.store";
 import flatten from "lodash/flatten"
 
 @autobind()
-export class TenantDepartmentStore extends ItemStore<TetantDepartment> {
+export class DepartmentStore extends ItemStore<TetantDepartment> {
+
+    @observable deptName:string
+    @observable dialogType:string
+ 
+    @action
+    changeItemName(name:string){
+      this.deptName = name
+    }
+
+    @action
+    changeDialogType(type:string){
+      this.dialogType = type
+    }
+
+    @action
+    clean(){
+      this.deptName = ''
+      this.dialogType = 'add'
+    }
+
     loadAll() {
       return this.loadItems(() => tetantDepartmentApi.list());
     }
@@ -20,4 +41,4 @@ export class TenantDepartmentStore extends ItemStore<TetantDepartment> {
 }
 
 
-export const tenantDepartmentStore = new TenantDepartmentStore();
+export const departmentStore = new DepartmentStore();

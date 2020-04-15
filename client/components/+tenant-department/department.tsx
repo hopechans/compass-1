@@ -5,20 +5,27 @@ import { observer } from "mobx-react";
 import { Trans } from "@lingui/macro";
 import { RouteComponentProps } from "react-router";
 import { cssNames, stopPropagation } from "../../utils";
-import { getDetailsUrl } from "../../navigation";
+import { getDetailsUrl,getDetails } from "../../navigation";
 import { apiManager } from "../../api/api-manager";
-import { tenantDepartmentStore } from "./department.store";
+import { departmentStore } from "./department.store";
 import { TetantDepartment } from "../../api/endpoints/tenant-department.api";
 import { DepartmentMenu } from './department-menu'
 import { computed } from "mobx";
 import { ItemListLayout, ItemListLayoutProps } from "../item-object-list/item-list-layout";
-import { AddDepartmentDialog } from './add-department-dialog'
+import { AddDepartmentDialog } from './department-dialog-add'
+import { DepartmentDeatil } from './department-detail'
+import { navigation } from "../../navigation";
+import { tenantDepartmentURL } from '../+tenant';
 
-export interface DepartmentProps  {
-    store: TetantDepartment;
+
+interface IDepartmentRouteProps{
+    id:string
+    name:string
 }
 
-
+export interface DepartmentProps extends RouteComponentProps<IDepartmentRouteProps>{
+    store: TetantDepartment;
+}
 enum sortBy {
     name = "name",
 }
@@ -26,17 +33,42 @@ enum sortBy {
 @observer
 export class Department extends React.Component<DepartmentProps>{
 
-    componentDidMount() {
-        // tenantDepartmentStore.loadAll();
+    constructor(props:any){
+        super(props)
     }
 
+    componentDidMount() {
+    }
 
+    get selectedDepartment() {
+        const paramsDetail = getDetails()
+        return departmentStore.items.find(department => {
+            return department.getId() == paramsDetail ;
+         });
+    }
+
+    hideDetails = () => {
+        this.showDetails(null);
+    }
+
+    showDetails = (item: TetantDepartment) => {
+        if (!item) {
+            navigation.searchParams.merge({
+                details:null
+            })
+        }
+        else {
+          navigation.searchParams.merge({
+              details: item.getId(),
+          })
+        }
+    }
     render(){
         return(
             <>
                <ItemListLayout
                     className="tetantDepartment"
-                    store={tenantDepartmentStore}
+                    store={departmentStore}
                     isClusterScoped={true}
                     isSelectable={true}
                     sortingCallbacks={{
@@ -44,6 +76,7 @@ export class Department extends React.Component<DepartmentProps>{
                     }}
                     searchFilters={[
                         (item: TetantDepartment) => item.getName(),
+                        (item: TetantDepartment) => item.getId(),
                    
                     ]}
                     renderHeaderTitle={<Trans>Department Manager</Trans>}
@@ -63,8 +96,15 @@ export class Department extends React.Component<DepartmentProps>{
                         onAdd: () => AddDepartmentDialog.open(),
                         addTooltip: <Trans>Create new department</Trans>
                     }}
+                    detailsItem={this.selectedDepartment}
+                    onDetails={this.showDetails}
                 />
                 <AddDepartmentDialog/>
+                <DepartmentDeatil
+                    selectItem={this.selectedDepartment}
+                    hideDetails={this.hideDetails}
+                >
+                </DepartmentDeatil>
             </>
         )
     }
