@@ -14,8 +14,14 @@ export const tenantRoute: RouteProps = {
 // };
 
 export const tenantDepartmentRoute: RouteProps = {
-  path: "/t-department"
+  path: "/t-department/:id?/:name?"
 }
+
+export const departmentDetailRoute: RouteProps = {
+  path: "/t-department/details=/:id?/:name?"
+}
+
+
 export const tenantRoleRoute: RouteProps = {
   path: "/t-role"
 }

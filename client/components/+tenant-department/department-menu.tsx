@@ -1,5 +1,6 @@
 import * as React from 'react'
 import { Trans } from "@lingui/macro";
+import { observer,inject} from 'mobx-react'
 import { autobind, cssNames } from "../../utils";
 import { MenuActions, MenuActionsProps } from "../menu/menu-actions";
 import { Department } from './department';
@@ -9,12 +10,16 @@ import { Menu, MenuItem, MenuProps } from "../menu";
 import { Icon, IconProps } from "../icon";
 import { _i18n } from "../../i18n";
 import { tetantDepartmentApi } from "../../api/endpoints";
+import { AddDepartmentDialog } from './department-dialog-add'
+import { TetantDepartment } from "../../api/endpoints/tenant-department.api";
+import { departmentStore } from './department.store'
+
+
 export interface DepartmentMenuProps<T extends Department = any> extends MenuActionsProps {
     object: T;
     editable?: boolean;
     removable?: boolean;
   }
-
 export class DepartmentMenu extends React.Component<DepartmentMenuProps>{
     get store() {
         const { object } = this.props;
@@ -35,7 +40,12 @@ export class DepartmentMenu extends React.Component<DepartmentMenuProps>{
         hideDetails();
     }
     
-    
+    editDepartment(item:TetantDepartment ){
+        AddDepartmentDialog.open()
+        departmentStore.changeItemName(item.name)
+        departmentStore.changeDialogType('edit')
+    }
+
     @autobind()
       async remove() {
         hideDetails();
@@ -64,9 +74,9 @@ export class DepartmentMenu extends React.Component<DepartmentMenuProps>{
                 removeAction={isRemovable ? remove : undefined}
                 removeConfirmationMessage={renderRemoveMessage}
             >
-                <MenuItem onClick={this.remove}>
+                <MenuItem onClick={()=>this.editDepartment(object)}>
                     <Icon material="edit" />
-                    <span className="title"><Trans>编辑</Trans></span>
+                    <span className="title"><Trans>edit</Trans></span>
                 </MenuItem>
             </MenuActions>
         )
