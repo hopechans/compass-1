@@ -3,6 +3,8 @@ import { autobind, base64, EventEmitter, interval } from "../utils";
 import { WebSocketApi } from "./websocket-api";
 import { configStore } from "../config.store";
 import isEqual from "lodash/isEqual"
+// tslint:disable-next-line:no-any
+
 
 export enum TerminalChannels {
   STDIN = 0,
@@ -59,18 +61,19 @@ export class TerminalApi extends WebSocketApi {
       });
     }
 
-    return `${wss}${hostname}${configStore.serverPort}${apiPrefix}/api?${stringify(queryParams)}`;
+    // return `${wss}${hostname}${configStore.serverPort}${apiPrefix}/api?${stringify(queryParams)}`;
+    return 'http://10.1.190.132:8080/workload/shell/pod'
   }
 
   async connect() {
-    const token = await configStore.getToken();
-    const apiUrl = await this.getUrl(token);
+    // const token = await configStore.getToken();
+    const apiUrl = await this.getUrl('');
     const { colorTheme } = this.options;
     this.emitStatus("Connecting ...", {
       color: colorTheme == "light" ? TerminalColor.GRAY : TerminalColor.LIGHT_GRAY
     });
     this.onData.addListener(this._onReady, { prepend: true });
-    this.currentToken = token;
+    this.currentToken = '';
     this.tokenInterval.start();
     return super.connect(apiUrl);
   }

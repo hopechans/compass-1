@@ -35,12 +35,12 @@ export default () => {
       publicPath: '',
       proxy:{
         '/api-kube': {
-          target:'http://127.0.0.1:8001/',
+          target:'http://10.1.190.132:8080/',
           //target: 'http://10.1.150.252:8080', // 接口的域名
           // target: 'http://10.1.140.175:8001', // 接口的域名
           secure: false,  // 如果是https接口，需要配置这个参数
           changeOrigin: true, // 如果接口跨域，需要进行这个参数配置
-          pathRewrite: {'^/api-kube': ''}
+          pathRewrite: {'^/api-kube': 'workload'}
         },
         '/api': {
           target:'http://10.1.140.175:8080/',
