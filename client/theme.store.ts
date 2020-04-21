@@ -167,13 +167,9 @@ export class ThemeStore {
       return this.themes.get(themeId);
     }
     try {
-      // const theme: ITheme = await import(
-      //   /* webpackMode: "lazy", webpackChunkName: "theme/[request]" */
-      //   `./themes/${themeId}.json`
-      // );
-      const theme: any = await import(
+      const theme: ITheme = await import(
         /* webpackMode: "lazy", webpackChunkName: "theme/[request]" */
-        `./themes/kontena-dark.json`
+        `./themes/${themeId}.json`
       );
       this.themes.set(themeId, theme);
       return theme;

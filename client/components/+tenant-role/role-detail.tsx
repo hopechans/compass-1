@@ -81,7 +81,6 @@ export class RoleDeatil extends React.Component<Props,State>{
         if (!selectItem) return null;
         return (
             <div>
-                
                 <DrawerItem name={<Trans>Name</Trans>}>
                     {selectItem.getName()}
                 </DrawerItem>
@@ -91,7 +90,6 @@ export class RoleDeatil extends React.Component<Props,State>{
                 <DrawerItem name={<Trans>Name</Trans>}>
                     {selectItem.getName()}
                 </DrawerItem>
-                
                 <DrawerTitle title={<Trans>Role List</Trans>}/>
                 {
                     (permissionsStore.allItem.length === 0)?null:permissionsStore.allItem.map((item,index)=>{
@@ -113,7 +111,9 @@ export class RoleDeatil extends React.Component<Props,State>{
                 <Button 
                     primary
                     className="save-btn"
-                    onClick={this.getData} >
+                    onClick={this.getData} 
+                    // waiting={true}
+                    >
                 save
                 </Button>
                     

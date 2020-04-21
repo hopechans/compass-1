@@ -55,7 +55,7 @@ export class KubeWatchApi {
     const { isClusterAdmin, allowedNamespaces } = configStore;
     return {
       api: this.activeApis.map(api => {
-        if (isClusterAdmin) return api.getWatchUrl();
+        if (true) return api.getWatchUrl();
         return allowedNamespaces.map(namespace => api.getWatchUrl(namespace))
       }).flat()
     }

@@ -84,3 +84,18 @@
     min-width: 0; // restrict size when overflow content (e.g. <Dock> tabs scrolling)
   }
 }
+
+.header-left{
+  flex: 1;
+}
+.header-right{
+  width: 100px;
+  float: right;
+  height: 40px;
+  line-height: 42px;
+  text-align: center;
+  font-size: 16px;
+  i{
+    margin-left: 10px;
+  }
+}

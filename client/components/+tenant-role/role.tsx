@@ -47,7 +47,11 @@ export class Role extends React.Component<DepartmentProps>{
                 permissionsStore.changeCurPermission(item.getPermissions())
                 return true
             }
-         });
+        });
+    }
+
+    fetchList(){
+        permissionsStore.loadAll()
     }
 
     hideDetails = () => {
