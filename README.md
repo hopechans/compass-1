@@ -1,6 +1,3 @@
 # compass
-![compass](https://github.com/yametech/compass/workflows/compass/badge.svg)
-
-
-## Thanks
-[lens](https://github.com/lensapp/lens)
+Navigation fuxi and nuwa for kubernetes
+This project WIP now, thanks lens app authors 
