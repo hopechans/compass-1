@@ -3,22 +3,16 @@ import { stringify } from "querystring";
 import { autobind } from "../../utils";
 import { resolve } from "dns";
 
-
-interface ITetantDepartmentList{
+interface ITetantRoleList{
     [x: string]: any;
-
 }
 
-export const tetantDepartmentApi = {
+export const tetantRoleApi = {
     list() {
         return tenantBase
-            .get<ITetantDepartmentList>('/tenant/department')
+            .get<ITetantRoleList>('/tenant/role')
             .then(data => {
-                return data.map(TetantDepartment.create);
-            // return Object
-            //   .values(data)
-            //   .reduce((allData, repoData) => allData.concat(Object.values(repoData)), [])
-            //   .map(TetantDepartment.create);
+                return data.map(TetantRole.create);
             });
     },
 
@@ -28,22 +22,30 @@ export const tetantDepartmentApi = {
                 reject('dasfasd')
             },2000)
         })
+    },
+
+    getPermissionsList(){
+        return tenantBase
+        .get<any>('/tenant/permissions')
+        .then(data => {
+            return data
+        });
     }
 }
 
 @autobind()
-export class TetantDepartment{
+export class TetantRole{
     constructor(data: any) {
         Object.assign(this, data);
     }
 
     static create(data: any) {
-        return new TetantDepartment(data);
+        return new TetantRole(data);
     }
-
 
     id:string
     name:string
+    permissions:Array<any>
 
     getId() {
         return this.id;
@@ -52,7 +54,8 @@ export class TetantDepartment{
     getName() {
         return this.name;
     }
-    
-   
 
+    getPermissions() {
+        return this.permissions;
+    }
 }

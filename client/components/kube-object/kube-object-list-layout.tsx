@@ -22,7 +22,6 @@ export class KubeObjectListLayout extends React.Component<KubeObjectListLayoutPr
       this.props.onDetails(item);
     }
     else {
-      console.log(item)
       showDetails(item.selfLink);
     }
   }

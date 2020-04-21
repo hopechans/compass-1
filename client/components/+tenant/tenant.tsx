@@ -41,7 +41,6 @@ export class Tenant extends React.Component<Props>{
     };
     render(){
         const tabRoutes = Tenant.tabRoutes;
-        console.log(tabRoutes)
         return (
             <MainLayout className="tenant" tabs={tabRoutes}>
                 <Switch>
