@@ -43,15 +43,14 @@ export default () => {
             changeOrigin: true, // 如果接口跨域，需要进行这个参数配置
             pathRewrite: {'^/api-kube': ''}
         },
-        '/api': {
-            target:'http://10.1.140.175:8080/',
+        '/api/config': {
+            target:'http://localhost:3000/',
             secure: false,
             changeOrigin: true, 
-            pathRewrite: {'^/api': 'workload'}
         },
         '/tenant': {
           //target: 'http://10.1.150.252:8080',
-            target: 'http://localhost:3000',
+            target: 'http://localhost:3000/',
             secure: false,
             changeOrigin: true,
         },
@@ -186,7 +185,6 @@ function getNetworkIp() {
 			let iface = network[dev];
 			for (let i = 0; i < iface.length; i++) {
         let alias = iface[i];
-        console.log(alias,alias.address.includes('10'))
 				if (alias.family === 'IPv4' && !alias.internal && alias.address.includes('10')) {
           needHost = alias.address;
           return needHost
