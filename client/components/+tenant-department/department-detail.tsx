@@ -40,7 +40,6 @@ export class DepartmentDeatil extends React.Component<Props>{
 
     render(){
         const { hideDetails,selectItem } = this.props
-        console.log(selectItem)
         const title=selectItem ? selectItem.getName() : ""
         return(
             <Drawer

@@ -4,6 +4,7 @@ import * as HtmlWebpackPlugin from "html-webpack-plugin";
 import * as MiniCssExtractPlugin from "mini-css-extract-plugin";
 import * as TerserWebpackPlugin from "terser-webpack-plugin";
 import { BUILD_DIR, CLIENT_DIR, clientVars, config } from "./server/config"
+const os = require('os');
 
 export default () => {
   const { IS_PRODUCTION } = config;
@@ -27,7 +28,7 @@ export default () => {
     },
     devServer:{
       //项目根目录
-      host:'0.0.0.0',
+      host:getNetworkIp(),
       port:'8087',
       contentBase:path.join(__dirname,"./dist"),
       historyApiFallback:true,
@@ -35,31 +36,24 @@ export default () => {
       publicPath: '',
       proxy:{
         '/api-kube': {
-          target:'http://127.0.0.1:8001/',
-          //target: 'http://10.1.150.252:8080', // 接口的域名
-          // target: 'http://10.1.140.175:8001', // 接口的域名
-          secure: false,  // 如果是https接口，需要配置这个参数
-          changeOrigin: true, // 如果接口跨域，需要进行这个参数配置
-          pathRewrite: {'^/api-kube': ''}
+            target:'http://127.0.0.1:8001/',
+            //target: 'http://10.1.150.252:8080', // 接口的域名
+            //target: 'http://10.1.140.175:8001', // 接口的域名
+            secure: false,  // 如果是https接口，需要配置这个参数
+            changeOrigin: true, // 如果接口跨域，需要进行这个参数配置
+            pathRewrite: {'^/api-kube': ''}
         },
         '/api': {
-          target:'http://10.1.140.175:8080/',
-          secure: false,  // 如果是https接口，需要配置这个参数
-          changeOrigin: true, // 如果接口跨域，需要进行这个参数配置
-          pathRewrite: {'^/api': 'workload'}
+            target:'http://10.1.140.175:8080/',
+            secure: false,
+            changeOrigin: true, 
+            pathRewrite: {'^/api': 'workload'}
         },
-        
-        // '/api': {
-        //   target:'http://10.200.64.10:8001/',
-        //   secure: false,  // 如果是https接口，需要配置这个参数
-        //   changeOrigin: true, // 如果接口跨域，需要进行这个参数配置
-        //   pathRewrite: {'^/api': ''}
-        // },
         '/tenant': {
-          //target: 'http://10.1.150.252:8080', // 接口的域名
-           target: 'http://localhost:3000', // 接口的域名
-          secure: false,  // 如果是https接口，需要配置这个参数
-          changeOrigin: true, // 如果接口跨域，需要进行这个参数配置
+          //target: 'http://10.1.150.252:8080',
+            target: 'http://localhost:3000',
+            secure: false,
+            changeOrigin: true,
         },
       }
       // openPage:'index.html',
@@ -182,3 +176,28 @@ export default () => {
     ],
   }
 };
+
+function getNetworkIp() {
+	let needHost = ''; // 打开的host
+	try {
+		// 获得网络接口列表
+		let network = os.networkInterfaces();
+		for (let dev in network) {
+			let iface = network[dev];
+			for (let i = 0; i < iface.length; i++) {
+        let alias = iface[i];
+        console.log(alias,alias.address.includes('10'))
+				if (alias.family === 'IPv4' && !alias.internal && alias.address.includes('10')) {
+          needHost = alias.address;
+          return needHost
+        }
+        else{
+          needHost = 'localhost'
+        }
+			}
+		}
+	} catch (e) {
+    needHost = 'localhost';
+	}
+	return needHost;
+}

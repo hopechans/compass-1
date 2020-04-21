@@ -175,7 +175,6 @@ export class ThemeStore {
         /* webpackMode: "lazy", webpackChunkName: "theme/[request]" */
         `./themes/kontena-dark.json`
       );
-      console.log(theme)
       this.themes.set(themeId, theme);
       return theme;
     } catch (err) {

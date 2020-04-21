@@ -12,38 +12,36 @@ import { systemName } from "../input/input.validators";
 import { Notifications } from "../notifications";
 import { tetantDepartmentApi } from '../../api/endpoints/tenant-department.api'
 import { TetantDepartment } from "../../api/endpoints/tenant-department.api";
-import { departmentStore } from './department.store'
+import { roleStore } from './role.store'
 import {autobind,prevDefault} from '../../utils'
-
-
 interface Props extends Partial<DialogProps> {
 }
 
 
 @observer
-export class AddDepartmentDialog extends React.Component<Props>{
+export class AddRoleDialog extends React.Component<Props>{
     @observable static isOpen = false;
-    @observable deptname = "";
+    @observable roleName = "";
 
     static open(){
-        AddDepartmentDialog.isOpen = true
+        AddRoleDialog.isOpen = true
     }
 
     static close(){
-        AddDepartmentDialog.isOpen = false
-        departmentStore.clean()
+        AddRoleDialog.isOpen = false
+        roleStore.clean()
     }
 
     reset = () => {
-        this.deptname = "";
+        this.roleName = "";
     }
 
     close = () => {
-        AddDepartmentDialog.close();
+        AddRoleDialog.close();
     }
 
     createDepartment = async () => {
-        const { deptname } = this;
+        const { roleName } = this;
         try {
             await tetantDepartmentApi.createApi()
             this.reset();
@@ -54,17 +52,17 @@ export class AddDepartmentDialog extends React.Component<Props>{
     }
 
     render(){
-        const { deptname } = this;
+        const { roleName } = this;
         const creatHeader = <h5 ><Trans >Create Department</Trans></h5>;
         const editHeader = <h5 ><Trans >Edit Department</Trans></h5>;
-        const name = departmentStore.deptName ? departmentStore.deptName : ''
-        const dialogType = departmentStore.dialogType
+        const name = roleStore.roleName ? roleStore.roleName : ''
+        const dialogType = roleStore.dialogType
         const header = dialogType === 'edit' ? editHeader :creatHeader
         
         return(
             <Dialog
-                className="AddDepartmentDialog"
-                isOpen={AddDepartmentDialog.isOpen}
+                className="AddRoleDialog"
+                isOpen={AddRoleDialog.isOpen}
                 close={this.close}
             >
                 <Wizard header={header} done={this.close}>
@@ -75,7 +73,7 @@ export class AddDepartmentDialog extends React.Component<Props>{
                                 autoFocus required
                                 placeholder={_i18n._(t`Name`)}
                                 validators={systemName}
-                                value={name} onChange={v => departmentStore.changeItemName(v)}
+                                value={name} onChange={v => roleStore.changeItemName(v)}
                             />
                         </div>
                     

@@ -93,20 +93,12 @@ export class KubeWatchApi {
   protected onMessage(evt: MessageEvent) {
     if (!evt.data) return;
     let data = JSON.parse(evt.data);
-
-    // let objo = {
-    //   type:"MODIFIED" as const,
-    //   object:data
-    // }
-    
-
     if ((data as IKubeWatchEvent).object) {
-      console.log('9631',data)
       this.onData.emit(data);
     }
     else {
-      console.log('9632',data)
       this.onRouteEvent(data);
+
     }
   }
 
@@ -140,7 +132,6 @@ export class KubeWatchApi {
 
   addListener(store: KubeObjectStore, callback: (evt: IKubeWatchEvent) => void) {
     const listener = (evt: IKubeWatchEvent<KubeJsonApiData>) => {
-      console.log('======@',evt)
       const { selfLink, namespace, resourceVersion } = evt.object.metadata;
       const api = apiManager.getApi(selfLink);
       api.setResourceVersion(namespace, resourceVersion);
