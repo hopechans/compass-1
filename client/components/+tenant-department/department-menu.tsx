@@ -76,7 +76,7 @@ export class DepartmentMenu extends React.Component<DepartmentMenuProps>{
             >
                 <MenuItem onClick={()=>this.editDepartment(object)}>
                     <Icon material="edit" />
-                    <span className="title"><Trans>edit</Trans></span>
+                    <span className="title"><Trans>Edit</Trans></span>
                 </MenuItem>
             </MenuActions>
         )
