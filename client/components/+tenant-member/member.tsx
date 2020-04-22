@@ -18,7 +18,7 @@ export class Member extends React.Component<Props>{
 
     render(){
         return(
-            <div>22</div>
+            <div>todo...</div>
         )
     }
 

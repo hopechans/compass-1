@@ -76,7 +76,7 @@ export class Sidebar extends React.Component<Props> {
         <div className={cssNames("Sidebar flex column", className, { pinned: isPinned })}>
           <div className="header flex align-center">
             <NavLink exact to="/" className="box grow">
-              <Icon svg="logo-full" className="logo-icon"/> <div className="logo-text">Compass</div>
+              <Icon svg="compass" className="logo-icon"/> <div className="logo-text">Compass</div>
             </NavLink>
             <Icon
               className="pin-icon"
@@ -148,7 +148,7 @@ export class Sidebar extends React.Component<Props> {
               id="ci"
               url={ciURL({ query })}
               routePath={ciRoute.path}
-              icon={<Icon material="layers"/>}
+              icon={<Icon material="linear_scale"/>}
               text={<Trans>CI</Trans>}
             />
             <SidebarNavItem

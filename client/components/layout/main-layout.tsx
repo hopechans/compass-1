@@ -69,12 +69,12 @@ export class MainLayout extends React.Component<Props> {
           <MenuActions
             >
               <MenuItem onClick={this.changeTheme}>
-                  <Icon material="layers" />
-                  <span className="title"><Trans>theme</Trans></span>
+                  <Icon material="loop" />
+                  <span className="title"><Trans>Theme</Trans></span>
               </MenuItem>
               <MenuItem >
-                  <Icon material="layers" />
-                  <span className="title"><Trans>logout</Trans></span>
+                  <Icon material="exit_to_app" />
+                  <span className="title"><Trans>Logout</Trans></span>
               </MenuItem>
             </MenuActions>
       </div>
