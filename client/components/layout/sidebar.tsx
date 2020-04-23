@@ -177,7 +177,6 @@ export class Sidebar extends React.Component<Props> {
             />
             <SidebarNavItem
               id="custom-resources"
-              isHidden={isClusterAdmin}
               url={crdURL()}
               subMenus={CustomResources.tabRoutes}
               routePath={crdRoute.path}
