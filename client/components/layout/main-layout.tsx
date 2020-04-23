@@ -63,9 +63,10 @@ export class MainLayout extends React.Component<Props> {
 
 
   renderUserMenu(){
+    const { username} = configStore.config;
     return (
       <div className="header-right">
-          <span>admin</span>
+          <span>{username}</span>
           <MenuActions
             >
               <MenuItem onClick={this.changeTheme}>
