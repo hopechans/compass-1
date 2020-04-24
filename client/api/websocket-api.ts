@@ -1,6 +1,7 @@
 import {observable} from "mobx";
 import {EventEmitter} from "../utils/eventEmitter";
 import SockJS from "sockjs-client";
+import {podsApi} from "../api/endpoints";
 
 interface IParams {
     url?: string;          // connection url, starts with ws:// or wss://
@@ -9,6 +10,9 @@ interface IParams {
     reconnectDelaySeconds?: number; // reconnect timeout in case of error (0 - don't reconnect)
     pingIntervalSeconds?: number; // send ping message for keeping connection alive in some env, e.g. AWS (0 - don't ping)
     logging?: boolean;    // show logs in console
+    namespace: string;  // kubernetes Namespace
+    pod: string; // kubernetes Pod
+    container: string // kubernetes Container
 }
 
 interface IMessage {
@@ -24,12 +28,18 @@ export enum WebSocketApiState {
     CLOSED,
 }
 
+
 export class WebSocketApi {
-    protected socket: WebSocket;
+    protected socket?: WebSocket;
     protected pendingCommands: IMessage[] = [];
     protected reconnectTimer: any;
     protected pingTimer: any;
     protected pingMessage = "PING";
+    protected namespace: string;
+    protected pod: string;
+    protected container: string;
+    protected op: number;
+    protected sessionId: string;
 
     @observable readyState = WebSocketApiState.PENDING;
 
@@ -38,6 +48,9 @@ export class WebSocketApi {
     public onClose = new EventEmitter<[]>();
 
     static defaultParams: Partial<IParams> = {
+        namespace: '',
+        pod: '',
+        container: '',
         autoConnect: true,
         logging: false,
         reconnectDelaySeconds: 10,
@@ -47,13 +60,16 @@ export class WebSocketApi {
 
     constructor(protected params: IParams) {
         this.params = Object.assign({}, WebSocketApi.defaultParams, params);
-        const {autoConnect, pingIntervalSeconds} = this.params;
+        const {namespace, pod, container, autoConnect, pingIntervalSeconds} = this.params;
+        this.namespace = namespace;
+        this.pod = pod;
+        this.container = container;
         if (autoConnect) {
-            setTimeout(() => this.connect());
+            setTimeout(() => this.connect(), 3000);
         }
-        if (pingIntervalSeconds) {
-            this.pingTimer = setInterval(() => this.ping(), pingIntervalSeconds * 1000);
-        }
+        // if (pingIntervalSeconds) {
+        //     this.pingTimer = setInterval(() => this.ping(), pingIntervalSeconds * 1000);
+        // }
     }
 
     get isConnected() {
@@ -73,8 +89,8 @@ export class WebSocketApi {
         if (this.socket) {
             this.socket.close(); // close previous connection first
         }
-        // this.socket = new WebSocket(url);
-        this.socket = new SockJS(url, {'disable_cors': true})
+        this.refreshSession();
+        this.socket = new SockJS(url);
         this.socket.onopen = this._onOpen.bind(this);
         this.socket.onmessage = this._onMessage.bind(this);
         this.socket.onerror = this._onError.bind(this);
@@ -99,11 +115,21 @@ export class WebSocketApi {
         if (!this.socket) return;
         this.socket.close();
         this.socket = null;
-        this.pendingCommands = [];
+        // this.pendingCommands = [];
         this.removeAllListeners();
         clearTimeout(this.reconnectTimer);
         clearInterval(this.pingTimer);
         this.readyState = WebSocketApiState.PENDING;
+    }
+
+    async refreshSession() {
+        const apiSession = await podsApi.getTerminalSession({
+            namespace: this.namespace,
+            pod: this.pod,
+            container: this.container
+        });
+        this.op = apiSession.op;
+        this.sessionId = apiSession.sessionId;
     }
 
     removeAllListeners() {
@@ -112,15 +138,10 @@ export class WebSocketApi {
         this.onClose.removeAllListeners();
     }
 
-    send(command: string) {
-        const msg: IMessage = {
-            id: (Math.random() * Date.now()).toString(16).replace(".", ""),
-            data: command,
-        };
+    send(msg: string) {
         if (this.isConnected) {
-            this.socket.send(msg.data);
-        } else {
-            this.pendingCommands.push(msg);
+            console.log('msg', msg, ' socket', this.socket);
+            this.socket.send(msg);
         }
     }
 
@@ -134,16 +155,21 @@ export class WebSocketApi {
     }
 
     protected _onOpen(evt: Event) {
+        const data = {Op: this.op, sessionID: this.sessionId};
         this.onOpen.emit();
-        if (this.params.flushOnOpen) this.flush();
+        // if (this.params.flushOnOpen) this.flush();
         this.readyState = WebSocketApiState.OPEN;
         this.writeLog('%cOPEN', 'color:green;font-weight:bold;', evt);
+        this.writeLog('data', data);
+        this.send(JSON.stringify(data));
     }
 
     protected _onMessage(evt: MessageEvent) {
-        const data = this.parseMessage(evt.data);
-        this.onData.emit(data);
+        console.log(evt);
+        const data = JSON.parse(evt.data);
         this.writeLog('%cMESSAGE', 'color:black;font-weight:bold;', data);
+        this.onData.emit(data.Data);
+        this.readyState = WebSocketApiState.CONNECTING;
     }
 
     protected _onError(evt: Event) {
@@ -151,13 +177,10 @@ export class WebSocketApi {
     }
 
     protected _onClose(evt: CloseEvent) {
-        const error = evt.code !== 1000 || !evt.wasClean;
-        if (error) {
-            this.reconnect();
-        } else {
-            this.readyState = WebSocketApiState.CLOSED;
-            this.onClose.emit();
-        }
+        const error = evt.type == "close" || !evt.wasClean;
+        this.onClose.emit();
+        this.onData.emit(evt.reason);
+        this.readyState = WebSocketApiState.CLOSED;
         this.writeLog('%cCLOSE', `color:${error ? "red" : "black"};font-weight:bold;`, evt);
     }
 

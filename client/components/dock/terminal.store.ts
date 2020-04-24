@@ -8,6 +8,7 @@ import {WebSocketApiState} from "../../api/websocket-api";
 import {_i18n} from "../../i18n";
 import {themeStore} from "../../theme.store";
 
+
 export interface ITerminalTab extends IDockTab {
     node?: string; // activate node shell mode
 }
@@ -27,6 +28,9 @@ export function createTerminalTab(tabParams: Partial<ITerminalTab> = {}) {
 
 @autobind()
 export class TerminalStore {
+    protected namespace: string;
+    protected pod: string;
+    protected container: string;
     protected terminals = new Map<TabId, Terminal>();
     protected connections = observable.map<TabId, TerminalApi>();
 
@@ -54,6 +58,9 @@ export class TerminalStore {
         }
         const tab: ITerminalTab = dockStore.getTabById(tabId);
         const api = new TerminalApi({
+            namespace: this.namespace,
+            pod: this.pod,
+            container: this.container,
             id: tabId,
             node: tab.node,
             colorTheme: themeStore.activeTheme.type
@@ -101,20 +108,25 @@ export class TerminalStore {
 
         const terminalApi = this.connections.get(dockStore.selectedTabId);
         if (terminalApi) {
-            terminalApi.sendCommand(command + (enter ? "\r" : ""));
+            terminalApi.emitStatus(command)
+            if (enter) {
+                const dataObj = {Data: command + (enter ? "\r" : "")}
+                terminalApi.sendCommand(dataObj);
+            }
         }
     }
 
-    startTerminal(op: number, sessionId: string, options: { enter?: boolean; newTab?: boolean; tabId?: TabId } = {}) {
-        const {enter, newTab, tabId} = options;
+    async startTerminal(namespace: string, pod: string, container: string, options: { newTab?: boolean; tabId?: TabId } = {}) {
+        this.namespace = namespace
+        this.pod = pod
+        this.container = container
+
+        const {newTab, tabId} = options;
         const {selectTab, getTabById} = dockStore;
 
         const tab = tabId && getTabById(tabId);
         if (tab) selectTab(tabId);
         if (newTab) createTerminalTab();
-        const terminalApi = this.connections.get(dockStore.selectedTabId);
-        terminalApi.ping()
-        console.log('terminalApi', terminalApi)
     }
 
     getTerminal(tabId: TabId) {

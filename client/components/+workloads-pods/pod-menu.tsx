@@ -18,18 +18,13 @@ interface Props extends KubeObjectMenuProps<Pod> {
 
 export class PodMenu extends React.Component<Props> {
     async execShell(container?: string) {
-
         hideDetails();
         const {object: pod} = this.props
-        const podTerminalSession = await podsApi.getTerminalSession({
-            namespace: pod.getNs(),
-            pod: pod.getName(),
-            container: container
-        });
+        const namespace = pod.getNs();
+        const podName = pod.getName()
 
-        if(podTerminalSession) {
-            terminalStore.startTerminal(podTerminalSession.op, podTerminalSession.sessionId,{
-                enter: true,
+        if (namespace && podName && container) {
+            await terminalStore.startTerminal(namespace, podName, container, {
                 newTab: true,
             })
         }
