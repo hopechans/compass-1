@@ -52,13 +52,36 @@ export class MainLayout extends React.Component<Props> {
     setTimeout(() => this.isAccessible = true, 250);
   }
 
+  changeTheme(){
+    if(themeStore.activeThemeId === 'kontena-light'){
+      themeStore.setTheme('kontena-dark')
+    }
+    if(themeStore.activeThemeId === 'kontena-dark'){
+      themeStore.setTheme('kontena-light')
+    }
+  }
+
+
   renderUserMenu(){
+    const { username} = configStore.config;
     return (
-      <div>
-        
+      <div className="header-right">
+          <span>{username}</span>
+          <MenuActions
+            >
+              <MenuItem onClick={this.changeTheme}>
+                  <Icon material="loop" />
+                  <span className="title"><Trans>Theme</Trans></span>
+              </MenuItem>
+              <MenuItem >
+                  <Icon material="exit_to_app" />
+                  <span className="title"><Trans>Logout</Trans></span>
+              </MenuItem>
+            </MenuActions>
       </div>
     )
   }
+
 
   render() {
     const { className, contentClass, headerClass, tabs, footer, footerClass, children } = this.props;
@@ -69,8 +92,8 @@ export class MainLayout extends React.Component<Props> {
       <div className={cssNames("MainLayout", className, themeStore.activeTheme.type)}>
         <header className={cssNames("flex gaps align-center", headerClass)}>
           <div className="box grow flex align-center">
-            {clusterName && <span>{clusterName}</span>}
-            
+            <div className="header-left">{clusterName && <span>{clusterName}</span>}</div>
+            {this.renderUserMenu()}
           </div>
         </header>
 

@@ -1,24 +1,120 @@
 
+import './role.scss'
 import * as React from 'react'
 import { observer } from "mobx-react";
 import { Trans } from "@lingui/macro";
 import { RouteComponentProps } from "react-router";
 import { cssNames, stopPropagation } from "../../utils";
-import { getDetailsUrl } from "../../navigation";
+import { getDetailsUrl,getDetails } from "../../navigation";
 import { apiManager } from "../../api/api-manager";
-import { ItemListLayout } from "../item-object-list/item-list-layout";
+import { roleStore } from "./role.store";
+import { TetantRole } from "../../api/endpoints/tenant-role.api";
+import { RoleMenu } from './role-menu'
+import { computed } from "mobx";
+import { ItemListLayout, ItemListLayoutProps } from "../item-object-list/item-list-layout";
+import { navigation } from "../../navigation";
+import { tenantDepartmentURL } from '../+tenant';
+import { AddRoleDialog } from './role-dialog-add'
+import { RoleDeatil } from './role-detail'
+import { permissionsStore} from './role.store.premission'
+interface IDepartmentRouteProps{
+    id:string
+    name:string
+}
 
-interface Props{
-
+export interface DepartmentProps extends RouteComponentProps<IDepartmentRouteProps>{
+    store: TetantRole;
+}
+enum sortBy {
+    name = "name",
 }
 
 @observer
-export class Role extends React.Component<Props>{
+export class Role extends React.Component<DepartmentProps>{
 
-    render(){
-        return(
-            <div>33</div>
-        )
+    constructor(props:any){
+        super(props)
     }
 
+    componentDidMount() {
+        permissionsStore.loadAll()
+    }
+
+    get selectedRole() {
+        const paramsDetail = getDetails()
+        return roleStore.items.find(item => {
+            if(item.getId() == paramsDetail){
+                permissionsStore.changeCurPermission(item.getPermissions())
+                return true
+            }
+        });
+    }
+
+    fetchList(){
+        permissionsStore.loadAll()
+    }
+
+    hideDetails = () => {
+        this.showDetails(null);
+    }
+
+    showDetails = (item: TetantRole) => {
+        if (!item) {
+            navigation.searchParams.merge({
+                details:null
+            })
+        }
+        else {
+          navigation.searchParams.merge({
+              details: item.getId(),
+          })
+        }
+    }
+    render(){
+        return(
+            <>
+               <ItemListLayout
+                    className="tetantRole"
+                    store={roleStore}
+                    isClusterScoped={true}
+                    isSelectable={true}
+                    sortingCallbacks={{
+                        [sortBy.name]: (item: TetantRole) => item.getName(),
+                    }}
+                    searchFilters={[
+                        (item: TetantRole) => item.getName(),
+                        (item: TetantRole) => item.getId(),
+                   
+                    ]}
+                    renderHeaderTitle={<Trans>Role Manager</Trans>}
+                    renderTableHeader={[
+                        { title: <Trans>ID</Trans>, className: "id" },
+                        { title: <Trans>name</Trans>, className: "name", sortBy:sortBy.name},
+
+                    ]}
+                    renderTableContents={(item: TetantRole) => [
+                        item.getId(),
+                        item.getName(),
+                    ]}
+                    renderItemMenu={(item: TetantRole) => {
+                        return <RoleMenu object={item}/>
+                    }}
+                    addRemoveButtons={{
+                        onAdd: () => AddRoleDialog.open(),
+                        addTooltip: <Trans>Create new department</Trans>
+                    }}
+                    detailsItem={this.selectedRole}
+                    onDetails={this.showDetails}
+                />
+                <AddRoleDialog/>
+                <RoleDeatil
+                    selectItem={this.selectedRole}
+                    hideDetails={this.hideDetails}
+                >
+                </RoleDeatil>
+            </>
+        )
+    }
 }
+
+

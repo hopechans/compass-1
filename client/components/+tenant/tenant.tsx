@@ -26,22 +26,21 @@ export class Tenant extends React.Component<Props>{
                 path:tenantDepartmentRoute.path
             },
             {
-                title: <Trans>Member</Trans>,
-                component:Member,
-                url: tenantMemberURL({query}),
-                path:tenantMemberRoute.path
-            },
-            {
                 title: <Trans>Role</Trans>,
                 component:Role,
                 url: tenantRoleURL({query}),
                 path:tenantRoleRoute.path
+            },
+            {
+                title: <Trans>Member</Trans>,
+                component:Member,
+                url: tenantMemberURL({query}),
+                path:tenantMemberRoute.path
             }
         ]
     };
     render(){
         const tabRoutes = Tenant.tabRoutes;
-        console.log(tabRoutes)
         return (
             <MainLayout className="tenant" tabs={tabRoutes}>
                 <Switch>

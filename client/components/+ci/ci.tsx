@@ -5,9 +5,7 @@ export class Ci extends React.Component{
     render() {
         return (
           <MainLayout>
-            <div className="Cluster">
-                <h1>CI</h1>
-            </div>
+           <div>todo...</div>
           </MainLayout>
         )
       }

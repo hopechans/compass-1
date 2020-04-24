@@ -3,24 +3,24 @@ import { Trans } from "@lingui/macro";
 import { observer,inject} from 'mobx-react'
 import { autobind, cssNames } from "../../utils";
 import { MenuActions, MenuActionsProps } from "../menu/menu-actions";
-import { Department } from './department';
+import { Role } from './role';
 import { hideDetails } from "../../navigation";
 import { apiManager } from "../../api/api-manager";
 import { Menu, MenuItem, MenuProps } from "../menu";
 import { Icon, IconProps } from "../icon";
 import { _i18n } from "../../i18n";
 import { tetantDepartmentApi } from "../../api/endpoints";
-import { AddDepartmentDialog } from './department-dialog-add'
-import { TetantDepartment } from "../../api/endpoints/tenant-department.api";
-import { departmentStore } from './department.store'
+import { AddRoleDialog } from './role-dialog-add'
+import { TetantRole } from "../../api/endpoints/tenant-role.api";
+import { roleStore } from './role.store'
 
 
-export interface DepartmentMenuProps<T extends Department = any> extends MenuActionsProps {
+export interface RoleMenuProps<T extends Role = any> extends MenuActionsProps {
     object: T;
     editable?: boolean;
     removable?: boolean;
   }
-export class DepartmentMenu extends React.Component<DepartmentMenuProps>{
+export class RoleMenu extends React.Component<RoleMenuProps>{
     get store() {
         const { object } = this.props;
         if (!object) return;
@@ -40,10 +40,10 @@ export class DepartmentMenu extends React.Component<DepartmentMenuProps>{
         hideDetails();
     }
     
-    editDepartment(item:TetantDepartment ){
-        AddDepartmentDialog.open()
-        departmentStore.changeItemName(item.name)
-        departmentStore.changeDialogType('edit')
+    editDepartment(item:TetantRole){
+        AddRoleDialog.open()
+        roleStore.changeItemName(item.name)
+        roleStore.changeDialogType('edit')
     }
 
     @autobind()

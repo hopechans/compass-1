@@ -114,8 +114,8 @@ export class ThemeStore {
   protected style = document.createElement("style");
 
   readonly defaultTheme: ITheme = {
-    name: "kontena-light",
-    type: "light",
+    name: "kontena-dark",
+    type: "dark",
     colors: {} as any,
   };
 
@@ -144,14 +144,14 @@ export class ThemeStore {
     reaction(() => this.activeTheme, this.onChange);
 
     // apply theme from configuration
-    import("./config.store").then(({ configStore }) => {
-      autorun(() => {
-        const themeId = configStore.config.lensTheme;
-        if (themeId && themeId !== this.activeThemeId) {
-          this.setTheme(themeId);
-        }
-      });
-    })
+    // import("./config.store").then(({ configStore }) => {
+    //   autorun(() => {
+    //     const themeId = configStore.config.lensTheme;
+    //     if (themeId && themeId !== this.activeThemeId) {
+    //       this.setTheme(themeId);
+    //     }
+    //   });
+    // })
   }
 
   protected onChange = (theme: ITheme) => {
@@ -167,15 +167,10 @@ export class ThemeStore {
       return this.themes.get(themeId);
     }
     try {
-      // const theme: ITheme = await import(
-      //   /* webpackMode: "lazy", webpackChunkName: "theme/[request]" */
-      //   `./themes/${themeId}.json`
-      // );
-      const theme: any = await import(
+      const theme: ITheme = await import(
         /* webpackMode: "lazy", webpackChunkName: "theme/[request]" */
-        `./themes/kontena-dark.json`
+        `./themes/${themeId}.json`
       );
-      console.log(theme)
       this.themes.set(themeId, theme);
       return theme;
     } catch (err) {

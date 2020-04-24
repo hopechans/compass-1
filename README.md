@@ -1,2 +1,6 @@
 # compass
-This project WIP now, thanks lens app authors 
+![compass](https://github.com/yametech/compass/workflows/compass/badge.svg)
+
+
+#### Acknowledgement
+[lens](https://github.com/lensapp/lens)

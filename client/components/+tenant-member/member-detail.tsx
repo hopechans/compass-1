@@ -1,4 +1,4 @@
-import './department-detail.scss'
+
 import * as React from 'react'
 import { Trans } from "@lingui/macro";
 import { Drawer, DrawerItem, DrawerTitle } from "../drawer";
@@ -7,18 +7,18 @@ import { Notifications } from "../notifications";
 import { cssNames, stopPropagation } from "../../utils";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { themeStore } from "../../theme.store";
-import { TetantDepartment } from "../../api/endpoints/tenant-department.api";
+import { tetantMemberApi,TetantMember} from "../../api/endpoints/tenant-member.api";
 import { RouteComponentProps } from "react-router";
 import { fromPrefixLen } from 'ip';
 
 interface Props {
-    selectItem:TetantDepartment
+    selectItem:TetantMember
     hideDetails(): void;
 }
 
 
 
-export class DepartmentDeatil extends React.Component<Props>{
+export class MemberDeatil extends React.Component<Props>{
 
     renderContent(){
         const { selectItem } = this.props
@@ -43,7 +43,7 @@ export class DepartmentDeatil extends React.Component<Props>{
         const title=selectItem ? selectItem.getName() : ""
         return(
             <Drawer
-                className={cssNames("DepartmentDetails", themeStore.activeTheme.type)}
+                className={cssNames("MemberDetails", themeStore.activeTheme.type)}
                 usePortal={true}
                 open={!!selectItem}
                 title={title}

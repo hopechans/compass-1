@@ -3,24 +3,24 @@ import { Trans } from "@lingui/macro";
 import { observer,inject} from 'mobx-react'
 import { autobind, cssNames } from "../../utils";
 import { MenuActions, MenuActionsProps } from "../menu/menu-actions";
-import { Department } from './department';
+import { Member } from './member';
 import { hideDetails } from "../../navigation";
 import { apiManager } from "../../api/api-manager";
 import { Menu, MenuItem, MenuProps } from "../menu";
 import { Icon, IconProps } from "../icon";
 import { _i18n } from "../../i18n";
 import { tetantDepartmentApi } from "../../api/endpoints";
-import { AddDepartmentDialog } from './department-dialog-add'
+import { AddMemberDialog } from './member-dialog-add'
 import { TetantDepartment } from "../../api/endpoints/tenant-department.api";
-import { departmentStore } from './department.store'
+import { memberStore } from './member.store'
 
 
-export interface DepartmentMenuProps<T extends Department = any> extends MenuActionsProps {
+export interface MembertMenuProps<T extends Member = any> extends MenuActionsProps {
     object: T;
     editable?: boolean;
     removable?: boolean;
   }
-export class DepartmentMenu extends React.Component<DepartmentMenuProps>{
+export class MembertMenu extends React.Component<MembertMenuProps>{
     get store() {
         const { object } = this.props;
         if (!object) return;
@@ -40,10 +40,10 @@ export class DepartmentMenu extends React.Component<DepartmentMenuProps>{
         hideDetails();
     }
     
-    editDepartment(item:TetantDepartment ){
-        AddDepartmentDialog.open()
-        departmentStore.changeItemName(item.name)
-        departmentStore.changeDialogType('edit')
+    editMember(item:TetantDepartment ){
+        AddMemberDialog.open()
+        memberStore.changeItemName(item.name)
+        memberStore.changeDialogType('edit')
     }
 
     @autobind()
@@ -69,12 +69,12 @@ export class DepartmentMenu extends React.Component<DepartmentMenuProps>{
         const { className, object, editable, removable, ...menuProps } = this.props;
         return (
             <MenuActions
-                className={cssNames("DepartmentMenu", className)}
+                className={cssNames("MemberMenu", className)}
                 updateAction={isEditable ? update : undefined}
                 removeAction={isRemovable ? remove : undefined}
                 removeConfirmationMessage={renderRemoveMessage}
             >
-                <MenuItem onClick={()=>this.editDepartment(object)}>
+                <MenuItem onClick={()=>this.editMember(object)}>
                     <Icon material="edit" />
                     <span className="title"><Trans>Edit</Trans></span>
                 </MenuItem>

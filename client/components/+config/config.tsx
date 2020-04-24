@@ -39,24 +39,24 @@ export class Config extends React.Component {
         url: resourceQuotaURL({ query }),
         path: resourceQuotaRoute.path,
       },
-      {
-        title: <Trans>Certificates</Trans>,
-        component: Certificates,
-        url: certificatesURL({ query }),
-        path: certificatesURL(),
-      },
-      {
-        title: <Trans>Issuers</Trans>,
-        component: Issuers,
-        url: issuersURL({ query }),
-        path: issuersURL(),
-      },
-      {
-        title: <Trans>Cluster Issuers</Trans>,
-        component: ClusterIssuers,
-        url: clusterIssuersURL(),
-        path: clusterIssuersURL(),
-      },
+      // {
+      //   title: <Trans>Certificates</Trans>,
+      //   component: Certificates,
+      //   url: certificatesURL({ query }),
+      //   path: certificatesURL(),
+      // },
+      // {
+      //   title: <Trans>Issuers</Trans>,
+      //   component: Issuers,
+      //   url: issuersURL({ query }),
+      //   path: issuersURL(),
+      // },
+      // {
+      //   title: <Trans>Cluster Issuers</Trans>,
+      //   component: ClusterIssuers,
+      //   url: clusterIssuersURL(),
+      //   path: clusterIssuersURL(),
+      // },
       {
         title: <Trans>HPA</Trans>,
         component: HorizontalPodAutoscalers,

@@ -1,19 +1,19 @@
 import { observable,action, autorun,reaction} from "mobx";
 import { observer,disposeOnUnmount} from 'mobx-react'
 import { autobind } from "../../utils";
-import { TetantDepartment, tetantDepartmentApi } from "../../api/endpoints/tenant-department.api";
+import { TetantMember,tetantMemberApi } from "../../api/endpoints/tenant-member.api";
 import { ItemStore } from "../../item.store";
-import flatten from "lodash/flatten"
+
 
 @autobind()
-export class DepartmentStore extends ItemStore<TetantDepartment> {
+export class MemberStore extends ItemStore<TetantMember> {
 
-    @observable deptName:string
+    @observable name:string
     @observable dialogType:string
  
     @action
     changeItemName(name:string){
-      this.deptName = name
+      this.name = name
     }
 
     @action
@@ -24,14 +24,13 @@ export class DepartmentStore extends ItemStore<TetantDepartment> {
     @action
     clean(){
       setTimeout(()=>{
-          this.deptName = ''
-          this.dialogType = 'add'
+        this.name = ''
+        this.dialogType = 'add'
       },1000)
-     
     }
 
     loadAll() {
-      return this.loadItems(() => tetantDepartmentApi.list());
+      return this.loadItems(() => tetantMemberApi.list());
     }
 
     getByName(name: string, repo: string) {
@@ -39,9 +38,9 @@ export class DepartmentStore extends ItemStore<TetantDepartment> {
     }
 
     async removeSelectedItems(){
-      //console.log('---------delete',this.selectedItems)
+      console.log('---------delete',this.selectedItems)
     }
 }
 
 
-export const departmentStore = new DepartmentStore();
+export const memberStore = new MemberStore();

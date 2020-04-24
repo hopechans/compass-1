@@ -10,9 +10,8 @@ import { Input } from "../input";
 import { SubTitle } from "../layout/sub-title";
 import { systemName } from "../input/input.validators";
 import { Notifications } from "../notifications";
-import { tetantDepartmentApi } from '../../api/endpoints/tenant-department.api'
-import { TetantDepartment } from "../../api/endpoints/tenant-department.api";
-import { departmentStore } from './department.store'
+import { TetantMember,tetantMemberApi } from "../../api/endpoints/tenant-member.api";
+import { memberStore } from './member.store'
 import {autobind,prevDefault} from '../../utils'
 
 
@@ -21,31 +20,31 @@ interface Props extends Partial<DialogProps> {
 
 
 @observer
-export class AddDepartmentDialog extends React.Component<Props>{
+export class AddMemberDialog extends React.Component<Props>{
     @observable static isOpen = false;
-    @observable deptname = "";
+    @observable name = "";
 
     static open(){
-        AddDepartmentDialog.isOpen = true
+        AddMemberDialog.isOpen = true
     }
 
     static close(){
-        AddDepartmentDialog.isOpen = false
-        departmentStore.clean()
+        AddMemberDialog.isOpen = false
+        memberStore.clean()
     }
 
     reset = () => {
-        this.deptname = "";
+        this.name = "";
     }
 
     close = () => {
-        AddDepartmentDialog.close();
+        AddMemberDialog.close();
     }
 
     createDepartment = async () => {
-        const { deptname } = this;
+        const { name } = this;
         try {
-            await tetantDepartmentApi.createApi()
+            await tetantMemberApi.list()
             this.reset();
             this.close();
         } catch (err) {
@@ -54,17 +53,17 @@ export class AddDepartmentDialog extends React.Component<Props>{
     }
 
     render(){
-        const { deptname } = this;
-        const creatHeader = <h5 ><Trans >Create Department</Trans></h5>;
-        const editHeader = <h5 ><Trans >Edit Department</Trans></h5>;
-        const name = departmentStore.deptName ? departmentStore.deptName : ''
-        const dialogType = departmentStore.dialogType
+        const { name } = this;
+        const creatHeader = <h5 ><Trans >Create Member</Trans></h5>;
+        const editHeader = <h5 ><Trans >Edit Member</Trans></h5>;
+        const name2 = memberStore.name ? memberStore.name : ''
+        const dialogType = memberStore.dialogType
         const header = dialogType === 'edit' ? editHeader :creatHeader
         
         return(
             <Dialog
-                className="AddDepartmentDialog"
-                isOpen={AddDepartmentDialog.isOpen}
+                className="AddMemberDialog"
+                isOpen={AddMemberDialog.isOpen}
                 close={this.close}
             >
                 <Wizard header={header} done={this.close}>
@@ -75,7 +74,7 @@ export class AddDepartmentDialog extends React.Component<Props>{
                                 autoFocus required
                                 placeholder={_i18n._(t`Name`)}
                                 validators={systemName}
-                                value={name} onChange={v => departmentStore.changeItemName(v)}
+                                value={name} onChange={v => memberStore.changeItemName(v)}
                             />
                         </div>
                     
