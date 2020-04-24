@@ -46,7 +46,7 @@ export default () => {
         '/api/config': {
             target:'http://localhost:3000/',
             secure: false,
-            changeOrigin: true, 
+            changeOrigin: true,
         },
         '/tenant': {
           //target: 'http://10.1.150.252:8080',

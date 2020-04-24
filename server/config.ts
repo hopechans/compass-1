@@ -15,7 +15,7 @@ export const config = {
 
   API_PREFIX: {
     BASE: '/api', // local express.js server api
-    TERMINAL: '/api-terminal', // terminal api
+    TERMINAL: '/api-kube', // terminal api
     KUBE_BASE: '/api-kube', // kubernetes cluster api
     KUBE_USERS: '/api-users', // users & groups api
     KUBE_HELM: '/api-helm', // helm charts api middleware
