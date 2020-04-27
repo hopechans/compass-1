@@ -7,7 +7,7 @@ import { Notifications } from "../notifications";
 import { cssNames, stopPropagation, autobind } from "../../utils";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { themeStore } from "../../theme.store";
-import { TetantRole } from "../../api/endpoints/tenant-role.api";
+import { TenantRole } from "../../api/endpoints/tenant-role.api";
 import { RouteComponentProps } from "react-router";
 import { fromPrefixLen } from 'ip';
 import { Checkbox } from "../checkbox";
@@ -18,7 +18,7 @@ import { autorun, observable, action } from 'mobx';
 
 
 interface Props {
-    selectItem:TetantRole
+    selectItem:TenantRole
     hideDetails(): void;
 }
 

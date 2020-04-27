@@ -3,6 +3,18 @@ import {EventEmitter} from "../utils/eventEmitter";
 import SockJS from "sockjs-client";
 import {podsApi} from "../api/endpoints";
 
+const welcome =`
+        /\\_/\\\r\n
+      =( °w° )=\ \r\n
+        )   (     // Compass Cloud Platform 🤔🤔🤔  ♻\r\n
+       (__ __)           === == ==\r\n
+ /"""""""""""""" //\\___/ === == ==\r\n
+{                       /  == =-\r\n
+ \\______ O           _ _/\r\n
+   \\    \\         _ _/\r\n
+    \\____\\_______/__/__/\r\n
+`
+
 interface IParams {
     url?: string;          // connection url, starts with ws:// or wss://
     autoConnect?: boolean; // auto-connect in constructor
@@ -156,7 +168,7 @@ export class WebSocketApi {
 
     protected _onOpen(evt: Event) {
         const data = {Op: this.op, sessionID: this.sessionId};
-        this.onOpen.emit();
+        this.onData.emit(welcome);
         // if (this.params.flushOnOpen) this.flush();
         this.readyState = WebSocketApiState.OPEN;
         this.writeLog('%cOPEN', 'color:green;font-weight:bold;', evt);

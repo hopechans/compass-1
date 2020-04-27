@@ -9,9 +9,9 @@ import { apiManager } from "../../api/api-manager";
 import { Menu, MenuItem, MenuProps } from "../menu";
 import { Icon, IconProps } from "../icon";
 import { _i18n } from "../../i18n";
-import { tetantDepartmentApi } from "../../api/endpoints";
+import { tenantDepartmentApi } from "../../api/endpoints";
 import { AddRoleDialog } from './role-dialog-add'
-import { TetantRole } from "../../api/endpoints/tenant-role.api";
+import { TenantRole } from "../../api/endpoints/tenant-role.api";
 import { roleStore } from './role.store'
 
 
@@ -40,7 +40,7 @@ export class RoleMenu extends React.Component<RoleMenuProps>{
         hideDetails();
     }
     
-    editDepartment(item:TetantRole){
+    editDepartment(item:TenantRole){
         AddRoleDialog.open()
         roleStore.changeItemName(item.name)
         roleStore.changeDialogType('edit')

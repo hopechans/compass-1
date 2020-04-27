@@ -1,49 +1,47 @@
-import { apiBase,tenantBase} from "../index";
-import { stringify } from "querystring";
-import { autobind } from "../../utils";
-import { resolve } from "dns";
+import {apiBase, tenantBase} from "../index";
+import {stringify} from "querystring";
+import {autobind} from "../../utils";
+import {resolve} from "dns";
 
 
-interface ITetantDepartmentList{
+interface ITenantDepartmentList {
     [x: string]: any;
-
 }
 
-export const tetantDepartmentApi = {
+export const tenantDepartmentApi = {
     list() {
         return tenantBase
-            .get<ITetantDepartmentList>('/tenant/department')
+            .get<ITenantDepartmentList>('/tenant/department')
             .then(data => {
-                return data.map(TetantDepartment.create);
-            // return Object
-            //   .values(data)
-            //   .reduce((allData, repoData) => allData.concat(Object.values(repoData)), [])
-            //   .map(TetantDepartment.create);
+                return data.map(TenantDepartment.create);
+                // return Object
+                //   .values(data)
+                //   .reduce((allData, repoData) => allData.concat(Object.values(repoData)), [])
+                //   .map(TetantDepartment.create);
             });
     },
 
-    createApi(){
-        return new Promise((resolve,reject)=>{
-            setTimeout(()=>{
+    createApi() {
+        return new Promise((resolve, reject) => {
+            setTimeout(() => {
                 reject('dasfasd')
-            },2000)
+            }, 2000)
         })
     }
 }
 
 @autobind()
-export class TetantDepartment{
+export class TenantDepartment {
     constructor(data: any) {
         Object.assign(this, data);
     }
 
     static create(data: any) {
-        return new TetantDepartment(data);
+        return new TenantDepartment(data);
     }
 
-
-    id:string
-    name:string
+    id: string
+    name: string
 
     getId() {
         return this.id;
@@ -52,7 +50,4 @@ export class TetantDepartment{
     getName() {
         return this.name;
     }
-    
-   
-
 }

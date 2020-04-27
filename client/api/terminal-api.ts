@@ -6,7 +6,6 @@ import isEqual from "lodash/isEqual"
 
 // tslint:disable-next-line:no-any
 
-
 export enum TerminalChannels {
     STDIN = 1,
     STDOUT = 2,
@@ -39,7 +38,7 @@ export interface ITerminalApiOptions {
 
 export class TerminalApi extends WebSocketApi {
     protected size: { Width: number; Height: number };
-    protected currentToken: string;
+    // protected currentToken: string;
     // protected tokenInterval = interval(60, this.sendNewToken); // refresh every minute
 
     public onReady = new EventEmitter<[]>();
@@ -69,7 +68,7 @@ export class TerminalApi extends WebSocketApi {
     async connect() {
         const apiUrl = await this.getUrl();
         const {colorTheme} = this.options;
-        this.emitStatus("Connecting ...", {
+        this.emitStatus("Connecting terminal.....", {
             color: colorTheme == "light" ? TerminalColor.GRAY : TerminalColor.LIGHT_GRAY
         });
         this.onData.addListener(this._onReady, {prepend: true});

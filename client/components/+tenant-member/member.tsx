@@ -7,7 +7,7 @@ import { cssNames, stopPropagation } from "../../utils";
 import { getDetailsUrl,getDetails } from "../../navigation";
 import { apiManager } from "../../api/api-manager";
 import { memberStore } from "./member.store";
-import { TetantMember } from "../../api/endpoints/tenant-member.api";
+import { TenantMember } from "../../api/endpoints/tenant-member.api";
 import { computed } from "mobx";
 import { ItemListLayout, ItemListLayoutProps } from "../item-object-list/item-list-layout";
 import { navigation } from "../../navigation";
@@ -21,7 +21,7 @@ interface IMemberRouteProps{
 }
 
 export interface DepartmentProps extends RouteComponentProps<IMemberRouteProps>{
-    store: TetantMember;
+    store: TenantMember;
 }
 enum sortBy {
     name = "name",
@@ -48,7 +48,7 @@ export class Member extends React.Component<DepartmentProps>{
         this.showDetails(null);
     }
 
-    showDetails = (item: TetantMember) => {
+    showDetails = (item: TenantMember) => {
         if (!item) {
             navigation.searchParams.merge({
                 details:null
@@ -69,11 +69,11 @@ export class Member extends React.Component<DepartmentProps>{
                     isClusterScoped={true}
                     isSelectable={true}
                     sortingCallbacks={{
-                        [sortBy.name]: (item: TetantMember) => item.getName(),
+                        [sortBy.name]: (item: TenantMember) => item.getName(),
                     }}
                     searchFilters={[
-                        (item: TetantMember) => item.getName(),
-                        (item: TetantMember) => item.getId(),
+                        (item: TenantMember) => item.getName(),
+                        (item: TenantMember) => item.getId(),
                    
                     ]}
                     renderHeaderTitle={<Trans>Member Manager</Trans>}
@@ -82,11 +82,11 @@ export class Member extends React.Component<DepartmentProps>{
                         { title: <Trans>name</Trans>, className: "name", sortBy:sortBy.name},
 
                     ]}
-                    renderTableContents={(item: TetantMember) => [
+                    renderTableContents={(item: TenantMember) => [
                         item.getId(),
                         item.getName(),
                     ]}
-                    renderItemMenu={(item: TetantMember) => {
+                    renderItemMenu={(item: TenantMember) => {
                         return <MembertMenu object={item}/>
                     }}
                     addRemoveButtons={{
