@@ -8,7 +8,7 @@ import { cssNames, stopPropagation } from "../../utils";
 import { getDetailsUrl,getDetails } from "../../navigation";
 import { apiManager } from "../../api/api-manager";
 import { roleStore } from "./role.store";
-import { TetantRole } from "../../api/endpoints/tenant-role.api";
+import { TenantRole } from "../../api/endpoints/tenant-role.api";
 import { RoleMenu } from './role-menu'
 import { computed } from "mobx";
 import { ItemListLayout, ItemListLayoutProps } from "../item-object-list/item-list-layout";
@@ -23,7 +23,7 @@ interface IDepartmentRouteProps{
 }
 
 export interface DepartmentProps extends RouteComponentProps<IDepartmentRouteProps>{
-    store: TetantRole;
+    store: TenantRole;
 }
 enum sortBy {
     name = "name",
@@ -58,7 +58,7 @@ export class Role extends React.Component<DepartmentProps>{
         this.showDetails(null);
     }
 
-    showDetails = (item: TetantRole) => {
+    showDetails = (item: TenantRole) => {
         if (!item) {
             navigation.searchParams.merge({
                 details:null
@@ -79,11 +79,11 @@ export class Role extends React.Component<DepartmentProps>{
                     isClusterScoped={true}
                     isSelectable={true}
                     sortingCallbacks={{
-                        [sortBy.name]: (item: TetantRole) => item.getName(),
+                        [sortBy.name]: (item: TenantRole) => item.getName(),
                     }}
                     searchFilters={[
-                        (item: TetantRole) => item.getName(),
-                        (item: TetantRole) => item.getId(),
+                        (item: TenantRole) => item.getName(),
+                        (item: TenantRole) => item.getId(),
                    
                     ]}
                     renderHeaderTitle={<Trans>Role Manager</Trans>}
@@ -92,11 +92,11 @@ export class Role extends React.Component<DepartmentProps>{
                         { title: <Trans>name</Trans>, className: "name", sortBy:sortBy.name},
 
                     ]}
-                    renderTableContents={(item: TetantRole) => [
+                    renderTableContents={(item: TenantRole) => [
                         item.getId(),
                         item.getName(),
                     ]}
-                    renderItemMenu={(item: TetantRole) => {
+                    renderItemMenu={(item: TenantRole) => {
                         return <RoleMenu object={item}/>
                     }}
                     addRemoveButtons={{

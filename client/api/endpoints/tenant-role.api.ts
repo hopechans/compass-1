@@ -3,23 +3,23 @@ import { stringify } from "querystring";
 import { autobind } from "../../utils";
 import { resolve } from "dns";
 
-interface ITetantRoleList{
+interface ITenantRoleList{
     [x: string]: any;
 }
 
-export const tetantRoleApi = {
+export const tenantRoleApi = {
     list() {
         return tenantBase
-            .get<ITetantRoleList>('/tenant/role')
+            .get<ITenantRoleList>('/tenant/role')
             .then(data => {
-                return data.map(TetantRole.create);
+                return data.map(TenantRole.create);
             });
     },
 
     createApi(){
         return new Promise((resolve,reject)=>{
             setTimeout(()=>{
-                reject('dasfasd')
+                reject('')
             },2000)
         })
     },
@@ -34,13 +34,13 @@ export const tetantRoleApi = {
 }
 
 @autobind()
-export class TetantRole{
+export class TenantRole{
     constructor(data: any) {
         Object.assign(this, data);
     }
 
     static create(data: any) {
-        return new TetantRole(data);
+        return new TenantRole(data);
     }
 
     id:string

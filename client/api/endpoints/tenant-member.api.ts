@@ -3,16 +3,16 @@ import { stringify } from "querystring";
 import { autobind } from "../../utils";
 import { resolve } from "dns";
 
-interface ITetantMemberList{
+interface ITenantMemberList{
     [x: string]: any;
 }
 
-export const tetantMemberApi = {
+export const tenantMemberApi = {
     list() {
         return tenantBase
-            .get<ITetantMemberList>('/tenant/member')
+            .get<ITenantMemberList>('/tenant/member')
             .then(data => {
-                return data.map(TetantMember.create);
+                return data.map(TenantMember.create);
             });
     },
 
@@ -23,17 +23,16 @@ export const tetantMemberApi = {
             },2000)
         })
     },
-
 }
 
 @autobind()
-export class TetantMember{
+export class TenantMember{
     constructor(data: any) {
         Object.assign(this, data);
     }
 
     static create(data: any) {
-        return new TetantMember(data);
+        return new TenantMember(data);
     }
 
     id:string
@@ -47,5 +46,4 @@ export class TetantMember{
     getName() {
         return this.name;
     }
-
 }

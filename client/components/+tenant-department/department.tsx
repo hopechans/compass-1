@@ -8,7 +8,7 @@ import { cssNames, stopPropagation } from "../../utils";
 import { getDetailsUrl,getDetails } from "../../navigation";
 import { apiManager } from "../../api/api-manager";
 import { departmentStore } from "./department.store";
-import { TetantDepartment } from "../../api/endpoints/tenant-department.api";
+import { TenantDepartment } from "../../api/endpoints/tenant-department.api";
 import { DepartmentMenu } from './department-menu'
 import { computed } from "mobx";
 import { ItemListLayout, ItemListLayoutProps } from "../item-object-list/item-list-layout";
@@ -24,7 +24,7 @@ interface IDepartmentRouteProps{
 }
 
 export interface DepartmentProps extends RouteComponentProps<IDepartmentRouteProps>{
-    store: TetantDepartment;
+    store: TenantDepartment;
 }
 enum sortBy {
     name = "name",
@@ -51,7 +51,7 @@ export class Department extends React.Component<DepartmentProps>{
         this.showDetails(null);
     }
 
-    showDetails = (item: TetantDepartment) => {
+    showDetails = (item: TenantDepartment) => {
         if (!item) {
             navigation.searchParams.merge({
                 details:null
@@ -72,11 +72,11 @@ export class Department extends React.Component<DepartmentProps>{
                     isClusterScoped={true}
                     isSelectable={true}
                     sortingCallbacks={{
-                        [sortBy.name]: (item: TetantDepartment) => item.getName(),
+                        [sortBy.name]: (item: TenantDepartment) => item.getName(),
                     }}
                     searchFilters={[
-                        (item: TetantDepartment) => item.getName(),
-                        (item: TetantDepartment) => item.getId(),
+                        (item: TenantDepartment) => item.getName(),
+                        (item: TenantDepartment) => item.getId(),
                    
                     ]}
                     renderHeaderTitle={<Trans>Department Manager</Trans>}
@@ -85,11 +85,11 @@ export class Department extends React.Component<DepartmentProps>{
                         { title: <Trans>name</Trans>, className: "name", sortBy:sortBy.name},
 
                     ]}
-                    renderTableContents={(item: TetantDepartment) => [
+                    renderTableContents={(item: TenantDepartment) => [
                         item.getId(),
                         item.getName(),
                     ]}
-                    renderItemMenu={(item: TetantDepartment) => {
+                    renderItemMenu={(item: TenantDepartment) => {
                         return <DepartmentMenu object={item}/>
                     }}
                     addRemoveButtons={{

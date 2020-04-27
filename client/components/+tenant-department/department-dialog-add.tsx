@@ -10,8 +10,8 @@ import { Input } from "../input";
 import { SubTitle } from "../layout/sub-title";
 import { systemName } from "../input/input.validators";
 import { Notifications } from "../notifications";
-import { tetantDepartmentApi } from '../../api/endpoints/tenant-department.api'
-import { TetantDepartment } from "../../api/endpoints/tenant-department.api";
+import { tenantDepartmentApi } from '../../api/endpoints/tenant-department.api'
+import { TenantDepartment } from "../../api/endpoints/tenant-department.api";
 import { departmentStore } from './department.store'
 import {autobind,prevDefault} from '../../utils'
 
@@ -45,7 +45,7 @@ export class AddDepartmentDialog extends React.Component<Props>{
     createDepartment = async () => {
         const { deptname } = this;
         try {
-            await tetantDepartmentApi.createApi()
+            await tenantDepartmentApi.createApi()
             this.reset();
             this.close();
         } catch (err) {
