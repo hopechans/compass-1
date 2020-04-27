@@ -1,12 +1,20 @@
 import debounce from "lodash/debounce";
 import {autorun} from "mobx";
-import {Terminal as XTerm} from "xterm";
+import {IBuffer, IBufferLine, Terminal as XTerm} from "xterm";
 import {FitAddon} from "xterm-addon-fit";
 import {dockStore, TabId} from "./dock.store";
 import {TerminalApi} from "../../api/terminal-api";
 import {themeStore} from "../../theme.store";
 import {autobind} from "../../utils";
-import {type} from "os";
+
+interface Position {
+    cols: number;
+    rows: number;
+    length: number;
+}
+
+const loadNumber = 0;
+const callbackNumber = 1;
 
 export class Terminal {
     static spawningPool: HTMLElement;
@@ -25,8 +33,11 @@ export class Terminal {
     public fitAddon: FitAddon;
     public scrollPos = 0;
     public disposers: Function[] = [];
-    protected dataCache : string[];
-    protected dataArray: string[];
+    protected codePoint: number;
+    protected tempData: string[];
+    protected typingData: string[];
+    protected serialNumber : number;
+    protected position: Position;
 
     @autobind()
     protected setTheme(colors = themeStore.activeTheme.colors) {
@@ -108,7 +119,9 @@ export class Terminal {
             () => window.removeEventListener("resize", this.onResize),
         );
         // data buffer
-        this.dataArray = [];
+        this.typingData = [];
+        this.serialNumber = callbackNumber;
+        this.position = {cols: 0, rows:0, length:0};
     }
 
     destroy() {
@@ -132,54 +145,69 @@ export class Terminal {
     }
 
     onApiData = (data: string) => {
-        console.log(this.dataCache)
-        if (this.dataCache) {
-            const dataCacheLength = this.dataCache.length
-            for (let i = 0; i < dataCacheLength; i++) {
+        console.log('serialNumber', this.serialNumber);
+        console.log(data)
+        if (this.serialNumber == loadNumber || this.codePoint == 9) {
+            for (let  i = 0; i <this.typingData.length; i++) {
                 this.xterm.write("\b \b");
             }
+            this.typingData = [];
+            console.log('load data', true);
+            this.xterm.write(data);
         }
-        this.xterm.write(data)
+        else{
+            this.serialNumber = callbackNumber;
+            this.xterm.write(data);
+        }
     }
 
     onData = (data: string) => {
         const codePoint = data.codePointAt(0);
-        console.log(codePoint);
-        console.log(this.xterm.buffer);
-        console.log(this.dataArray)
-        if (codePoint > 31 && codePoint < 127) {
+
+        console.log('codePoint', codePoint)
+
+        this.codePoint = codePoint
+        if ((codePoint > 31 && codePoint < 127) || codePoint == 65372) {
+            this.tempData = data.split('');
+            for (let i=0; i < this.tempData.length; i++) {
+                this.xterm.write(this.tempData[i]);
+                this.typingData.push(this.tempData[i]);
+            }
+        }
+        // BackSpace
+        if (codePoint == 127) {
+            this.xterm.write("\b \b");
+            if (this.typingData.length > 0) {
+                this.typingData.pop();
+            }
+        }
+        // CtrlC
+        if (codePoint == 3) {
+            this.serialNumber = loadNumber;
+            this.typingData = [];
             this.xterm.write(data);
-            this.dataArray.push(data);
+            this.api.sendCommand({Data: data});
         }
         // Enter
         if (codePoint == 13) {
             if (!this.api.isReady) return;
-            const data = this.dataArray.join('') + '\r';
-            this.api.sendCommand({Data: data});
-            this.dataCache = this.dataArray;
-            this.dataArray = [];
+            const sendData = this.typingData.join('') + '\r';
+            this.serialNumber = loadNumber;
+            this.api.sendCommand({Data: sendData});
         }
-        // BackSpace
-        if (codePoint == 127 && this.dataArray.length > 0) {
-            this.xterm.write("\b \b");
-            this.dataArray.pop();
-        }
-        // CtrlC | Escape |
-        if (codePoint == 3) {
-            this.xterm.write(data);
-            this.api.sendCommand({Data: data});
-            this.dataArray = [];
-            this.dataCache = [];
-        }
-        //
+        // Escape
         if (codePoint == 27) {
-          const dataArrayLength = this.dataArray.length
-          for (let i = 0; i < dataArrayLength; i++) {
-            this.xterm.write("\b \b");
-          }
           this.api.sendCommand({Data: data});
-          this.dataArray = [];
         }
+        // Tab
+        if (codePoint == 9) {
+            let sendData = this.typingData.join('') + data;
+            this.serialNumber = loadNumber;
+            this.api.sendCommand({Data: sendData});
+        }
+
+        console.log(codePoint);
+        console.log(this.typingData)
     }
 
     onScroll = () => {
@@ -222,31 +250,18 @@ export class Terminal {
                 case "KeyW":
                     evt.preventDefault();
                     break;
+
+                // Ctrl+U
+                case "KeyU":
+                    for (let i = 0; i < this.typingData.length; i++) {
+                      this.xterm.write("\b \b");
+                    }
+                    this.position.length = 0;
+                    this.typingData = [];
+                    evt.preventDefault();
+                    break;
             }
         }
-
-        // Handle custom without hotkey bindings
-        // if (!ctrlKey) {
-        //     switch (code) {
-        //         // ArrowUp
-        //         case "ArrowUp":
-        //             const dataArrayLength = this.dataArray.length
-        //             for (let i = 0; i < dataArrayLength; i++) {
-        //                 this.xterm.write("\b \b");
-        //             }
-        //             this.dataArray = [];
-        //             break;
-        //         // ArrowDown
-        //         case "ArrowDown":
-        //             break;
-        //         // ArrowLeft
-        //         case "ArrowLeft":
-        //             break;
-        //         // ArrowRight
-        //         case "ArrowRight":
-        //             break;
-        //     }
-        // }
 
         return true;
     }
