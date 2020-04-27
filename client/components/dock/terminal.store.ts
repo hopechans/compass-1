@@ -7,10 +7,13 @@ import {dockStore, IDockTab, TabId, TabKind} from "./dock.store";
 import {WebSocketApiState} from "../../api/websocket-api";
 import {_i18n} from "../../i18n";
 import {themeStore} from "../../theme.store";
+import {_isComputed} from "mobx/lib/api/iscomputed";
 
 
 export interface ITerminalTab extends IDockTab {
     node?: string; // activate node shell mode
+    pod?: string;
+    container?: string;
 }
 
 export function isTerminalTab(tab: IDockTab) {
@@ -21,7 +24,7 @@ export function isTerminalTab(tab: IDockTab) {
 export function createTerminalTab(tabParams: Partial<ITerminalTab> = {}) {
     return dockStore.createTab({
         kind: TabKind.TERMINAL,
-        title: _i18n._(t`Terminal`),
+        title: _i18n._(t``),
         ...tabParams
     });
 }
@@ -53,21 +56,26 @@ export class TerminalStore {
     }
 
     async connect(tabId: TabId) {
-        if (this.isConnected(tabId)) {
-            return;
+        if (this.namespace && this.container){
+            if (this.isConnected(tabId)) {
+                return;
+            }
+            const tab: ITerminalTab = dockStore.getTabById(tabId);
+            const api = new TerminalApi({
+                namespace: this.namespace,
+                pod: this.pod,
+                container: this.container,
+                id: tabId,
+                node: tab.node,
+                colorTheme: themeStore.activeTheme.type
+            });
+            const terminal = new Terminal(tabId, api);
+            this.connections.set(tabId, api);
+            this.terminals.set(tabId, terminal);
         }
-        const tab: ITerminalTab = dockStore.getTabById(tabId);
-        const api = new TerminalApi({
-            namespace: this.namespace,
-            pod: this.pod,
-            container: this.container,
-            id: tabId,
-            node: tab.node,
-            colorTheme: themeStore.activeTheme.type
-        });
-        const terminal = new Terminal(tabId, api);
-        this.connections.set(tabId, api);
-        this.terminals.set(tabId, terminal);
+        else{
+            dockStore.closeTab(tabId);
+        }
     }
 
     disconnect(tabId: TabId) {
@@ -126,7 +134,7 @@ export class TerminalStore {
 
         const tab = tabId && getTabById(tabId);
         if (tab) selectTab(tabId);
-        if (newTab) createTerminalTab();
+        if (newTab) createTerminalTab({pod: this.pod, container: this.container});
     }
 
     getTerminal(tabId: TabId) {

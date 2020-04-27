@@ -74,7 +74,7 @@ export class Role extends React.Component<DepartmentProps>{
         return(
             <>
                <ItemListLayout
-                    className="tetantRole"
+                    className="tenantRole"
                     store={roleStore}
                     isClusterScoped={true}
                     isSelectable={true}
