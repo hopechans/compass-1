@@ -7,14 +7,6 @@ import {TerminalApi} from "../../api/terminal-api";
 import {themeStore} from "../../theme.store";
 import {autobind} from "../../utils";
 
-interface Position {
-    cols: number;
-    rows: number;
-    length: number;
-}
-
-const loadNumber = 0;
-const callbackNumber = 1;
 
 export class Terminal {
     static spawningPool: HTMLElement;
@@ -33,11 +25,7 @@ export class Terminal {
     public fitAddon: FitAddon;
     public scrollPos = 0;
     public disposers: Function[] = [];
-    protected codePoint: number;
-    protected tempData: string[];
-    protected typingData: string[];
-    protected serialNumber : number;
-    protected position: Position;
+
 
     @autobind()
     protected setTheme(colors = themeStore.activeTheme.colors) {
@@ -118,10 +106,6 @@ export class Terminal {
             () => this.api.removeAllListeners(),
             () => window.removeEventListener("resize", this.onResize),
         );
-        // data buffer
-        this.typingData = [];
-        this.serialNumber = callbackNumber;
-        this.position = {cols: 0, rows:0, length:0};
     }
 
     destroy() {
@@ -145,69 +129,11 @@ export class Terminal {
     }
 
     onApiData = (data: string) => {
-        console.log('serialNumber', this.serialNumber);
-        console.log(data)
-        if (this.serialNumber == loadNumber || this.codePoint == 9) {
-            for (let  i = 0; i <this.typingData.length; i++) {
-                this.xterm.write("\b \b");
-            }
-            this.typingData = [];
-            console.log('load data', true);
-            this.xterm.write(data);
-        }
-        else{
-            this.serialNumber = callbackNumber;
-            this.xterm.write(data);
-        }
+        this.xterm.write(typeof data === 'string' ? data : new Uint8Array(data));
     }
 
     onData = (data: string) => {
-        const codePoint = data.codePointAt(0);
-
-        console.log('codePoint', codePoint)
-
-        this.codePoint = codePoint
-        if ((codePoint > 31 && codePoint < 127) || codePoint == 65372) {
-            this.tempData = data.split('');
-            for (let i=0; i < this.tempData.length; i++) {
-                this.xterm.write(this.tempData[i]);
-                this.typingData.push(this.tempData[i]);
-            }
-        }
-        // BackSpace
-        if (codePoint == 127) {
-            this.xterm.write("\b \b");
-            if (this.typingData.length > 0) {
-                this.typingData.pop();
-            }
-        }
-        // CtrlC
-        if (codePoint == 3) {
-            this.serialNumber = loadNumber;
-            this.typingData = [];
-            this.xterm.write(data);
-            this.api.sendCommand({Data: data});
-        }
-        // Enter
-        if (codePoint == 13) {
-            if (!this.api.isReady) return;
-            const sendData = this.typingData.join('') + '\r';
-            this.serialNumber = loadNumber;
-            this.api.sendCommand({Data: sendData});
-        }
-        // Escape
-        if (codePoint == 27) {
-          this.api.sendCommand({Data: data});
-        }
-        // Tab
-        if (codePoint == 9) {
-            let sendData = this.typingData.join('') + data;
-            this.serialNumber = loadNumber;
-            this.api.sendCommand({Data: sendData});
-        }
-
-        console.log(codePoint);
-        console.log(this.typingData)
+        this.api.sendCommand({Data: data})
     }
 
     onScroll = () => {
@@ -234,7 +160,6 @@ export class Terminal {
     }
 
     keyHandler = (evt: KeyboardEvent): boolean => {
-        console.log(evt)
         const {code, ctrlKey, type} = evt;
 
         // Handle custom hotkey bindings
@@ -248,16 +173,6 @@ export class Terminal {
                 // Ctrl+W: prevent unexpected terminal tab closing, e.g. editing file in vim
                 // https://github.com/kontena/lens-app/issues/156#issuecomment-534906480
                 case "KeyW":
-                    evt.preventDefault();
-                    break;
-
-                // Ctrl+U
-                case "KeyU":
-                    for (let i = 0; i < this.typingData.length; i++) {
-                      this.xterm.write("\b \b");
-                    }
-                    this.position.length = 0;
-                    this.typingData = [];
                     evt.preventDefault();
                     break;
             }
