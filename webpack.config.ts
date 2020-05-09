@@ -4,15 +4,21 @@ import * as HtmlWebpackPlugin from "html-webpack-plugin";
 import * as MiniCssExtractPlugin from "mini-css-extract-plugin";
 import * as TerserWebpackPlugin from "terser-webpack-plugin";
 import { BUILD_DIR, CLIENT_DIR, clientVars, config } from "./server/config"
+
 const os = require('os');
 
+const SpeedMeasurePlugin = require("speed-measure-webpack-plugin");
+const smp = new SpeedMeasurePlugin();
+
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+const WebpackBar = require('webpackbar');
 export default () => {
   const { IS_PRODUCTION } = config;
   const srcDir = path.resolve(process.cwd(), CLIENT_DIR);
   const buildDir = path.resolve(process.cwd(), BUILD_DIR, CLIENT_DIR);
   const tsConfigClientFile = path.resolve(srcDir, "tsconfig.json");
   const sassCommonVarsFile = "./components/vars.scss"; // needs to be relative for Windows
-  return {
+  return smp.wrap({
     entry: {
       app: path.resolve(srcDir, "components/app.tsx"),
     },
@@ -36,30 +42,29 @@ export default () => {
       publicPath: '',
       proxy:{
         '/api-kube': {
-            target:'http://127.0.0.1:8001/',
-            //target: 'http://10.1.150.252:8080', // 接口的域名
-            //target: 'http://10.1.140.175:8001', // 接口的域名
-            secure: false,  // 如果是https接口，需要配置这个参数
-            changeOrigin: true, // 如果接口跨域，需要进行这个参数配置
-            pathRewrite: {'^/api-kube': ''}
+          target: 'http://10.1.140.175:8080',
+          secure: false,  // 如果是https接口，需要配置这个参数
+          changeOrigin: true, // 如果接口跨域，需要进行这个参数配置
+          pathRewrite: { '^/api-kube': '/workload' },
         },
-        '/api/config': {
-            target:'http://localhost:3000/',
-            secure: false,
-            changeOrigin: true,
+
+        '/api-resource': {
+          target: 'http://10.1.140.175:8080/',
+          secure: false,
+          changeOrigin: true,
+          pathRewrite: { '^/api-resource': '/workload' },
         },
-        '/tenant': {
-          //target: 'http://10.1.150.252:8080',
-            target: 'http://localhost:3000/',
-            secure: false,
-            changeOrigin: true,
+
+        '/api': {
+          target: 'http://10.1.140.175:8080/',
+          secure: false,
+          changeOrigin: true,
+          pathRewrite: { '^/api': '/workload' },
         },
       }
-      // openPage:'index.html',
     },
     mode: IS_PRODUCTION ? "production" : "development",
     devtool: IS_PRODUCTION ? "" : "cheap-module-eval-source-map",
-
     optimization: {
       minimize: IS_PRODUCTION,
       minimizer: [
@@ -76,7 +81,7 @@ export default () => {
             extractComments: {
               condition: "some",
               banner: [
-                `Lens. Copyright ${new Date().getFullYear()} by Lakend Labs, Inc. All rights reserved.`
+                `Copyright ${new Date().getFullYear()} by`
               ].join("\n")
             }
           })
@@ -92,13 +97,13 @@ export default () => {
         }
       }
     },
-
     module: {
       rules: [
         {
           test: /\.tsx?$/,
           exclude: /node_modules/,
           use: [
+            
             "babel-loader",
             {
               loader: 'ts-loader',
@@ -123,7 +128,8 @@ export default () => {
         {
           test: /\.s?css$/,
           use: [
-            IS_PRODUCTION ? MiniCssExtractPlugin.loader : {
+            IS_PRODUCTION ? MiniCssExtractPlugin.loader : 
+            {
               loader: "style-loader",
               options: {}
             },
@@ -147,11 +153,16 @@ export default () => {
         }
       ]
     },
-    
     plugins: [
-      // ...(IS_PRODUCTION ? [] : [
-      // new webpack.HotModuleReplacementPlugin(),
-      // ]),
+      ...(IS_PRODUCTION ? 
+        [
+          new BundleAnalyzerPlugin()
+        ] :
+        [
+          new webpack.HotModuleReplacementPlugin(),
+        ]
+      ),
+      new WebpackBar(),
 
       new webpack.HotModuleReplacementPlugin(),
 
@@ -172,8 +183,9 @@ export default () => {
       new MiniCssExtractPlugin({
         filename: "[name].css",
       }),
+     
     ],
-  }
+  })
 };
 
 function getNetworkIp() {

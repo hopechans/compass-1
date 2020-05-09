@@ -1,7 +1,6 @@
 // Server-side config
 export const CLIENT_DIR = "client";
 export const BUILD_DIR = "build";
-
 export const IS_PRODUCTION = process.env.NODE_ENV === "production";
 export const KUBERNETES_SERVICE_HOST = process.env.KUBERNETES_SERVICE_HOST || "kubernetes";
 export const KUBERNETES_SERVICE_PORT = Number(process.env.KUBERNETES_SERVICE_PORT || 443);
