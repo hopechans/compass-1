@@ -14,22 +14,6 @@ interface Props {
 
 export class FRender extends React.Component<Props> {
 
-    // state = {formData: this.props.formData, valid: this.props.valid}
-
-    // constructor(props: Props) {
-    //     super(props);
-    //     this.setValid = this.setValid.bind(this)
-    //     this.setFormData = this.setFormData.bind(this)
-    // }
-
-    // setValid = (value: any) => {
-    //     this.setState({valid: value})
-    // }
-    //
-    // setFormData = (value: any) => {
-    //     this.setState({formData: value})
-    // }
-
     render() {
         return (
             <FormRender
@@ -38,9 +22,6 @@ export class FRender extends React.Component<Props> {
                 formData={this.props.formData}
                 onChange={this.props.setFormData}
                 onValidate={this.props.setValid}
-                // formData={this.state.formData}
-                // onChange={this.setFormData}
-                // onValidate={this.setValid}
             />
         )
     }
