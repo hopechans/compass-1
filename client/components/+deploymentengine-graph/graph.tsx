@@ -1,6 +1,7 @@
 import React from "react";
 import {FRender} from "../ali-formrender";
-import {formRenderStore} from "../ali-formrender/ali-formrender.store";
+import {FormRenderStore} from "../ali-formrender/ali-formrender.store";
+import {autorun} from "mobx";
 
 
 interface IGraphProps {
@@ -8,30 +9,49 @@ interface IGraphProps {
 
 export class Graph extends React.Component<IGraphProps> {
 
-    private propsSchema = formRenderStore.propsSchema;
-    private uiSchema = formRenderStore.uiSchema;
+    private namespace = "kube-system"
+    private render_name = "example-formrender"
+    private formRenderStore: any
 
-    // setValid = (value: any) => {
-    //     this.setState({valid: value})
-    // }
-    //
-    // setFormData = (value: any) => {
-    //     this.setState({formData: value})
-    // }
+    state = {formData: {}, valid: [] as string[]}
 
-    onSubmit = () => {
-        // if (valid.length > 0) {
-        //     alert(`校验未通过字段：${valid.toString()}`);
-        // } else {
-        //     alert(JSON.stringify(formData, null, 2));
-        // }
+    constructor(props: IGraphProps) {
+        super(props);
+
+        autorun(() => {
+            this.formRenderStore = new FormRenderStore(
+                {namespace: this.namespace, render_name: this.render_name})
+        })
+    }
+
+    setValid = (value: any) => {
+        this.setState({valid: value})
+    }
+
+    setFormData = (value: any) => {
+        console.log(value)
+        this.setState({formData: value})
+    }
+
+    onSubmit = (valid: any, formData: any) => {
+        if (valid.length > 0) {
+            alert(`校验未通过字段：${valid.toString()}`);
+        } else {
+            alert(JSON.stringify(formData, null, 2));
+        }
     }
 
     render() {
         return (
             <div style={{padding: 40}}>
-                <FRender propsSchema={this.propsSchema} uiSchema={this.uiSchema} />
-                <button onClick={this.onSubmit}>提交</button>
+                <FRender
+                    propsSchema={this.formRenderStore.propsSchema}
+                    uiSchema={this.formRenderStore.uiSchema}
+                    formData={this.state.formData}
+                    setFormData={this.setFormData}
+                    valid={this.state.valid}
+                />
+                <button onClick={() => {this.onSubmit(this.state.valid, this.state.formData)}}>提交</button>
             </div>
         )
     }
