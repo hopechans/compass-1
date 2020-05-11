@@ -1,39 +1,35 @@
-
 import './department.scss'
 import * as React from 'react'
-import { observer } from "mobx-react";
-import { Trans } from "@lingui/macro";
-import { RouteComponentProps } from "react-router";
-import { cssNames, stopPropagation } from "../../utils";
-import { getDetailsUrl,getDetails } from "../../navigation";
-import { apiManager } from "../../api/api-manager";
-import { departmentStore } from "./department.store";
-import { TenantDepartment } from "../../api/endpoints/tenant-department.api";
-import { DepartmentMenu } from './department-menu'
-import { computed } from "mobx";
-import { ItemListLayout, ItemListLayoutProps } from "../item-object-list/item-list-layout";
-import { AddDepartmentDialog } from './department-dialog-add'
-import { DepartmentDeatil } from './department-detail'
-import { navigation } from "../../navigation";
-import { tenantDepartmentURL } from '../+tenant';
+import {observer} from "mobx-react";
+import {Trans} from "@lingui/macro";
+import {RouteComponentProps} from "react-router";
+import {getDetailsUrl, getDetails} from "../../navigation";
+import {departmentStore} from "./department.store";
+import {TenantDepartment} from "../../api/endpoints/tenant-department.api";
+import {DepartmentMenu} from './department-menu'
+import {ItemListLayout, ItemListLayoutProps} from "../item-object-list/item-list-layout";
+import {AddDepartmentDialog} from './department-dialog-add'
+import {DepartmentDeatil} from './department-detail'
+import {navigation} from "../../navigation";
 
 
-interface IDepartmentRouteProps{
-    id:string
-    name:string
+interface IDepartmentRouteProps {
+    id: string
+    name: string
 }
 
-export interface DepartmentProps extends RouteComponentProps<IDepartmentRouteProps>{
+export interface DepartmentProps extends RouteComponentProps<IDepartmentRouteProps> {
     store: TenantDepartment;
 }
+
 enum sortBy {
     name = "name",
 }
 
 @observer
-export class Department extends React.Component<DepartmentProps>{
+export class Department extends React.Component<DepartmentProps> {
 
-    constructor(props:any){
+    constructor(props: any) {
         super(props)
     }
 
@@ -43,8 +39,8 @@ export class Department extends React.Component<DepartmentProps>{
     get selectedDepartment() {
         const paramsDetail = getDetails()
         return departmentStore.items.find(department => {
-            return department.getId() == paramsDetail ;
-         });
+            return department.getId() == paramsDetail;
+        });
     }
 
     hideDetails = () => {
@@ -54,20 +50,20 @@ export class Department extends React.Component<DepartmentProps>{
     showDetails = (item: TenantDepartment) => {
         if (!item) {
             navigation.searchParams.merge({
-                details:null
+                details: null
+            })
+        } else {
+            navigation.searchParams.merge({
+                details: item.getId(),
             })
         }
-        else {
-          navigation.searchParams.merge({
-              details: item.getId(),
-          })
-        }
     }
-    render(){
-        return(
+
+    render() {
+        return (
             <>
-               <ItemListLayout
-                    className="tetantDepartment"
+                <ItemListLayout
+                    className="tenantDepartment"
                     store={departmentStore}
                     isClusterScoped={true}
                     isSelectable={true}
@@ -77,13 +73,12 @@ export class Department extends React.Component<DepartmentProps>{
                     searchFilters={[
                         (item: TenantDepartment) => item.getName(),
                         (item: TenantDepartment) => item.getId(),
-                   
                     ]}
                     renderHeaderTitle={<Trans>Department Manager</Trans>}
                     renderTableHeader={[
-                        { title: <Trans>ID</Trans>, className: "id" },
-                        { title: <Trans>name</Trans>, className: "name", sortBy:sortBy.name},
-
+                        {title: <Trans>ID</Trans>, className: "id"},
+                        {title: <Trans>DeptName</Trans>, className: "deptName", sortBy: sortBy.name},
+                        {title: <Trans>name</Trans>, className: "name", sortBy: sortBy.name},
                     ]}
                     renderTableContents={(item: TenantDepartment) => [
                         item.getId(),

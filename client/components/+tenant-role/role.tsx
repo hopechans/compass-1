@@ -1,16 +1,12 @@
-
 import './role.scss'
 import * as React from 'react'
 import { observer } from "mobx-react";
 import { Trans } from "@lingui/macro";
 import { RouteComponentProps } from "react-router";
-import { cssNames, stopPropagation } from "../../utils";
 import { getDetailsUrl,getDetails } from "../../navigation";
-import { apiManager } from "../../api/api-manager";
 import { roleStore } from "./role.store";
 import { TenantRole } from "../../api/endpoints/tenant-role.api";
 import { RoleMenu } from './role-menu'
-import { computed } from "mobx";
 import { ItemListLayout, ItemListLayoutProps } from "../item-object-list/item-list-layout";
 import { navigation } from "../../navigation";
 import { tenantDepartmentURL } from '../+tenant';

@@ -19,7 +19,7 @@ export const tenantMemberApi = {
     createApi(){
         return new Promise((resolve,reject)=>{
             setTimeout(()=>{
-                reject('dasfasd')
+                reject('')
             },2000)
         })
     },

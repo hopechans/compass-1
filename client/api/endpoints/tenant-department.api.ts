@@ -11,7 +11,7 @@ interface ITenantDepartmentList {
 export const tenantDepartmentApi = {
     list() {
         return tenantBase
-            .get<ITenantDepartmentList>('/tenant/department')
+            .get<ITenantDepartmentList>('/v1/departments')
             .then(data => {
                 return data.map(TenantDepartment.create);
                 // return Object
@@ -24,7 +24,7 @@ export const tenantDepartmentApi = {
     createApi() {
         return new Promise((resolve, reject) => {
             setTimeout(() => {
-                reject('dasfasd')
+                reject('')
             }, 2000)
         })
     }
@@ -42,6 +42,7 @@ export class TenantDepartment {
 
     id: string
     name: string
+
 
     getId() {
         return this.id;
