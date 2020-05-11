@@ -34,6 +34,9 @@ import { PodLogsDialog } from "./+workloads-pods/pod-logs-dialog";
 import { DeploymentScaleDialog } from "./+workloads-deployments/deployment-scale-dialog";
 import { CustomResources } from "./+custom-resources/custom-resources";
 import { crdRoute } from "./+custom-resources";
+import {DeploymentEngine} from "./+deploymentengine";
+import {deploymentEngineRoute, deploymentEngineURL} from "./+deploymentengine";
+
 
 @observer
 class App extends React.Component {
@@ -59,6 +62,7 @@ class App extends React.Component {
                   <Switch>
                     <Route component={Cluster} {...clusterRoute}/>
                     <Route component={Nodes} {...nodesRoute}/>
+                    <Route component={DeploymentEngine} {...deploymentEngineRoute} />
                     <Route component={Workloads} {...workloadsRoute}/>
                     <Route component={Config} {...configRoute}/>
                     <Route component={Network} {...networkRoute}/>
@@ -68,8 +72,8 @@ class App extends React.Component {
                     <Route component={Ci} {...ciRoute}/>
                     <Route component={CustomResources} {...crdRoute}/>
                     <Route component={UserManagement} {...usersManagementRoute}/> */}
-                    <Route component={Apps} {...appsRoute}/> 
-                    <Route component={Tenant} {...tenantRoute}/> 
+                    <Route component={Apps} {...appsRoute}/>
+                    <Route component={Tenant} {...tenantRoute}/>
                     <Redirect exact from="/" to={homeUrl}/>
                     <Route path="*" component={NotFound}/>
                     {/* // <Route component={Cluster} {...clusterRoute}/>
@@ -84,10 +88,10 @@ class App extends React.Component {
                 <PodLogsDialog/>
                 <DeploymentScaleDialog/>
               </ErrorBoundary>
-          </Router> 
+          </Router>
         </I18nProvider>
       </div>
-      
+
     )
   }
 }

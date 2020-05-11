@@ -38,7 +38,7 @@ export interface ITerminalApiOptions {
 
 export class TerminalApi extends WebSocketApi {
     protected size: { Width: number; Height: number };
-    // protected currentToken: string;
+    protected currentToken: string;
     // protected tokenInterval = interval(60, this.sendNewToken); // refresh every minute
 
     public onReady = new EventEmitter<[]>();
@@ -60,9 +60,8 @@ export class TerminalApi extends WebSocketApi {
         const {hostname, protocol} = location;
         const wss = `http${protocol === "https:" ? "s" : ""}://`;
         console.log(`${wss}${hostname}${configStore.serverPort}/workload/shell/pod`)
-        // return `${wss}${hostname}${configStore.serverPort}/workload/shell/pod`;
-        return 'http://10.1.190.132:8080/workload/shell/pod'
-        // return 'http://10.1.150.252:8080/workload/shell/pod'
+        // return 'http://10.1.190.132:8080/workload/shell/pod'
+        return `${wss}${hostname}:8080/workload/shell/pod`
     }
 
     async connect() {

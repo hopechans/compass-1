@@ -1,6 +1,6 @@
 import { KubeObjectStore } from "../../kube-object.store";
 import { autobind } from "../../utils";
-import { NetworkPolicy, networkPolicyApi } from "../../api/endpoints/network-policy.api";
+import { NetworkPolicy, networkPolicyApi } from "../../api/endpoints";
 import { apiManager } from "../../api/api-manager";
 
 @autobind()

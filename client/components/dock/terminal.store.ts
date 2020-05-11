@@ -7,7 +7,6 @@ import {dockStore, IDockTab, TabId, TabKind} from "./dock.store";
 import {WebSocketApiState} from "../../api/websocket-api";
 import {_i18n} from "../../i18n";
 import {themeStore} from "../../theme.store";
-import {_isComputed} from "mobx/lib/api/iscomputed";
 
 
 export interface ITerminalTab extends IDockTab {
@@ -56,7 +55,7 @@ export class TerminalStore {
     }
 
     async connect(tabId: TabId) {
-        if (this.namespace && this.container){
+        if (this.namespace && this.container) {
             if (this.isConnected(tabId)) {
                 return;
             }
@@ -72,8 +71,7 @@ export class TerminalStore {
             const terminal = new Terminal(tabId, api);
             this.connections.set(tabId, api);
             this.terminals.set(tabId, terminal);
-        }
-        else{
+        } else {
             dockStore.closeTab(tabId);
         }
     }

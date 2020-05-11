@@ -18,7 +18,8 @@ export const config = {
     KUBE_BASE: '/api-kube', // kubernetes cluster api
     KUBE_USERS: '/api-users', // users & groups api
     KUBE_HELM: '/api-helm', // helm charts api middleware
-    KUBE_RESOURCE_APPLIER: "/api-resource",
+    KUBE_RESOURCE_APPLIER: "/api-kube",
+    TENANT: '/base',  // tenant api
   },
 
   // express.js port
@@ -67,6 +68,7 @@ export const clientVars = {
   BUILD_VERSION: config.BUILD_VERSION,
   IS_PRODUCTION: config.IS_PRODUCTION,
   API_PREFIX: config.API_PREFIX,
+  TENANT_PREFIX: config.API_PREFIX,
   LOCAL_SERVER_PORT: config.LOCAL_SERVER_PORT,
 }
 

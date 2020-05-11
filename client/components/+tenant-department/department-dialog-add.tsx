@@ -78,7 +78,6 @@ export class AddDepartmentDialog extends React.Component<Props>{
                                 value={name} onChange={v => departmentStore.changeItemName(v)}
                             />
                         </div>
-                    
                     </WizardStep>
                 </Wizard>
             </Dialog>
