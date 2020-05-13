@@ -7,9 +7,8 @@ import { BUILD_DIR, CLIENT_DIR, clientVars, config } from "./server/config"
 
 const os = require('os');
 
-const SpeedMeasurePlugin = require("speed-measure-webpack-plugin");
-const smp = new SpeedMeasurePlugin();
-
+// const SpeedMeasurePlugin = require("speed-measure-webpack-plugin");
+// const smp = new SpeedMeasurePlugin();
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const WebpackBar = require('webpackbar');
 export default () => {
@@ -18,7 +17,7 @@ export default () => {
   const buildDir = path.resolve(process.cwd(), BUILD_DIR, CLIENT_DIR);
   const tsConfigClientFile = path.resolve(srcDir, "tsconfig.json");
   const sassCommonVarsFile = "./components/vars.scss"; // needs to be relative for Windows
-  return smp.wrap({
+  return {
     entry: {
       app: path.resolve(srcDir, "components/app.tsx"),
     },
@@ -42,21 +41,21 @@ export default () => {
       publicPath: '',
       proxy:{
         '/api-kube': {
-          target: 'http://10.1.140.175:8080',
+          target: 'http://10.1.150.252:8080',
           secure: false,  // 如果是https接口，需要配置这个参数
           changeOrigin: true, // 如果接口跨域，需要进行这个参数配置
           pathRewrite: { '^/api-kube': '/workload' },
         },
 
         '/api-resource': {
-          target: 'http://10.1.140.175:8080/',
+          target: 'http://10.1.150.252:8080/',
           secure: false,
           changeOrigin: true,
           pathRewrite: { '^/api-resource': '/workload' },
         },
 
         '/api': {
-          target: 'http://10.1.140.175:8080/',
+          target: 'http://10.1.150.252:8080/',
           secure: false,
           changeOrigin: true,
           pathRewrite: { '^/api': '/workload' },
@@ -163,9 +162,6 @@ export default () => {
         ]
       ),
       new WebpackBar(),
-
-      new webpack.HotModuleReplacementPlugin(),
-
       new webpack.DefinePlugin({
         process: {
           env: JSON.stringify(clientVars)
@@ -183,9 +179,8 @@ export default () => {
       new MiniCssExtractPlugin({
         filename: "[name].css",
       }),
-     
     ],
-  })
+  }
 };
 
 function getNetworkIp() {

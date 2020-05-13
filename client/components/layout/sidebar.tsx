@@ -110,7 +110,7 @@ export class Sidebar extends React.Component<Props> {
                             routePath={deploymentEngineRoute.path}
                             subMenus={DeploymentEngine.tabRoutes}
                             text={<Trans>Enhance</Trans>}
-                            icon={<Icon svg="nodes"/>}
+                            icon={<Icon material="post_add"/>}
                         />
                         <SidebarNavItem
                             id="workloads"
