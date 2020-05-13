@@ -233,8 +233,11 @@ export class Graph extends React.Component<IGraphProps> {
     }
 
     render() {
+        const bgStyle={
+            backgroundColor:'#fff'
+        }
         return (
-            <div>
+            <div style={bgStyle}>
                 <FRender
                     // propsSchema={this.formRenderStore.propsSchema}
                     // uiSchema={this.formRenderStore.uiSchema}

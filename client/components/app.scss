@@ -25,6 +25,7 @@ html {
 html, body {
   height: 100%;
   overflow: hidden;
+  background-color:$mainBackground!important;
 }
 
 #app {
@@ -34,6 +35,7 @@ html, body {
 
 body {
   font: $font-size $font-main;
+  color:$textColorPrimary!important;
 }
 
 fieldset {
@@ -47,7 +49,7 @@ label {
 }
 
 ol, ul {
-  margin: 0;
+  margin: 0!important;
   list-style: none;
 }
 
@@ -55,6 +57,10 @@ hr {
   margin: $margin 0 !important;
   height: 1px;
   background: $grey-800;
+}
+
+h1,h2,h3,h4,h5,h6{
+  color: inherit!important;
 }
 
 h1 {
@@ -107,7 +113,7 @@ code {
 }
 
 a {
-  color: inherit;
+  color:$textColorPrimary;
   cursor: pointer;
 
   [href] {
@@ -115,7 +121,7 @@ a {
   }
 
   &:focus {
-    color: white;
+    color: white!important;
   }
 
   &:not([href]) {
