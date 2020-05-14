@@ -4,7 +4,7 @@ import {FormRenderStore} from "../ali-formrender/ali-formrender.store";
 import {autorun, keys} from "mobx";
 
 interface LooseObject {
-    [key: string] : any
+    [key: string]: any
 }
 
 interface IGraphProps {
@@ -277,6 +277,37 @@ export class Graph extends React.Component<IGraphProps> {
         this.setState({formData: value})
     }
 
+    propsById(properties: any, id: string) {
+        for (let i = 0; i < properties.length; i++) {
+            if (properties[i].id === id) {
+                return properties[i];
+            }
+        }
+        return {};
+    }
+
+    objectToConfiguration(props: any, propsType: any, key: any, args: any) {
+
+        if (this.keyWordMap[propsType].includes(key) && props[key] != "") {
+
+            if (propsType == "select" && key == "select") {
+                const enumArray = [];
+                const enumNamesArray = [];
+                // Enum EnumNames
+                for (let i = 0; i < props[key].length; i++) {
+                    enumArray.push(props[key][i]["key"])
+                    enumNamesArray.push(props[key][i]["value"])
+                }
+                args["enum"] = enumArray;
+                args["enumNames"] = enumNamesArray;
+            } else {
+                args[key] = props[key]
+            }
+        }
+
+        return args
+    }
+
     adorn(formData: any) {
         if (formData.hasOwnProperty("properties")) {
             const properties: LooseObject = {};
@@ -285,36 +316,45 @@ export class Graph extends React.Component<IGraphProps> {
 
                 const props = formData.properties[i];
                 const propsId = props.id;
-                const propsType = props.type;
-                const propsKeys = Object.keys(props);
-                const args: LooseObject = {};
 
-                // without nested
-                for (let i=0; i < propsKeys.length; i++) {
-                    const key = propsKeys[i]
-                    if (this.keyWordMap[propsType].includes(key) && props[key] != "") {
+                if (!props.nested) {
+                    const propsKeys = Object.keys(props);
+                    let args: LooseObject = {};
+                    for (let i = 0; i < propsKeys.length; i++) {
+                        const key = propsKeys[i]
 
-                        if (propsType == "select" && key == "select") {
-                            const enumArray = [];
-                            const enumNamesArray = [];
-                            // Enum EnumNames
-                            for (let i=0; i < props[key].length; i++) {
-                                enumArray.push(props[key][i]["key"])
-                                enumNamesArray.push(props[key][i]["value"])
+                        // without nested
+                        args = this.objectToConfiguration(props, props.type, key, args)
+
+                        // add nested
+                        if (props.type == "array") {
+
+                            const itemsProperties: LooseObject = {};
+                            for (let i = 0; i < props.array.length; i++) {
+
+                                const propsById = this.propsById(formData.properties, props.array[i].template);
+                                const propsByIdKeys = Object.keys(propsById);
+                                let propsByIdArgs: LooseObject = {};
+
+                                // Duplicated code fragment
+                                for (let i = 0; i < propsByIdKeys.length; i++) {
+
+                                    // without nested
+                                    propsByIdArgs = this.objectToConfiguration(
+                                        propsById, propsById.type, propsByIdKeys[i], propsByIdArgs)
+                                    console.log('propsByIdArgs', propsByIdArgs)
+                                    itemsProperties[propsById.id] = propsByIdArgs
+                                }
+
+                                args["item"] = {type: "object", properties: itemsProperties}
+
                             }
-                            args["enum"] = enumArray;
-                            args["enumNames"] = enumNamesArray;
                         }
-                        else{
-                            args[key] = props[key]
-                        }
+                        // set properties
+                        properties[propsId] = args;
                     }
                 }
-                // with nested
 
-
-                // set properties
-                properties[propsId] = args;
 
             }
             return {type: "object", properties: properties}
@@ -325,10 +365,9 @@ export class Graph extends React.Component<IGraphProps> {
         if (this.state.valid.length > 0) {
             alert(`校验未通过字段：${this.state.valid.toString()}`);
         } else {
-            console.log(this.adorn(this.state.formData))
-            const thisFormData = JSON.stringify(this.state.formData, null, 2)
-            alert(thisFormData);
-            console.log(thisFormData)
+            this.adorn(this.state.formData)
+            // const thisFormData = JSON.stringify(this.state.formData, null, 2)
+            // console.log(thisFormData)
         }
     }
 
