@@ -31,6 +31,14 @@ export const cronJobsRoute: RouteProps = {
   path: "/cronjobs"
 }
 
+export const stonesRoute: RouteProps = {
+  path: "/stones"
+}
+
+export const statefulsetsNuwaRoute: RouteProps = {
+  path: "/statefulsets_nuwa"
+}
+
 // Route params
 export interface IWorkloadsOverviewRouteParams {
 }
@@ -47,11 +55,18 @@ export interface IDaemonSetsRouteParams {
 export interface IStatefulSetsRouteParams {
 }
 
+export interface IStatefulSetsNuwaRouteParams {
+}
+
 export interface IJobsRouteParams {
 }
 
 export interface ICronJobsRouteParams {
 }
+
+export interface IStonesRouteParams {
+}
+
 
 // URL-builders
 export const workloadsURL = (params?: IURLParams) => overviewURL(params);
@@ -62,3 +77,5 @@ export const daemonSetsURL = buildURL<IDaemonSetsRouteParams>(daemonSetsRoute.pa
 export const statefulSetsURL = buildURL<IStatefulSetsRouteParams>(statefulSetsRoute.path)
 export const jobsURL = buildURL<IJobsRouteParams>(jobsRoute.path)
 export const cronJobsURL = buildURL<ICronJobsRouteParams>(cronJobsRoute.path)
+export const stonesURL = buildURL<IStonesRouteParams>(stonesRoute.path)
+export const statefulSetsNuwaURL = buildURL<IStatefulSetsNuwaRouteParams>(statefulsetsNuwaRoute.path)

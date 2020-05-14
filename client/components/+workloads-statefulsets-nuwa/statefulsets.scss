@@ -1,0 +1,15 @@
+.StatefulSetsNuwa {
+  .TableCell {
+    &.name {
+      flex-grow: 2;
+    }
+
+    &.pods {
+      flex-grow: 0.3;
+    }
+
+    &.warning {
+      @include table-cell-warning;
+    }
+  }
+}

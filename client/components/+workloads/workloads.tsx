@@ -7,7 +7,7 @@ import { RouteComponentProps } from "react-router-dom";
 import { Trans } from "@lingui/macro";
 import { MainLayout, TabRoute } from "../layout/main-layout";
 import { WorkloadsOverview } from "../+workloads-overview/overview";
-import { cronJobsRoute, cronJobsURL, daemonSetsRoute, daemonSetsURL, deploymentsRoute, deploymentsURL, jobsRoute, jobsURL, overviewRoute, overviewURL, podsRoute, podsURL, statefulSetsRoute, statefulSetsURL, workloadsURL } from "./workloads.route";
+import { statefulSetsNuwaURL, statefulsetsNuwaRoute, stonesURL, stonesRoute, cronJobsRoute, cronJobsURL, daemonSetsRoute, daemonSetsURL, deploymentsRoute, deploymentsURL, jobsRoute, jobsURL, overviewRoute, overviewURL, podsRoute, podsURL, statefulSetsRoute, statefulSetsURL, workloadsURL } from "./workloads.route";
 import { namespaceStore } from "../+namespaces/namespace.store";
 import { Pods } from "../+workloads-pods";
 import { Deployments } from "../+workloads-deployments";
@@ -15,6 +15,8 @@ import { DaemonSets } from "../+workloads-daemonsets";
 import { StatefulSets } from "../+workloads-statefulsets";
 import { Jobs } from "../+workloads-jobs";
 import { CronJobs } from "../+workloads-cronjobs";
+import { Stones } from "../+workloads-stones";
+import {StatefulSetsNuwa} from "../+workloads-statefulsets-nuwa";
 
 interface Props extends RouteComponentProps {
 }
@@ -29,6 +31,18 @@ export class Workloads extends React.Component<Props> {
         component: WorkloadsOverview,
         url: overviewURL({ query }),
         path: overviewRoute.path
+      },
+      // {
+      //   title: <Trans>〄Stones</Trans>,
+      //   component: Stones,
+      //   url: stonesURL({ query }),
+      //   path: stonesRoute.path
+      // },
+      {
+        title: <Trans>〄StatefulSets</Trans>,
+        component: StatefulSetsNuwa,
+        url: statefulSetsNuwaURL({ query }),
+        path: statefulsetsNuwaRoute.path
       },
       {
         title: <Trans>Pods</Trans>,
@@ -73,8 +87,8 @@ export class Workloads extends React.Component<Props> {
     return (
       <MainLayout className="Workloads" tabs={tabRoutes}>
         <Switch>
-            {tabRoutes.map((route, index) => <Route key={index} {...route}/>)}
-            <Redirect to={workloadsURL({ query: namespaceStore.getContextParams() })}/>
+          {tabRoutes.map((route, index) => <Route key={index} {...route} />)}
+          <Redirect to={workloadsURL({ query: namespaceStore.getContextParams() })} />
         </Switch>
       </MainLayout>
     )
