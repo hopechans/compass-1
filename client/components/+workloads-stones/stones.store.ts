@@ -4,6 +4,7 @@ import { KubeObjectStore } from "../../kube-object.store";
 import { IPodMetrics, podsApi, PodStatus, Stone, stoneApi } from "../../api/endpoints";
 import { podsStore } from "../+workloads-pods/pods.store";
 import { apiManager } from "../../api/api-manager";
+import { enhanceStatefulSetStore } from "../+workloads-enhancestatefulsets/enhancestatefulset.store";
 
 @autobind()
 export class StoneStore extends KubeObjectStore<Stone> {
@@ -13,13 +14,22 @@ export class StoneStore extends KubeObjectStore<Stone> {
   loadMetrics(stone: Stone) {
     // 需要先get stone 下的nuwa.nip.io/v1/statefulsets
     const pods = this.getChildPods(stone);
+    const enhanceStatefulsets = this.getChildEnhanceStatefulset(stone);
     return podsApi.getMetrics(pods, stone.getNs(), "").then(metrics =>
       this.metrics = metrics
     );
   }
 
+  getChildEnhanceStatefulset(stone: Stone) {
+    return enhanceStatefulSetStore
+      .getEnhanceStatefulSetByOwner(stone)
+      .filter(enhanceStatefulset => enhanceStatefulset.getNs() === stone.getNs())
+  }
+
   getChildPods(stone: Stone) {
-    return podsStore.getPodsByOwner(stone)
+    return podsStore
+      .getByLabel(stone.getTemplateLabels())
+      .filter(pod => pod.getNs() === stone.getNs())
   }
 
   getStatuses(stones: Stone[]) {

@@ -5,9 +5,9 @@ import { autobind } from "../../utils";
 import { KubeApi } from "../kube-api";
 
 @autobind()
-export class StatefulSetNuwa extends WorkloadKubeObject {
+export class EnhanceStatefulSet extends WorkloadKubeObject {
+  
   static kind = "StatefulSet"
-
   spec: {
     serviceName: string;
     replicas: number;
@@ -20,6 +20,9 @@ export class StatefulSetNuwa extends WorkloadKubeObject {
       metadata: {
         labels: {
           app: string;
+          annotations: {
+            [key: string]: string;
+          };
         };
       };
       spec: {
@@ -39,7 +42,7 @@ export class StatefulSetNuwa extends WorkloadKubeObject {
         nodeSelector?: {
           [selector: string]: string;
         };
-        tolerations: {
+        tolerations?: {
           key: string;
           operator: string;
           effect: string;
@@ -50,6 +53,9 @@ export class StatefulSetNuwa extends WorkloadKubeObject {
     volumeClaimTemplates: {
       metadata: {
         name: string;
+        annotations: {
+          [key: string]: string;
+        };
       };
       spec: {
         accessModes: string[];
@@ -60,6 +66,15 @@ export class StatefulSetNuwa extends WorkloadKubeObject {
         };
       };
     }[];
+  }
+  podManagementPolicy: string;
+  updateStrategy: {
+    type: string;
+    rollingUpdate: {
+      podUpdatePolicy: string;
+      maxUnavailable: number;
+      partition: number;
+    };
   }
   status: {
     observedGeneration: number;
@@ -74,11 +89,16 @@ export class StatefulSetNuwa extends WorkloadKubeObject {
     const containers: IPodContainer[] = get(this, "spec.template.spec.containers", [])
     return [...containers].map(container => container.image)
   }
+
+  getReplicas() {
+    const replicas: number = get(this, "spec.replicas")
+    return replicas
+  }
 }
 
-export const statefulSetNuwaApi = new KubeApi({
-  kind: StatefulSetNuwa.kind,
+export const enhanceStatefulSetApi = new KubeApi({
+  kind: EnhanceStatefulSet.kind,
   apiBase: "/apis/nuwa.nip.io/v1/statefulsets",
   isNamespaced: true,
-  objectConstructor: StatefulSetNuwa,
+  objectConstructor: EnhanceStatefulSet,
 });

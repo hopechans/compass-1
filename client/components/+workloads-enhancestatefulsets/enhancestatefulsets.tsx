@@ -1,17 +1,17 @@
-import "./statefulsets.scss";
+import "./enhancestatefulsets.scss";
 
 import React from "react";
 import { observer } from "mobx-react";
 import { RouteComponentProps } from "react-router";
 import { Trans } from "@lingui/macro";
-import { StatefulSetNuwa, statefulSetNuwaApi } from "../../api/endpoints";
+import { EnhanceStatefulSet, enhanceStatefulSetApi } from "../../api/endpoints";
 import { podsStore } from "../+workloads-pods/pods.store";
-import { statefulSetNuwaStore } from "./statefulset.store";
+import { enhanceStatefulSetStore } from "./enhancestatefulset.store";
 import { nodesStore } from "../+nodes/nodes.store";
 import { eventStore } from "../+events/event.store";
 import { KubeObjectMenu, KubeObjectMenuProps } from "../kube-object/kube-object-menu";
 import { KubeObjectListLayout } from "../kube-object";
-import { IStatefulSetsNuwaRouteParams } from "../+workloads";
+import { IEnhanceStatefulSetsRouteParams } from "../+workloads";
 import { KubeEventIcon } from "../+events/kube-event-icon";
 import { apiManager } from "../../api/api-manager";
 
@@ -22,28 +22,28 @@ enum sortBy {
   age = "age",
 }
 
-interface Props extends RouteComponentProps<IStatefulSetsNuwaRouteParams> {
+interface Props extends RouteComponentProps<IEnhanceStatefulSetsRouteParams> {
 }
 
 @observer
-export class StatefulSetsNuwa extends React.Component<Props> {
-  getPodsLength(statefulSet: StatefulSetNuwa) {
-    return statefulSetNuwaStore.getChildPods(statefulSet).length;
+export class EnhanceStatefulSets extends React.Component<Props> {
+  getPodsLength(statefulSet: EnhanceStatefulSet) {
+    return enhanceStatefulSetStore.getChildPods(statefulSet).length;
   }
 
   render() {
     return (
       <KubeObjectListLayout
-        className="StatefulSetsNuwa" store={statefulSetNuwaStore}
+        className="EnhanceStatefulSets" store={enhanceStatefulSetStore}
         dependentStores={[podsStore, nodesStore, eventStore]}
         sortingCallbacks={{
-          [sortBy.name]: (statefulSet: StatefulSetNuwa) => statefulSet.getName(),
-          [sortBy.namespace]: (statefulSet: StatefulSetNuwa) => statefulSet.getNs(),
-          [sortBy.age]: (statefulSet: StatefulSetNuwa) => statefulSet.getAge(false),
-          [sortBy.pods]: (statefulSet: StatefulSetNuwa) => this.getPodsLength(statefulSet),
+          [sortBy.name]: (statefulSet: EnhanceStatefulSet) => statefulSet.getName(),
+          [sortBy.namespace]: (statefulSet: EnhanceStatefulSet) => statefulSet.getNs(),
+          [sortBy.age]: (statefulSet: EnhanceStatefulSet) => statefulSet.getAge(false),
+          [sortBy.pods]: (statefulSet: EnhanceStatefulSet) => this.getPodsLength(statefulSet),
         }}
         searchFilters={[
-          (statefulSet: StatefulSetNuwa) => statefulSet.getSearchFields(),
+          (statefulSet: EnhanceStatefulSet) => statefulSet.getSearchFields(),
         ]}
         renderHeaderTitle={<Trans>Stateful Sets</Trans>}
         renderTableHeader={[
@@ -53,27 +53,27 @@ export class StatefulSetsNuwa extends React.Component<Props> {
           { className: "warning" },
           { title: <Trans>Age</Trans>, className: "age", sortBy: sortBy.age },
         ]}
-        renderTableContents={(statefulSet: StatefulSetNuwa) => [
+        renderTableContents={(statefulSet: EnhanceStatefulSet) => [
           statefulSet.getName(),
           statefulSet.getNs(),
           this.getPodsLength(statefulSet),
           <KubeEventIcon object={statefulSet} />,
           statefulSet.getAge(),
         ]}
-        renderItemMenu={(item: StatefulSetNuwa) => {
-          return <StatefulSetNuwaMenu object={item} />
+        renderItemMenu={(item: EnhanceStatefulSet) => {
+          return <EnhanceStatefulSetMenu object={item} />
         }}
       />
     )
   }
 }
 
-export function StatefulSetNuwaMenu(props: KubeObjectMenuProps<StatefulSetNuwa>) {
+export function EnhanceStatefulSetMenu(props: KubeObjectMenuProps<EnhanceStatefulSet>) {
   return (
     <KubeObjectMenu {...props} />
   )
 }
 
-apiManager.registerViews(statefulSetNuwaApi, {
-  Menu: StatefulSetNuwaMenu,
+apiManager.registerViews(enhanceStatefulSetApi, {
+  Menu: EnhanceStatefulSetMenu,
 })

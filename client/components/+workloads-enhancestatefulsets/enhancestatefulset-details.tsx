@@ -1,4 +1,4 @@
-import "./statefulset-details.scss";
+import "./enhancestatefulset-details.scss";
 
 import React from "react";
 import { disposeOnUnmount, observer } from "mobx-react";
@@ -11,23 +11,23 @@ import { PodDetailsTolerations } from "../+workloads-pods/pod-details-toleration
 import { PodDetailsAffinities } from "../+workloads-pods/pod-details-affinities";
 import { KubeEventDetails } from "../+events/kube-event-details";
 import { podsStore } from "../+workloads-pods/pods.store";
-import { statefulSetNuwaStore } from "./statefulset.store";
+import { enhanceStatefulSetStore } from "./enhancestatefulset.store";
 import { KubeObjectDetailsProps } from "../kube-object";
-import { StatefulSetNuwa, statefulSetNuwaApi } from "../../api/endpoints";
+import { EnhanceStatefulSet, enhanceStatefulSetApi } from "../../api/endpoints";
 import { ResourceMetrics, ResourceMetricsText } from "../resource-metrics";
 import { PodCharts, podMetricTabs } from "../+workloads-pods/pod-charts";
 import { PodDetailsList } from "../+workloads-pods/pod-details-list";
 import { apiManager } from "../../api/api-manager";
 import { KubeObjectMeta } from "../kube-object/kube-object-meta";
 
-interface Props extends KubeObjectDetailsProps<StatefulSetNuwa> {
+interface Props extends KubeObjectDetailsProps<EnhanceStatefulSet> {
 }
 
 @observer
-export class StatefulSetNuwaDetails extends React.Component<Props> {
+export class EnhanceStatefulSetDetails extends React.Component<Props> {
   @disposeOnUnmount
   clean = reaction(() => this.props.object, () => {
-    statefulSetNuwaStore.reset();
+    enhanceStatefulSetStore.reset();
   });
 
   componentDidMount() {
@@ -37,28 +37,28 @@ export class StatefulSetNuwaDetails extends React.Component<Props> {
   }
 
   componentWillUnmount() {
-    statefulSetNuwaStore.reset();
+    enhanceStatefulSetStore.reset();
   }
 
   render() {
-    const { object: statefulSetNuwa } = this.props;
-    if (!statefulSetNuwa) return null
-    const images = statefulSetNuwa.getImages()
-    const selectors = statefulSetNuwa.getSelectors()
-    const nodeSelector = statefulSetNuwa.getNodeSelectors()
-    const childPods = statefulSetNuwaStore.getChildPods(statefulSetNuwa)
-    const metrics = statefulSetNuwaStore.metrics
+    const { object: enhanceStatefulset } = this.props;
+    if (!enhanceStatefulset) return null
+    const images = enhanceStatefulset.getImages()
+    const selectors = enhanceStatefulset.getSelectors()
+    const nodeSelector = enhanceStatefulset.getNodeSelectors()
+    const childPods = enhanceStatefulSetStore.getChildPods(enhanceStatefulset)
+    const metrics = enhanceStatefulSetStore.metrics
     return (
-      <div className="StatefulSetsNuwaDetails">
+      <div className="EnhanceStatefulSetDetails">
         {podsStore.isLoaded && (
           <ResourceMetrics
-            loader={() => statefulSetNuwaStore.loadMetrics(statefulSetNuwa)}
-            tabs={podMetricTabs} object={statefulSetNuwa} params={{ metrics }}
+            loader={() => enhanceStatefulSetStore.loadMetrics(enhanceStatefulset)}
+            tabs={podMetricTabs} object={enhanceStatefulset} params={{ metrics }}
           >
             <PodCharts/>
           </ResourceMetrics>
         )}
-        <KubeObjectMeta object={statefulSetNuwa}/>
+        <KubeObjectMeta object={enhanceStatefulset}/>
         {selectors.length &&
         <DrawerItem name={<Trans>Selector</Trans>} labelsOnly>
           {
@@ -82,19 +82,21 @@ export class StatefulSetNuwaDetails extends React.Component<Props> {
           }
         </DrawerItem>
         }
-        <PodDetailsTolerations workload={statefulSetNuwa}/>
-        <PodDetailsAffinities workload={statefulSetNuwa}/>
+        
+        <PodDetailsTolerations workload={enhanceStatefulset}/>
+        <PodDetailsAffinities workload={enhanceStatefulset}/>
+
         <DrawerItem name={<Trans>Pod Status</Trans>} className="pod-status">
           <PodDetailsStatuses pods={childPods}/>
         </DrawerItem>
         <ResourceMetricsText metrics={metrics}/>
-        <PodDetailsList pods={childPods} owner={statefulSetNuwa}/>
-        <KubeEventDetails object={statefulSetNuwa}/>
+        <PodDetailsList pods={childPods} owner={enhanceStatefulset}/>
+        <KubeEventDetails object={enhanceStatefulset}/>
       </div>
     )
   }
 }
 
-apiManager.registerViews(statefulSetNuwaApi, {
-  Details: StatefulSetNuwaDetails
+apiManager.registerViews(enhanceStatefulSetApi, {
+  Details: EnhanceStatefulSetDetails
 })

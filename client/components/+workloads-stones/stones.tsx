@@ -19,7 +19,9 @@ enum sortBy {
   name = "name",
   namespace = "namespace",
   pods = "pods",
+  sts = "sts",
   age = "age",
+
 }
 
 interface Props extends RouteComponentProps<IStatefulSetsRouteParams> {
@@ -31,9 +33,10 @@ export class Stones extends React.Component<Props> {
     return stoneStore.getChildPods(stone).length;
   }
 
-  // getReplicas(stone: Stone) {
-  //   return stoneStore.
-  // }
+  getEnhanceStatefulSetLength(stone: Stone) {
+    return stoneStore.getChildEnhanceStatefulset(stone).length
+  }
+
 
   render() {
     return (
@@ -44,6 +47,7 @@ export class Stones extends React.Component<Props> {
           [sortBy.name]: (stone: Stone) => stone.getName(),
           [sortBy.namespace]: (stone: Stone) => stone.getNs(),
           [sortBy.age]: (stone: Stone) => stone.getAge(false),
+          [sortBy.sts]: (stone: Stone) => this.getEnhanceStatefulSetLength(stone),
           [sortBy.pods]: (stone: Stone) => this.getPodsLength(stone),
         }}
         searchFilters={[
@@ -54,6 +58,7 @@ export class Stones extends React.Component<Props> {
           { title: <Trans>Name</Trans>, className: "name", sortBy: sortBy.name },
           { title: <Trans>Namespace</Trans>, className: "namespace", sortBy: sortBy.namespace },
           { title: <Trans>Pods</Trans>, className: "pods", sortBy: sortBy.pods },
+          { title: <Trans>Sts</Trans>, className: "sts", sortBy: sortBy.sts },
           { className: "warning" },
           { title: <Trans>Age</Trans>, className: "age", sortBy: sortBy.age },
         ]}

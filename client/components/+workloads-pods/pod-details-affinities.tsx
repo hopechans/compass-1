@@ -4,10 +4,10 @@ import jsYaml from "js-yaml";
 import { Trans } from "@lingui/macro";
 import { AceEditor } from "../ace-editor";
 import { DrawerParamToggler, DrawerItem } from "../drawer";
-import { Pod, Deployment, DaemonSet, StatefulSet, ReplicaSet, Job } from "../../api/endpoints";
+import { Pod, Deployment, DaemonSet, StatefulSet, ReplicaSet, Job, EnhanceStatefulSet } from "../../api/endpoints";
 
 interface Props {
-  workload: Pod | Deployment | DaemonSet | StatefulSet | ReplicaSet | Job;
+  workload: Pod | Deployment | DaemonSet | StatefulSet | ReplicaSet | Job | EnhanceStatefulSet;
 }
 
 export class PodDetailsAffinities extends React.Component<Props> {

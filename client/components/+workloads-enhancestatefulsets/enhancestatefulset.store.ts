@@ -1,27 +1,37 @@
 import { observable } from "mobx";
 import { autobind } from "../../utils";
 import { KubeObjectStore } from "../../kube-object.store";
-import { IPodMetrics, podsApi, PodStatus, StatefulSetNuwa, statefulSetNuwaApi } from "../../api/endpoints";
+import { IPodMetrics, podsApi, PodStatus, EnhanceStatefulSet, enhanceStatefulSetApi, Stone } from "../../api/endpoints";
 import { podsStore } from "../+workloads-pods/pods.store";
 import { apiManager } from "../../api/api-manager";
+import { WorkloadKubeObject } from "client/api/workload-kube-object";
 
 @autobind()
-export class StatefulSetNuwaStore extends KubeObjectStore<StatefulSetNuwa> {
-  api = statefulSetNuwaApi
+export class EnhanceStatefulSetStore extends KubeObjectStore<EnhanceStatefulSet> {
+  api = enhanceStatefulSetApi
   @observable metrics: IPodMetrics = null;
 
-  loadMetrics(statefulSet: StatefulSetNuwa) {
+  loadMetrics(statefulSet: EnhanceStatefulSet) {
     const pods = this.getChildPods(statefulSet);
     return podsApi.getMetrics(pods, statefulSet.getNs(), "").then(metrics =>
       this.metrics = metrics
     );
   }
 
-  getChildPods(statefulSet: StatefulSetNuwa) {
+  getEnhanceStatefulSetByOwner(stone: Stone): EnhanceStatefulSet[] {
+    if (!stone) return [];
+    return this.items.filter(enhanceStatefulSet => {
+      const owners = enhanceStatefulSet.getOwnerRefs()
+      if (!owners.length) return
+      return owners.find(owner => owner.uid === stone.getId())
+    })
+  }
+
+  getChildPods(statefulSet: EnhanceStatefulSet) {
     return podsStore.getPodsByOwner(statefulSet)
   }
 
-  getStatuses(statefulSets: StatefulSetNuwa[]) {
+  getStatuses(statefulSets: EnhanceStatefulSet[]) {
     const status = { failed: 0, pending: 0, running: 0 }
     statefulSets.forEach(statefulSet => {
       const pods = this.getChildPods(statefulSet)
@@ -43,5 +53,6 @@ export class StatefulSetNuwaStore extends KubeObjectStore<StatefulSetNuwa> {
   }
 }
 
-export const statefulSetNuwaStore = new StatefulSetNuwaStore();
-apiManager.registerStore(statefulSetNuwaApi, statefulSetNuwaStore);
+export const enhanceStatefulSetStore = new EnhanceStatefulSetStore();
+
+apiManager.registerStore(enhanceStatefulSetApi, enhanceStatefulSetStore);

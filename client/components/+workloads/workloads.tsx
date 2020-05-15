@@ -7,16 +7,16 @@ import { RouteComponentProps } from "react-router-dom";
 import { Trans } from "@lingui/macro";
 import { MainLayout, TabRoute } from "../layout/main-layout";
 import { WorkloadsOverview } from "../+workloads-overview/overview";
-import { statefulSetsNuwaURL, statefulsetsNuwaRoute, stonesURL, stonesRoute, cronJobsRoute, cronJobsURL, daemonSetsRoute, daemonSetsURL, deploymentsRoute, deploymentsURL, jobsRoute, jobsURL, overviewRoute, overviewURL, podsRoute, podsURL, statefulSetsRoute, statefulSetsURL, workloadsURL } from "./workloads.route";
+import { enhanceStatefulSetsURL, enhanceStatefulsetsRoute, stonesURL, stonesRoute, cronJobsRoute, cronJobsURL, daemonSetsRoute, daemonSetsURL, deploymentsRoute, deploymentsURL, jobsRoute, jobsURL, overviewRoute, overviewURL, podsRoute, podsURL, statefulSetsRoute, statefulSetsURL, workloadsURL } from "./workloads.route";
 import { namespaceStore } from "../+namespaces/namespace.store";
 import { Pods } from "../+workloads-pods";
 import { Deployments } from "../+workloads-deployments";
 import { DaemonSets } from "../+workloads-daemonsets";
-import { StatefulSets } from "../+workloads-statefulsets";
+import { EnhanceStatefulSets } from "../+workloads-enhancestatefulsets";
 import { Jobs } from "../+workloads-jobs";
 import { CronJobs } from "../+workloads-cronjobs";
 import { Stones } from "../+workloads-stones";
-import {StatefulSetsNuwa} from "../+workloads-statefulsets-nuwa";
+import {StatefulSets} from "../+workloads-statefulsets";
 
 interface Props extends RouteComponentProps {
 }
@@ -32,17 +32,17 @@ export class Workloads extends React.Component<Props> {
         url: overviewURL({ query }),
         path: overviewRoute.path
       },
-      // {
-      //   title: <Trans>〄Stones</Trans>,
-      //   component: Stones,
-      //   url: stonesURL({ query }),
-      //   path: stonesRoute.path
-      // },
       {
-        title: <Trans>〄StatefulSets</Trans>,
-        component: StatefulSetsNuwa,
-        url: statefulSetsNuwaURL({ query }),
-        path: statefulsetsNuwaRoute.path
+        title: <Trans>Stones</Trans>,
+        component: Stones,
+        url: stonesURL({ query }),
+        path: stonesRoute.path
+      },
+      {
+        title: <Trans>Enhance StatefulSets</Trans>,
+        component: EnhanceStatefulSets,
+        url: enhanceStatefulSetsURL({ query }),
+        path: enhanceStatefulsetsRoute.path
       },
       {
         title: <Trans>Pods</Trans>,
