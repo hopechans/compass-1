@@ -12,6 +12,8 @@ import { deploymentStore } from "../+workloads-deployments/deployments.store";
 import { daemonSetStore } from "../+workloads-daemonsets/daemonsets.store";
 import { statefulSetStore } from "../+workloads-statefulsets/statefulset.store";
 import { replicaSetStore } from "../+workloads-replicasets/replicasets.store";
+import { enhanceStatefulSetStore } from "../+workloads-enhancestatefulsets/enhancestatefulset.store"
+import { stoneStore } from "../+workloads-stones/stones.store"
 import { jobStore } from "../+workloads-jobs/job.store";
 import { cronJobStore } from "../+workloads-cronjobs/cronjob.store";
 import { Spinner } from "../spinner";
@@ -35,6 +37,8 @@ export class WorkloadsOverview extends React.Component<Props> {
       jobStore,
       cronJobStore,
       eventStore,
+      enhanceStatefulSetStore,
+      stoneStore,
     ];
     this.isReady = stores.every(store => store.isLoaded);
     await Promise.all(stores.map(store => store.loadAll()));
@@ -50,11 +54,11 @@ export class WorkloadsOverview extends React.Component<Props> {
 
   renderContents() {
     if (!this.isReady) {
-      return <Spinner center/>
+      return <Spinner center />
     }
     return (
       <>
-        <OverviewStatuses/>
+        <OverviewStatuses />
         <Events
           compact
           hideFilters
