@@ -62,6 +62,7 @@ export class KubeObjectDetails extends React.Component {
 
   render() {
     const { object, isLoading, loadingError, isCrdInstance } = this;
+    let isCrdInstanceLocal = isCrdInstance;
     const isOpen = !!(object || isLoading || loadingError);
     let title = "";
     let apiComponents: ApiComponents;
@@ -69,7 +70,11 @@ export class KubeObjectDetails extends React.Component {
       const { kind, getName, selfLink } = object;
       title = `${kind}: ${getName()}`;
       apiComponents = apiManager.getViews(selfLink);
-      if (isCrdInstance) {
+      // nuwa ingore use crd details
+      if (kind == "StatefulSet" || kind == "Stone" || kind == "Injector" || kind == "Water") {
+        isCrdInstanceLocal = false;
+      }
+      if (isCrdInstanceLocal) {
         apiComponents.Details = CrdResourceDetails
         apiComponents.Menu = CrdResourceMenu
       }
@@ -79,12 +84,12 @@ export class KubeObjectDetails extends React.Component {
         className="KubeObjectDetails flex column"
         open={isOpen}
         title={title}
-        toolbar={apiComponents && apiComponents.Menu && <apiComponents.Menu object={object} toolbar/>}
+        toolbar={apiComponents && apiComponents.Menu && <apiComponents.Menu object={object} toolbar />}
         onClose={hideDetails}
       >
-        {isLoading && <Spinner center/>}
+        {isLoading && <Spinner center />}
         {loadingError && <div className="box center">{loadingError}</div>}
-        {apiComponents && apiComponents.Details && <apiComponents.Details object={object}/>}
+        {apiComponents && apiComponents.Details && <apiComponents.Details object={object} />}
       </Drawer>
     )
   }

@@ -144,14 +144,14 @@ export class ThemeStore {
     reaction(() => this.activeTheme, this.onChange);
 
     // apply theme from configuration
-    // import("./config.store").then(({ configStore }) => {
-    //   autorun(() => {
-    //     const themeId = configStore.config.lensTheme;
-    //     if (themeId && themeId !== this.activeThemeId) {
-    //       this.setTheme(themeId);
-    //     }
-    //   });
-    // })
+    import("./config.store").then(({ configStore }) => {
+      autorun(() => {
+        const themeId = configStore.config.lensTheme;
+        if (themeId && themeId !== this.activeThemeId) {
+          this.setTheme(themeId);
+        }
+      });
+    })
   }
 
   protected onChange = (theme: ITheme) => {

@@ -1,11 +1,11 @@
 import "./pod-details-tolerations.scss";
 import * as React from "react";
 import { Trans } from "@lingui/macro";
-import { Pod, Deployment, DaemonSet, StatefulSet, ReplicaSet, Job } from "../../api/endpoints";
+import { Pod, Deployment, DaemonSet, StatefulSet, ReplicaSet, Job, EnhanceStatefulSet } from "../../api/endpoints";
 import { DrawerParamToggler, DrawerItem } from "../drawer";
 
 interface Props {
-  workload: Pod | Deployment | DaemonSet | StatefulSet | ReplicaSet | Job;
+  workload: Pod | Deployment | DaemonSet | StatefulSet | ReplicaSet | Job | EnhanceStatefulSet;
 }
 
 export class PodDetailsTolerations extends React.Component<Props> {

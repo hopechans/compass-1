@@ -5,11 +5,7 @@ import { KubeApi } from "../kube-api";
 
 export class NodesApi extends KubeApi<Node> {
   getMetrics(): Promise<INodeMetrics> {
-    const memoryUsage = `
-        sum (
-          node_memory_MemTotal_bytes - (node_memory_MemFree_bytes + node_memory_Buffers_bytes + node_memory_Cached_bytes)
-        ) by (kubernetes_node)
-      `;
+    const memoryUsage = `sum(node_memory_MemTotal_bytes - (node_memory_MemFree_bytes + node_memory_Buffers_bytes + node_memory_Cached_bytes)) by (kubernetes_node)`;
     const memoryCapacity = `sum(kube_node_status_capacity{resource="memory"}) by (node)`;
     const cpuUsage = `sum(rate(node_cpu_seconds_total{mode=~"user|system"}[1m])) by(kubernetes_node)`;
     const cpuCapacity = `sum(kube_node_status_allocatable{resource="cpu"}) by (node)`;
