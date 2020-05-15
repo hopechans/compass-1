@@ -39,7 +39,7 @@ export class Workloads extends React.Component<Props> {
         path: stonesRoute.path
       },
       {
-        title: <Trans>Enhance StatefulSets</Trans>,
+        title: <Trans>Advanced StatefulSets</Trans>,
         component: EnhanceStatefulSets,
         url: enhanceStatefulSetsURL({ query }),
         path: enhanceStatefulsetsRoute.path
