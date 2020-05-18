@@ -6,7 +6,10 @@ import { KubeApi } from "../kube-api";
 
 @autobind()
 export class EnhanceStatefulSet extends WorkloadKubeObject {
-  
+  getStatus() {
+    return get(this, "spec.status.replicas")
+  }
+
   static kind = "StatefulSet"
   spec: {
     serviceName: string;
@@ -91,8 +94,7 @@ export class EnhanceStatefulSet extends WorkloadKubeObject {
   }
 
   getReplicaUpdate() {
-    const replicas: number = get(this, "spec.status.updateRevision")
-    return replicas
+    return get(this, "spec.status.updateRevision")
   }
 
 }

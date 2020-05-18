@@ -7,8 +7,6 @@ import { Trans } from "@lingui/macro";
 import { Badge } from "../badge";
 import { DrawerItem } from "../drawer";
 import { PodDetailsStatuses } from "../+workloads-pods/pod-details-statuses";
-import { PodDetailsTolerations } from "../+workloads-pods/pod-details-tolerations";
-import { PodDetailsAffinities } from "../+workloads-pods/pod-details-affinities";
 import { KubeEventDetails } from "../+events/kube-event-details";
 import { podsStore } from "../+workloads-pods/pods.store";
 import { stoneStore } from "./stones.store";
@@ -48,6 +46,7 @@ export class StoneDetails extends React.Component<Props> {
     const nodeSelector = stone.getNodeSelectors()
     const childPods = stoneStore.getChildPods(stone)
     const metrics = stoneStore.metrics
+    const childStatefulsets = stoneStore.getChildEnhanceStatefulset(stone)
     return (
       <div className="StoneDetails">
         {podsStore.isLoaded && (
@@ -81,13 +80,13 @@ export class StoneDetails extends React.Component<Props> {
               images.map(image => <p key={image}>{image}</p>)
             }
           </DrawerItem>
-        }  
+        } 
         <DrawerItem name={<Trans>Pod Status</Trans>} className="pod-status">
           <PodDetailsStatuses pods={childPods} />
         </DrawerItem>
         <ResourceMetricsText metrics={metrics} />
         <PodDetailsList pods={childPods} owner={stone} />
-        <KubeEventDetails object={stone} />
+        <KubeEventDetails object={stone} />     
       </div>
     )
   }

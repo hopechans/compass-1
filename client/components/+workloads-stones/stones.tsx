@@ -14,12 +14,13 @@ import { KubeObjectListLayout } from "../kube-object";
 import { IStatefulSetsRouteParams } from "../+workloads";
 import { KubeEventIcon } from "../+events/kube-event-icon";
 import { apiManager } from "../../api/api-manager";
+import { enhanceStatefulSetStore } from "../+workloads-enhancestatefulsets/enhancestatefulset.store";
 
 enum sortBy {
   name = "name",
   namespace = "namespace",
   pods = "pods",
-  sts = "sts",
+  statefulsets = "statefulsets",
   age = "age",
 
 }
@@ -34,7 +35,7 @@ export class Stones extends React.Component<Props> {
   }
 
   getEnhanceStatefulSetLength(stone: Stone) {
-    return stoneStore.getChildEnhanceStatefulset(stone).length
+    return stoneStore.getChildEnhanceStatefulset(stone).length;
   }
 
 
@@ -42,23 +43,24 @@ export class Stones extends React.Component<Props> {
     return (
       <KubeObjectListLayout
         className="Stones" store={stoneStore}
-        dependentStores={[podsStore, nodesStore, eventStore]}
+        dependentStores={[podsStore, nodesStore, eventStore,enhanceStatefulSetStore]}
         sortingCallbacks={{
           [sortBy.name]: (stone: Stone) => stone.getName(),
           [sortBy.namespace]: (stone: Stone) => stone.getNs(),
           [sortBy.age]: (stone: Stone) => stone.getAge(false),
-          [sortBy.sts]: (stone: Stone) => this.getEnhanceStatefulSetLength(stone),
+          [sortBy.statefulsets]: (stone: Stone) => this.getEnhanceStatefulSetLength(stone),
           [sortBy.pods]: (stone: Stone) => this.getPodsLength(stone),
         }}
         searchFilters={[
           (stone: Stone) => stone.getSearchFields(),
         ]}
-        renderHeaderTitle={<Trans>Stateful Sets</Trans>}
+        renderHeaderTitle={<Trans>Stones</Trans>}
         renderTableHeader={[
           { title: <Trans>Name</Trans>, className: "name", sortBy: sortBy.name },
           { title: <Trans>Namespace</Trans>, className: "namespace", sortBy: sortBy.namespace },
-          { title: <Trans>Pods</Trans>, className: "pods", sortBy: sortBy.pods },      
+          { title: <Trans>Pods</Trans>, className: "pods", sortBy: sortBy.pods },
           { className: "warning" },
+          { title: <Trans>Statefulsets</Trans>, className: "statefulsets", sortBy: sortBy.statefulsets },
           { title: <Trans>Age</Trans>, className: "age", sortBy: sortBy.age },
         ]}
         renderTableContents={(stone: Stone) => [
@@ -66,6 +68,7 @@ export class Stones extends React.Component<Props> {
           stone.getNs(),
           this.getPodsLength(stone),
           <KubeEventIcon object={stone} />,
+          this.getEnhanceStatefulSetLength(stone),
           stone.getAge(),
         ]}
         renderItemMenu={(item: Stone) => {
