@@ -33,13 +33,13 @@ export class Workloads extends React.Component<Props> {
         path: overviewRoute.path
       },
       {
-        title: <Trans>Stones</Trans>,
+        title: <Trans>🧜🏽‍♀️Stones</Trans>,
         component: Stones,
         url: stonesURL({ query }),
         path: stonesRoute.path
       },
       {
-        title: <Trans>Advanced StatefulSets</Trans>,
+        title: <Trans>🧜🏽‍♀️StatefulSets</Trans>,
         component: EnhanceStatefulSets,
         url: enhanceStatefulSetsURL({ query }),
         path: enhanceStatefulsetsRoute.path

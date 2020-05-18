@@ -4,7 +4,6 @@ import { KubeObjectStore } from "../../kube-object.store";
 import { IPodMetrics, podsApi, PodStatus, EnhanceStatefulSet, enhanceStatefulSetApi, Stone } from "../../api/endpoints";
 import { podsStore } from "../+workloads-pods/pods.store";
 import { apiManager } from "../../api/api-manager";
-import { WorkloadKubeObject } from "client/api/workload-kube-object";
 
 @autobind()
 export class EnhanceStatefulSetStore extends KubeObjectStore<EnhanceStatefulSet> {

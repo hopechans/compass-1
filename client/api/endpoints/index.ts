@@ -34,3 +34,4 @@ export * from "./tenant-department.api"
 export * from "./ali-formrender.api"
 export * from "./stone.api"
 export * from "./enhance-stateful-set.api"
+export * from './endpoint.api'

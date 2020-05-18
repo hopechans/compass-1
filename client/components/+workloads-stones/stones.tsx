@@ -57,8 +57,7 @@ export class Stones extends React.Component<Props> {
         renderTableHeader={[
           { title: <Trans>Name</Trans>, className: "name", sortBy: sortBy.name },
           { title: <Trans>Namespace</Trans>, className: "namespace", sortBy: sortBy.namespace },
-          { title: <Trans>Pods</Trans>, className: "pods", sortBy: sortBy.pods },
-          { title: <Trans>Sts</Trans>, className: "sts", sortBy: sortBy.sts },
+          { title: <Trans>Pods</Trans>, className: "pods", sortBy: sortBy.pods },      
           { className: "warning" },
           { title: <Trans>Age</Trans>, className: "age", sortBy: sortBy.age },
         ]}

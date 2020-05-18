@@ -90,10 +90,11 @@ export class EnhanceStatefulSet extends WorkloadKubeObject {
     return [...containers].map(container => container.image)
   }
 
-  getReplicas() {
-    const replicas: number = get(this, "spec.replicas")
+  getReplicaUpdate() {
+    const replicas: number = get(this, "spec.status.updateRevision")
     return replicas
   }
+
 }
 
 export const enhanceStatefulSetApi = new KubeApi({
