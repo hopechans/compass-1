@@ -1,7 +1,7 @@
 import "./injectors.store.ts";
 
 import React from "react";
-import { observer, inject } from "mobx-react";
+import { observer } from "mobx-react";
 import { RouteComponentProps } from "react-router";
 import { Trans } from "@lingui/macro";
 import { Injector, injectorApi } from "../../api/endpoints";
