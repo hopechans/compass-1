@@ -63,16 +63,16 @@ export class MainLayout extends React.Component<Props> {
 
 
   renderUserMenu(){
-    const { username} = configStore.config;
+    const { userName } = configStore.config;
     return (
       <div className="header-right">
-          <span>{username}</span>
+          <span>{userName}</span>
           <MenuActions
             >
-              <MenuItem onClick={this.changeTheme}>
+              {/* <MenuItem onClick={this.changeTheme}>
                   <Icon material="loop" />
                   <span className="title"><Trans>Theme</Trans></span>
-              </MenuItem>
+              </MenuItem> */}
               <MenuItem >
                   <Icon material="exit_to_app" />
                   <span className="title"><Trans>Logout</Trans></span>
@@ -85,7 +85,7 @@ export class MainLayout extends React.Component<Props> {
 
   render() {
     const { className, contentClass, headerClass, tabs, footer, footerClass, children } = this.props;
-    const { clusterName, username, lensVersion, kubectlAccess } = configStore.config;
+    const { clusterName, lensVersion, kubectlAccess } = configStore.config;
     const { pathname } = navigation.location;
     const { languages, setLocale, activeLang } = i18nStore;
     return (

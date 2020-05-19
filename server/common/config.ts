@@ -2,7 +2,7 @@ import { IClusterInfo } from "../common/cluster";
 export interface IConfig extends Partial<IClusterInfo> {
   lensVersion?: string;
   lensTheme?: string;
-  username?: string;
+  userName?: string;
   token?: string;
   allowedNamespaces?: string[];
   isClusterAdmin?: boolean;
