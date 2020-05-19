@@ -1,8 +1,10 @@
+import "./field.scss"
+
 import * as React from "react";
 import {observer} from "mobx-react";
 import {RouteComponentProps} from "react-router";
 import {Trans} from "@lingui/macro";
-import {KubeObjectMenu, KubeObjectMenuProps} from "../kube-object/kube-object-menu";
+import {KubeObjectMenu, KubeObjectMenuProps} from "../kube-object";
 import {KubeObjectListLayout} from "../kube-object";
 import {IFieldRouteParams} from "./field.route";
 import {fieldStore} from "./field.store";
@@ -12,7 +14,6 @@ import {apiManager} from "../../api/api-manager";
 enum sortBy {
     name = "name",
     namespace = "namespace",
-    replicas = "replicas",
     age = "age",
 }
 

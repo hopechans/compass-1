@@ -1,0 +1,22 @@
+@import "./field.mixins";
+
+.Fields {
+  .TableCell {
+    &.name {
+      flex: 1.5;
+    }
+
+    &.status {
+      flex: 1.5;
+      @include table-cell-labels-offsets;
+
+      .Badge {
+        @include field-status-bgc;
+      }
+    }
+
+    &.age {
+      flex: .5;
+    }
+  }
+}

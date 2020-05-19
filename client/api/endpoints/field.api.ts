@@ -11,19 +11,6 @@ export class Field extends KubeObject {
             name: string;
             apiVersion: string;
         };
-        minReplicas: number;
-        maxReplicas: number;
-    }
-    status: {
-        currentReplicas: number;
-        desiredReplicas: number;
-        conditions: {
-            lastTransitionTime: string;
-            message: string;
-            reason: string;
-            status: string;
-            type: string;
-        }[];
     }
 }
 

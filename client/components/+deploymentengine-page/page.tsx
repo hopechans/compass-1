@@ -1,3 +1,5 @@
+import "./page.scss";
+
 import * as React from "react";
 import { observer } from "mobx-react";
 import { RouteComponentProps } from "react-router";
