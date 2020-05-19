@@ -7,7 +7,7 @@ import { RouteComponentProps } from "react-router-dom";
 import { Trans } from "@lingui/macro";
 import { MainLayout, TabRoute } from "../layout/main-layout";
 import { WorkloadsOverview } from "../+workloads-overview/overview";
-import { enhanceStatefulSetsURL, enhanceStatefulsetsRoute, stonesURL, stonesRoute, cronJobsRoute, cronJobsURL, daemonSetsRoute, daemonSetsURL, deploymentsRoute, deploymentsURL, jobsRoute, jobsURL, overviewRoute, overviewURL, podsRoute, podsURL, statefulSetsRoute, statefulSetsURL, workloadsURL } from "./workloads.route";
+import { injectorURL, injectorsRoute, enhanceStatefulSetsURL, enhanceStatefulsetsRoute, stonesURL, stonesRoute, cronJobsRoute, cronJobsURL, daemonSetsRoute, daemonSetsURL, deploymentsRoute, deploymentsURL, jobsRoute, jobsURL, overviewRoute, overviewURL, podsRoute, podsURL, statefulSetsRoute, statefulSetsURL, workloadsURL } from "./workloads.route";
 import { namespaceStore } from "../+namespaces/namespace.store";
 import { Pods } from "../+workloads-pods";
 import { Deployments } from "../+workloads-deployments";
@@ -16,7 +16,8 @@ import { EnhanceStatefulSets } from "../+workloads-enhancestatefulsets";
 import { Jobs } from "../+workloads-jobs";
 import { CronJobs } from "../+workloads-cronjobs";
 import { Stones } from "../+workloads-stones";
-import {StatefulSets} from "../+workloads-statefulsets";
+import { StatefulSets } from "../+workloads-statefulsets";
+import { Injectors } from "../+workloads-injectors";
 
 interface Props extends RouteComponentProps {
 }
@@ -43,6 +44,12 @@ export class Workloads extends React.Component<Props> {
         component: EnhanceStatefulSets,
         url: enhanceStatefulSetsURL({ query }),
         path: enhanceStatefulsetsRoute.path
+      },
+      {
+        title: <Trans>🧜🏽‍♀️Injectors</Trans>,
+        component: Injectors,
+        url: injectorURL({ query }),
+        path: injectorsRoute.path
       },
       {
         title: <Trans>Pods</Trans>,

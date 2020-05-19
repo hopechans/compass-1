@@ -39,6 +39,9 @@ export const enhanceStatefulsetsRoute: RouteProps = {
   path: "/enhancestatefulsets"
 }
 
+export const injectorsRoute: RouteProps = {
+  path: "/injectors"
+}
 // Route params
 export interface IWorkloadsOverviewRouteParams {
 }
@@ -53,6 +56,8 @@ export interface IDaemonSetsRouteParams {
 }
 
 export interface IStatefulSetsRouteParams {
+}
+export interface InjectorsRouteParams {
 }
 
 export interface IEnhanceStatefulSetsRouteParams {
@@ -79,3 +84,4 @@ export const jobsURL = buildURL<IJobsRouteParams>(jobsRoute.path)
 export const cronJobsURL = buildURL<ICronJobsRouteParams>(cronJobsRoute.path)
 export const stonesURL = buildURL<IStonesRouteParams>(stonesRoute.path)
 export const enhanceStatefulSetsURL = buildURL<IEnhanceStatefulSetsRouteParams>(enhanceStatefulsetsRoute.path)
+export const injectorURL = buildURL<InjectorsRouteParams>(injectorsRoute.path)
