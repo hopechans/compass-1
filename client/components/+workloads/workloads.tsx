@@ -7,7 +7,7 @@ import { RouteComponentProps } from "react-router-dom";
 import { Trans } from "@lingui/macro";
 import { MainLayout, TabRoute } from "../layout/main-layout";
 import { WorkloadsOverview } from "../+workloads-overview/overview";
-import { injectorURL, injectorsRoute, enhanceStatefulSetsURL, enhanceStatefulsetsRoute, stonesURL, stonesRoute, cronJobsRoute, cronJobsURL, daemonSetsRoute, daemonSetsURL, deploymentsRoute, deploymentsURL, jobsRoute, jobsURL, overviewRoute, overviewURL, podsRoute, podsURL, statefulSetsRoute, statefulSetsURL, workloadsURL } from "./workloads.route";
+import { watersRoute, watersURL, deployURL, injectorURL, injectorsRoute, enhanceStatefulSetsURL, enhanceStatefulsetsRoute, stonesURL, stonesRoute, cronJobsRoute, cronJobsURL, daemonSetsRoute, daemonSetsURL, deploymentsRoute, deploymentsURL, jobsRoute, jobsURL, overviewRoute, overviewURL, podsRoute, podsURL, statefulSetsRoute, statefulSetsURL, workloadsURL, deployRoute } from "./workloads.route";
 import { namespaceStore } from "../+namespaces/namespace.store";
 import { Pods } from "../+workloads-pods";
 import { Deployments } from "../+workloads-deployments";
@@ -18,6 +18,8 @@ import { CronJobs } from "../+workloads-cronjobs";
 import { Stones } from "../+workloads-stones";
 import { StatefulSets } from "../+workloads-statefulsets";
 import { Injectors } from "../+workloads-injectors";
+import { Deploys } from "../+workloads-deploy";
+import { Waters } from "../+workloads-waters"
 
 interface Props extends RouteComponentProps {
 }
@@ -34,22 +36,34 @@ export class Workloads extends React.Component<Props> {
         path: overviewRoute.path
       },
       {
-        title: <Trans>🧜🏽‍♀️Stones</Trans>,
+        title: <Trans>Stones</Trans>,
         component: Stones,
         url: stonesURL({ query }),
         path: stonesRoute.path
       },
       {
-        title: <Trans>🧜🏽‍♀️StatefulSets</Trans>,
+        title: <Trans>Waters</Trans>,
+        component: Waters,
+        url: watersURL({ query }),
+        path: watersRoute.path
+      },
+      {
+        title: <Trans>StatefulSets*</Trans>,
         component: EnhanceStatefulSets,
         url: enhanceStatefulSetsURL({ query }),
         path: enhanceStatefulsetsRoute.path
       },
       {
-        title: <Trans>🧜🏽‍♀️Injectors</Trans>,
+        title: <Trans>Injectors</Trans>,
         component: Injectors,
         url: injectorURL({ query }),
         path: injectorsRoute.path
+      },
+      {
+        title: <Trans>Deploy</Trans>,
+        component: Deploys,
+        url: deployURL({ query }),
+        path: deployRoute.path
       },
       {
         title: <Trans>Pods</Trans>,

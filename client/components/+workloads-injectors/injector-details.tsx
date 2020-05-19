@@ -34,13 +34,13 @@ export class InjectorDetails extends React.Component<Props> {
     const ownerRef = injector.getOwnerRefs()[0];
     return (
       <div className="InjectorDetails">
-        <DrawerItem name={<Trans>Owner Type</Trans>} labelsOnly>
+        <DrawerItem name={<Trans>Owner Type</Trans>}>
           {
             <>{ownerRef.kind}</>
           }
         </DrawerItem>
 
-        <DrawerItem name={<Trans>Owner</Trans>} labelsOnly>
+        <DrawerItem name={<Trans>Owner</Trans>}>
           {
             <>{ownerRef.namespace} / {ownerRef.name}</>
 

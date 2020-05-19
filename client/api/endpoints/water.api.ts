@@ -5,8 +5,8 @@ import { autobind } from "../../utils";
 import { KubeApi } from "../kube-api";
 
 @autobind()
-export class Stone extends WorkloadKubeObject {
-  static kind = "Stone"
+export class Water extends WorkloadKubeObject {
+  static kind = "Water"
   spec: {
     service: {
       ports: {
@@ -68,18 +68,15 @@ export class Stone extends WorkloadKubeObject {
     statefulset: number;
   }
 
-  getStrategy() {
-    return get(this, 'spec.strategy')
-  }
   getImages() {
     const containers: IPodContainer[] = get(this, "spec.template.spec.containers", [])
     return [...containers].map(container => container.image)
   }
 }
 
-export const stoneApi = new KubeApi({
-  kind: Stone.kind,
-  apiBase: "/apis/nuwa.nip.io/v1/stones",
+export const waterApi = new KubeApi({
+  kind: Water.kind,
+  apiBase: "/apis/nuwa.nip.io/v1/waters",
   isNamespaced: true,
-  objectConstructor: Stone,
+  objectConstructor: Water,
 });

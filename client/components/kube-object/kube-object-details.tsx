@@ -71,7 +71,7 @@ export class KubeObjectDetails extends React.Component {
       title = `${kind}: ${getName()}`;
       apiComponents = apiManager.getViews(selfLink);
       // nuwa ingore use crd details
-      if (kind == "StatefulSet" || kind == "Stone" || kind == "Injector" || kind == "Water") {
+      if (kind == "StatefulSet" || kind == "Stone" || kind == "Injector" || kind == "Water" || kind == "Workloads") {
         isCrdInstanceLocal = false;
       }
       if (isCrdInstanceLocal) {

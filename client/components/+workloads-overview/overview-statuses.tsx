@@ -5,7 +5,7 @@ import { observer } from "mobx-react";
 import { Trans } from "@lingui/macro";
 import { OverviewWorkloadStatus } from "./overview-workload-status";
 import { Link } from "react-router-dom";
-import { cronJobsURL, daemonSetsURL, deploymentsURL, jobsURL, podsURL, statefulSetsURL, enhanceStatefulSetsURL, stonesURL } from "../+workloads";
+import { cronJobsURL, daemonSetsURL, deploymentsURL, jobsURL, podsURL, statefulSetsURL, enhanceStatefulSetsURL, stonesURL, watersURL } from "../+workloads";
 import { podsStore } from "../+workloads-pods/pods.store";
 import { deploymentStore } from "../+workloads-deployments/deployments.store";
 import { daemonSetStore } from "../+workloads-daemonsets/daemonsets.store";
@@ -17,6 +17,7 @@ import { enhanceStatefulSetStore } from "../+workloads-enhancestatefulsets/enhan
 import { stoneStore } from "../+workloads-stones/stones.store"
 import { PageFiltersList } from "../item-object-list/page-filters-list";
 import { NamespaceSelectFilter } from "../+namespaces/namespace-select";
+import { waterStore } from "../+workloads-waters/waters.store";
 
 
 @observer
@@ -31,6 +32,7 @@ export class OverviewStatuses extends React.Component {
     const cronJobs = cronJobStore.getAllByNs(contextNs);
     const enhanceStatefulSets = enhanceStatefulSetStore.getAllByNs(contextNs);
     const stones = stoneStore.getAllByNs(contextNs);
+    const waters = waterStore.getAllByNs(contextNs);
 
     return (
       <div className="OverviewStatuses">
@@ -45,12 +47,16 @@ export class OverviewStatuses extends React.Component {
             <OverviewWorkloadStatus status={podsStore.getStatuses(pods)} />
           </div>
           <div className="workload">
-            <div className="title"><Link to={stonesURL()}><Trans>🧜🏽‍♀️Stones</Trans> ({stones.length})</Link></div>
+            <div className="title"><Link to={stonesURL()}><Trans>Stones</Trans> ({stones.length})</Link></div>
             <OverviewWorkloadStatus status={stoneStore.getStatuses(stones)} />
           </div>
           <div className="workload">
-            <div className="title"><Link to={enhanceStatefulSetsURL()}><Trans>🧜🏽‍♀️StatefulSets</Trans> ({enhanceStatefulSets.length})</Link></div>
+            <div className="title"><Link to={enhanceStatefulSetsURL()}><Trans>StatefulSets*</Trans> ({enhanceStatefulSets.length})</Link></div>
             <OverviewWorkloadStatus status={enhanceStatefulSetStore.getStatuses(enhanceStatefulSets)} />
+          </div>
+          <div className="workload">
+            <div className="title"><Link to={watersURL()}><Trans>Waters</Trans> ({waters.length})</Link></div>
+            <OverviewWorkloadStatus status={waterStore.getStatuses(waters)} />
           </div>
           <div className="workload">
             <div className="title"><Link to={deploymentsURL()}><Trans>Deployments</Trans> ({deployments.length})</Link></div>
