@@ -21,6 +21,7 @@ import {ciURL, ciRoute} from "../+ci";
 import {Config, configRoute, configURL} from "../+config";
 import {eventRoute, eventsURL} from "../+events";
 import {tenantRoute, tenantURL, Tenant} from "../+tenant";
+import {deployRoute, deployURL, Deploy} from "../+deploy";
 import {Apps, appsRoute, appsURL} from "../+apps";
 import {namespaceStore} from "../+namespaces/namespace.store";
 import {TabRoute} from "./main-layout";
@@ -104,13 +105,13 @@ export class Sidebar extends React.Component<Props> {
                             text={<Trans>Nodes</Trans>}
                             icon={<Icon svg="nodes"/>}
                         />
-                        <SidebarNavItem
-                            id="deploymentEngine"
-                            url={deploymentEngineURL()}
-                            routePath={deploymentEngineRoute.path}
-                            subMenus={DeploymentEngine.tabRoutes}
-                            text={<Trans>Enhance</Trans>}
-                            icon={<Icon material="post_add"/>}
+                         <SidebarNavItem
+                            id="deploy"
+                            url={deployURL({query})}
+                            routePath={deployRoute.path}
+                            subMenus={Deploy.tabRoutes}
+                            text={<Trans>Deploy</Trans>}
+                            icon={<Icon material="open_in_browser"/>}
                         />
                         <SidebarNavItem
                             id="workloads"
@@ -171,6 +172,14 @@ export class Sidebar extends React.Component<Props> {
                             subMenus={Tenant.tabRoutes}
                             text={<Trans>Tenant</Trans>}
                             icon={<Icon svg="user"/>}
+                        />
+                        <SidebarNavItem
+                            id="deploymentEngine"
+                            url={deploymentEngineURL()}
+                            routePath={deploymentEngineRoute.path}
+                            subMenus={DeploymentEngine.tabRoutes}
+                            text={<Trans>Enhance</Trans>}
+                            icon={<Icon material="post_add"/>}
                         />
                         <SidebarNavItem
                             id="apps"

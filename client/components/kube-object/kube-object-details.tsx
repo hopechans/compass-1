@@ -70,8 +70,12 @@ export class KubeObjectDetails extends React.Component {
       const { kind, getName, selfLink } = object;
       title = `${kind}: ${getName()}`;
       apiComponents = apiManager.getViews(selfLink);
-      // nuwa ingore use crd details
-      if (kind == "StatefulSet" || kind == "Stone" || kind == "Injector" || kind == "Water" || kind == "Workloads") {
+      //  ingore nuwa/fuxi use crd details
+      if (kind == "StatefulSet" || kind == "Stone" ||
+          kind == "Injector" || kind == "Water" ||
+          kind == "Workloads"||
+          kind == "Field" || kind == "Form" || kind == "Page"
+      ) {
         isCrdInstanceLocal = false;
       }
       if (isCrdInstanceLocal) {

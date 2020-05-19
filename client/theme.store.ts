@@ -114,8 +114,8 @@ export class ThemeStore {
   protected style = document.createElement("style");
 
   readonly defaultTheme: ITheme = {
-    name: "kontena-dark",
-    type: "dark",
+    name: "kontena-light",
+    type: "light",
     colors: {} as any,
   };
 
