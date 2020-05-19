@@ -105,14 +105,6 @@ export class Sidebar extends React.Component<Props> {
                             icon={<Icon svg="nodes"/>}
                         />
                         <SidebarNavItem
-                            id="deploymentEngine"
-                            url={deploymentEngineURL()}
-                            routePath={deploymentEngineRoute.path}
-                            subMenus={DeploymentEngine.tabRoutes}
-                            text={<Trans>Enhance</Trans>}
-                            icon={<Icon material="post_add"/>}
-                        />
-                        <SidebarNavItem
                             id="workloads"
                             url={workloadsURL({query})}
                             routePath={workloadsRoute.path}
@@ -171,6 +163,14 @@ export class Sidebar extends React.Component<Props> {
                             subMenus={Tenant.tabRoutes}
                             text={<Trans>Tenant</Trans>}
                             icon={<Icon svg="user"/>}
+                        />
+                        <SidebarNavItem
+                            id="deploymentEngine"
+                            url={deploymentEngineURL()}
+                            routePath={deploymentEngineRoute.path}
+                            subMenus={DeploymentEngine.tabRoutes}
+                            text={<Trans>Enhance</Trans>}
+                            icon={<Icon material="post_add"/>}
                         />
                         <SidebarNavItem
                             id="apps"

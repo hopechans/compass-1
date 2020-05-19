@@ -4,6 +4,9 @@ import {Redirect, Route, Switch} from "react-router";
 import {Trans} from "@lingui/macro";
 import {MainLayout, TabRoute} from "../layout/main-layout";
 import {Graph, graphRoute, graphURL} from "../+deploymentengine-graph";
+import {Pages, pageRoute, pageURL} from "../+deploymentengine-page";
+import {Forms, formRoute, formURL} from "../+deploymentengine-form";
+import {Fields, fieldRoute, fieldURL} from "../+deploymentengine-field";
 
 @observer
 export class DeploymentEngine extends React.Component {
@@ -14,6 +17,24 @@ export class DeploymentEngine extends React.Component {
                 component: Graph,
                 url: graphURL(),
                 path: graphRoute.path,
+            },
+            {
+                title: <Trans>Page</Trans>,
+                component: Pages,
+                url: pageURL(),
+                path: pageRoute.path,
+            },
+            {
+                title: <Trans>Form</Trans>,
+                component: Forms,
+                url: formURL(),
+                path: formRoute.path,
+            },
+            {
+                title: <Trans>Field</Trans>,
+                component: Fields,
+                url: fieldURL(),
+                path: fieldRoute.path,
             },
         ]
     }
