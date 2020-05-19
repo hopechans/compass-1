@@ -1,4 +1,4 @@
-import "./stone-details.scss";
+import "./waters-details.scss";
 
 import React from "react";
 import { disposeOnUnmount, observer } from "mobx-react";
@@ -9,23 +9,23 @@ import { DrawerItem } from "../drawer";
 import { PodDetailsStatuses } from "../+workloads-pods/pod-details-statuses";
 import { KubeEventDetails } from "../+events/kube-event-details";
 import { podsStore } from "../+workloads-pods/pods.store";
-import { stoneStore } from "./stones.store";
+import { waterStore } from "./waters.store";
 import { KubeObjectDetailsProps } from "../kube-object";
-import { Stone, stoneApi } from "../../api/endpoints";
+import { Water, waterApi } from "../../api/endpoints";
 import { ResourceMetrics, ResourceMetricsText } from "../resource-metrics";
 import { PodCharts, podMetricTabs } from "../+workloads-pods/pod-charts";
 import { PodDetailsList } from "../+workloads-pods/pod-details-list";
 import { apiManager } from "../../api/api-manager";
 import { KubeObjectMeta } from "../kube-object/kube-object-meta";
 
-interface Props extends KubeObjectDetailsProps<Stone> {
+interface Props extends KubeObjectDetailsProps<Water> {
 }
 
 @observer
-export class StoneDetails extends React.Component<Props> {
+export class WaterDetails extends React.Component<Props> {
   @disposeOnUnmount
   clean = reaction(() => this.props.object, () => {
-    stoneStore.reset();
+    waterStore.reset();
   });
 
   componentDidMount() {
@@ -35,29 +35,29 @@ export class StoneDetails extends React.Component<Props> {
   }
 
   componentWillUnmount() {
-    stoneStore.reset();
+    waterStore.reset();
   }
 
   render() {
-    const { object: stone } = this.props;
-    if (!stone) return null
-    const images = stone.getImages()
-    const selectors = stone.getSelectors()
-    const nodeSelector = stone.getNodeSelectors()
-    const childPods = stoneStore.getChildPods(stone)
-    const metrics = stoneStore.metrics
-    const childStatefulsets = stoneStore.getChildEnhanceStatefulset(stone)
+    const { object: water } = this.props;
+    if (!water) return null
+    const images = water.getImages()
+    const selectors = water.getSelectors()
+    const nodeSelector = water.getNodeSelectors()
+    const childPods = waterStore.getChildPods(water)
+    const metrics = waterStore.metrics
+    // const childStatefulsets = waterStore.getChildEnhanceStatefulset(water)
     return (
       <div className="StoneDetails">
         {podsStore.isLoaded && (
           <ResourceMetrics
-            loader={() => stoneStore.loadMetrics(stone)}
-            tabs={podMetricTabs} object={stone} params={{ metrics }}
+            loader={() => waterStore.loadMetrics(water)}
+            tabs={podMetricTabs} object={water} params={{ metrics }}
           >
             <PodCharts />
           </ResourceMetrics>
         )}
-        <KubeObjectMeta object={stone} />
+        <KubeObjectMeta object={water} />
         {selectors.length &&
           <DrawerItem name={<Trans>Selector</Trans>} labelsOnly>
             {
@@ -80,18 +80,18 @@ export class StoneDetails extends React.Component<Props> {
               images.map(image => <p key={image}>{image}</p>)
             }
           </DrawerItem>
-        } 
+        }
         <DrawerItem name={<Trans>Pod Status</Trans>} className="pod-status">
           <PodDetailsStatuses pods={childPods} />
         </DrawerItem>
         <ResourceMetricsText metrics={metrics} />
-        <PodDetailsList pods={childPods} owner={stone} />
-        <KubeEventDetails object={stone} />     
+        <PodDetailsList pods={childPods} owner={water} />
+        <KubeEventDetails object={water} />
       </div>
     )
   }
 }
 
-apiManager.registerViews(stoneApi, {
-  Details: StoneDetails
+apiManager.registerViews(waterApi, {
+  Details: WaterDetails
 })

@@ -35,3 +35,6 @@ export * from "./ali-formrender.api"
 export * from "./stone.api"
 export * from "./enhance-stateful-set.api"
 export * from './endpoint.api'
+export * from './injector.api'
+export * from './water.api'
+export * from './workloads-deploy.api'

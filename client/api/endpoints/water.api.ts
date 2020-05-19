@@ -5,27 +5,23 @@ import { autobind } from "../../utils";
 import { KubeApi } from "../kube-api";
 
 @autobind()
-export class EnhanceStatefulSet extends WorkloadKubeObject {
-  getStatus() {
-    return get(this, "spec.status.replicas")
-  }
-
-  static kind = "StatefulSet"
+export class Water extends WorkloadKubeObject {
+  static kind = "Water"
   spec: {
-    serviceName: string;
-    replicas: number;
-    selector: {
-      matchLabels: {
-        [key: string]: string;
-      };
+    service: {
+      ports: {
+        name: string,
+        protocol: string,
+        port: number,
+        targetPort: number,
+      }[],
+      type: string;
     };
+    strategy: string;
     template: {
       metadata: {
         labels: {
           app: string;
-          annotations: {
-            [key: string]: string;
-          };
         };
       };
       spec: {
@@ -45,7 +41,7 @@ export class EnhanceStatefulSet extends WorkloadKubeObject {
         nodeSelector?: {
           [selector: string]: string;
         };
-        tolerations?: {
+        tolerations: {
           key: string;
           operator: string;
           effect: string;
@@ -56,9 +52,6 @@ export class EnhanceStatefulSet extends WorkloadKubeObject {
     volumeClaimTemplates: {
       metadata: {
         name: string;
-        annotations: {
-          [key: string]: string;
-        };
       };
       spec: {
         accessModes: string[];
@@ -70,38 +63,20 @@ export class EnhanceStatefulSet extends WorkloadKubeObject {
       };
     }[];
   }
-  podManagementPolicy: string;
-  updateStrategy: {
-    type: string;
-    rollingUpdate: {
-      podUpdatePolicy: string;
-      maxUnavailable: number;
-      partition: number;
-    };
-  }
   status: {
-    observedGeneration: number;
     replicas: number;
-    currentReplicas: number;
-    currentRevision: string;
-    updateRevision: string;
-    collisionCount: number;
+    statefulset: number;
   }
 
   getImages() {
     const containers: IPodContainer[] = get(this, "spec.template.spec.containers", [])
     return [...containers].map(container => container.image)
   }
-
-  getReplicaUpdate() {
-    return get(this, "spec.status.updateRevision")
-  }
-
 }
 
-export const enhanceStatefulSetApi = new KubeApi({
-  kind: EnhanceStatefulSet.kind,
-  apiBase: "/apis/nuwa.nip.io/v1/statefulsets",
+export const waterApi = new KubeApi({
+  kind: Water.kind,
+  apiBase: "/apis/nuwa.nip.io/v1/waters",
   isNamespaced: true,
-  objectConstructor: EnhanceStatefulSet,
+  objectConstructor: Water,
 });

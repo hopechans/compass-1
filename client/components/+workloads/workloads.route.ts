@@ -39,6 +39,18 @@ export const enhanceStatefulsetsRoute: RouteProps = {
   path: "/enhancestatefulsets"
 }
 
+export const injectorsRoute: RouteProps = {
+  path: "/injectors"
+}
+
+export const watersRoute: RouteProps = {
+  path: "/waters"
+}
+
+export const deployRoute: RouteProps = {
+  path: "/deploy"
+}
+
 // Route params
 export interface IWorkloadsOverviewRouteParams {
 }
@@ -53,6 +65,13 @@ export interface IDaemonSetsRouteParams {
 }
 
 export interface IStatefulSetsRouteParams {
+}
+export interface InjectorsRouteParams {
+}
+export interface IWatersRouteParams {
+}
+
+export interface IDeployRouteParams {
 }
 
 export interface IEnhanceStatefulSetsRouteParams {
@@ -79,3 +98,6 @@ export const jobsURL = buildURL<IJobsRouteParams>(jobsRoute.path)
 export const cronJobsURL = buildURL<ICronJobsRouteParams>(cronJobsRoute.path)
 export const stonesURL = buildURL<IStonesRouteParams>(stonesRoute.path)
 export const enhanceStatefulSetsURL = buildURL<IEnhanceStatefulSetsRouteParams>(enhanceStatefulsetsRoute.path)
+export const injectorURL = buildURL<InjectorsRouteParams>(injectorsRoute.path)
+export const watersURL = buildURL<IWatersRouteParams>(watersRoute.path)
+export const deployURL = buildURL<IDeployRouteParams>(deployRoute.path)

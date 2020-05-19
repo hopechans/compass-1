@@ -12,9 +12,7 @@ export class StoneStore extends KubeObjectStore<Stone> {
   @observable metrics: IPodMetrics = null;
 
   loadMetrics(stone: Stone) {
-    // 需要先get stone 下的nuwa.nip.io/v1/statefulsets
     const pods = this.getChildPods(stone);
-    const enhanceStatefulsets = this.getChildEnhanceStatefulset(stone);
     return podsApi.getMetrics(pods, stone.getNs(), "").then(metrics =>
       this.metrics = metrics
     );
