@@ -21,6 +21,7 @@ import {ciURL, ciRoute} from "../+ci";
 import {Config, configRoute, configURL} from "../+config";
 import {eventRoute, eventsURL} from "../+events";
 import {tenantRoute, tenantURL, Tenant} from "../+tenant";
+import {deployRoute, deployURL, Deploy} from "../+deploy";
 import {Apps, appsRoute, appsURL} from "../+apps";
 import {namespaceStore} from "../+namespaces/namespace.store";
 import {TabRoute} from "./main-layout";
@@ -103,6 +104,14 @@ export class Sidebar extends React.Component<Props> {
                             url={nodesURL()}
                             text={<Trans>Nodes</Trans>}
                             icon={<Icon svg="nodes"/>}
+                        />
+                         <SidebarNavItem
+                            id="deploy"
+                            url={deployURL({query})}
+                            routePath={deployRoute.path}
+                            subMenus={Deploy.tabRoutes}
+                            text={<Trans>Deploy</Trans>}
+                            icon={<Icon material="open_in_browser"/>}
                         />
                         <SidebarNavItem
                             id="workloads"
