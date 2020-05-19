@@ -1,0 +1,14 @@
+$form-status-colors: (
+        abletoscale: $colorOk,
+        scalingactive: $colorInfo,
+        scalinglimited: $colorSoftError,
+);
+
+@mixin form-status-bgc {
+  @each $status, $color in $form-status-colors {
+    &.#{$status} {
+      background: $color;
+      color: white;
+    }
+  }
+}
