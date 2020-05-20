@@ -10,6 +10,7 @@ import { deployStore } from "./deploy.store";
 import { KubeObjectDetailsProps } from "../kube-object";
 import { deployApi, Deploy } from "../../api/endpoints";
 import { apiManager } from "../../api/api-manager";
+import { Stone } from "../../api/endpoints";
 
 interface Props extends KubeObjectDetailsProps<Deploy> {
 }
@@ -31,9 +32,11 @@ export class DeployDetails extends React.Component<Props> {
   render() {
     const { object: deploy } = this.props;
     if (!deploy) return null
+    const tmplate = deploy.getTemplate();
     return (
       <div className="DeployDetails">
-        显示contaiers的配置与数据
+        12345 上山打老虎
+        
       </div>
     )
   }

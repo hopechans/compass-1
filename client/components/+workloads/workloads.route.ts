@@ -71,9 +71,6 @@ export interface InjectorsRouteParams {
 export interface IWatersRouteParams {
 }
 
-export interface IDeployRouteParams {
-}
-
 export interface IEnhanceStatefulSetsRouteParams {
 }
 
@@ -100,4 +97,3 @@ export const stonesURL = buildURL<IStonesRouteParams>(stonesRoute.path)
 export const enhanceStatefulSetsURL = buildURL<IEnhanceStatefulSetsRouteParams>(enhanceStatefulsetsRoute.path)
 export const injectorURL = buildURL<InjectorsRouteParams>(injectorsRoute.path)
 export const watersURL = buildURL<IWatersRouteParams>(watersRoute.path)
-export const deployURL = buildURL<IDeployRouteParams>(deployRoute.path)

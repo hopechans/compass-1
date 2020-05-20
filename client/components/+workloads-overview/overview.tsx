@@ -14,6 +14,7 @@ import { statefulSetStore } from "../+workloads-statefulsets/statefulset.store";
 import { replicaSetStore } from "../+workloads-replicasets/replicasets.store";
 import { enhanceStatefulSetStore } from "../+workloads-enhancestatefulsets/enhancestatefulset.store"
 import { stoneStore } from "../+workloads-stones/stones.store"
+import { waterStore } from "../+workloads-waters/waters.store"
 import { jobStore } from "../+workloads-jobs/job.store";
 import { cronJobStore } from "../+workloads-cronjobs/cronjob.store";
 import { Spinner } from "../spinner";
@@ -39,6 +40,7 @@ export class WorkloadsOverview extends React.Component<Props> {
       eventStore,
       enhanceStatefulSetStore,
       stoneStore,
+      waterStore,
     ];
     this.isReady = stores.every(store => store.isLoaded);
     await Promise.all(stores.map(store => store.loadAll()));

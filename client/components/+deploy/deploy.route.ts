@@ -1,21 +1,14 @@
 import { RouteProps } from "react-router"
 import { buildURL, IURLParams } from "../../navigation";
-import { Deploy } from "./deploy";
+import { Deploys } from "./deploy";
 
 export const deployRoute: RouteProps = {
   path: "/workloads-template"
 }
 
-export const deployWorkloadsTemplateRoute: RouteProps = {
-  path: "/workloads-template"
-}
-
-
 // Route params
-export interface IDeployWorkloadsTemplateParams {
+export interface IDeployWorkloadsParams {
 }
-
 
 // URL-builders
-export const deployURL = (params?: IURLParams) => deployWorkloadsTemplateURL(params);
-export const deployWorkloadsTemplateURL = buildURL<IDeployWorkloadsTemplateParams>(deployWorkloadsTemplateRoute.path)
+export const deployURL = buildURL<IDeployWorkloadsParams>(deployRoute.path)
