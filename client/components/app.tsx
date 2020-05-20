@@ -16,7 +16,7 @@ import { usersManagementRoute } from "./+user-management/user-management.routes"
 import { clusterRoute, clusterURL } from "./+cluster";
 import { KubeConfigDialog } from "./kubeconfig-dialog/kubeconfig-dialog";
 import { Nodes, nodesRoute } from "./+nodes";
-import { Deploy, deployURL,deployRoute } from "./+deploy";
+import { Deploy, deployURL, deployRoute } from "./+deploy";
 import { Workloads, workloadsRoute, workloadsURL } from "./+workloads";
 import { Tenant, tenantURL,tenantRoute } from "./+tenant";
 import { Namespaces, namespacesRoute } from "./+namespaces";
