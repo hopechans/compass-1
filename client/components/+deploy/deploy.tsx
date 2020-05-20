@@ -8,18 +8,19 @@ import { Deploy, deployApi } from "../../api/endpoints";
 import { KubeObjectMenu, KubeObjectMenuProps } from "../kube-object/kube-object-menu";
 import { MainLayout, TabRoute } from "../layout/main-layout";
 import { KubeObjectListLayout } from "../kube-object";
-import { IDeployWorkloadsTemplateParams } from "../+deploy";
+import { IDeployWorkloadsParams } from "../+deploy";
 import { apiManager } from "../../api/api-manager";
 import { deployStore } from "./deploy.store";
 
 enum sortBy {
-    name = "name",
+    templateName = "templateName",
     namespace = "namespace",
+    appName = "appName",
     generateTimestamp = "generateTimestamp",
     age = "age",
 }
 
-interface Props extends RouteComponentProps<IDeployWorkloadsTemplateParams> {
+interface Props extends RouteComponentProps<IDeployWorkloadsParams> {
 }
 
 @observer
@@ -29,10 +30,11 @@ export class Deploys extends React.Component<Props> {
         return (
             <MainLayout>
                 <KubeObjectListLayout
-                    className="Deploys" store={deployStore}
+                    className="Deploy" store={deployStore}
                     sortingCallbacks={{
-                        [sortBy.name]: (deploy: Deploy) => deploy.getName(),
+                        [sortBy.templateName]: (deploy: Deploy) => deploy.getName(),
                         [sortBy.namespace]: (deploy: Deploy) => deploy.getNs(),
+                        [sortBy.generateTimestamp]: (deploy: Deploy) => deploy.getGenerateTimestamp(),
                         [sortBy.age]: (deploy: Deploy) => deploy.getAge(false),
                     }
                     }
@@ -45,8 +47,9 @@ export class Deploys extends React.Component<Props> {
                     renderHeaderTitle={< Trans > Deploys </Trans >}
                     renderTableHeader={
                         [
-                            { title: <Trans>Name</Trans>, className: "name", sortBy: sortBy.name },
+                            { title: <Trans>TemplateName</Trans>, className: "template", sortBy: sortBy.templateName },
                             { title: <Trans>Namespace</Trans>, className: "namespace", sortBy: sortBy.namespace },
+                            { title: <Trans>AppName</Trans>, className: "appName", sortBy: sortBy.appName },
                             { title: <Trans>GenerateTimestamp</Trans>, className: "generateTimestamp", sortBy: sortBy.generateTimestamp },
                             { title: <Trans>Age</Trans>, className: "age", sortBy: sortBy.age },
                         ]}
@@ -54,6 +57,7 @@ export class Deploys extends React.Component<Props> {
                     renderTableContents={(deploy: Deploy) => [
                         deploy.getName(),
                         deploy.getNs(),
+                        deploy.getAppName(),
                         new Date(deploy.getGenerateTimestamp() * 1e3).toISOString(),
                         deploy.getAge(),
                     ]}

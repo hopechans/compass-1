@@ -7,9 +7,8 @@ export const deployRoute: RouteProps = {
 }
 
 // Route params
-export interface IDeployWorkloadsTemplateParams {
+export interface IDeployWorkloadsParams {
 }
 
 // URL-builders
-export const deployURL = (params?: IURLParams) => deployWorkloadsTemplateURL(params);
-export const deployWorkloadsTemplateURL = buildURL<IDeployWorkloadsTemplateParams>(deployRoute.path)
+export const deployURL = buildURL<IDeployWorkloadsParams>(deployRoute.path)
