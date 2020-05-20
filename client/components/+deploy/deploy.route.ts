@@ -3,9 +3,7 @@ import { buildURL, IURLParams } from "../../navigation";
 import { Deploy } from "./deploy";
 
 export const deployRoute: RouteProps = {
-  get path() {
-    return Deploy.tabRoutes.map(({ path }) => path).flat()
-  }
+  path: "/workloads-template"
 }
 
 export const deployWorkloadsTemplateRoute: RouteProps = {

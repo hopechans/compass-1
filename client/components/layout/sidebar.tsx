@@ -109,7 +109,6 @@ export class Sidebar extends React.Component<Props> {
                             id="deploy"
                             url={deployURL({query})}
                             routePath={deployRoute.path}
-                            subMenus={Deploy.tabRoutes}
                             text={<Trans>Deploy</Trans>}
                             icon={<Icon material="open_in_browser"/>}
                         />
