@@ -33,7 +33,7 @@ export class DeployDetails extends React.Component<Props> {
     if (!deploy) return null
     return (
       <div className="DeployDetails">
-        显示contaiers的配置与数据
+        <>显示contaiers的配置与数据</>
       </div>
     )
   }

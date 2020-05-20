@@ -21,7 +21,7 @@ import {ciURL, ciRoute} from "../+ci";
 import {Config, configRoute, configURL} from "../+config";
 import {eventRoute, eventsURL} from "../+events";
 import {tenantRoute, tenantURL, Tenant} from "../+tenant";
-import {deployRoute, deployURL, Deploy} from "../+deploy";
+import {deployRoute, deployURL, Deploys} from "../+deploy";
 import {Apps, appsRoute, appsURL} from "../+apps";
 import {namespaceStore} from "../+namespaces/namespace.store";
 import {TabRoute} from "./main-layout";
