@@ -1,2 +1,30 @@
 .DeployDetails {
 }
+[data-theme='compact'] .site-collapse-custom-collapse .site-collapse-custom-panel,
+.site-collapse-custom-collapse .site-collapse-custom-panel {
+  // background: #f7f7f7;
+  border-radius: 5px;
+  margin-top: 12px;
+  margin-bottom: 5px;
+  border: 0px;
+  overflow: hidden;
+}
+
+[data-theme='compact'] .ant-collapse-borderless {.ant-collapse-item {
+  border-bottom: none!important
+}}
+
+[data-theme='compact'] .ant-collapse-item {
+  border-bottom:none!important
+}
+
+.mt-15{
+  margin-top: 15px!important;
+}
+
+.env-config-btn{
+  margin: 10px 0 0 30px;
+}
+
+.env-config-del-btn{
+}

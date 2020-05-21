@@ -37,8 +37,7 @@ import { CustomResources } from "./+custom-resources/custom-resources";
 import { crdRoute } from "./+custom-resources";
 import {DeploymentEngine} from "./+deploymentengine";
 import {deploymentEngineRoute, deploymentEngineURL} from "./+deploymentengine";
-
-
+import 'antd/dist/antd.css';
 @observer
 class App extends React.Component {
   static rootElem = document.getElementById('app');
