@@ -68,10 +68,10 @@ export function ServiceAccountMenu(props: KubeObjectMenuProps<ServiceAccount>) {
   const { object, toolbar } = props;
   return (
     <KubeObjectMenu {...props}>
-      <MenuItem onClick={() => openServiceAccountKubeConfig(object)}>
+      {/* <MenuItem onClick={() => openServiceAccountKubeConfig(object)}>
         <Icon material="insert_drive_file" title="Kubeconfig File" interactive={toolbar}/>
         <span className="title"><Trans>Kubeconfig</Trans></span>
-      </MenuItem>
+      </MenuItem> */}
     </KubeObjectMenu>
   )
 }

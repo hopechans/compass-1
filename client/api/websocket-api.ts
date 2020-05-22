@@ -1,18 +1,16 @@
-import {observable} from "mobx";
-import {EventEmitter} from "../utils/eventEmitter";
+import { observable } from "mobx";
+import { EventEmitter } from "../utils/eventEmitter";
 import SockJS from "sockjs-client";
-import {podsApi} from "../api/endpoints";
+import { podsApi } from "../api/endpoints";
 
 const welcome =`
-        /\\_/\\\r\n
-      =( °w° )=\ \r\n
-        )   (     // Compass Cloud Platform 🤔🤔🤔  ♻\r\n
-       (__ __)           === == ==\r\n
- /"""""""""""""" //\\___/ === == ==\r\n
-{                       /  == =-\r\n
- \\______ O           _ _/\r\n
-   \\    \\         _ _/\r\n
-    \\____\\_______/__/__/\r\n
+Yame Container Cloud Platform === \r\n
+             === == ==\r\n
+ /"""""""""""""" //\\___/ === == == \r\n
+{                       /  == = \r\n
+ \\______ O           _ _/  == === == \r\n
+   \\    \\         _ _/ == === ===\r\n
+    \\____\\_______/__/__/ == == == \r\n
 `
 
 interface IParams {
@@ -72,7 +70,7 @@ export class WebSocketApi {
 
     constructor(protected params: IParams) {
         this.params = Object.assign({}, WebSocketApi.defaultParams, params);
-        const {namespace, pod, container, autoConnect, pingIntervalSeconds} = this.params;
+        const { namespace, pod, container, autoConnect, pingIntervalSeconds } = this.params;
         this.namespace = namespace;
         this.pod = pod;
         this.container = container;
@@ -116,7 +114,7 @@ export class WebSocketApi {
     }
 
     reconnect() {
-        const {reconnectDelaySeconds} = this.params;
+        const { reconnectDelaySeconds } = this.params;
         if (!reconnectDelaySeconds) return;
         this.writeLog('reconnect after', reconnectDelaySeconds + "ms");
         this.reconnectTimer = setTimeout(() => this.connect(), reconnectDelaySeconds * 1000);
@@ -167,7 +165,7 @@ export class WebSocketApi {
     }
 
     protected _onOpen(evt: Event) {
-        const data = {Op: this.op, sessionID: this.sessionId};
+        const data = { Op: this.op, sessionID: this.sessionId };
         this.onData.emit(welcome);
         // if (this.params.flushOnOpen) this.flush();
         this.readyState = WebSocketApiState.OPEN;

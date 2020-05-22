@@ -3,6 +3,7 @@ import "./deploy-details.scss";
 import React from "react";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { reaction } from "mobx";
+import { AceEditor } from "../ace-editor";
 import { Badge } from "../badge/badge";
 import { Trans } from "@lingui/macro";
 import { DrawerItem } from "../drawer";
@@ -10,7 +11,7 @@ import { deployStore } from "./deploy.store";
 import { KubeObjectDetailsProps } from "../kube-object";
 import { deployApi, Deploy } from "../../api/endpoints";
 import { apiManager } from "../../api/api-manager";
-import { Stone } from "../../api/endpoints";
+
 
 interface Props extends KubeObjectDetailsProps<Deploy> {
 }
@@ -32,11 +33,24 @@ export class DeployDetails extends React.Component<Props> {
   render() {
     const { object: deploy } = this.props;
     if (!deploy) return null
-    const tmplate = deploy.getTemplate();
+    const object = deploy.getObject();
     return (
       <div className="DeployDetails">
-        12345 上山打老虎
-        
+        <DrawerItem name={<Trans>App Name</Trans>} labelsOnly>
+          {
+            <>{deploy.getAppName()}</>
+          }
+        </DrawerItem>
+
+        <DrawerItem name={<Trans>Template Content</Trans>} labelsOnly>
+          <AceEditor
+            mode="yaml"
+            value={JSON.stringify(object)}
+            showGutter={false}
+            readOnly
+          />
+        </DrawerItem>
+
       </div>
     )
   }

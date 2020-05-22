@@ -2,7 +2,6 @@ import get from "lodash/get";
 import { WorkloadKubeObject } from "../workload-kube-object";
 import { autobind } from "../../utils";
 import { KubeApi } from "../kube-api";
-import { Stone } from "./stone.api"
 
 @autobind()
 export class Deploy extends WorkloadKubeObject {
@@ -11,7 +10,7 @@ export class Deploy extends WorkloadKubeObject {
         name: string,  // the app name
         resourceType: string;
         generateTimestamp: string;
-        metadata: string; // the field record array container configuration
+        metadata: WorkloadKubeObject; // the field record array container configuration
     }
     status: {}
 
@@ -28,13 +27,14 @@ export class Deploy extends WorkloadKubeObject {
         return get(this, "spec.generateTimestamp")
     }
 
-    getTemplate() {
-        switch (this.getResourceType()) {
-            case ("Stones"):
-                return new Stone(get(this, "spec.metadata"));
-            default:
-        }
+    getObject() {
+        return get(this, "spec.metadata");
     }
+
+    setTemplate(metadata: WorkloadKubeObject) {
+        this.spec.metadata = metadata;
+    }
+
 }
 
 export const deployApi = new KubeApi({

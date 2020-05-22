@@ -2,8 +2,11 @@ import "./deploy.store.ts";
 
 import React from "react";
 import { observer } from "mobx-react";
+import { MenuItem } from "../menu";
+import { Icon } from "../icon";
+import { _i18n } from "../../i18n"
 import { RouteComponentProps } from "react-router";
-import { Trans } from "@lingui/macro";
+import { t, Trans } from "@lingui/macro";
 import { Deploy, deployApi } from "../../api/endpoints";
 import { KubeObjectMenu, KubeObjectMenuProps } from "../kube-object/kube-object-menu";
 import { MainLayout, TabRoute } from "../layout/main-layout";
@@ -14,8 +17,8 @@ import { deployStore } from "./deploy.store";
 
 enum sortBy {
     templateName = "templateName",
-    namespace = "namespace",
     appName = "appName",
+    resourceType = "resourceType",
     generateTimestamp = "generateTimestamp",
     age = "age",
 }
@@ -33,7 +36,8 @@ export class Deploys extends React.Component<Props> {
                     className="Deploy" store={deployStore}
                     sortingCallbacks={{
                         [sortBy.templateName]: (deploy: Deploy) => deploy.getName(),
-                        [sortBy.namespace]: (deploy: Deploy) => deploy.getNs(),
+                        [sortBy.appName]: (deploy: Deploy) => deploy.getAppName(),
+                        [sortBy.resourceType]: (deploy: Deploy) => deploy.getResourceType(),
                         [sortBy.generateTimestamp]: (deploy: Deploy) => deploy.getGenerateTimestamp(),
                         [sortBy.age]: (deploy: Deploy) => deploy.getAge(false),
                     }
@@ -47,17 +51,17 @@ export class Deploys extends React.Component<Props> {
                     renderHeaderTitle={< Trans > Deploys </Trans >}
                     renderTableHeader={
                         [
-                            { title: <Trans>TemplateName</Trans>, className: "template", sortBy: sortBy.templateName },
-                            { title: <Trans>Namespace</Trans>, className: "namespace", sortBy: sortBy.namespace },
                             { title: <Trans>AppName</Trans>, className: "appName", sortBy: sortBy.appName },
+                            { title: <Trans>TemplateName</Trans>, className: "template", sortBy: sortBy.templateName },
+                            { title: <Trans>ResourceType</Trans>, className: "resourceType", sortBy: sortBy.resourceType },
                             { title: <Trans>GenerateTimestamp</Trans>, className: "generateTimestamp", sortBy: sortBy.generateTimestamp },
                             { title: <Trans>Age</Trans>, className: "age", sortBy: sortBy.age },
                         ]}
 
                     renderTableContents={(deploy: Deploy) => [
-                        deploy.getName(),
-                        deploy.getNs(),
                         deploy.getAppName(),
+                        deploy.getName(),
+                        deploy.getResourceType(),
                         new Date(deploy.getGenerateTimestamp() * 1e3).toISOString(),
                         deploy.getAge(),
                     ]}
@@ -72,8 +76,18 @@ export class Deploys extends React.Component<Props> {
 }
 
 export function DeployMenu(props: KubeObjectMenuProps<Deploy>) {
+    const { object, toolbar } = props;
     return (
-        <KubeObjectMenu {...props} />
+        <KubeObjectMenu {...props} >
+            <MenuItem onClick={() => {
+
+            }}>
+                <Icon material="control_camera" title={_i18n._(t`Release`)} interactive={toolbar} />
+                <span className="title"><Trans>Release</Trans></span>
+            </MenuItem>
+        </KubeObjectMenu>
+
+
     )
 }
 
