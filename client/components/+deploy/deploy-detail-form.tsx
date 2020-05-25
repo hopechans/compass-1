@@ -61,7 +61,7 @@ export class DetailForm extends React.Component<Props,State>{
               httpPort:'',
               url:'',
               tcpPort:'',
-              command:''
+              command:'333'
             }
           },
           aliveProbe:{
@@ -453,7 +453,9 @@ export class DetailForm extends React.Component<Props,State>{
   readyProbeInputChange(index:number,e:string|any|React.ChangeEvent<HTMLInputElement|HTMLTextAreaElement>,filed:string){
     let {forms} = this.state
     let val = ''
+    
     if(e&&e.target){
+        console.log(e.target)
       val = e.target.value
     }
     else{
@@ -538,10 +540,16 @@ export class DetailForm extends React.Component<Props,State>{
     this.setState({forms:forms})
   }
 
-  lifeCycleInputChange(index:number,e:React.ChangeEvent<HTMLInputElement|HTMLTextAreaElement>,filed:string){
+  lifeCycleInputChange(index:number,e:React.ChangeEvent<HTMLInputElement|HTMLTextAreaElement>,type:string,filed:string){
     let {forms} = this.state
     const val = e.target.value
-    let data = forms[index].lifeCycle
+    let data:any = {}
+    if(type == 'postStart'){
+        data = forms[index].lifeCycle.postStart
+    }
+    if(type == 'preStop'){
+        data = forms[index].lifeCycle.preStop
+    }
     switch(filed){
       case 'httpPort':
         data.httpPort = val
@@ -798,10 +806,10 @@ export class DetailForm extends React.Component<Props,State>{
                         forms[index].readyProbe.pattern.type=='1'?
                         <Row className="mt-10">
                           <Col span={4} className="text-right">HTTP端口：</Col>
-                          <Col span={6}><Input size="small" placeholder="HTTP端口" value={forms[index].readyProbe.httpPort} onChange={(e)=>this.readyProbeInputChange(index,e,'httpPort')}/></Col>
+                          <Col span={6}><Input size="small" placeholder="HTTP端口" value={forms[index].readyProbe.pattern.httpPort} onChange={(e)=>this.readyProbeInputChange(index,e,'httpPort')}/></Col>
                           <Col span={1}></Col>
                           <Col span={4} className="text-right">URL：</Col>
-                          <Col span={6}><Input size="small" placeholder="URL" value={forms[index].readyProbe.url} onChange={(e)=>this.readyProbeInputChange(index,e,'url')}/></Col>
+                          <Col span={6}><Input size="small" placeholder="URL" value={forms[index].readyProbe.pattern.url} onChange={(e)=>this.readyProbeInputChange(index,e,'url')}/></Col>
                         </Row>
                         :<></>
                       }
@@ -809,7 +817,7 @@ export class DetailForm extends React.Component<Props,State>{
                         forms[index].readyProbe.pattern.type=='2'?
                         <Row className="mt-10">
                           <Col span={4} className="text-right">TCP端口：</Col>
-                          <Col span={6}><Input size="small" placeholder="TCP端口" value={forms[index].readyProbe.tcpPort} onChange={(e)=>this.readyProbeInputChange(index,e,'tcpPort')}/></Col>
+                          <Col span={6}><Input size="small" placeholder="TCP端口" value={forms[index].readyProbe.pattern.tcpPort} onChange={(e)=>this.readyProbeInputChange(index,e,'tcpPort')}/></Col>
                         </Row>
                         :<></>
                       }
@@ -817,7 +825,7 @@ export class DetailForm extends React.Component<Props,State>{
                         forms[index].readyProbe.pattern.type=='3'?
                         <Row className="mt-10">
                           <Col span={4} className="text-right">执行命令：</Col>
-                          <Col span={18}><TextArea rows={4} placeholder="执行命令" value={forms[index].readyProbe.command} onChange={(e)=>this.readyProbeInputChange(index,e,'command')}/></Col>
+                          <Col span={18}><TextArea rows={4} placeholder="执行命令" value={forms[index].readyProbe.pattern.command} onChange={(e)=>this.readyProbeInputChange(index,e,'command')}/></Col>
                         </Row>
                         :<></>
                       }
@@ -860,10 +868,10 @@ export class DetailForm extends React.Component<Props,State>{
                         forms[index].aliveProbe.pattern.type=='1'?
                         <Row className="mt-10">
                           <Col span={4} className="text-right">HTTP端口：</Col>
-                          <Col span={6}><Input size="small" placeholder="HTTP端口" value={forms[index].aliveProbe.httpPort} onChange={(e)=>this.aliveProbeInputChange(index,e,'httpPort')}/></Col>
+                          <Col span={6}><Input size="small" placeholder="HTTP端口" value={forms[index].aliveProbe.pattern.httpPort} onChange={(e)=>this.aliveProbeInputChange(index,e,'httpPort')}/></Col>
                           <Col span={1}></Col>
                           <Col span={4} className="text-right">URL：</Col>
-                          <Col span={6}><Input size="small" placeholder="URL" value={forms[index].aliveProbe.url} onChange={(e)=>this.aliveProbeInputChange(index,e,'url')}/></Col>
+                          <Col span={6}><Input size="small" placeholder="URL" value={forms[index].aliveProbe.pattern.url} onChange={(e)=>this.aliveProbeInputChange(index,e,'url')}/></Col>
                         </Row>
                         :<></>
                       }
@@ -871,7 +879,7 @@ export class DetailForm extends React.Component<Props,State>{
                         forms[index].aliveProbe.pattern.type=='2'?
                         <Row className="mt-10">
                           <Col span={4} className="text-right">TCP端口：</Col>
-                          <Col span={6}><Input size="small" placeholder="TCP端口" value={forms[index].aliveProbe.tcpPort} onChange={(e)=>this.aliveProbeInputChange(index,e,'tcpPort')}/></Col>
+                          <Col span={6}><Input size="small" placeholder="TCP端口" value={forms[index].aliveProbe.pattern.tcpPort} onChange={(e)=>this.aliveProbeInputChange(index,e,'tcpPort')}/></Col>
                         </Row>
                         :<></>
                       }
@@ -879,7 +887,7 @@ export class DetailForm extends React.Component<Props,State>{
                         forms[index].aliveProbe.pattern.type=='3'?
                         <Row className="mt-10">
                           <Col span={4} className="text-right">执行命令：</Col>
-                          <Col span={18}><TextArea rows={4} placeholder="执行命令" value={forms[index].aliveProbe.command} onChange={(e)=>this.aliveProbeInputChange(index,e,'command')}/></Col>
+                          <Col span={18}><TextArea rows={4} placeholder="执行命令" value={forms[index].aliveProbe.pattern.command} onChange={(e)=>this.aliveProbeInputChange(index,e,'command')}/></Col>
                         </Row>
                         :<></>
                       }
@@ -909,10 +917,10 @@ export class DetailForm extends React.Component<Props,State>{
                           forms[index].lifeCycle.postStart.type=='2'?
                           <Row className="mt-10">
                             <Col span={4} className="text-right">HTTP端口：</Col>
-                            <Col span={6}><Input size="small" placeholder="HTTP端口" value={forms[index].lifeCycle.postStart.httpPort} onChange={(e)=>this.lifeCycleInputChange(index,e,'httpPort')}/></Col>
+                            <Col span={6}><Input size="small" placeholder="HTTP端口" value={forms[index].lifeCycle.postStart.httpPort} onChange={(e)=>this.lifeCycleInputChange(index,e,'postStart','httpPort')}/></Col>
                             <Col span={1}></Col>
                             <Col span={4} className="text-right">URL：</Col>
-                            <Col span={6}><Input size="small" placeholder="URL" value={forms[index].lifeCycle.postStart.url} onChange={(e)=>this.lifeCycleInputChange(index,e,'url')}/></Col>
+                            <Col span={6}><Input size="small" placeholder="URL" value={forms[index].lifeCycle.postStart.url} onChange={(e)=>this.lifeCycleInputChange(index,e,'postStart','url')}/></Col>
                           </Row>
                           :<></>
                         }
@@ -920,7 +928,7 @@ export class DetailForm extends React.Component<Props,State>{
                           forms[index].lifeCycle.postStart.type=='3'?
                           <Row className="mt-10">
                             <Col span={4} className="text-right">TCP端口：</Col>
-                            <Col span={6}><Input size="small" placeholder="TCP端口" value={forms[index].lifeCycle.postStart.tcpPort} onChange={(e)=>this.lifeCycleInputChange(index,e,'tcpPort')}/></Col>
+                            <Col span={6}><Input size="small" placeholder="TCP端口" value={forms[index].lifeCycle.postStart.tcpPort} onChange={(e)=>this.lifeCycleInputChange(index,e,'postStart','tcpPort')}/></Col>
                           </Row>
                           :<></>
                         }
@@ -928,7 +936,7 @@ export class DetailForm extends React.Component<Props,State>{
                           forms[index].lifeCycle.postStart.type=='4'?
                           <Row className="mt-10">
                             <Col span={4} className="text-right">执行命令：</Col>
-                            <Col span={18}><TextArea rows={4} placeholder="执行命令" value={forms[index].lifeCycle.postStart.command} onChange={(e)=>this.lifeCycleInputChange(index,e,'command')}/></Col>
+                            <Col span={18}><TextArea rows={4} placeholder="执行命令" value={forms[index].lifeCycle.postStart.command} onChange={(e)=>this.lifeCycleInputChange(index,e,'postStart','command')}/></Col>
                           </Row>
                           :<></>
                         }
@@ -949,10 +957,10 @@ export class DetailForm extends React.Component<Props,State>{
                           forms[index].lifeCycle.preStop.type=='2'?
                           <Row className="mt-10">
                             <Col span={4} className="text-right">HTTP端口：</Col>
-                            <Col span={6}><Input size="small" placeholder="HTTP端口" value={forms[index].lifeCycle.preStop.httpPort} onChange={(e)=>this.lifeCycleInputChange(index,e,'httpPort')}/></Col>
+                            <Col span={6}><Input size="small" placeholder="HTTP端口" value={forms[index].lifeCycle.preStop.httpPort} onChange={(e)=>this.lifeCycleInputChange(index,e,'preStop','httpPort')}/></Col>
                             <Col span={1}></Col>
                             <Col span={4} className="text-right">URL：</Col>
-                            <Col span={6}><Input size="small" placeholder="URL" value={forms[index].lifeCycle.preStop.url} onChange={(e)=>this.lifeCycleInputChange(index,e,'url')}/></Col>
+                            <Col span={6}><Input size="small" placeholder="URL" value={forms[index].lifeCycle.preStop.url} onChange={(e)=>this.lifeCycleInputChange(index,e,'preStop','url')}/></Col>
                           </Row>
                           :<></>
                         }
@@ -960,7 +968,7 @@ export class DetailForm extends React.Component<Props,State>{
                           forms[index].lifeCycle.preStop.type=='3'?
                           <Row className="mt-10">
                             <Col span={4} className="text-right">TCP端口：</Col>
-                            <Col span={6}><Input size="small" placeholder="TCP端口" value={forms[index].lifeCycle.preStop.tcpPort} onChange={(e)=>this.lifeCycleInputChange(index,e,'tcpPort')}/></Col>
+                            <Col span={6}><Input size="small" placeholder="TCP端口" value={forms[index].lifeCycle.preStop.tcpPort} onChange={(e)=>this.lifeCycleInputChange(index,e,'preStop','tcpPort')}/></Col>
                           </Row>
                           :<></>
                         }
@@ -968,7 +976,7 @@ export class DetailForm extends React.Component<Props,State>{
                           forms[index].lifeCycle.preStop.type=='4'?
                           <Row className="mt-10">
                             <Col span={4} className="text-right">执行命令：</Col>
-                            <Col span={18}><TextArea rows={4} placeholder="执行命令" value={forms[index].lifeCycle.preStop.command} onChange={(e)=>this.lifeCycleInputChange(index,e,'command')}/></Col>
+                            <Col span={18}><TextArea rows={4} placeholder="执行命令" value={forms[index].lifeCycle.preStop.command} onChange={(e)=>this.lifeCycleInputChange(index,e,'preStop','command')}/></Col>
                           </Row>
                           :<></>
 
