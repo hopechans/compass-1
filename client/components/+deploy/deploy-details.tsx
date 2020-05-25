@@ -11,16 +11,27 @@ import { KubeObjectDetailsProps } from "../kube-object";
 import { deployApi, Deploy } from "../../api/endpoints";
 import { apiManager } from "../../api/api-manager";
 import { Stone } from "../../api/endpoints";
+import {DetailForm} from './deploy-detail-form'
 
 interface Props extends KubeObjectDetailsProps<Deploy> {
 }
 
 @observer
 export class DeployDetails extends React.Component<Props> {
+
+  baseFormRef = React.createRef<any>()
+
   @disposeOnUnmount
   clean = reaction(() => this.props.object, () => {
     deployStore.reset();
   });
+
+  getData(){
+    this.baseFormRef.current.getData().then((values:any)=>{
+      console.log(values)
+    });
+   
+  }
 
   componentDidMount() {
   }
@@ -35,8 +46,7 @@ export class DeployDetails extends React.Component<Props> {
     const tmplate = deploy.getTemplate();
     return (
       <div className="DeployDetails">
-        12345 上山打老虎
-        
+        <DetailForm/>
       </div>
     )
   }
