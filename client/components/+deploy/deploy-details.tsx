@@ -11,17 +11,32 @@ import { deployStore } from "./deploy.store";
 import { KubeObjectDetailsProps } from "../kube-object";
 import { deployApi, Deploy } from "../../api/endpoints";
 import { apiManager } from "../../api/api-manager";
+<<<<<<< HEAD
 
+=======
+import { Stone } from "../../api/endpoints";
+import {DetailForm} from './deploy-detail-form'
+>>>>>>> deaf5d04745ea9047537f2c059d283f7971ab829
 
 interface Props extends KubeObjectDetailsProps<Deploy> {
 }
 
 @observer
 export class DeployDetails extends React.Component<Props> {
+
+  baseFormRef = React.createRef<any>()
+
   @disposeOnUnmount
   clean = reaction(() => this.props.object, () => {
     deployStore.reset();
   });
+
+  getData(){
+    this.baseFormRef.current.getData().then((values:any)=>{
+      console.log(values)
+    });
+   
+  }
 
   componentDidMount() {
   }
@@ -36,21 +51,7 @@ export class DeployDetails extends React.Component<Props> {
     const object = deploy.getObject();
     return (
       <div className="DeployDetails">
-        <DrawerItem name={<Trans>App Name</Trans>} labelsOnly>
-          {
-            <>{deploy.getAppName()}</>
-          }
-        </DrawerItem>
-
-        <DrawerItem name={<Trans>Template Content</Trans>} labelsOnly>
-          <AceEditor
-            mode="yaml"
-            value={JSON.stringify(object)}
-            showGutter={false}
-            readOnly
-          />
-        </DrawerItem>
-
+        {/* <DetailForm/> */}
       </div>
     )
   }
