@@ -11,12 +11,7 @@ import { deployStore } from "./deploy.store";
 import { KubeObjectDetailsProps } from "../kube-object";
 import { deployApi, Deploy } from "../../api/endpoints";
 import { apiManager } from "../../api/api-manager";
-<<<<<<< HEAD
-
-=======
-import { Stone } from "../../api/endpoints";
-import {DetailForm} from './deploy-detail-form'
->>>>>>> deaf5d04745ea9047537f2c059d283f7971ab829
+import {DetailForm} from './deploy-detail-form';
 
 interface Props extends KubeObjectDetailsProps<Deploy> {
 }
@@ -51,7 +46,7 @@ export class DeployDetails extends React.Component<Props> {
     const object = deploy.getObject();
     return (
       <div className="DeployDetails">
-        {/* <DetailForm/> */}
+        <DetailForm/>
       </div>
     )
   }
