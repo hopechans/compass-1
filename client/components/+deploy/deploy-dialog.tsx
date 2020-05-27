@@ -49,7 +49,7 @@ interface Probe {
   cycle: number | string,
   retryCount: number | string,
   delay: number | string,
-  pattern: Pattern,
+  pattern?: Pattern,
 }
 
 interface LifeCycleCommand {
@@ -66,10 +66,63 @@ interface LifeCycle {
   preStop: LifeCycleCommand,
 }
 
+interface limits {
+  cpu: number | string,
+  memory: number | string,
+}
+
+interface requests {
+  cpu: number | string,
+  memory: number | string,
+}
+
+interface Resource {
+  limits: limits
+  requests: requests
+}
+
+interface VolumeClaimTemplateMetadata {
+  name: string,
+  annotations: string,
+}
+
+interface VolumeClaimTemplateSpecResourcesRequests {
+  storage: number | string,
+}
+
+interface VolumeClaimTemplateSpecResources {
+  requests: VolumeClaimTemplateSpecResourcesRequests
+}
+
+interface VolumeClaimTemplateSpec {
+  accessModes: string[],
+  resources: VolumeClaimTemplateSpecResources,
+}
+
+interface VolumeClaimTemplate {
+  metadata: VolumeClaimTemplateMetadata,
+  spec: VolumeClaimTemplateSpec,
+}
+
+interface VolumeClaimTemplates {
+  status: boolean,
+  volumeClaimTemplates: Array<VolumeClaimTemplate>,
+}
+
 @observer
 export class AddDeployDialog extends React.Component<Props, State>{
 
   default_node() {
+    let resource: Resource = {
+      limits: { cpu: 170, memory: 170 },
+      requests: { cpu: 100, memory: 30 },
+    };
+
+    let volumeClaimTemplates: VolumeClaimTemplates = {
+      status: false,
+      volumeClaimTemplates: new Array<VolumeClaimTemplate>(),
+    };
+
     return {
       type: 'Stone',
       name: 'app-name',
@@ -80,26 +133,18 @@ export class AddDeployDialog extends React.Component<Props, State>{
           name: 'default',
           image: 'app:latest',
           imagePullPolicy: 'IfNotPresent',
-          resource: {
-            limits: {
-              cpu: 170,
-              memory: 170,
-            },
-            requests: {
-              cpu: 100,
-              memory: 30,
-            }
-          },
+          resource: resource,
           volumeMounts: new Array<VolumeMount>(),
-          startCommand: new Array<string>(),
-          startParams: new Array<string>(),
+          command: new Array<string>(),
+          args: new Array<string>(),
           oneEnvConfig: new Array<string>(),
           multipleEnvConfig: new Array<string>(),
           readyProbe: new Array<Probe>(),
           aliveProbe: new Array<Probe>(),
           lifeCycle: new Array<LifeCycle>(),
         }
-      ]
+      ],
+      volumeClaimTemplates: volumeClaimTemplates,
     };
   }
 
@@ -122,8 +167,7 @@ export class AddDeployDialog extends React.Component<Props, State>{
 
   addContainer() {
     let { forms } = this.state
-    let container = this.default_node();
-    forms.push(container);
+    forms.push(this.default_node().forms[0]);
     this.setState({ forms: forms })
   }
 
@@ -150,9 +194,7 @@ export class AddDeployDialog extends React.Component<Props, State>{
             event.stopPropagation();
           }}
         />
-
       </Popconfirm>
-
     )
   };
 
@@ -216,27 +258,27 @@ export class AddDeployDialog extends React.Component<Props, State>{
     this.setState({ forms: forms })
   }
 
-  addStartCommand(index: number) {
+  addCommand(index: number) {
     let { forms } = this.state
     let obj = {
       id: this.random(),
       value: ''
     }
-    forms[index].startCommand.push(obj)
+    forms[index].command.push(obj)
     this.setState({ forms: forms })
   }
 
-  changeInputStartCommand(index: number, scIndex: number, e: React.ChangeEvent<HTMLInputElement>) {
+  changeInputCommand(index: number, scIndex: number, e: React.ChangeEvent<HTMLInputElement>) {
     e.stopPropagation()
     let { forms } = this.state
     const value = e.target.value
-    forms[index].startCommand[scIndex].value = value
+    forms[index].command[scIndex].value = value
     this.setState({ forms: forms })
   }
 
-  deleteStartCommand(index: number, id: string) {
+  deleteCommand(index: number, id: string) {
     let { forms } = this.state
-    let com = forms[index].startCommand
+    let com = forms[index].command
     for (let i = 0; i < com.length; i++) {
       if (com[i].id == id) {
         com.splice(i, 1)
@@ -245,26 +287,26 @@ export class AddDeployDialog extends React.Component<Props, State>{
     this.setState({ forms: forms })
   }
 
-  addStartParams(index: number) {
+  addArgs(index: number) {
     let { forms } = this.state
     let obj = {
       id: this.random(),
       value: ''
     }
-    forms[index].startParams.push(obj)
+    forms[index].args.push(obj)
     this.setState({ forms: forms })
   }
 
-  changeInputStartParams(index: number, scIndex: number, e: React.ChangeEvent<HTMLInputElement>) {
+  changeInputArgs(index: number, scIndex: number, e: React.ChangeEvent<HTMLInputElement>) {
     let { forms } = this.state
     const value = e.target.value
-    forms[index].startParams[scIndex].value = value
+    forms[index].args[scIndex].value = value
     this.setState({ forms: forms })
   }
 
-  deleteStartParams(index: number, id: string) {
+  deleteArgs(index: number, id: string) {
     let { forms } = this.state
-    let com = forms[index].startParams
+    let com = forms[index].args
     for (let i = 0; i < com.length; i++) {
       if (com[i].id == id) {
         com.splice(i, 1)
@@ -603,25 +645,25 @@ export class AddDeployDialog extends React.Component<Props, State>{
                       </Row>
 
 
-                      <Row><Button size="small" type="primary" className="mt-10" shape="circle" icon={<PlusOutlined translate />} onClick={() => this.addStartCommand(index)}></Button> <span className="btn-right-text1">Addition Command</span> </Row>
+                      <Row><Button size="small" type="primary" className="mt-10" shape="circle" icon={<PlusOutlined translate />} onClick={() => this.addCommand(index)}></Button> <span className="btn-right-text1">Addition Command</span> </Row>
                       {
-                        forms[index].startCommand.map((item: any, scIndex: number) => {
+                        forms[index].command.map((item: any, scIndex: number) => {
                           return (
                             <Row>
-                              <Col span={20} className="mt-10"><Input size="small" addonBefore="Command" value={forms[index].startCommand[scIndex].value} onChange={(e) => this.changeInputStartCommand(index, scIndex, e)} /></Col>
-                              <Col span={4} className="mt-10"><Button size="small" className="ml-10" icon={<DeleteOutlined translate />} shape="circle" danger onClick={(e) => { e.stopPropagation(); this.deleteStartCommand(index, item.id) }}></Button></Col>
+                              <Col span={20} className="mt-10"><Input size="small" addonBefore="Command" value={forms[index].command[scIndex].value} onChange={(e) => this.changeInputCommand(index, scIndex, e)} /></Col>
+                              <Col span={4} className="mt-10"><Button size="small" className="ml-10" icon={<DeleteOutlined translate />} shape="circle" danger onClick={(e) => { e.stopPropagation(); this.deleteCommand(index, item.id) }}></Button></Col>
                             </Row>
                           )
                         })
                       }
 
-                      <Row><Button size="small" type="primary" className="mt-10" shape="circle" icon={<PlusOutlined translate />} onClick={() => this.addStartParams(index)}></Button> <span className="btn-right-text1">Addition Start Command</span> </Row>
+                      <Row><Button size="small" type="primary" className="mt-10" shape="circle" icon={<PlusOutlined translate />} onClick={() => this.addArgs(index)}></Button> <span className="btn-right-text1">Addition Args</span> </Row>
                       {
-                        forms[index].startParams.map((item: any, scIndex: number) => {
+                        forms[index].args.map((item: any, scIndex: number) => {
                           return (
                             <Row>
-                              <Col span={20} className="mt-10"><Input size="small" addonBefore="Start Command" value={forms[index].startParams[scIndex].value} onChange={(e) => this.changeInputStartParams(index, scIndex, e)} /></Col>
-                              <Col span={4} className="mt-10"><Button size="small" className="ml-10" icon={<DeleteOutlined translate />} shape="circle" danger onClick={(e) => { e.stopPropagation(); this.deleteStartParams(index, item.id) }}></Button></Col>
+                              <Col span={20} className="mt-10"><Input size="small" addonBefore="Args" value={forms[index].args[scIndex].value} onChange={(e) => this.changeInputArgs(index, scIndex, e)} /></Col>
+                              <Col span={4} className="mt-10"><Button size="small" className="ml-10" icon={<DeleteOutlined translate />} shape="circle" danger onClick={(e) => { e.stopPropagation(); this.deleteArgs(index, item.id) }}></Button></Col>
                             </Row>
                           )
                         })
