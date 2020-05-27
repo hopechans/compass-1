@@ -1,6 +1,6 @@
 import {RouteProps} from "react-router";
 import {DeploymentEngine} from "./deploymentengine";
-import {graphURL} from "../+deploymentengine-graph";
+import {pageURL} from "../+deploymentengine-page";
 import {IURLParams} from "../../navigation";
 
 export const deploymentEngineRoute: RouteProps = {
@@ -9,4 +9,4 @@ export const deploymentEngineRoute: RouteProps = {
     }
 };
 
-export const deploymentEngineURL = (params?: IURLParams) => graphURL(params);
+export const deploymentEngineURL = (params?: IURLParams) => pageURL(params);
