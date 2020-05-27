@@ -3,7 +3,6 @@ import {observer} from "mobx-react";
 import {Redirect, Route, Switch} from "react-router";
 import {Trans} from "@lingui/macro";
 import {MainLayout, TabRoute} from "../layout/main-layout";
-import {Graph, graphRoute, graphURL} from "../+deploymentengine-graph";
 import {Pages, pageRoute, pageURL} from "../+deploymentengine-page";
 import {Forms, formRoute, formURL} from "../+deploymentengine-form";
 import {Fields, fieldRoute, fieldURL} from "../+deploymentengine-field";
@@ -12,12 +11,6 @@ import {Fields, fieldRoute, fieldURL} from "../+deploymentengine-field";
 export class DeploymentEngine extends React.Component {
     static get tabRoutes(): TabRoute[] {
         return [
-            {
-                title: <Trans>Graph</Trans>,
-                component: Graph,
-                url: graphURL(),
-                path: graphRoute.path,
-            },
             {
                 title: <Trans>Page</Trans>,
                 component: Pages,

@@ -1,16 +1,15 @@
 import {KubeObject} from "../kube-object";
 import {KubeApi} from "../kube-api";
+import {autobind} from "../../utils";
 
-
+@autobind()
 export class Field extends KubeObject {
     static kind = "Field";
 
     spec: {
-        scaleTargetRef: {
-            kind: string;
-            name: string;
-            apiVersion: string;
-        };
+        field_type: string;
+        form_data_config: string;
+        props_schema: string;
     }
 }
 
