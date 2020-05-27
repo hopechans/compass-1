@@ -48,6 +48,7 @@ export class EnhanceStatefulSetDetails extends React.Component<Props> {
     const nodeSelector = enhanceStatefulset.getNodeSelectors()
     const childPods = enhanceStatefulSetStore.getChildPods(enhanceStatefulset)
     const metrics = enhanceStatefulSetStore.metrics
+    
     return (
       <div className="EnhanceStatefulSetDetails">
         {podsStore.isLoaded && (

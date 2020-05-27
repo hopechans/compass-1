@@ -3,6 +3,7 @@ import "./deploy-details.scss";
 import React from "react";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { reaction } from "mobx";
+import { AceEditor } from "../ace-editor";
 import { Badge } from "../badge/badge";
 import { Trans } from "@lingui/macro";
 import { DrawerItem } from "../drawer";
@@ -10,8 +11,7 @@ import { deployStore } from "./deploy.store";
 import { KubeObjectDetailsProps } from "../kube-object";
 import { deployApi, Deploy } from "../../api/endpoints";
 import { apiManager } from "../../api/api-manager";
-import { Stone } from "../../api/endpoints";
-import {DetailForm} from './deploy-detail-form'
+import {DetailForm} from './deploy-detail-form';
 
 interface Props extends KubeObjectDetailsProps<Deploy> {
 }
@@ -43,7 +43,7 @@ export class DeployDetails extends React.Component<Props> {
   render() {
     const { object: deploy } = this.props;
     if (!deploy) return null
-    const tmplate = deploy.getTemplate();
+    const object = deploy.getObject();
     return (
       <div className="DeployDetails">
         <DetailForm/>
