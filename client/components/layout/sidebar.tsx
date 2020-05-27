@@ -17,7 +17,7 @@ import {storageRoute, storageURL} from "../+storage/storage.route";
 import {deploymentEngineRoute, deploymentEngineURL} from "../+deploymentengine/deploymentengine.route"
 import {DeploymentEngine} from "../+deploymentengine/deploymentengine"
 import {clusterURL} from "../+cluster";
-import {ciURL, ciRoute} from "../+ci";
+import {tektonURL, tektonRoute, Tekton} from "../+tekton";
 import {Config, configRoute, configURL} from "../+config";
 import {eventRoute, eventsURL} from "../+events";
 import {tenantRoute, tenantURL, Tenant} from "../+tenant";
@@ -158,11 +158,12 @@ export class Sidebar extends React.Component<Props> {
                             text={<Trans>Events</Trans>}
                         />
                         <SidebarNavItem
-                            id="ci"
-                            url={ciURL({query})}
-                            routePath={ciRoute.path}
-                            icon={<Icon material="linear_scale"/>}
-                            text={<Trans>CI</Trans>}
+                            id="tekton"
+                            url={tektonURL({query})}
+                            routePath={tektonRoute.path}
+                            subMenus={Tekton.tabRoutes}
+                            icon={<Icon material="clear_all"/>}
+                            text={<Trans>Tekton</Trans>}
                         />
                         <SidebarNavItem
                             id="tenant"
@@ -170,7 +171,7 @@ export class Sidebar extends React.Component<Props> {
                             routePath={tenantRoute.path}
                             subMenus={Tenant.tabRoutes}
                             text={<Trans>Tenant</Trans>}
-                            icon={<Icon svg="user"/>}
+                            icon={<Icon material="people"/>}
                         />
                         <SidebarNavItem
                             id="deploymentEngine"
