@@ -6,26 +6,8 @@ export class Page extends KubeObject {
     static kind = "Page";
 
     spec: {
-        scaleTargetRef: {
-            kind: string;
-            name: string;
-            apiVersion: string;
-        };
-        minReplicas: number;
-        maxReplicas: number;
+        tree: string
     }
-    status: {
-        currentReplicas: number;
-        desiredReplicas: number;
-        conditions: {
-            lastTransitionTime: string;
-            message: string;
-            reason: string;
-            status: string;
-            type: string;
-        }[];
-    }
-
 }
 
 export const pageApi = new KubeApi({
