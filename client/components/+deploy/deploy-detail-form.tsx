@@ -57,7 +57,7 @@ export class DetailForm extends React.Component<Props, State>{
 
           multipleEnvConfig: new Array,
           readyProbe: {
-            tatus: false,
+            status: false,
             timeout: '',
             cycle: '',
             retryCount: '',
@@ -71,7 +71,7 @@ export class DetailForm extends React.Component<Props, State>{
             }
           },
           aliveProbe: {
-            tatus: false,
+            status: false,
             timeout: '',
             cycle: '',
             retryCount: '',
