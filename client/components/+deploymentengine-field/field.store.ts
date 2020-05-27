@@ -1,6 +1,6 @@
 import {autobind} from "../../utils";
 import {KubeObjectStore} from "../../kube-object.store";
-import {Field, fieldApi} from "../../api/endpoints/field.api";
+import {Field, fieldApi} from "../../api/endpoints";
 import {apiManager} from "../../api/api-manager";
 
 @autobind()

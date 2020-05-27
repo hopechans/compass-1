@@ -5,12 +5,11 @@ import {Button} from "../button";
 
 interface Props {
     propsSchema: {},
-    uiSchema: {},
+    uiSchema?: {},
     formData: {},
-    setFormData: any,
+    onChange?: any,
     valid?: any,
     setValid?: any,
-    onSubmit?: any,
 }
 
 
@@ -23,10 +22,9 @@ export class FRender extends React.Component<Props> {
                     propsSchema={this.props.propsSchema}
                     uiSchema={this.props.uiSchema}
                     formData={this.props.formData}
-                    onChange={this.props.setFormData}
+                    onChange={this.props.onChange}
                     onValidate={this.props.setValid}
                 />
-                <Button onClick={this.props.onSubmit}>submit</Button>
             </div>
         )
     }
