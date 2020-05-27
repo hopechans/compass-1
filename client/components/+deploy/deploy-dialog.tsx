@@ -29,6 +29,43 @@ interface State {
   activeKey?: any
 }
 
+interface VolumeMount {
+  name: string,
+  readOnly: boolean,
+  mouthPath: string,
+}
+
+interface Pattern {
+  type: string
+  httpPort: number | string,
+  url: string,
+  tcpPort: number | string,
+  command: string,
+}
+
+interface Probe {
+  status: boolean,
+  timeout: number | string,
+  cycle: number | string,
+  retryCount: number | string,
+  delay: number | string,
+  pattern: Pattern,
+}
+
+interface LifeCycleCommand {
+  type: string,
+  httpPort: number | string,
+  url: string,
+  tcpPort: number | string,
+  command: string,
+}
+
+interface LifeCycle {
+  status: boolean,
+  postStart: LifeCycleCommand,
+  preStop: LifeCycleCommand,
+}
+
 @observer
 export class AddDeployDialog extends React.Component<Props, State>{
 
@@ -53,55 +90,14 @@ export class AddDeployDialog extends React.Component<Props, State>{
               memory: 30,
             }
           },
-          startCommand: new Array,
-          startParams: new Array,
-          oneEnvConfig: new Array,
-          multipleEnvConfig: new Array,
-          readyProbe: {
-            status: false,
-            timeout: '',
-            cycle: '',
-            retryCount: '',
-            delay: '',
-            pattern: {
-              type: '0',
-              httpPort: '',
-              url: '',
-              tcpPort: '',
-              command: ''
-            }
-          },
-          aliveProbe: {
-            status: false,
-            timeout: '',
-            cycle: '',
-            retryCount: '',
-            delay: '',
-            pattern: {
-              type: '0',
-              httpPort: '',
-              url: '',
-              tcpPort: '',
-              command: ''
-            }
-          },
-          lifeCycle: {
-            status: false,
-            postStart: {
-              type: '0',
-              httpPort: '',
-              url: '',
-              tcpPort: '',
-              command: ''
-            },
-            preStop: {
-              type: '0',
-              httpPort: '',
-              url: '',
-              tcpPort: '',
-              command: ''
-            }
-          },
+          volumeMounts: new Array<VolumeMount>(),
+          startCommand: new Array<string>(),
+          startParams: new Array<string>(),
+          oneEnvConfig: new Array<string>(),
+          multipleEnvConfig: new Array<string>(),
+          readyProbe: new Array<Probe>(),
+          aliveProbe: new Array<Probe>(),
+          lifeCycle: new Array<LifeCycle>(),
         }
       ]
     };

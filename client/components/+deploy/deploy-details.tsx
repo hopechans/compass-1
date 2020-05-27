@@ -11,7 +11,6 @@ import { deployStore } from "./deploy.store";
 import { KubeObjectDetailsProps } from "../kube-object";
 import { deployApi, Deploy } from "../../api/endpoints";
 import { apiManager } from "../../api/api-manager";
-// import {DetailForm} from './deploy-detail-form';
 
 interface Props extends KubeObjectDetailsProps<Deploy> {
 }
