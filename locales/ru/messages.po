@@ -1828,7 +1828,7 @@ msgid "Run As Group"
 msgstr ""
 
 #: client/components/+pod-security-policies/pod-security-policy-details.tsx:127
-msgid "Run As User"
+msgid "Run As TenantUser"
 msgstr ""
 
 #: client/components/+pod-security-policies/pod-security-policy-details.tsx:131
@@ -2234,7 +2234,7 @@ msgid "Used"
 msgstr "Использовано"
 
 #: client/components/+pod-security-policies/pod-security-policy-details.tsx:155
-msgid "User"
+msgid "TenantUser"
 msgstr "Пользователь"
 
 #: client/components/+custom-resources/crd-details.tsx:99
