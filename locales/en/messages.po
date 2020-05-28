@@ -1827,8 +1827,8 @@ msgid "Run As Group"
 msgstr "Run As Group"
 
 #: client/components/+pod-security-policies/pod-security-policy-details.tsx:127
-msgid "Run As User"
-msgstr "Run As User"
+msgid "Run As TenantUser"
+msgstr "Run As TenantUser"
 
 #: client/components/+pod-security-policies/pod-security-policy-details.tsx:131
 msgid "Runtime Class"
@@ -2233,8 +2233,8 @@ msgid "Used"
 msgstr "Used"
 
 #: client/components/+pod-security-policies/pod-security-policy-details.tsx:155
-msgid "User"
-msgstr "User"
+msgid "TenantUser"
+msgstr "TenantUser"
 
 #: client/components/+custom-resources/crd-details.tsx:99
 msgid "Validation"

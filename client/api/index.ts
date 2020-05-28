@@ -15,7 +15,7 @@ export const apiBase = new JsonApi({
     }
 });
 
-export const tenantBase = new JsonApi({
+export const apiTenant = new KubeJsonApi({
     debug: !clientVars.IS_PRODUCTION,
     apiPrefix: clientVars.TENANT_PREFIX.TENANT
 });
@@ -52,4 +52,4 @@ apiKube.onError.addListener(onApiError);
 apiKubeUsers.onError.addListener(onApiError);
 apiKubeHelm.onError.addListener(onApiError);
 apiKubeResourceApplier.onError.addListener(onApiError);
-tenantBase.onError.addListener(onApiError);
+apiTenant.onError.addListener(onApiError);

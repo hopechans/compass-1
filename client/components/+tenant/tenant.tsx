@@ -1,45 +1,59 @@
 import './tenant.scss'
 import * as React from "react";
-import { observer } from "mobx-react";
-import { Redirect, Route, Switch } from "react-router";
-import { RouteComponentProps } from "react-router-dom";
-import { Trans } from "@lingui/macro";
-import { MainLayout, TabRoute } from "../layout/main-layout";
-import { Department} from '../+tenant-department'
-import { Member} from '../+tenant-member'
-import { Role} from '../+tenant-role'
-import { namespaceStore } from "../+namespaces/namespace.store";
-import { tenantURL,tenantDepartmentURL,tenantRoleURL,tenantMemberURL,tenantDepartmentRoute,tenantRoleRoute,tenantMemberRoute} from './tenant.route'
+import {observer} from "mobx-react";
+import {Redirect, Route, Switch} from "react-router";
+import {RouteComponentProps} from "react-router-dom";
+import {Trans} from "@lingui/macro";
+import {MainLayout, TabRoute} from "../layout/main-layout";
+import {TenantDepartments} from '../+tenant-department';
+import {TenantPermissions} from "../+tenant-permission";
+import {TenantRoles} from '../+tenant-role';
+import {TenantUsers} from "../+tenant-user";
+import {namespaceStore} from "../+namespaces/namespace.store";
+import {
+    tenantDepartmentRoute, tenantDepartmentURL,
+    tenantPermissionRoute, tenantPermissionURL,
+    tenantRoleRoute, tenantRoleURL,
+    tenantUserRoute, tenantUserURL
+} from './tenant.route'
+
 interface Props extends RouteComponentProps {
-} 
+}
 
 @observer
-export class Tenant extends React.Component<Props>{
+export class Tenant extends React.Component<Props> {
 
-    static get tabRoutes():TabRoute[]{
+    static get tabRoutes(): TabRoute[] {
         const query = namespaceStore.getContextParams();
         return [
             {
                 title: <Trans>Department</Trans>,
-                component:Department,
+                component: TenantDepartments,
                 url: tenantDepartmentURL({query}),
-                path:tenantDepartmentRoute.path
+                path: tenantDepartmentRoute.path
+            },
+            {
+                title: <Trans>Permission</Trans>,
+                component: TenantPermissions,
+                url: tenantPermissionURL({query}),
+                path: tenantPermissionRoute.path
             },
             {
                 title: <Trans>Role</Trans>,
-                component:Role,
+                component: TenantRoles,
                 url: tenantRoleURL({query}),
-                path:tenantRoleRoute.path
+                path: tenantRoleRoute.path
             },
             {
-                title: <Trans>Member</Trans>,
-                component:Member,
-                url: tenantMemberURL({query}),
-                path:tenantMemberRoute.path
-            }
+                title: <Trans>User</Trans>,
+                component: TenantUsers,
+                url: tenantUserURL({query}),
+                path: tenantUserRoute.path
+            },
         ]
     };
-    render(){
+
+    render() {
         const tabRoutes = Tenant.tabRoutes;
         return (
             <MainLayout className="tenant" tabs={tabRoutes}>

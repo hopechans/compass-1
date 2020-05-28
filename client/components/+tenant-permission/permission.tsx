@@ -4,11 +4,12 @@ import {RouteComponentProps} from "react-router";
 import {t, Trans} from "@lingui/macro";
 import {KubeObjectMenu, KubeObjectMenuProps} from "../kube-object";
 import {KubeObjectListLayout} from "../kube-object";
-import {TenantDepartment, tenantDepartmentApi} from "../../api/endpoints";
+import {TenantPermission, tenantPermissionApi} from "../../api/endpoints";
+import {tenantPermissionStore} from "./permission.store";
 import {apiManager} from "../../api/api-manager";
-import {tenantDepartmentStore} from "./department.store"
 
-import {AddDepartmentDialog} from "./add-department-dialog";
+
+import {AddPermissionDialog} from "./add-permission-dialog";
 
 enum sortBy {
     name = "name",
@@ -24,47 +25,47 @@ interface Props extends RouteComponentProps<RoleProps> {
 }
 
 @observer
-export class TenantDepartments extends React.Component<Props> {
+export class TenantPermissions extends React.Component<Props> {
     spec: { scaleTargetRef: any; };
 
     render() {
         return (
             <>
                 <KubeObjectListLayout
-                    className="Departments" store={tenantDepartmentStore}
+                    className="TenantPermissions" store={tenantPermissionStore}
                     sortingCallbacks={{
-                        [sortBy.name]: (item: TenantDepartment) => item.getName(),
-                        [sortBy.namespace]: (item: TenantDepartment) => item.getNs(),
+                        [sortBy.name]: (item: TenantPermission) => item.getName(),
+                        [sortBy.namespace]: (item: TenantPermission) => item.getNs(),
                     }}
                     searchFilters={[
-                        (item: TenantDepartment) => item.getSearchFields()
+                        (item: TenantPermission) => item.getSearchFields()
                     ]}
-                    renderHeaderTitle={<Trans>Departments</Trans>}
+                    renderHeaderTitle={<Trans>Permissions</Trans>}
                     renderTableHeader={[
                         {title: <Trans>Name</Trans>, className: "name", sortBy: sortBy.name},
                         {title: <Trans>Namespace</Trans>, className: "namespace", sortBy: sortBy.namespace},
                         {title: <Trans>Age</Trans>, className: "age", sortBy: sortBy.age},
                     ]}
-                    renderTableContents={(department: TenantDepartment) => [
-                        department.getName(),
-                        department.getNs(),
-                        department.getAge(),
+                    renderTableContents={(permission: TenantPermission) => [
+                        permission.getName(),
+                        permission.getNs(),
+                        permission.getAge(),
                     ]}
-                    renderItemMenu={(item: TenantDepartment) => {
-                        return <DepartmentMenu object={item}/>
+                    renderItemMenu={(item: TenantPermission) => {
+                        return <PermissionMenu object={item}/>
                     }}
                     addRemoveButtons={{
-                        onAdd: () => AddDepartmentDialog.open(),
-                        addTooltip: <Trans>Create new Department</Trans>
+                        onAdd: () => AddPermissionDialog.open(),
+                        addTooltip: <Trans>Create new Permission</Trans>
                     }}
                 />
-                <AddDepartmentDialog/>
+                <AddPermissionDialog/>
             </>
         );
     }
 }
 
-export function DepartmentMenu(props: KubeObjectMenuProps<TenantDepartment>) {
+export function PermissionMenu(props: KubeObjectMenuProps<TenantPermission>) {
     return (
         <>
             <KubeObjectMenu {...props} />
@@ -72,6 +73,6 @@ export function DepartmentMenu(props: KubeObjectMenuProps<TenantDepartment>) {
     )
 }
 
-apiManager.registerViews(tenantDepartmentApi, {
-    Menu: DepartmentMenu,
+apiManager.registerViews(tenantPermissionApi, {
+    Menu: PermissionMenu,
 })

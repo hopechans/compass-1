@@ -1,44 +1,12 @@
-import {observable, action, autorun, reaction} from "mobx";
 import {autobind} from "../../utils";
-import {TenantDepartment, tenantDepartmentApi} from "../../api/endpoints/tenant-department.api";
-import {ItemStore} from "../../item.store";
+import {KubeObjectStore} from "../../kube-object.store";
+import {TenantRole, tenantRoleApi} from "../../api/endpoints";
+import {apiManager} from "../../api/api-manager";
 
 @autobind()
-export class DepartmentStore extends ItemStore<TenantDepartment> {
-
-    @observable deptName: string
-    @observable dialogType: string
-
-    @action
-    changeItemName(name: string) {
-        this.deptName = name
-    }
-
-    @action
-    changeDialogType(type: string) {
-        this.dialogType = type
-    }
-
-    @action
-    clean() {
-        setTimeout(() => {
-            this.deptName = ''
-            this.dialogType = 'add'
-        }, 1000)
-    }
-
-    loadAll() {
-        return this.loadItems(() => tenantDepartmentApi.list());
-    }
-
-    getByName(name: string, repo: string) {
-        return this.items.find(item => item.getName() === name);
-    }
-
-    async removeSelectedItems() {
-        //console.log('---------delete',this.selectedItems)
-    }
+export class TenantDepartmentStore extends KubeObjectStore<TenantRole> {
+    api = tenantRoleApi
 }
 
-
-export const departmentStore = new DepartmentStore();
+export const tenantDepartmentStore = new TenantDepartmentStore();
+apiManager.registerStore(tenantRoleApi, tenantDepartmentStore);

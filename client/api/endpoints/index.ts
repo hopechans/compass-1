@@ -30,7 +30,6 @@ export * from "./storage-class.api"
 export * from "./pod-metrics.api"
 export * from "./podsecuritypolicy.api"
 export * from "./selfsubjectrulesreviews.api"
-export * from "./tenant-department.api"
 export * from "./ali-formrender.api"
 export * from "./page.api"
 export * from "./form.api"
@@ -41,3 +40,7 @@ export * from './endpoint.api'
 export * from './injector.api'
 export * from './water.api'
 export * from './workloads-deploy.api'
+export * from "./tenant-department.api"
+export * from "./tenant-user"
+export * from "./tenant-role.api"
+export * from "./tenant-permission.api"
