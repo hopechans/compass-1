@@ -4,7 +4,7 @@ import { PlusOutlined, DeleteOutlined } from '@ant-design/icons';
 import './deploy-dialog.scss'
 import { observable } from "mobx";
 import { observer } from "mobx-react";
-import { t, Trans } from "@lingui/macro";
+import { t, Trans, number } from "@lingui/macro";
 import { _i18n } from "../../i18n";
 import { Dialog, DialogProps } from "../dialog";
 import { Wizard, WizardStep } from "../wizard";
@@ -29,65 +29,115 @@ interface State {
   activeKey?: any
 }
 
-interface VolumeMount {
-  name: string,
-  readOnly: boolean,
-  mouthPath: string,
+class VolumeMount {
+  name: string;
+  readOnly: boolean;
+  mouthPath: string;
+  constructor() {
+    this.name = '';
+    this.readOnly = true;
+    this.mouthPath = '';
+  }
 }
 
-interface Pattern {
-  type: string
-  httpPort: number | string,
-  url: string,
-  tcpPort: number | string,
-  command: string,
+class Pattern {
+  type: string;
+  httpPort: number | string;
+  url: string;
+  tcpPort: number | string;
+  command: string;
+  constructor() {
+    this.type = '1'; // HTTP
+    this.httpPort = 8080;
+    this.url = '';
+    this.tcpPort = 0;
+    this.command = '';
+  };
 }
 
-interface Probe {
-  status: boolean,
-  timeout: number | string,
-  cycle: number | string,
-  retryCount: number | string,
-  delay: number | string,
-  pattern?: Pattern,
+class Probe {
+  status: boolean;
+  timeout: string | number;
+  cycle: string | number;
+  retryCount: string | number;
+  delay: string | number;
+  pattern?: Pattern;
+  constructor() {
+    this.status = false;
+    this.timeout = 0;
+    this.cycle = 0;
+    this.retryCount = 0;
+    this.delay = 0;
+    this.pattern = new Pattern();
+  }
 }
 
-interface LifeCycleCommand {
-  type: string,
-  httpPort: number | string,
-  url: string,
-  tcpPort: number | string,
-  command: string,
+class LifeCycle {
+  status: boolean;
+  postStart?: Pattern;
+  preStop?: Pattern;
+  constructor() {
+    this.status = false;
+    this.postStart = new Pattern();
+    this.preStop = new Pattern();
+  }
 }
 
-interface LifeCycle {
-  status: boolean,
-  postStart: LifeCycleCommand,
-  preStop: LifeCycleCommand,
+class Limitation {
+  cpu: number;
+  memory: number;
+  constructor(cpu: number, memory: number) {
+    this.cpu = cpu;
+    this.memory = memory;
+  }
 }
 
-interface limits {
-  cpu: number | string,
-  memory: number | string,
+
+class Resource {
+  limits: Limitation;
+  requests: Limitation;
+  constructor() {
+    this.limits = new Limitation(170, 170);
+    this.requests = new Limitation(100, 30);
+  }
 }
 
-interface requests {
-  cpu: number | string,
-  memory: number | string,
+class VolumeClaimTemplateMetadata {
+  isUseDefaultStorageClass: boolean;
+  name: string;
+  annotations: Map<string, string>;
+  constructor() {
+    this.name = '';
+    const annotations = new Map<string, string>();
+    if (this.isUseDefaultStorageClass) {
+      annotations.set('volume.alpha.kubernetes.io/storage-class', 'default')
+    }
+  }
 }
 
-interface Resource {
-  limits: limits
-  requests: requests
-}
+class VolumeClaimTemplateSpecResourcesRequests {
+  storage: number | string;
+  accessModes: string[];
+  storageClassName: string;
+  resources: any;
 
-interface VolumeClaimTemplateMetadata {
-  name: string,
-  annotations: string,
-}
+  constructor() {
+    this.storage = '200Mi';
+    this.accessModes = ["ReadWriteOnce"];
+    this.resources = { requests: { storage: this.storage } };
+  }
 
-interface VolumeClaimTemplateSpecResourcesRequests {
-  storage: number | string,
+  setStorageClassName(name: string) {
+    this.storageClassName = name
+  }
+
+  setStorageSize(size: number | string) {
+    if (typeof size === 'string') {
+      this.storage = size
+    } else {
+      this.storage = size.toString() + 'Gi'
+    }
+  }
 }
 
 interface VolumeClaimTemplateSpecResources {
@@ -139,9 +189,9 @@ export class AddDeployDialog extends React.Component<Props, State>{
           args: new Array<string>(),
           oneEnvConfig: new Array<string>(),
           multipleEnvConfig: new Array<string>(),
-          readyProbe: new Array<Probe>(),
-          aliveProbe: new Array<Probe>(),
-          lifeCycle: new Array<LifeCycle>(),
+          readyProbe: new Probe(),
+          aliveProbe: new Probe(),
+          lifeCycle: new LifeCycle(),
         }
       ],
       volumeClaimTemplates: volumeClaimTemplates,
