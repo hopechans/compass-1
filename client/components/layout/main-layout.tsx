@@ -1,6 +1,7 @@
 import "./main-layout.scss";
 
 import * as React from "react";
+import { Redirect } from "react-router";
 import { observable, reaction } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { matchPath, RouteProps } from "react-router-dom";
@@ -20,6 +21,8 @@ import { i18nStore } from "../../i18n";
 import { Badge } from "../badge";
 import { themeStore } from "../../theme.store";
 
+import {createBrowserHistory} from "history";
+
 export interface TabRoute extends RouteProps {
   title: React.ReactNode;
   url: string;
@@ -32,6 +35,7 @@ interface Props {
   headerClass?: string;
   contentClass?: string;
   footerClass?: string;
+  history?:any
 }
 
 @observer
@@ -61,6 +65,14 @@ export class MainLayout extends React.Component<Props> {
     }
   }
 
+  loginout = () => {
+    let history = createBrowserHistory()
+    history.push({
+      pathname: "/login",
+    });
+    history.go(0);
+
+  }
 
   renderUserMenu(){
     const { userName } = configStore.config;
@@ -73,7 +85,7 @@ export class MainLayout extends React.Component<Props> {
                   <Icon material="loop" />
                   <span className="title"><Trans>Theme</Trans></span>
               </MenuItem> */}
-              <MenuItem >
+              <MenuItem onClick={this.loginout}>
                   <Icon material="exit_to_app" />
                   <span className="title"><Trans>Logout</Trans></span>
               </MenuItem>
@@ -127,3 +139,4 @@ export class MainLayout extends React.Component<Props> {
     );
   }
 }
+
