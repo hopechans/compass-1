@@ -14,6 +14,7 @@ import { KubeObjectListLayout } from "../kube-object";
 import { IDeployWorkloadsParams } from "../+deploy";
 import { apiManager } from "../../api/api-manager";
 import { deployStore } from "./deploy.store";
+import { AddDeployDialog } from "./deploy-dialog";
 
 enum sortBy {
     templateName = "templateName",
@@ -62,14 +63,21 @@ export class Deploys extends React.Component<Props> {
                         deploy.getAppName(),
                         deploy.getName(),
                         deploy.getResourceType(),
-                        new Date(deploy.getGenerateTimestamp() * 1e3).toISOString(),
+                        // new Date( * 1e3).toISOString(),
+                        deploy.getGenerateTimestamp(),
                         deploy.getAge(),
                     ]}
 
                     renderItemMenu={(item: Deploy) => {
                         return <DeployMenu object={item} />
                     }}
+
+                    addRemoveButtons={{
+                        addTooltip: <Trans>AddDeployDialog</Trans>,
+                        onAdd: () => AddDeployDialog.open(),
+                    }}
                 />
+                <AddDeployDialog />
             </MainLayout>
         )
     }
@@ -79,15 +87,11 @@ export function DeployMenu(props: KubeObjectMenuProps<Deploy>) {
     const { object, toolbar } = props;
     return (
         <KubeObjectMenu {...props} >
-            <MenuItem onClick={() => {
-
-            }}>
+            <MenuItem onClick={() => { }}>
                 <Icon material="control_camera" title={_i18n._(t`Release`)} interactive={toolbar} />
                 <span className="title"><Trans>Release</Trans></span>
             </MenuItem>
         </KubeObjectMenu>
-
-
     )
 }
 

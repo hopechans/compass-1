@@ -11,7 +11,6 @@ import { deployStore } from "./deploy.store";
 import { KubeObjectDetailsProps } from "../kube-object";
 import { deployApi, Deploy } from "../../api/endpoints";
 import { apiManager } from "../../api/api-manager";
-import {DetailForm} from './deploy-detail-form';
 
 interface Props extends KubeObjectDetailsProps<Deploy> {
 }
@@ -26,11 +25,11 @@ export class DeployDetails extends React.Component<Props> {
     deployStore.reset();
   });
 
-  getData(){
-    this.baseFormRef.current.getData().then((values:any)=>{
+  getData() {
+    this.baseFormRef.current.getData().then((values: any) => {
       console.log(values)
     });
-   
+
   }
 
   componentDidMount() {
@@ -46,7 +45,8 @@ export class DeployDetails extends React.Component<Props> {
     const object = deploy.getObject();
     return (
       <div className="DeployDetails">
-        <DetailForm/>
+        {/* <DetailForm/> */}
+        what the fuck is this
       </div>
     )
   }
