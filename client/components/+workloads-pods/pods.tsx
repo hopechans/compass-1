@@ -52,7 +52,7 @@ export class Pods extends React.Component<Props> {
               {toPairs(state[status]).map(([name, value]) => (
                 <div key={name} className="flex gaps align-center">
                   <div className="name">{startCase(name)}</div>
-                  <div className="value">{value}</div>
+                  <div className="value ">{value}</div>
                 </div>
               ))}
             </Fragment>

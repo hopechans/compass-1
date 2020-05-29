@@ -1,0 +1,16 @@
+.Tasks {
+  .TableCell {
+    &.name {
+      flex-grow: 0.8;
+    }
+    &.namespace{
+      flex-grow: 1.2;
+    }
+    &.age {
+      flex-grow: 0.3;
+    }
+    &.warning {
+      @include table-cell-warning;
+    }
+  }
+}

@@ -1,25 +1,52 @@
 import * as React from 'react'
 import { RouteComponentProps } from "react-router-dom";
 import { Redirect, Route, Switch } from "react-router";
-import { MainLayout,TabRoute } from "../layout/main-layout";
+import { MainLayout, TabRoute } from "../layout/main-layout";
 import { Trans } from "@lingui/macro";
 import { namespaceStore } from "../+namespaces/namespace.store";
-import { Pipeline } from '../+tekton-pipeline'
-import { pipelineURL, pipelineRoute} from './tekton.route'
+import { Pipelines } from '../+tekton-pipeline'
+import { PipelineRuns } from '../+tekton-pipelinerun'
+import { PipelineResources } from '../+tekton-pipelineresource'
+import { pipelineURL, pipelineRoute, pipelineRunURL, pipelineRunRoute, pipelineResourceURL, pipelineResourceRoute, taskURL, taskRoute, taskRunURL, taskRunRoute } from './tekton.route'
+import { Tasks } from '../+tekton-task';
+import { TaskRuns } from '../+tekton-taskrun';
 
-interface Props extends RouteComponentProps {}
+interface Props extends RouteComponentProps { }
 
-export class Tekton extends React.Component{
-  static get tabRoutes():TabRoute[]{
+export class Tekton extends React.Component<Props> {
+  static get tabRoutes(): TabRoute[] {
     const query = namespaceStore.getContextParams();
     return [
       {
-          title: <Trans>Pipeline</Trans>,
-          component:Pipeline,
-          url: pipelineURL({query}),
-          path:pipelineRoute.path
+        title: <Trans>Pipeline</Trans>,
+        component: Pipelines,
+        url: pipelineURL({ query }),
+        path: pipelineRoute.path
       },
-        
+      {
+        title: <Trans>PipelineRun</Trans>,
+        component: PipelineRuns,
+        url: pipelineRunURL({ query }),
+        path: pipelineRunRoute.path
+      },
+      {
+        title: <Trans>PipelineResource</Trans>,
+        component: PipelineResources,
+        url: pipelineResourceURL({ query }),
+        path: pipelineResourceRoute.path
+      },
+      {
+        title: <Trans>Task</Trans>,
+        component: Tasks,
+        url: taskURL({ query }),
+        path: taskRoute.path
+      },
+      {
+        title: <Trans>TaskRun</Trans>,
+        component: TaskRuns,
+        url: taskRunURL({ query }),
+        path: taskRunRoute.path
+      },
     ]
   };
   render() {
@@ -27,8 +54,8 @@ export class Tekton extends React.Component{
     return (
       <MainLayout>
         <Switch>
-            {tabRoutes.map((route, index) => <Route key={index} {...route}/>)}
-            <Redirect to={tabRoutes[0].url}/>
+          {tabRoutes.map((route, index) => <Route key={index} {...route} />)}
+          <Redirect to={tabRoutes[0].url} />
         </Switch>
       </MainLayout>
     )
