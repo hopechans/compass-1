@@ -2,7 +2,7 @@ import React from "react";
 import {observer} from "mobx-react";
 import {Dialog, DialogProps} from "../dialog";
 import {observable} from "mobx";
-import {Form, formApi, DataNode} from "../../api/endpoints";
+import {TenantUser, tenantUserApi} from "../../api/endpoints";
 import {Wizard, WizardStep} from "../wizard";
 import {t, Trans} from "@lingui/macro";
 import {SubTitle} from "../layout/sub-title";
@@ -12,45 +12,39 @@ import {systemName} from "../input/input.validators";
 import {Notifications} from "../notifications";
 import {showDetails} from "../../navigation";
 
-
 interface Props extends Partial<DialogProps> {
 }
 
 @observer
-export class AddFormDialog extends React.Component<Props> {
+export class AddUserDialog extends React.Component<Props> {
 
     @observable static isOpen = false;
 
     static open() {
-        AddFormDialog.isOpen = true;
+        AddUserDialog.isOpen = true;
     }
 
     static close() {
-        AddFormDialog.isOpen = false;
+        AddUserDialog.isOpen = false;
     }
 
     @observable name = "";
-    @observable namespace = "kube-system";
+    @observable namespace = "";
 
     close = () => {
-        AddFormDialog.close();
+        AddUserDialog.close();
     }
 
     reset = () => {
         this.name = "";
     }
 
-    createForm = async () => {
+    createUser = async () => {
         const {name, namespace} = this;
-        const form: Partial<Form> = {
-            spec: {
-                tree: [{title: name, key: name, node_type: "array", children: []}],
-                props_schema: ""
-            }
-        }
+        const user: Partial<TenantUser> = {}
         try {
-            const newField = await formApi.create({namespace, name}, form);
-            showDetails(newField.selfLink);
+            const newUser = await tenantUserApi.create({namespace, name}, user);
+            showDetails(newUser.selfLink);
             this.reset();
             this.close();
         } catch (err) {
@@ -61,18 +55,18 @@ export class AddFormDialog extends React.Component<Props> {
     render() {
         const {...dialogProps} = this.props;
         const {name} = this;
-        const header = <h5><Trans>Create Form</Trans></h5>;
+        const header = <h5><Trans>Create User</Trans></h5>;
         return (
             <Dialog
                 {...dialogProps}
-                className="AddFormDialog"
-                isOpen={AddFormDialog.isOpen}
+                className="AddUserDialog"
+                isOpen={AddUserDialog.isOpen}
                 close={this.close}
             >
                 <Wizard header={header} done={this.close}>
-                    <WizardStep contentClass="flow column" nextLabel={<Trans>Create</Trans>} next={this.createForm}>
-                        <div className="form-name">
-                            <SubTitle title={<Trans>Field name</Trans>}/>
+                    <WizardStep contentClass="flow column" nextLabel={<Trans>Create</Trans>} next={this.createUser}>
+                        <div className="user-name">
+                            <SubTitle title={<Trans>User name</Trans>}/>
                             <Input
                                 autoFocus required
                                 placeholder={_i18n._(t`Name`)}
@@ -85,5 +79,4 @@ export class AddFormDialog extends React.Component<Props> {
             </Dialog>
         )
     }
-
 }

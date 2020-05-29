@@ -2,10 +2,10 @@ import { observable, reaction } from "mobx";
 import { setupI18n } from "@lingui/core";
 import { autobind, createStorage } from "./utils";
 import orderBy from "lodash/orderBy"
-
 import moment from "moment";
 import "moment/locale/ru";
 import "moment/locale/fi";
+import "moment/locale/zh-cn";
 
 export interface ILanguage {
   code: string;
@@ -22,7 +22,7 @@ export const _i18n = setupI18n({
 
 @autobind()
 export class LocalizationStore {
-  readonly defaultLocale = "en"
+  readonly defaultLocale = "zh-cn"
   @observable activeLang = this.defaultLocale;
 
   public languages: ILanguage[] = orderBy<ILanguage>([
@@ -46,13 +46,12 @@ export class LocalizationStore {
       /* webpackMode: "lazy", webpackChunkName: "locale/[request]" */
       `../locales/${locale}/messages.js`
     );
-    return _i18n.load(locale, catalog);
+    return _i18n.load(locale,catalog);
   }
 
   async setLocale(locale: string) {
     await this.load(locale);
     await _i18n.activate(locale);
-
     // set moment's locale before activeLang for proper next render() in app
     moment.locale(locale);
     this.activeLang = locale;

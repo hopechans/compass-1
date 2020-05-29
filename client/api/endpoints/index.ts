@@ -30,7 +30,6 @@ export * from "./storage-class.api"
 export * from "./pod-metrics.api"
 export * from "./podsecuritypolicy.api"
 export * from "./selfsubjectrulesreviews.api"
-export * from "./tenant-department.api"
 export * from "./ali-formrender.api"
 export * from "./page.api"
 export * from "./form.api"
@@ -46,3 +45,7 @@ export * from './tekton-pipelinerun.api'
 export * from './tekton-task.api'
 export * from './tekton-pipelineresource.api'
 export * from './tekton-taskrun.api'
+export * from "./tenant-department.api"
+export * from "./tenant-user"
+export * from "./tenant-role.api"
+export * from "./tenant-permission.api"

@@ -4,11 +4,11 @@ import {RouteComponentProps} from "react-router";
 import {t, Trans} from "@lingui/macro";
 import {KubeObjectMenu, KubeObjectMenuProps} from "../kube-object";
 import {KubeObjectListLayout} from "../kube-object";
-import {TenantRole, tenantRoleApi} from "../../api/endpoints";
+import {tenantUserStore} from "./user.store";
+import {TenantUser, tenantUserApi} from "../../api/endpoints";
 import {apiManager} from "../../api/api-manager";
-import {tenantRoleStore} from "./role.store"
 
-import {AddRoleDialog} from "./add-role-dialog";
+import {AddUserDialog} from "./add-user-dialog";
 
 enum sortBy {
     name = "name",
@@ -17,54 +17,53 @@ enum sortBy {
 }
 
 
-interface RoleProps {
-}
+interface UserProps {}
 
-interface Props extends RouteComponentProps<RoleProps> {
+interface Props extends RouteComponentProps<UserProps> {
 }
 
 @observer
-export class TenantRoles extends React.Component<Props> {
+export class TenantUsers extends React.Component<Props> {
     spec: { scaleTargetRef: any; };
 
     render() {
         return (
             <>
                 <KubeObjectListLayout
-                    className="TenantRoles" store={tenantRoleStore}
+                    className="Users" store={tenantUserStore}
                     sortingCallbacks={{
-                        [sortBy.name]: (item: TenantRole) => item.getName(),
-                        [sortBy.namespace]: (item: TenantRole) => item.getNs(),
+                        [sortBy.name]: (item: TenantUser) => item.getName(),
+                        [sortBy.namespace]: (item: TenantUser) => item.getNs(),
                     }}
                     searchFilters={[
-                        (item: TenantRole) => item.getSearchFields()
+                        (item: TenantUser) => item.getSearchFields()
                     ]}
-                    renderHeaderTitle={<Trans>Roles</Trans>}
+                    renderHeaderTitle={<Trans>Users</Trans>}
                     renderTableHeader={[
                         {title: <Trans>Name</Trans>, className: "name", sortBy: sortBy.name},
                         {title: <Trans>Namespace</Trans>, className: "namespace", sortBy: sortBy.namespace},
                         {title: <Trans>Age</Trans>, className: "age", sortBy: sortBy.age},
                     ]}
-                    renderTableContents={(role: TenantRole) => [
-                        role.getName(),
-                        role.getNs(),
-                        role.getAge(),
+                    renderTableContents={(user: TenantUser) => [
+                        user.getName(),
+                        user.getNs(),
+                        user.getAge(),
                     ]}
-                    renderItemMenu={(item: TenantRole) => {
-                        return <RoleMenu object={item}/>
+                    renderItemMenu={(item: TenantUser) => {
+                        return <TenantUserMenu object={item}/>
                     }}
                     addRemoveButtons={{
-                        onAdd: () => AddRoleDialog.open(),
-                        addTooltip: <Trans>Create new Role</Trans>
+                        onAdd: () => AddUserDialog.open(),
+                        addTooltip: <Trans>Create new User</Trans>
                     }}
                 />
-                <AddRoleDialog/>
+                <AddUserDialog/>
             </>
         );
     }
 }
 
-export function RoleMenu(props: KubeObjectMenuProps<TenantRole>) {
+export function TenantUserMenu(props: KubeObjectMenuProps<TenantUser>) {
     return (
         <>
             <KubeObjectMenu {...props} />
@@ -72,6 +71,6 @@ export function RoleMenu(props: KubeObjectMenuProps<TenantRole>) {
     )
 }
 
-apiManager.registerViews(tenantRoleApi, {
-    Menu: RoleMenu,
+apiManager.registerViews(tenantUserApi, {
+    Menu: TenantUserMenu,
 })

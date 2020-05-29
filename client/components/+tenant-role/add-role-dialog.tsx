@@ -2,7 +2,7 @@ import React from "react";
 import {observer} from "mobx-react";
 import {Dialog, DialogProps} from "../dialog";
 import {observable} from "mobx";
-import {Form, formApi, DataNode} from "../../api/endpoints";
+import {TenantRole, tenantRoleApi} from "../../api/endpoints";
 import {Wizard, WizardStep} from "../wizard";
 import {t, Trans} from "@lingui/macro";
 import {SubTitle} from "../layout/sub-title";
@@ -12,45 +12,39 @@ import {systemName} from "../input/input.validators";
 import {Notifications} from "../notifications";
 import {showDetails} from "../../navigation";
 
-
 interface Props extends Partial<DialogProps> {
 }
 
 @observer
-export class AddFormDialog extends React.Component<Props> {
+export class AddRoleDialog extends React.Component<Props> {
 
     @observable static isOpen = false;
 
     static open() {
-        AddFormDialog.isOpen = true;
+        AddRoleDialog.isOpen = true;
     }
 
     static close() {
-        AddFormDialog.isOpen = false;
+        AddRoleDialog.isOpen = false;
     }
 
     @observable name = "";
-    @observable namespace = "kube-system";
+    @observable namespace = "";
 
     close = () => {
-        AddFormDialog.close();
+        AddRoleDialog.close();
     }
 
     reset = () => {
         this.name = "";
     }
 
-    createForm = async () => {
+    createRole = async () => {
         const {name, namespace} = this;
-        const form: Partial<Form> = {
-            spec: {
-                tree: [{title: name, key: name, node_type: "array", children: []}],
-                props_schema: ""
-            }
-        }
+        const role: Partial<TenantRole> = {}
         try {
-            const newField = await formApi.create({namespace, name}, form);
-            showDetails(newField.selfLink);
+            const newRole = await tenantRoleApi.create({namespace, name}, role);
+            showDetails(newRole.selfLink);
             this.reset();
             this.close();
         } catch (err) {
@@ -61,18 +55,18 @@ export class AddFormDialog extends React.Component<Props> {
     render() {
         const {...dialogProps} = this.props;
         const {name} = this;
-        const header = <h5><Trans>Create Form</Trans></h5>;
+        const header = <h5><Trans>Create Role</Trans></h5>;
         return (
             <Dialog
                 {...dialogProps}
-                className="AddFormDialog"
-                isOpen={AddFormDialog.isOpen}
+                className="AddRoleDialog"
+                isOpen={AddRoleDialog.isOpen}
                 close={this.close}
             >
                 <Wizard header={header} done={this.close}>
-                    <WizardStep contentClass="flow column" nextLabel={<Trans>Create</Trans>} next={this.createForm}>
-                        <div className="form-name">
-                            <SubTitle title={<Trans>Field name</Trans>}/>
+                    <WizardStep contentClass="flow column" nextLabel={<Trans>Create</Trans>} next={this.createRole}>
+                        <div className="role-name">
+                            <SubTitle title={<Trans>Role name</Trans>}/>
                             <Input
                                 autoFocus required
                                 placeholder={_i18n._(t`Name`)}
@@ -85,5 +79,4 @@ export class AddFormDialog extends React.Component<Props> {
             </Dialog>
         )
     }
-
 }

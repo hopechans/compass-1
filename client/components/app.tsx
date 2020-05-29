@@ -25,6 +25,7 @@ import { Storage, storageRoute } from "./+storage";
 import { Cluster } from "./+cluster/cluster";
 import { Config, configRoute } from "./+config";
 import { Events } from "./+events/events";
+import { Login } from "./+login";
 import { Tekton,tektonRoute } from "./+tekton";
 import { eventRoute } from "./+events";
 import { ErrorBoundary } from "./error-boundary";
@@ -75,6 +76,7 @@ class App extends React.Component {
                     <Route component={UserManagement} {...usersManagementRoute}/> */}
                     <Route component={Apps} {...appsRoute}/>
                     <Route component={Tenant} {...tenantRoute}/>
+                    <Route component={Login} path="/login"/>
                     <Redirect exact from="/" to={homeUrl}/>
                     <Route path="*" component={NotFound}/>
                     {/* // <Route component={Cluster} {...clusterRoute}/>
