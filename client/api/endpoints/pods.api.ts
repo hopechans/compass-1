@@ -131,7 +131,7 @@ export interface IPodContainer {
     imagePullPolicy: string;
 }
 
-interface IContainerProbe {
+export interface IContainerProbe {
     httpGet?: {
         path?: string;
         port: number;

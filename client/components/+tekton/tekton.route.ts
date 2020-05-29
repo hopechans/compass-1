@@ -12,5 +12,26 @@ export const pipelineRoute: RouteProps = {
   path: "/tekton-pipeline",
 };
 
+export const pipelineRunRoute: RouteProps = {
+  path: "/tekton-pipelinerun",
+};
+
+export const pipelineResourceRoute: RouteProps = {
+  path: "/tekton-pipelineresource",
+};
+
+export const taskRoute: RouteProps = {
+  path: "/tekton-task",
+};
+
+export const taskRunRoute: RouteProps = {
+  path: "/tekton-taskrun",
+};
+
+
 export const tektonURL = buildURL(pipelineRoute.path);
 export const pipelineURL = buildURL(pipelineRoute.path);
+export const pipelineRunURL = buildURL(pipelineRunRoute.path);
+export const pipelineResourceURL = buildURL(pipelineResourceRoute.path);
+export const taskURL = buildURL(taskRoute.path);
+export const taskRunURL = buildURL(taskRunRoute.path);

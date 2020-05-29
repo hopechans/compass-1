@@ -40,6 +40,11 @@ export * from './endpoint.api'
 export * from './injector.api'
 export * from './water.api'
 export * from './workloads-deploy.api'
+export * from './tekton-pipeline.api'
+export * from './tekton-pipelinerun.api'
+export * from './tekton-task.api'
+export * from './tekton-pipelineresource.api'
+export * from './tekton-taskrun.api'
 export * from "./tenant-department.api"
 export * from "./tenant-user"
 export * from "./tenant-role.api"
