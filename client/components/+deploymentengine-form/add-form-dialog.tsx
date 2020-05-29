@@ -2,7 +2,7 @@ import React from "react";
 import {observer} from "mobx-react";
 import {Dialog, DialogProps} from "../dialog";
 import {observable} from "mobx";
-import {Form, formApi} from "../../api/endpoints";
+import {Form, formApi, DataNode} from "../../api/endpoints";
 import {Wizard, WizardStep} from "../wizard";
 import {t, Trans} from "@lingui/macro";
 import {SubTitle} from "../layout/sub-title";
@@ -11,6 +11,7 @@ import {_i18n} from "../../i18n";
 import {systemName} from "../input/input.validators";
 import {Notifications} from "../notifications";
 import {showDetails} from "../../navigation";
+
 
 interface Props extends Partial<DialogProps> {
 }
@@ -43,7 +44,8 @@ export class AddFormDialog extends React.Component<Props> {
         const {name, namespace} = this;
         const form: Partial<Form> = {
             spec: {
-                tree: "[]"
+                tree: [{title: name, key: name, node_type: "array", children: []}],
+                props_schema: ""
             }
         }
         try {
