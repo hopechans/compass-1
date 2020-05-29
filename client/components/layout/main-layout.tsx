@@ -72,6 +72,16 @@ export class Layout extends React.Component<Props,State> {
     this.props.history.push('/login')
   }
 
+  changeLanguage = () => {
+    const { setLocale, activeLang } = i18nStore;
+    if(activeLang == 'zh-cn'){
+      setLocale('en')
+    }
+    if(activeLang == 'en'){
+      setLocale('zh-cn')
+    }
+  }
+
   renderUserMenu(){
     const { userName } = configStore.config;
     return (
@@ -83,6 +93,10 @@ export class Layout extends React.Component<Props,State> {
                   <Icon material="loop" />
                   <span className="title"><Trans>Theme</Trans></span>
               </MenuItem> */}
+              <MenuItem onClick={this.changeLanguage}>
+                  <Icon material="g_translate" />
+                  <span className="title"><Trans>Language</Trans></span>
+              </MenuItem>
               <MenuItem onClick={this.loginout}>
                   <Icon material="exit_to_app" />
                   <span className="title"><Trans>Logout</Trans></span>
