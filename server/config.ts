@@ -14,12 +14,12 @@ export const config = {
 
   API_PREFIX: {
     BASE: '/api', // local express.js server api
+    TENANT: '/base',  // tenant api
     TERMINAL: '/api-kube', // terminal api
     KUBE_BASE: '/api-kube', // kubernetes cluster api
     KUBE_USERS: '/api-users', // users & groups api
     KUBE_HELM: '/api-helm', // helm charts api middleware
     KUBE_RESOURCE_APPLIER: "/api-kube",
-    TENANT: '/base',  // tenant api
   },
 
   // express.js port

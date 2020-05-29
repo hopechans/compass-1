@@ -8,7 +8,6 @@ import {Field, fieldApi} from "../../api/endpoints";
 import {Wizard, WizardStep} from "../wizard";
 import {t, Trans} from "@lingui/macro";
 import {Notifications} from "../notifications";
-import {showDetails} from "../../navigation";
 import {FRender} from "../ali-formrender";
 
 interface LooseObject {
@@ -239,10 +238,9 @@ export class ConfigFieldDialog extends React.Component<Props> {
         this.field.spec.form_data_config = JSON.stringify(this.formData)
         this.field.spec.props_schema = JSON.stringify(this.adorn(this.formData, this.field.spec.field_type))
         try {
-            const newField = await fieldApi.create({name, namespace}, this.field);
-            showDetails(newField.selfLink);
-            this.reset();
+            await fieldApi.create({name, namespace}, this.field);
             this.close();
+            this.reset();
         } catch (err) {
             Notifications.error(err);
         }
