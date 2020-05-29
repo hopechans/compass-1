@@ -20,30 +20,33 @@ import { navigate, navigation } from "../../navigation";
 import { i18nStore } from "../../i18n";
 import { Badge } from "../badge";
 import { themeStore } from "../../theme.store";
-
-import {createBrowserHistory} from "history";
+import {withRouter,RouteComponentProps } from 'react-router';
 
 export interface TabRoute extends RouteProps {
   title: React.ReactNode;
   url: string;
 }
 
-interface Props {
+interface Props extends RouteComponentProps{
   className?: any;
   tabs?: TabRoute[];
   footer?: React.ReactNode;
   headerClass?: string;
   contentClass?: string;
   footerClass?: string;
-  history?:any
+}
+interface State{
+
 }
 
 @observer
-export class MainLayout extends React.Component<Props> {
+export class Layout extends React.Component<Props,State> {
   public storage = createStorage("main_layout", { pinnedSidebar: true });
 
   @observable isPinned = this.storage.get().pinnedSidebar;
   @observable isAccessible = true;
+  
+  
 
   @disposeOnUnmount syncPinnedStateWithStorage = reaction(
     () => this.isPinned,
@@ -66,12 +69,7 @@ export class MainLayout extends React.Component<Props> {
   }
 
   loginout = () => {
-    let history = createBrowserHistory()
-    history.push({
-      pathname: "/login",
-    });
-    history.go(0);
-
+    this.props.history.push('/login')
   }
 
   renderUserMenu(){
@@ -140,3 +138,4 @@ export class MainLayout extends React.Component<Props> {
   }
 }
 
+export const MainLayout =  withRouter(Layout);
