@@ -1,6 +1,7 @@
 import "./main-layout.scss";
 
 import * as React from "react";
+import { Redirect } from "react-router";
 import { observable, reaction } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { matchPath, RouteProps } from "react-router-dom";
@@ -19,13 +20,14 @@ import { navigate, navigation } from "../../navigation";
 import { i18nStore } from "../../i18n";
 import { Badge } from "../badge";
 import { themeStore } from "../../theme.store";
+import {withRouter,RouteComponentProps } from 'react-router';
 
 export interface TabRoute extends RouteProps {
   title: React.ReactNode;
   url: string;
 }
 
-interface Props {
+interface Props extends RouteComponentProps{
   className?: any;
   tabs?: TabRoute[];
   footer?: React.ReactNode;
@@ -33,13 +35,18 @@ interface Props {
   contentClass?: string;
   footerClass?: string;
 }
+interface State{
+
+}
 
 @observer
-export class MainLayout extends React.Component<Props> {
+export class Layout extends React.Component<Props,State> {
   public storage = createStorage("main_layout", { pinnedSidebar: true });
 
   @observable isPinned = this.storage.get().pinnedSidebar;
   @observable isAccessible = true;
+  
+  
 
   @disposeOnUnmount syncPinnedStateWithStorage = reaction(
     () => this.isPinned,
@@ -61,6 +68,19 @@ export class MainLayout extends React.Component<Props> {
     }
   }
 
+  loginout = () => {
+    this.props.history.push('/login')
+  }
+
+  changeLanguage = () => {
+    const { setLocale, activeLang } = i18nStore;
+    if(activeLang == 'zh-cn'){
+      setLocale('en')
+    }
+    if(activeLang == 'en'){
+      setLocale('zh-cn')
+    }
+  }
 
   renderUserMenu(){
     const { userName } = configStore.config;
@@ -73,7 +93,11 @@ export class MainLayout extends React.Component<Props> {
                   <Icon material="loop" />
                   <span className="title"><Trans>Theme</Trans></span>
               </MenuItem> */}
-              <MenuItem >
+              <MenuItem onClick={this.changeLanguage}>
+                  <Icon material="g_translate" />
+                  <span className="title"><Trans>Language</Trans></span>
+              </MenuItem>
+              <MenuItem onClick={this.loginout}>
                   <Icon material="exit_to_app" />
                   <span className="title"><Trans>Logout</Trans></span>
               </MenuItem>
@@ -127,3 +151,5 @@ export class MainLayout extends React.Component<Props> {
     );
   }
 }
+
+export const MainLayout =  withRouter(Layout);
