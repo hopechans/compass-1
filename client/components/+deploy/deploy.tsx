@@ -6,7 +6,7 @@ import { MenuItem } from "../menu";
 import { Icon } from "../icon";
 import { _i18n } from "../../i18n"
 import { RouteComponentProps } from "react-router";
-import { t, Trans } from "@lingui/macro";
+import { t, Trans, select } from "@lingui/macro";
 import { Deploy, deployApi } from "../../api/endpoints";
 import { KubeObjectMenu, KubeObjectMenuProps } from "../kube-object/kube-object-menu";
 import { MainLayout, TabRoute } from "../layout/main-layout";
@@ -87,9 +87,11 @@ export function DeployMenu(props: KubeObjectMenuProps<Deploy>) {
     const { object, toolbar } = props;
     return (
         <KubeObjectMenu {...props} >
-            <MenuItem onClick={() => { }}>
-                <Icon material="control_camera" title={_i18n._(t`Release`)} interactive={toolbar} />
-                <span className="title"><Trans>Release</Trans></span>
+            <MenuItem onClick={() => {
+                alert("choose a namespace")
+            }}>
+                <Icon material="control_camera" title={_i18n._(t`Deploy To`)} interactive={toolbar} />
+                <span className="title"><Trans>Deploy To</Trans></span>
             </MenuItem>
         </KubeObjectMenu>
     )
