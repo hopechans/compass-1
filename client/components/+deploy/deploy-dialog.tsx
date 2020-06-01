@@ -1,7 +1,7 @@
+import './deploy-dialog.scss'
 import React from 'react'
 import { Input, Button, Row, Col, Collapse, Select, Switch, InputNumber, Popconfirm } from 'antd';
 import { PlusOutlined, DeleteOutlined } from '@ant-design/icons';
-import './deploy-dialog.scss'
 import { observable } from "mobx";
 import { observer } from "mobx-react";
 import { t, Trans, number } from "@lingui/macro";
@@ -30,10 +30,12 @@ interface State {
 }
 
 class VolumeMount {
+  status: boolean;
   name: string;
   readOnly: boolean;
   mouthPath: string;
   constructor() {
+    this.status = false;
     this.name = '';
     this.readOnly = true;
     this.mouthPath = '';
@@ -140,62 +142,74 @@ class VolumeClaimTemplateSpecResourcesRequests {
   }
 }
 
-interface VolumeClaimTemplateSpecResources {
+class VolumeClaimTemplateSpecResources {
   requests: VolumeClaimTemplateSpecResourcesRequests
 }
 
-interface VolumeClaimTemplateSpec {
-  accessModes: string[],
-  resources: VolumeClaimTemplateSpecResources,
+class VolumeClaimTemplateSpec {
+  accessModes: string[];
+  resources: VolumeClaimTemplateSpecResources;
 }
 
-interface VolumeClaimTemplate {
-  metadata: VolumeClaimTemplateMetadata,
-  spec: VolumeClaimTemplateSpec,
+class VolumeClaimTemplate {
+  metadata: VolumeClaimTemplateMetadata;
+  spec: VolumeClaimTemplateSpec;
 }
 
-interface VolumeClaimTemplates {
-  status: boolean,
-  volumeClaimTemplates: Array<VolumeClaimTemplate>,
+class VolumeClaimTemplates {
+  status: boolean;
+  volumeClaimTemplates: Array<VolumeClaimTemplate>;
+}
+
+export interface DeployTemplate {
+  type: string,
+  name: string,
+  strategy: string,
+  forms: any[],
+  volumeClaimTemplates: VolumeClaimTemplates,
 }
 
 @observer
 export class AddDeployDialog extends React.Component<Props, State>{
 
-  default_node() {
+  default_container() {
     let resource: Resource = {
       limits: { cpu: 170, memory: 170 },
       requests: { cpu: 100, memory: 30 },
     };
+    return {
+      id: this.random(),
+      name: 'default',
+      image: 'app:latest',
+      imagePullPolicy: 'IfNotPresent',
+      resource: resource,
+      volumeMounts: new Array<VolumeMount>(),
+      command: new Array<string>(),
+      args: new Array<string>(),
+      oneEnvConfig: new Array<string>(),
+      multipleEnvConfig: new Array<string>(),
+      readyProbe: new Probe(),
+      aliveProbe: new Probe(),
+      lifeCycle: new LifeCycle(),
+    }
+  }
 
+  default_node() {
     let volumeClaimTemplates: VolumeClaimTemplates = {
       status: false,
       volumeClaimTemplates: new Array<VolumeClaimTemplate>(),
     };
 
-    return {
+    let deployTemplate: DeployTemplate = {
       type: 'Stone',
       name: 'app-name',
       strategy: 'Aplha',
       forms: [
-        {
-          id: this.random(),
-          name: 'default',
-          image: 'app:latest',
-          imagePullPolicy: 'IfNotPresent',
-          resource: resource,
-          volumeMounts: new Array<VolumeMount>(),
-          command: new Array<string>(),
-          args: new Array<string>(),
-          oneEnvConfig: new Array<string>(),
-          multipleEnvConfig: new Array<string>(),
-          readyProbe: new Probe(),
-          aliveProbe: new Probe(),
-          lifeCycle: new LifeCycle(),
-        }
+        this.default_container(),
       ],
       volumeClaimTemplates: volumeClaimTemplates,
     };
+    return deployTemplate
   }
 
   constructor(props: any) {
@@ -217,7 +231,7 @@ export class AddDeployDialog extends React.Component<Props, State>{
 
   addContainer() {
     let { forms } = this.state
-    forms.push(this.default_node().forms[0]);
+    forms.push(this.default_container());
     this.setState({ forms: forms })
   }
 
@@ -595,11 +609,10 @@ export class AddDeployDialog extends React.Component<Props, State>{
     const data = this.getData();
     const { onSuccess, onError } = this.props;
     try {
-      console.log(data);
       await deployStore.create(
-        { name: data.name + '_' + Math.floor(Date.now() / 1000), namespace: '' }, {
+        { name: data.name + '-' + Math.floor(Date.now() / 1000), namespace: '' }, {
         spec: {
-          name: data.name,
+          appName: data.name,
           resourceType: data.type,
           metadata: JSON.stringify(data.forms),
         },
@@ -633,23 +646,25 @@ export class AddDeployDialog extends React.Component<Props, State>{
                 <Col span={2} className="text-right fs-14 top-form-text">Type:&nbsp; </Col>
                 <Col span={18}>
                   <Select value={type} size="small" className="top-form-text" style={{ width: '100%' }} onChange={(value) => this.changeSelectType(value)} onClick={(e: React.MouseEvent) => e.stopPropagation()}>
-                    <Option value="1">Stone</Option>
-                    <Option value="2">Water</Option>
+                    <Option value="Stone">Stone</Option>
+                    <Option value="Water">Water</Option>
+                    <Option value="Deployment">Deployment</Option>
+                    <Option value="Statefulset">Statefulset</Option>
                   </Select>
                 </Col>
               </Row>
 
               <Row className="mt-10">
-                <Col span={2} className="text-right fs-14 top-form-text">Name:</Col>
+                <Col span={2} className="text-right fs-14 top-form-text">Name:&nbsp;</Col>
                 <Col span={18}>
                   <Input size="small" className="top-form-text" value={name} onChange={(e) => this.changeInputName(e)} />
                 </Col>
               </Row>
             </div>
 
-            <Button type="primary" className="mt-10" shape="circle" icon={<PlusOutlined translate />} onClick={() => this.addContainer()}></Button> <span className="btn-right-text3">Addition Container</span>
+            <Button type="primary" className="mt-10" shape="circle" icon={<PlusOutlined translate />} onClick={() => this.addContainer()}></Button>
+            <span className="btn-right-text2">Addition Container</span>
 
-            <Row className="mt-10"></Row>
             <Collapse defaultActiveKey={'0'} >
               {
                 forms.map((item: any, index: number) => {
@@ -718,6 +733,7 @@ export class AddDeployDialog extends React.Component<Props, State>{
                           )
                         })
                       }
+
                       <Row className="mt-10"><Button type="primary" size="small" shape="circle" icon={<PlusOutlined translate />} onClick={() => this.addEnvConfigByOne(index)}></Button><span className="btn-right-text2">Environment </span></Row>
                       {
                         forms[index].oneEnvConfig.map((item: any, cIndex: number) => {
@@ -1014,8 +1030,6 @@ export class AddDeployDialog extends React.Component<Props, State>{
                 })
               }
             </Collapse>
-
-
           </WizardStep>
         </Wizard>
       </Dialog >
