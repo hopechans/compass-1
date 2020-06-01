@@ -4,15 +4,11 @@ import React from "react";
 import {observer} from "mobx-react";
 import {Dialog, DialogProps} from "../dialog";
 import {observable} from "mobx";
-import {Field, fieldApi} from "../../api/endpoints";
+import {Field, fieldApi, FormDataConfig, LooseObject} from "../../api/endpoints";
 import {Wizard, WizardStep} from "../wizard";
 import {t, Trans} from "@lingui/macro";
 import {Notifications} from "../notifications";
 import {FRender} from "../ali-formrender";
-
-interface LooseObject {
-    [key: string]: any
-}
 
 interface Props extends Partial<DialogProps> {
 }
@@ -24,10 +20,10 @@ function propsSchema(type: string) {
                 type: "object",
                 properties: {
                     required: [
-                        "name"
+                        "title"
                     ],
-                    name: {
-                        title: "name",
+                    title: {
+                        title: "title",
                         type: "string",
                     },
                     pattern: {
@@ -89,8 +85,8 @@ function propsSchema(type: string) {
             return {
                 type: "object",
                 properties: {
-                    name: {
-                        title: "name",
+                    title: {
+                        title: "title",
                         type: "string",
                         required: true
                     },
@@ -124,8 +120,8 @@ function propsSchema(type: string) {
             return {
                 type: "object",
                 properties: {
-                    name: {
-                        title: "name",
+                    title: {
+                        title: "title",
                         type: "string",
                         required: true
                     },
@@ -170,7 +166,11 @@ export class ConfigFieldDialog extends React.Component<Props> {
     @observable static isOpen = false;
     @observable static data: Field = null;
 
-    @observable formData = {};
+    @observable formData: FormDataConfig = {
+        name: "",
+        description: "",
+
+    };
     @observable name = "";
     @observable field_type = "";
     @observable namespace = "kube-system";
@@ -189,8 +189,8 @@ export class ConfigFieldDialog extends React.Component<Props> {
     }
 
     onOpen = () => {
-        const { field } = this;
-        this.formData = JSON.parse(field.spec.form_data_config);
+        const {field} = this;
+        this.formData = field.spec.form_data_config;
         this.name = field.getName();
         this.field_type = field.spec.field_type;
     }
@@ -200,22 +200,21 @@ export class ConfigFieldDialog extends React.Component<Props> {
     }
 
     reset = () => {
-        this.formData = {};
+        this.formData = {name: "", description: "", select: []};
         this.name = "";
     }
 
     adorn = (formData: any, type: string) => {
-        const field: LooseObject = {};
-        const props: LooseObject = {type: type};
-        const propsKeys = Object.keys(formData);
+        let field: LooseObject = {};
+        let props: LooseObject = {type: type};
+        const formDataKeys = Object.keys(formData);
 
-        for (let i = 0; i < propsKeys.length; i++) {
+        for (let i = 0; i < formDataKeys.length; i++) {
+            const fieldType = formDataKeys[i];
 
-            const fieldType = propsKeys[i];
-            if (fieldType == "select" && formData[fieldType] != "") {
-
-                const enumArray = [];
-                const enumNamesArray = [];
+            if (fieldType == "select" && formData["select"] != []) {
+                const enumArray: string[] = [];
+                const enumNamesArray: string[] = [];
                 // Enum EnumNames
                 for (let i = 0; i < formData[fieldType].length; i++) {
                     enumArray.push(formData[fieldType][i]["key"]);
@@ -235,8 +234,13 @@ export class ConfigFieldDialog extends React.Component<Props> {
 
     updateField = async () => {
         const {namespace} = this;
-        this.field.spec.form_data_config = JSON.stringify(this.formData)
-        this.field.spec.props_schema = JSON.stringify(this.adorn(this.formData, this.field.spec.field_type))
+
+        if (!this.formData.hasOwnProperty("select")) {
+            this.formData.select = [];
+        }
+        this.field.spec.form_data_config = this.formData
+        this.field.spec.props_schema = this.adorn(this.formData, this.field.spec.field_type)
+
         try {
             await fieldApi.create({name, namespace}, this.field);
             this.close();

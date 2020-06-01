@@ -13,6 +13,7 @@ import {Button} from "../button";
 import {Icon} from "../icon";
 import {ConfigFieldDialog} from "./config-field-dialog";
 import {DataNode} from "../../api/endpoints";
+import {fieldStore} from "../+deploymentengine-field";
 
 
 interface Props extends Partial<DialogProps> {
@@ -48,14 +49,6 @@ export class ConfigFormDialog extends React.Component<Props> {
         ConfigFormDialog.isOpen = false;
     }
 
-    get types() {
-        return [
-            "string",
-            "number",
-            "boolean",
-        ]
-    }
-
     reset = () => {
         this.newFieldTitle = "";
     }
@@ -75,16 +68,15 @@ export class ConfigFormDialog extends React.Component<Props> {
     updateForm = async () => {
         if (this.selectNode) {
             const {title, newFieldTitle} = this;
-            let thisGData = this.gData
+            let thisGData = onChange(this.gData, this.selectNode.node, title);
             if (newFieldTitle != "") {
                 thisGData = onAdd(thisGData, this.selectNode.node, {
                     title: newFieldTitle,
                     key: newFieldTitle,
-                    node_type: "field",
+                    node_type: "array",
                     children: [] as any,
                 });
             }
-            thisGData = onChange(thisGData, this.selectNode, title);
             this.props.handleGData(thisGData);
             this.close();
             this.reset();
@@ -127,9 +119,7 @@ export class ConfigFormDialog extends React.Component<Props> {
                             <div className="new-field-title">
                                 <SubTitle title={<Trans>Field name</Trans>}/>
                                 <Input
-                                    autoFocus required
                                     placeholder={_i18n._(t`New Field Title`)}
-                                    validators={systemName}
                                     value={newFieldTitle} onChange={v => this.newFieldTitle = v}
                                 />
                             </div>

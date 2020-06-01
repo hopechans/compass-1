@@ -7,6 +7,9 @@ import {apiTenant} from "../index"
 export class TenantDepartment extends KubeObject {
     static kind = "BaseDepartment";
 
+    spec: {
+        namespace: string
+    }
 }
 
 export const tenantDepartmentApi = new KubeApi({
