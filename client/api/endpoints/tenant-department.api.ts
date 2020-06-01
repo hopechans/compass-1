@@ -1,6 +1,7 @@
 import {KubeObject} from "../kube-object";
 import {KubeApi} from "../kube-api";
 import {autobind} from "../../utils";
+import {apiTenant} from "../index"
 
 @autobind()
 export class TenantDepartment extends KubeObject {
@@ -10,7 +11,8 @@ export class TenantDepartment extends KubeObject {
 
 export const tenantDepartmentApi = new KubeApi({
     kind: TenantDepartment.kind,
-    apiBase: "/base/apis/fuxi.nip.io/v1/basedepartments",
+    apiBase: "/apis/fuxi.nip.io/v1/basedepartments",
     isNamespaced: true,
     objectConstructor: TenantDepartment,
+    request: apiTenant
 });

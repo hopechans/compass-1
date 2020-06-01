@@ -1,6 +1,7 @@
 import {KubeObject} from "../kube-object";
 import {KubeApi} from "../kube-api";
 import {autobind} from "../../utils";
+import {apiTenant} from "../index";
 
 @autobind()
 export class TenantRole extends KubeObject {
@@ -9,8 +10,9 @@ export class TenantRole extends KubeObject {
 
 export const tenantRoleApi = new KubeApi({
     kind: TenantRole.kind,
-    apiBase: "/base/apis/fuxi.nip.io/v1/baseroles",
+    apiBase: "/apis/fuxi.nip.io/v1/baseroles",
     isNamespaced: true,
     objectConstructor: TenantRole,
+    request: apiTenant
 });
 
