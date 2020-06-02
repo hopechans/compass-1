@@ -25,10 +25,10 @@ export class PodSecurityPolicies extends React.Component {
         isClusterScoped={true}
         store={podSecurityPoliciesStore}
         sortingCallbacks={{
-          [sortBy.name]: (item: PodSecurityPolicy) => item.getName(),
+          [sortBy.name]: (item: PodSecurityPolicy) => item.metadata.name,
           [sortBy.volumes]: (item: PodSecurityPolicy) => item.getVolumes(),
           [sortBy.privileged]: (item: PodSecurityPolicy) => +item.isPrivileged(),
-          [sortBy.age]: (item: PodSecurityPolicy) => item.getAge(false),
+          [sortBy.age]: (item: PodSecurityPolicy) => item.metadata.creationTimestamp,
         }}
         searchFilters={[
           (item: PodSecurityPolicy) => item.getSearchFields(),
@@ -44,14 +44,14 @@ export class PodSecurityPolicies extends React.Component {
         ]}
         renderTableContents={(item: PodSecurityPolicy) => {
           return [
-            item.getName(),
+            item.metadata.name,
             item.isPrivileged() ? <Trans>Yes</Trans> : <Trans>No</Trans>,
             item.getVolumes().join(", "),
-            item.getAge(),
+            item.metadata.creationTimestamp,
           ]
         }}
         renderItemMenu={(item: PodSecurityPolicy) => {
-          return <PodSecurityPolicyMenu object={item}/>
+          return <PodSecurityPolicyMenu object={item} />
         }}
       />
     )
@@ -60,7 +60,7 @@ export class PodSecurityPolicies extends React.Component {
 
 export function PodSecurityPolicyMenu(props: KubeObjectMenuProps<PodSecurityPolicy>) {
   return (
-    <KubeObjectMenu {...props}/>
+    <KubeObjectMenu {...props} />
   )
 }
 
