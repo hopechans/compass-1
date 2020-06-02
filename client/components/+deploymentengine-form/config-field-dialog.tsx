@@ -7,6 +7,8 @@ import {t, Trans} from "@lingui/macro";
 import {SubTitle} from "../layout/sub-title";
 import {Select, SelectOption} from "../select";
 import {onAdd} from "../+deploymentengine";
+import {fieldStore} from "../+deploymentengine-field";
+import {Field} from "../../api/endpoints";
 
 
 interface Props extends Partial<DialogProps> {
@@ -28,6 +30,7 @@ export class ConfigFieldDialog extends React.Component<Props> {
         ConfigFieldDialog.gData = gData;
     }
 
+
     get selectNode() {
         return ConfigFieldDialog.selectNode;
     }
@@ -41,11 +44,10 @@ export class ConfigFieldDialog extends React.Component<Props> {
     }
 
     get types() {
-        return [
-            "string",
-            "number",
-            "boolean",
-        ]
+        let fieldNames: string[] = []
+        setTimeout(() => {fieldNames = fieldStore.items.map((item: Field) => item.getName())}, 3000)
+        return fieldNames;
+        // return ['container']
     }
 
     close = () => {

@@ -4,10 +4,11 @@ import * as HtmlWebpackPlugin from "html-webpack-plugin";
 import * as MiniCssExtractPlugin from "mini-css-extract-plugin";
 import * as TerserWebpackPlugin from "terser-webpack-plugin";
 import { BUILD_DIR, CLIENT_DIR, clientVars, config } from "./server/config"
-const os = require('os');
-const SpeedMeasurePlugin = require("speed-measure-webpack-plugin");
-const smp = new SpeedMeasurePlugin();
 
+const os = require('os');
+
+// const SpeedMeasurePlugin = require("speed-measure-webpack-plugin");
+// const smp = new SpeedMeasurePlugin();
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const WebpackBar = require('webpackbar');
 export default () => {
@@ -21,7 +22,8 @@ export default () => {
       app: path.resolve(srcDir, "components/app.tsx"),
     },
     output: {
-      path: path.resolve(__dirname, './dist'),
+      //path: buildDir,
+      path:path.resolve(__dirname,'./dist'),
       publicPath: '/',
       filename: '[name].js',
       chunkFilename: 'chunks/[name].js',
@@ -29,41 +31,43 @@ export default () => {
     resolve: {
       extensions: ['.ts', '.tsx', '.js', '.json']
     },
-    devServer: {
+    devServer:{
       //项目根目录
-      host: '127.0.0.1',
-      port: '8087',
-      contentBase: path.join(__dirname, "./dist"),
-      historyApiFallback: true,
-      overlay: true,
+      host:getNetworkIp(),
+      port:'8087',
+      contentBase:path.join(__dirname,"./dist"),
+      historyApiFallback:true,
+      overlay:true,
       publicPath: '',
-      proxy: {
+      proxy:{
+        '/base': {
+          target: 'http://0.0.0.0:8081',
+          secure: false,
+          changeOrigin: true,
+        },
         '/api-kube': {
-          target: 'http://10.200.100.200:8080/',
+          target: 'http://0.0.0.0:8080',
           secure: false,  // 如果是https接口，需要配置这个参数
           changeOrigin: true, // 如果接口跨域，需要进行这个参数配置
-          pathRewrite: { '^/api-kube': '/workload' }
+          pathRewrite: { '^/api-kube': '/workload' },
         },
-
         '/api-resource': {
-          target: 'http://10.200.100.200:8080/',
-          secure: false,  // 如果是https接口，需要配置这个参数
-          changeOrigin: true, // 如果接口跨域，需要进行这个参数配置
-          pathRewrite: { '^/api-resource': '/workload' }
+          target: 'http://0.0.0.0:8080',
+          secure: false,
+          changeOrigin: true,
+          pathRewrite: { '^/api-resource': '/workload' },
         },
-
         '/api': {
-          target: 'http://10.200.100.200:8080/',
-          secure: false,  // 如果是https接口，需要配置这个参数
-          changeOrigin: true, // 如果接口跨域，需要进行这个参数配置
-          pathRewrite: { '^/api': '/workload' }
+          target: 'http://0.0.0.0:8080',
+          secure: false,
+          changeOrigin: true,
+          pathRewrite: { '^/api': '/workload' },
         },
       }
-      // openPage:'index.html',
     },
     mode: IS_PRODUCTION ? "production" : "development",
-    devtool: IS_PRODUCTION ? "" : "cheap-module-eval-source-map",
-
+    // devtool: IS_PRODUCTION ? "" : "cheap-module-eval-source-map",
+    devtool: false,
     optimization: {
       minimize: IS_PRODUCTION,
       minimizer: [
@@ -80,7 +84,7 @@ export default () => {
             extractComments: {
               condition: "some",
               banner: [
-                `Lens. Copyright ${new Date().getFullYear()} by Lakend Labs, Inc. All rights reserved.`
+                `Copyright ${new Date().getFullYear()} by`
               ].join("\n")
             }
           })
@@ -96,13 +100,13 @@ export default () => {
         }
       }
     },
-
     module: {
       rules: [
         {
           test: /\.tsx?$/,
           exclude: /node_modules/,
           use: [
+
             "babel-loader",
             {
               loader: 'ts-loader',
@@ -127,7 +131,8 @@ export default () => {
         {
           test: /\.s?css$/,
           use: [
-            IS_PRODUCTION ? MiniCssExtractPlugin.loader : {
+            IS_PRODUCTION ? MiniCssExtractPlugin.loader :
+            {
               loader: "style-loader",
               options: {}
             },
@@ -151,14 +156,16 @@ export default () => {
         }
       ]
     },
-
     plugins: [
-      // ...(IS_PRODUCTION ? [] : [
-      // new webpack.HotModuleReplacementPlugin(),
-      // ]),
-
-      new webpack.HotModuleReplacementPlugin(),
-
+      ...(IS_PRODUCTION ?
+        [
+          new BundleAnalyzerPlugin()
+        ] :
+        [
+          new webpack.HotModuleReplacementPlugin(),
+        ]
+      ),
+      new WebpackBar(),
       new webpack.DefinePlugin({
         process: {
           env: JSON.stringify(clientVars)
@@ -181,25 +188,25 @@ export default () => {
 };
 
 function getNetworkIp() {
-  let needHost = ''; // 打开的host
-  try {
-    // 获得网络接口列表
-    let network = os.networkInterfaces();
-    for (let dev in network) {
-      let iface = network[dev];
-      for (let i = 0; i < iface.length; i++) {
+	let needHost = ''; // 打开的host
+	try {
+		// 获得网络接口列表
+		let network = os.networkInterfaces();
+		for (let dev in network) {
+			let iface = network[dev];
+			for (let i = 0; i < iface.length; i++) {
         let alias = iface[i];
-        if (alias.family === 'IPv4' && !alias.internal && alias.address.includes('10')) {
+				if (alias.family === 'IPv4' && !alias.internal && alias.address.includes('10')) {
           needHost = alias.address;
           return needHost
         }
-        else {
+        else{
           needHost = 'localhost'
         }
-      }
-    }
-  } catch (e) {
+			}
+		}
+	} catch (e) {
     needHost = 'localhost';
-  }
-  return needHost;
+	}
+	return needHost;
 }

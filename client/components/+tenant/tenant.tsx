@@ -6,13 +6,11 @@ import {RouteComponentProps} from "react-router-dom";
 import {Trans} from "@lingui/macro";
 import {MainLayout, TabRoute} from "../layout/main-layout";
 import {TenantDepartments} from '../+tenant-department';
-import {TenantPermissions} from "../+tenant-permission";
 import {TenantRoles} from '../+tenant-role';
 import {TenantUsers} from "../+tenant-user";
 import {namespaceStore} from "../+namespaces/namespace.store";
 import {
     tenantDepartmentRoute, tenantDepartmentURL,
-    tenantPermissionRoute, tenantPermissionURL,
     tenantRoleRoute, tenantRoleURL,
     tenantUserRoute, tenantUserURL
 } from './tenant.route'
@@ -31,12 +29,6 @@ export class Tenant extends React.Component<Props> {
                 component: TenantDepartments,
                 url: tenantDepartmentURL({query}),
                 path: tenantDepartmentRoute.path
-            },
-            {
-                title: <Trans>Permission</Trans>,
-                component: TenantPermissions,
-                url: tenantPermissionURL({query}),
-                path: tenantPermissionRoute.path
             },
             {
                 title: <Trans>Role</Trans>,
