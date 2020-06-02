@@ -7,8 +7,8 @@ import { BUILD_DIR, CLIENT_DIR, clientVars, config } from "./server/config"
 
 const os = require('os');
 
-// const SpeedMeasurePlugin = require("speed-measure-webpack-plugin");
-// const smp = new SpeedMeasurePlugin();
+const SpeedMeasurePlugin = require("speed-measure-webpack-plugin");
+const smp = new SpeedMeasurePlugin();
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const WebpackBar = require('webpackbar');
 export default () => {
