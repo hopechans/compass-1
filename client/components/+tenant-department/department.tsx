@@ -6,7 +6,7 @@ import {KubeObjectMenu, KubeObjectMenuProps} from "../kube-object";
 import {KubeObjectListLayout} from "../kube-object";
 import {TenantDepartment, tenantDepartmentApi} from "../../api/endpoints";
 import {apiManager} from "../../api/api-manager";
-import {tenantDepartmentStore} from "./department.store"
+import {tenantDepartmentStore} from "./department.store";
 
 import {AddDepartmentDialog} from "./add-department-dialog";
 

@@ -8,13 +8,15 @@ import {KubeObjectMenu, KubeObjectMenuProps} from "../kube-object";
 import {KubeObjectListLayout} from "../kube-object";
 import {IFormRouteParams} from "./form.route";
 import {formStore} from "./form.store";
-import {Form, formApi} from "../../api/endpoints";
+import {Field, Form, formApi} from "../../api/endpoints";
 import {apiManager} from "../../api/api-manager";
 import {MenuItem} from "../menu";
 import {Icon} from "../icon";
 import {_i18n} from "../../i18n";
 import {AddFormDialog} from "./add-form-dialog";
 import {ConfigTreeDialog} from "./config-tree-dialog";
+import {SequelFormDialog} from "./sequel-form-dialog";
+import {fieldStore} from "./field.store";
 
 
 enum sortBy {
@@ -31,6 +33,9 @@ interface Props extends RouteComponentProps<IFormRouteParams> {
 export class Forms extends React.Component<Props> {
 
     render() {
+
+        console.log('forms',fieldStore.items.map(item => item.getName()))
+
         return (
             <>
                 <KubeObjectListLayout
@@ -74,12 +79,17 @@ export function FormMenu(props: KubeObjectMenuProps<Form>) {
     return (
         <>
             <KubeObjectMenu {...props}>
+                <MenuItem onClick={() => SequelFormDialog.open(object)}>
+                    <Icon material="code" title={_i18n._(t`Show`)} interactive={toolbar}/>
+                    <span className="title"><Trans>Show</Trans></span>
+                </MenuItem>
                 <MenuItem onClick={() => ConfigTreeDialog.open(object)}>
-                    <Icon material="control_camera" title={_i18n._(t`Modal`)} interactive={toolbar}/>
-                    <span className="title"><Trans>Modal</Trans></span>
+                    <Icon material="toc" title={_i18n._(t`Tree`)} interactive={toolbar}/>
+                    <span className="title"><Trans>Tree</Trans></span>
                 </MenuItem>
             </KubeObjectMenu>
             <ConfigTreeDialog/>
+            <SequelFormDialog/>
         </>
     )
 }
