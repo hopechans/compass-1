@@ -8,7 +8,7 @@ export class Deploy extends WorkloadKubeObject {
     static kind = "Workloads"
 
     spec: {
-        name: string,  // the app name
+        appName: string,  // the app name
         resourceType: string;
         metadata: string; // the field record array container configuration
     }

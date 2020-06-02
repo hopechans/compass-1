@@ -16,6 +16,7 @@ import {_i18n} from "../../i18n";
 
 import {AddFieldDialog} from "./add-field-dialog";
 import {ConfigFieldDialog} from "./config-field-dialog";
+import {SequelFieldDialog} from "./sequel-field-dialog";
 
 enum sortBy {
     name = "name",
@@ -29,7 +30,6 @@ interface Props extends RouteComponentProps<IFieldRouteParams> {
 
 @observer
 export class Fields extends React.Component<Props> {
-    spec: { scaleTargetRef: any; };
 
     render() {
         return (
@@ -77,12 +77,17 @@ export function FieldMenu(props: KubeObjectMenuProps<Field>) {
     return (
         <>
             <KubeObjectMenu {...props}>
+                <MenuItem onClick={() => SequelFieldDialog.open(object)}>
+                    <Icon material="code" title={_i18n._(t`Show`)} interactive={toolbar}/>
+                    <span className="title"><Trans>Show</Trans></span>
+                </MenuItem>
                 <MenuItem onClick={() => ConfigFieldDialog.open(object)}>
-                    <Icon material="control_camera" title={_i18n._(t`Modal`)} interactive={toolbar}/>
-                    <span className="title"><Trans>Modal</Trans></span>
+                    <Icon material="settings_ethernet" title={_i18n._(t`Config`)} interactive={toolbar}/>
+                    <span className="title"><Trans>Config</Trans></span>
                 </MenuItem>
             </KubeObjectMenu>
             <ConfigFieldDialog/>
+            <SequelFieldDialog/>
         </>
     )
 }

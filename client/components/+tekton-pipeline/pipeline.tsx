@@ -13,6 +13,8 @@ import { KubeObjectMenu, KubeObjectMenuProps } from "../kube-object/kube-object-
 import { KubeObjectListLayout } from "../kube-object";
 import { KubeEventIcon } from "../+events/kube-event-icon";
 import { apiManager } from "../../api/api-manager";
+import './registerShape';
+import G6 from '@antv/g6';
 
 enum sortBy {
     name = "name",
@@ -27,9 +29,172 @@ interface Props extends RouteComponentProps {
 
 @observer
 export class Pipelines extends React.Component<Props> {
+
+    componentDidMount(){
+        const data = {
+            nodes: [
+              {
+                id: '1', x: 5, y: 5,
+              },
+            ],
+          };
+      
+      
+          const graph = new G6.Graph({
+            container: 'container',
+            width: 1300,
+            height: 200,
+            renderer: 'svg',
+            modes: {
+            //   default: ['drag-node'],
+            //   edit: ['click-select'],
+              // addEdge: ['click-add-edge', 'click-select'],
+            },
+            defaultEdge: {
+              type: 'hvh',
+           
+              // 其他配置
+            },
+            defaultNode: {
+              type: 'pipeline-node',
+              size: [120, 40],
+              linkPoints: {
+                top: true,
+                bottom: true,
+                left: true,
+                right: true,
+                fill: '#fff',
+                size: 5,
+              },
+            },
+            nodeStateStyles: {
+              hover: {
+                fillOpacity: 0.1,
+                lineWidth: 2,
+              },
+            },
+          });
+      
+          const bindEvents = () => {
+            // 监听edge上面mouse事件
+            graph.on('edge:mouseenter', (evt: { item: any; target: any; }) => {
+              const { item, target } = evt
+              // debugger
+              const type = target.get('type')
+              if (type !== 'text') {
+                return
+              }
+              const model = item.getModel()
+              const { endPoint } = model
+              // y=endPoint.y - height / 2，在同一水平线上，x值=endPoint.x - width - 10
+              const y = endPoint.y - 35
+              const x = endPoint.x - 150 - 10
+              const point = graph.getCanvasByPoint(x, y)
+            //   setEdgeTooltipX(point.x)
+            //   setEdgeTooltipY(point.y)
+            //   setShowEdgeTooltip(true)
+            })
+      
+          }
+         
+          
+          
+          graph.data(data);
+          graph.setMode('addEdge');
+          graph.render();
+      
+      
+          
+      
+          // 监听鼠标进入节点事件
+          graph.on('node:mouseenter', (evt: { item: any; }) => {
+            console.log('------------------------------>mouseenter');
+            const node = evt.item;
+            // 激活该节点的 hover 状态
+            graph.setItemState(node, 'hover', true);
+          });
+      
+          // 监听鼠标离开节点事件
+          graph.on('node:mouseleave', (evt: { item: any; }) => {
+            const node = evt.item;
+            // 关闭该节点的 hover 状态
+            graph.setItemState(node, 'hover', false);
+          });
+      
+          graph.on('node:click', (evt: any) => {
+            const { item } = evt;
+      
+            const shape = evt.target.cfg.name;
+
+
+
+            console.log(shape);
+            if (shape === 'right-plus') {
+              const source = item._cfg.id;
+              const target = Number(source) + 1;
+      
+              const model = item.getModel()
+              const { x, y } = model
+              const point = graph.getCanvasByPoint(x, y)
+              graph.addItem('node',
+                {
+                  id: target.toString(),
+                  // title: 'Task' + target,
+                  x: Number(point.x) + 200,
+                  y: Number(point.y),
+      
+                },
+              );
+      
+              graph.addItem('edge', {
+                source: target.toString(),
+                target: model.id,
+                // sourceAnchor: 0,
+                // targetAnchor: 10,
+              });
+            }
+      
+      
+            if (shape === 'bottom-plus') {
+              const source = item._cfg.id;
+              const target = Number(source) + 10;
+      
+              const model = item.getModel()
+              const { x, y } = model
+              const point = graph.getCanvasByPoint(x, y)
+              graph.addItem('node',
+                {
+                  id: target.toString(),
+                  x: Number(point.x),
+                  y: Number(point.y) + 80,
+      
+                },
+              );
+      
+              graph.addItem('edge', {
+                type: 'hvh',
+                source: target.toString(),
+                target: '2',
+                sourceAnchor: 0,
+                targetAnchor: 10,
+              });
+            }
+      
+            if (shape === 'dom1')
+            console.log("点击了当前的dom。。。。。。。。。")
+          });
+    
+    }
+
     render() {
+
         return (
-            <KubeObjectListLayout
+
+            <div>
+                <div className="graph" id="container">
+                    {/* <h1>test</h1> */}
+                </div>
+                <KubeObjectListLayout
                 className="Pipelines" store={pipelineStore}
                 dependentStores={[podsStore, nodesStore, eventStore]}  // other
                 sortingCallbacks={{
@@ -68,6 +233,7 @@ export class Pipelines extends React.Component<Props> {
                     }
                 }}
             />
+            </div>
         )
     }
 }

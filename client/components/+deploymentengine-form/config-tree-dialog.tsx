@@ -1,14 +1,13 @@
 import React from "react";
 import {observer} from "mobx-react";
 import {observable} from "mobx";
-import {Form, DataNode, fieldApi, formApi} from "../../api/endpoints";
+import {Form, DataNode, formApi, Field} from "../../api/endpoints";
 import {Dialog, DialogProps} from "../dialog";
 import {Tree} from "antd";
 import {Wizard, WizardStep} from "../wizard";
 import {Trans} from "@lingui/macro";
 import {ConfigFormDialog} from "./config-form-dialog";
 import {Notifications} from "../notifications";
-
 
 interface Props extends Partial<DialogProps> {
 }
@@ -44,6 +43,7 @@ export class ConfigTreeDialog extends React.Component<Props> {
         const {form} = this;
         this.name = form.getName();
         this.gData = form.spec.tree
+        console.log(this.gData);
     }
 
     handleGData = (gData: DataNode[]) => {
@@ -79,6 +79,8 @@ export class ConfigTreeDialog extends React.Component<Props> {
                             <Tree
                                 className="draggable-tree"
                                 multiple={false}
+                                autoExpandParent={true}
+                                showLine={true}
                                 treeData={this.gData}
                                 onSelect={(selectedKeys: any, info: any) => {
                                     this.selectNode = info
