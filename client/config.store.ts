@@ -49,6 +49,14 @@ export class ConfigStore {
     return this.config.isClusterAdmin;
   }
 
+  public getAllowedNamespaces() {
+    return this.config.allowedNamespaces
+  }
+
+  public setConfig(res: any) {
+    this.config = res;
+  }
+  
   reset() {
     this.isLoaded = false;
     this.config = {};

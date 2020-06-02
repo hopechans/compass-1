@@ -15,6 +15,7 @@ import { IDeployWorkloadsParams } from "../+deploy";
 import { apiManager } from "../../api/api-manager";
 import { deployStore } from "./deploy.store";
 import { AddDeployDialog } from "./deploy-dialog";
+import { configStore } from "../../config.store"
 
 enum sortBy {
     templateName = "templateName",
@@ -85,15 +86,17 @@ export class Deploys extends React.Component<Props> {
 
 export function DeployMenu(props: KubeObjectMenuProps<Deploy>) {
     const { object, toolbar } = props;
+    const namespaces = configStore.getAllowedNamespaces();
     return (
         <KubeObjectMenu {...props} >
             <MenuItem onClick={() => {
-                alert("choose a namespace")
+                alert("选择命名空间")
+
             }}>
                 <Icon material="control_camera" title={_i18n._(t`Deploy To`)} interactive={toolbar} />
                 <span className="title"><Trans>Deploy To</Trans></span>
-            </MenuItem>
-        </KubeObjectMenu>
+            </MenuItem >
+        </KubeObjectMenu >
     )
 }
 
