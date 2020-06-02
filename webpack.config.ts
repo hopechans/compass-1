@@ -31,7 +31,7 @@ export default () => {
     },
     devServer: {
       //项目根目录
-      host: '127.0.0.1',
+      host: '10.200.100.200',
       port: '8087',
       contentBase: path.join(__dirname, "./dist"),
       historyApiFallback: true,
@@ -52,11 +52,10 @@ export default () => {
           pathRewrite: { '^/api-resource': '/workload' }
         },
 
-        '/api/login': {
+        '/login': {
           target: 'http://127.0.0.1:8080/',
           secure: false,  // 如果是https接口，需要配置这个参数
           changeOrigin: true, // 如果接口跨域，需要进行这个参数配置
-          pathRewrite: { '^/api/login': '/login' }
         },
 
         '/api/config': {
