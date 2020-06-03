@@ -4,7 +4,7 @@ import { observer } from "mobx-react";
 import { cssNames } from "../../utils";
 import { KubeObject } from "../../api/kube-object";
 import { getSelectedDetails, showDetails } from "../../navigation";
-import { ItemListLayout, ItemListLayoutProps } from "../item-object-list/item-list-layout";
+import { ItemListLayout, ItemListLayoutProps } from "../item-object-list";
 import { KubeObjectStore } from "../../kube-object.store";
 
 export interface KubeObjectListLayoutProps extends ItemListLayoutProps {

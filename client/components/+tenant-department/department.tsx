@@ -31,6 +31,7 @@ export class TenantDepartments extends React.Component<Props> {
         return (
             <>
                 <KubeObjectListLayout
+                    onDetails={() => {}}
                     className="Departments" store={tenantDepartmentStore}
                     sortingCallbacks={{
                         [sortBy.name]: (item: TenantDepartment) => item.getName(),
