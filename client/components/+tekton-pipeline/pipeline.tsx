@@ -147,7 +147,7 @@ export class Pipelines extends React.Component<Props> {
     
         graph.on('node:click', (evt: any) => {
           const { item } = evt;
-          this.openTaskDrawer()
+          
           const shape = evt.target.cfg.name;
           if (shape === 'right-plus') {
             const source = item._cfg.id;
@@ -172,6 +172,8 @@ export class Pipelines extends React.Component<Props> {
               // sourceAnchor: 0,
               // targetAnchor: 10,
             });
+
+            return
           }
     
           if (shape === 'bottom-plus') {
@@ -197,11 +199,10 @@ export class Pipelines extends React.Component<Props> {
               sourceAnchor: 0,
               targetAnchor: 10,
             });
+            return
           }
     
-          if (shape === 'dom1'){
-            console.log("点击了当前的dom。。。。。。。。。")
-          }
+          this.openTaskDrawer();
         });
     }
 
