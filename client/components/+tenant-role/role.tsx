@@ -9,6 +9,10 @@ import {apiManager} from "../../api/api-manager";
 import {tenantRoleStore} from "./role.store"
 
 import {AddRoleDialog} from "./add-role-dialog";
+import {ConfigRoleDialog} from "./config-role-dialog";
+import {MenuItem} from "../menu";
+import {Icon} from "../icon";
+import {_i18n} from "../../i18n";
 
 enum sortBy {
     name = "name",
@@ -65,9 +69,18 @@ export class TenantRoles extends React.Component<Props> {
 }
 
 export function RoleMenu(props: KubeObjectMenuProps<TenantRole>) {
+
+    const {object, toolbar} = props;
+
     return (
         <>
-            <KubeObjectMenu {...props} />
+            <KubeObjectMenu {...props}>
+                <MenuItem onClick={() => ConfigRoleDialog.open(object)}>
+                    <Icon material="toc" title={_i18n._(t`Config`)} interactive={toolbar}/>
+                    <span className="config"><Trans>Config</Trans></span>
+                </MenuItem>
+            </KubeObjectMenu>
+            <ConfigRoleDialog/>
         </>
     )
 }

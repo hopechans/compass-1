@@ -42,8 +42,7 @@ export class ConfigTreeDialog extends React.Component<Props> {
     onOpen = () => {
         const {form} = this;
         this.name = form.getName();
-        this.gData = form.spec.tree
-        console.log(this.gData);
+        this.gData = form.spec.tree;
     }
 
     handleGData = (gData: DataNode[]) => {

@@ -5,7 +5,12 @@ import {apiTenant} from "../index";
 
 @autobind()
 export class TenantRole extends KubeObject {
-    static kind = "BaseRoles";
+    static kind = "BaseRole";
+
+    spec: {
+        value: number
+        comment?: string
+    }
 }
 
 export const tenantRoleApi = new KubeApi({

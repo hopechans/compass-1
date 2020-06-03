@@ -5,7 +5,15 @@ import {apiTenant} from "../index";
 
 @autobind()
 export class TenantUser extends KubeObject {
-    static kind = "BaseUsers";
+    static kind = "BaseUser";
+
+    spec: {
+        name: string,
+        department_id: string,
+        display: string,
+        email: string,
+        password: string
+    }
 
 }
 

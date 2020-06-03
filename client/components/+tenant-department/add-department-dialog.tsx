@@ -1,8 +1,13 @@
 import React from "react";
 import {observer} from "mobx-react";
 import {Dialog, DialogProps} from "../dialog";
-import {observable} from "mobx";
-import {TenantDepartment, tenantDepartmentApi, namespacesApi} from "../../api/endpoints";
+import {computed, observable} from "mobx";
+import {
+    TenantDepartment,
+    tenantDepartmentApi,
+    Namespace,
+    tenantRoleApi, TenantRole
+} from "../../api/endpoints";
 import {Wizard, WizardStep} from "../wizard";
 import {t, Trans} from "@lingui/macro";
 import {SubTitle} from "../layout/sub-title";
@@ -11,6 +16,7 @@ import {_i18n} from "../../i18n";
 import {systemName} from "../input/input.validators";
 import {Notifications} from "../notifications";
 import {NamespaceSelect} from "../+namespaces/namespace-select";
+import {SelectOption} from "../select";
 
 interface Props extends Partial<DialogProps> {
 }
@@ -29,7 +35,7 @@ export class AddDepartmentDialog extends React.Component<Props> {
     }
 
     @observable name = "";
-    @observable namespace = "";
+    @observable namespaces = observable.array<Namespace>([], {deep: false});
 
     close = () => {
         AddDepartmentDialog.close();
@@ -37,18 +43,38 @@ export class AddDepartmentDialog extends React.Component<Props> {
 
     reset = () => {
         this.name = "";
-        this.namespace = "";
+    }
+
+    @computed get selectedNamespaces() {
+        return [
+            ...this.namespaces,
+        ]
     }
 
     createDepartment = async () => {
-        const {name, namespace} = this;
+        const {name} = this;
         const department: Partial<TenantDepartment> = {
             spec: {
-                namespace: namespace
+                namespace: this.selectedNamespaces
             }
         }
+        const departmentAdminRole: Partial<TenantRole> = {
+            spec: {
+                value: 15,
+                comment: name + '-dept-admin'
+            }
+        }
+        const departmentEmployeeRole: Partial<TenantRole> = {
+            spec: {
+                value: 1,
+                comment: name + '-dept-employee'
+            }
+        }
+
         try {
-            await tenantDepartmentApi.create({namespace:"kube-system", name:name}, department);
+            await tenantDepartmentApi.create({namespace: "kube-system", name: name}, department);
+            await tenantRoleApi.create({namespace: "kube-system", name: name + '-dept-admin'}, departmentAdminRole);
+            await tenantRoleApi.create({namespace: "kube-system", name: name + '-dept-employee'}, departmentEmployeeRole);
             this.reset();
             this.close();
         } catch (err) {
@@ -59,6 +85,7 @@ export class AddDepartmentDialog extends React.Component<Props> {
     render() {
         const {...dialogProps} = this.props;
         const {name} = this;
+        const unwrapNamespaces = (options: SelectOption[]) => options.map(option => option.value);
         const header = <h5><Trans>Create Department</Trans></h5>;
         return (
             <Dialog
@@ -68,7 +95,8 @@ export class AddDepartmentDialog extends React.Component<Props> {
                 close={this.close}
             >
                 <Wizard header={header} done={this.close}>
-                    <WizardStep contentClass="flow column" nextLabel={<Trans>Create</Trans>} next={this.createDepartment}>
+                    <WizardStep contentClass="flow column" nextLabel={<Trans>Create</Trans>}
+                                next={this.createDepartment}>
                         <div className="department-name">
                             <SubTitle title={<Trans>Department name</Trans>}/>
                             <Input
@@ -81,11 +109,15 @@ export class AddDepartmentDialog extends React.Component<Props> {
                         <div className="namespace">
                             <SubTitle title={<Trans>Namespace</Trans>}/>
                             <NamespaceSelect
-                                value={this.namespace}
+                                isMulti
+                                value={this.namespaces}
                                 placeholder={_i18n._(t`Namespace`)}
                                 themeName="light"
                                 className="box grow"
-                                onChange={({ value }) => this.namespace = value}
+                                onChange={(opts: SelectOption[]) => {
+                                    if (!opts) opts = [];
+                                    this.namespaces.replace(unwrapNamespaces(opts));
+                                }}
                             />
                         </div>
                     </WizardStep>
