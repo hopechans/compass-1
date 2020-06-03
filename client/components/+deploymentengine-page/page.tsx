@@ -56,6 +56,7 @@ export class Pages extends React.Component<Props> {
         return (
             <>
                 <KubeObjectListLayout
+                    onDetails={() => {}}
                     className="Pages" store={pageStore}
                     sortingCallbacks={{
                         [sortBy.name]: (item: Page) => item.getName(),

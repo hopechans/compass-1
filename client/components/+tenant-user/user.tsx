@@ -30,6 +30,7 @@ export class TenantUsers extends React.Component<Props> {
         return (
             <>
                 <KubeObjectListLayout
+                    onDetails={() => {}}
                     className="Users" store={tenantUserStore}
                     sortingCallbacks={{
                         [sortBy.name]: (item: TenantUser) => item.getName(),

@@ -39,6 +39,7 @@ export class Forms extends React.Component<Props> {
         return (
             <>
                 <KubeObjectListLayout
+                    onDetails={() => {}}
                     className="Forms" store={formStore}
                     sortingCallbacks={{
                         [sortBy.name]: (item: Form) => item.getName(),

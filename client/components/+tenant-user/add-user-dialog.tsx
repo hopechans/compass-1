@@ -1,8 +1,8 @@
 import React from "react";
 import {observer} from "mobx-react";
 import {Dialog, DialogProps} from "../dialog";
-import {computed, observable} from "mobx";
-import {ServiceAccount, TenantDepartment, TenantUser, tenantUserApi} from "../../api/endpoints";
+import {observable} from "mobx";
+import {TenantUser, tenantUserApi} from "../../api/endpoints";
 import {Wizard, WizardStep} from "../wizard";
 import {t, Trans} from "@lingui/macro";
 import {SubTitle} from "../layout/sub-title";
@@ -10,7 +10,6 @@ import {Input} from "../input";
 import {_i18n} from "../../i18n";
 import {systemName} from "../input/input.validators";
 import {Notifications} from "../notifications";
-import {showDetails} from "../../navigation";
 import {BaseDepartmentSelect} from "../+tenant-department/department-select";
 
 interface Props extends Partial<DialogProps> {
