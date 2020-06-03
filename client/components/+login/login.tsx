@@ -1,8 +1,11 @@
 import React from 'react'
 import axios from 'axios'
+import { Trans } from "@lingui/macro";
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import { Form, Input, Button, Checkbox, message } from 'antd';
 import { configStore } from "../../config.store";
+import { Notifications } from "../notifications";
+import {withRouter,RouteComponentProps } from 'react-router';
 import './login.scss'
 const layout = {
   labelCol: { span: 0 },
@@ -12,7 +15,7 @@ const tailLayout = {
   wrapperCol: { offset: 0, span: 24 },
 };
 
-interface Props {
+interface Props extends RouteComponentProps{
   history: any
 }
 
@@ -20,7 +23,7 @@ interface State {
   loading: boolean
 }
 
-export class Login extends React.Component<Props, State>{
+class LoginComponet extends React.Component<Props, State>{
 
   constructor(props: Props) {
     super(props)
@@ -33,8 +36,13 @@ export class Login extends React.Component<Props, State>{
     this.setState({ loading: true })
     axios.post('/login', values)
       .then((res: any) => {
-        configStore.setConfig(res)
+        configStore.isLoaded = true
+        configStore.setConfig(res.data)
+        Notifications.ok('login success')
         this.setState({ loading: false })
+        setTimeout(()=>{
+          this.props.history.push('/')
+        },1000)
       }).catch(err => {
         this.setState({ loading: false })
       })
@@ -96,3 +104,4 @@ export class Login extends React.Component<Props, State>{
   }
 }
 
+export const Login =  withRouter(LoginComponet);

@@ -45,6 +45,10 @@ export class ConfigStore {
     return this.config.allowedNamespaces || [];
   }
 
+  get userName() {
+    return this.config.userName;
+  }
+
   get isClusterAdmin() {
     return this.config.isClusterAdmin;
   }
