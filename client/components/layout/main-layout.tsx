@@ -69,6 +69,7 @@ export class Layout extends React.Component<Props,State> {
   }
 
   loginout = () => {
+    configStore.reset()
     this.props.history.push('/login')
   }
 

@@ -52,8 +52,13 @@ class App extends React.Component {
   };
 
   render() {
-    const homeUrl = configStore.isClusterAdmin ? clusterURL() : workloadsURL();
-    //const homeUrl = clusterURL()
+    let homeUrl = ''
+    if(configStore.userName){
+      homeUrl = configStore.isClusterAdmin ? clusterURL() : workloadsURL();
+    }else{
+      homeUrl = '/login'
+    }
+    console.log(homeUrl,configStore.userName)
     return (
       <div>
 
