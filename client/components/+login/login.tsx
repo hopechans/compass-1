@@ -34,7 +34,7 @@ class LoginComponet extends React.Component<Props, State>{
 
   onFinish = (values: any) => {
     this.setState({ loading: true })
-    axios.post('/login', values)
+    axios.post('/user-login', values)
       .then((res: any) => {
         configStore.isLoaded = true
         configStore.setConfig(res.data)
@@ -43,6 +43,7 @@ class LoginComponet extends React.Component<Props, State>{
         setTimeout(()=>{
           this.props.history.push('/')
         },1000)
+        
       }).catch(err => {
         this.setState({ loading: false })
       })
