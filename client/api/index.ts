@@ -1,17 +1,22 @@
-import {JsonApi, JsonApiErrorParsed} from "./json-api";
-import {KubeJsonApi} from "./kube-json-api";
-import {Notifications} from "../components/notifications";
-import {clientVars} from "../../server/config";
-
+import { JsonApi, JsonApiErrorParsed } from "./json-api";
+import { KubeJsonApi } from "./kube-json-api";
+import { Notifications } from "../components/notifications";
+import { clientVars } from "../../server/config";
+import { configStore } from "../config.store"
 //-- JSON HTTP APIS
+console.log("------configStore", configStore);
 
+let _token = "";
+if (configStore) {
+    _token = configStore.getConfigToken()
+}
 export const apiBase = new JsonApi({
     debug: !clientVars.IS_PRODUCTION,
     apiPrefix: clientVars.API_PREFIX.BASE,
 
 }, {
     headers: {
-        Authorization: ''
+        Authorization: _token
     }
 });
 
