@@ -36,6 +36,10 @@ export class ConfigStore {
     return this.config.token;
   }
 
+  public getConfigToken(): string {
+    return this.config.token;
+  }
+
   get serverPort() {
     const port = location.port;
     return port ? `:${port}` : "";
@@ -60,7 +64,7 @@ export class ConfigStore {
   public setConfig(res: any) {
     this.config = res;
   }
-  
+
   reset() {
     this.isLoaded = false;
     this.config = {};
