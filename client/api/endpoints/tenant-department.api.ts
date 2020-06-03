@@ -2,13 +2,14 @@ import {KubeObject} from "../kube-object";
 import {KubeApi} from "../kube-api";
 import {autobind} from "../../utils";
 import {apiTenant} from "../index"
+import {Namespace} from "./namespaces.api";
 
 @autobind()
 export class TenantDepartment extends KubeObject {
     static kind = "BaseDepartment";
 
     spec: {
-        namespace: string
+        namespace: Namespace[];
     }
 }
 
