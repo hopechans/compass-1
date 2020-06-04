@@ -34,7 +34,7 @@ export class BasePermissionSelect extends React.Component<Props> {
     }
 
     @computed get options(): SelectOption[] {
-        return tenantPermissionListStore.items.map(item => ({value: item}))
+        return tenantPermissionListStore.items.map(item => ({value: item}));
     }
 
     formatOptionLabel = (option: SelectOption) => {
@@ -52,7 +52,6 @@ export class BasePermissionSelect extends React.Component<Props> {
         const {className, showIcons, showClusterOption, clusterOptionLabel, customizeOptions, ...selectProps} = this.props;
         return (
             <Select
-                isMulti
                 className={cssNames("BasePermissionSelect", className)}
                 menuClass="BasePermissionSelectMenu"
                 formatOptionLabel={this.formatOptionLabel}

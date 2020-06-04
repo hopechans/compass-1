@@ -7,8 +7,11 @@ import {KubeObjectListLayout} from "../kube-object";
 import {TenantDepartment, tenantDepartmentApi} from "../../api/endpoints";
 import {apiManager} from "../../api/api-manager";
 import {tenantDepartmentStore} from "./department.store";
-
 import {AddDepartmentDialog} from "./add-department-dialog";
+import {ConfigDepartmentDialog} from "./config-department-dialog";
+import {MenuItem} from "../menu";
+import {Icon} from "../icon";
+import {_i18n} from "../../i18n";
 
 enum sortBy {
     name = "name",
@@ -25,13 +28,13 @@ interface Props extends RouteComponentProps<RoleProps> {
 
 @observer
 export class TenantDepartments extends React.Component<Props> {
-    spec: { scaleTargetRef: any; };
 
     render() {
         return (
             <>
                 <KubeObjectListLayout
-                    onDetails={() => {}}
+                    onDetails={() => {
+                    }}
                     className="Departments" store={tenantDepartmentStore}
                     sortingCallbacks={{
                         [sortBy.name]: (item: TenantDepartment) => item.getName(),
@@ -60,16 +63,23 @@ export class TenantDepartments extends React.Component<Props> {
                     }}
                 />
                 <AddDepartmentDialog/>
+                <ConfigDepartmentDialog/>
             </>
         );
     }
 }
 
 export function DepartmentMenu(props: KubeObjectMenuProps<TenantDepartment>) {
+
+    const {object, toolbar} = props;
+
     return (
-        <>
-            <KubeObjectMenu {...props} />
-        </>
+        <KubeObjectMenu {...props}>
+            <MenuItem onClick={() => ConfigDepartmentDialog.open(object)}>
+                <Icon material="toc" title={_i18n._(t`Config`)} interactive={toolbar}/>
+                <span className="config"><Trans>Config</Trans></span>
+            </MenuItem>
+        </KubeObjectMenu>
     )
 }
 
