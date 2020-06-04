@@ -92,15 +92,6 @@ export class ConfigRoleDialog extends React.Component<Props> {
             >
                 <Wizard header={header} done={this.close}>
                     <WizardStep contentClass="flow column" nextLabel={<Trans>Update</Trans>} next={this.updateRole}>
-                        <div className="name">
-                            <SubTitle title={<Trans>Name</Trans>}/>
-                            <Input
-                                autoFocus required
-                                placeholder={_i18n._(t`Name`)}
-                                validators={systemName}
-                                value={name} onChange={v => this.name = v}
-                            />
-                        </div>
                         <div className="namespace">
                             <SubTitle title={<Trans>Permission</Trans>}/>
                             <BasePermissionSelect
