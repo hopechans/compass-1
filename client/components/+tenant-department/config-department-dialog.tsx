@@ -78,7 +78,7 @@ export class ConfigDepartmentDialog extends React.Component<Props> {
     render() {
         const {...dialogProps} = this.props;
         const unwrapNamespaces = (options: SelectOption[]) => options.map(option => option.value);
-        const header = <h5><Trans>Create Department</Trans></h5>;
+        const header = <h5><Trans>Config Department</Trans></h5>;
         return (
             <Dialog
                 {...dialogProps}
