@@ -6,10 +6,6 @@ import {apiManager} from "../../api/api-manager";
 @autobind()
 export class TenantDepartmentStore extends KubeObjectStore<TenantDepartment> {
     api = tenantDepartmentApi
-
-    spec: {
-        namespace: string
-    }
 }
 
 export const tenantDepartmentStore = new TenantDepartmentStore();

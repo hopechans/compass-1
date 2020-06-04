@@ -1,14 +1,14 @@
 import React from "react";
-import { observer } from "mobx-react";
-import { Dialog, DialogProps } from "../dialog";
-import { observable } from "mobx";
-import { Wizard, WizardStep } from "../wizard";
-import { t, Trans } from "@lingui/macro";
-import { SubTitle } from "../layout/sub-title";
-import { Input } from "../input";
-import { _i18n } from "../../i18n";
-import { NamespaceSelect } from "../+namespaces/namespace-select";
-import { apiBase } from "../../api";
+import {observer} from "mobx-react";
+import {Dialog, DialogProps} from "../dialog";
+import {observable} from "mobx";
+import {Namespace} from "../../api/endpoints";
+import {Wizard, WizardStep} from "../wizard";
+import {t, Trans} from "@lingui/macro";
+import {SubTitle} from "../layout/sub-title";
+import {_i18n} from "../../i18n";
+import {NamespaceSelect} from "../+namespaces/namespace-select";
+import {apiBase} from "../../api";
 
 interface Props extends Partial<DialogProps> {
 }
