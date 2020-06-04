@@ -29,7 +29,6 @@ interface Props extends RouteComponentProps<RoleProps> {
 
 @observer
 export class TenantRoles extends React.Component<Props> {
-    spec: { scaleTargetRef: any; };
 
     render() {
         return (
@@ -64,6 +63,7 @@ export class TenantRoles extends React.Component<Props> {
                     }}
                 />
                 <AddRoleDialog/>
+                <ConfigRoleDialog/>
             </>
         );
     }
@@ -74,15 +74,12 @@ export function RoleMenu(props: KubeObjectMenuProps<TenantRole>) {
     const {object, toolbar} = props;
 
     return (
-        <>
-            <KubeObjectMenu {...props}>
-                <MenuItem onClick={() => ConfigRoleDialog.open(object)}>
-                    <Icon material="toc" title={_i18n._(t`Config`)} interactive={toolbar}/>
-                    <span className="config"><Trans>Config</Trans></span>
-                </MenuItem>
-            </KubeObjectMenu>
-            <ConfigRoleDialog/>
-        </>
+        <KubeObjectMenu {...props}>
+            <MenuItem onClick={() => ConfigRoleDialog.open(object)}>
+                <Icon material="toc" title={_i18n._(t`Config`)} interactive={toolbar}/>
+                <span className="config"><Trans>Config</Trans></span>
+            </MenuItem>
+        </KubeObjectMenu>
     )
 }
 

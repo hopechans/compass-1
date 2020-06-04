@@ -2,7 +2,7 @@ import React from "react";
 import {observer} from "mobx-react";
 import {Dialog, DialogProps} from "../dialog";
 import {observable} from "mobx";
-import {Namespace, TenantRole, tenantRoleApi} from "../../api/endpoints";
+import {TenantRole, tenantRoleApi} from "../../api/endpoints";
 import {Wizard, WizardStep} from "../wizard";
 import {t, Trans} from "@lingui/macro";
 import {SubTitle} from "../layout/sub-title";
@@ -11,9 +11,7 @@ import {_i18n} from "../../i18n";
 import {systemName} from "../input/input.validators";
 import {Notifications} from "../notifications";
 import {BasePermissionSelect} from "./permission-select";
-import {tenantPermissionTransferStore} from "./permission.store";
 import {apiPermission} from "../../api";
-import {SelectOption} from "../select";
 
 interface Props extends Partial<DialogProps> {
 }
@@ -31,7 +29,8 @@ export class ConfigRoleDialog extends React.Component<Props> {
 
     static open(object: TenantRole) {
         ConfigRoleDialog.isOpen = true;
-        ConfigRoleDialog.data = object
+        ConfigRoleDialog.data = object;
+        this.value = object.spec.value;
     }
 
     static close() {
@@ -44,24 +43,24 @@ export class ConfigRoleDialog extends React.Component<Props> {
 
     reset = () => {
         this.name = "";
+        this.value = 0;
+        this.permissions.replace([])
     }
 
     get tenantRole () {
         return ConfigRoleDialog.data
     }
 
-    onOpen = async () => {
+    onOpen = () => {
         this.name = this.tenantRole.getName();
-        this.value = this.tenantRole.spec.value;
-        await tenantPermissionTransferStore.loadAll(this.value);
-        this.permissions = tenantPermissionTransferStore.items;
+        this.permissions.replace(this.tenantRole.permissions);
     }
 
     unwrapPermissions = (options: string[]) => options.map(option => option);
 
     updateRole = async () => {
         const {name, namespace, permissions} = this;
-        const data = permissions.map(item => item)
+        const data = permissions.map(item => item);
         await apiPermission.post("/permission_auth_value/", {data}).then((value: number) => this.value = value)
         const role: Partial<TenantRole> = {
             spec: {
@@ -80,7 +79,7 @@ export class ConfigRoleDialog extends React.Component<Props> {
 
     render() {
         const {...dialogProps} = this.props;
-        const {name, permissions} = this;
+        const {name} = this;
 
         const header = <h5><Trans>Config Role</Trans></h5>;
         return (
@@ -92,7 +91,7 @@ export class ConfigRoleDialog extends React.Component<Props> {
                 close={this.close}
             >
                 <Wizard header={header} done={this.close}>
-                    <WizardStep contentClass="flow column" nextLabel={<Trans>Create</Trans>} next={this.updateRole}>
+                    <WizardStep contentClass="flow column" nextLabel={<Trans>Update</Trans>} next={this.updateRole}>
                         <div className="name">
                             <SubTitle title={<Trans>Name</Trans>}/>
                             <Input
