@@ -1,5 +1,4 @@
 import "./app.scss";
-
 import React from "react";
 import { render } from "react-dom";
 import { Redirect, Route, Router, Switch } from "react-router";
@@ -57,12 +56,13 @@ class App extends React.Component {
 
   render() {
     let homeUrl = ''
-    if (configStore.userName) {
-      homeUrl = configStore.isClusterAdmin ? clusterURL() : workloadsURL();
+    const userName = localStorage.getItem('u_userName')
+    const admin = localStorage.getItem('u_admin')
+    if (userName) {
+      homeUrl = admin == 'true' ? clusterURL() : workloadsURL();
     } else {
       homeUrl = '/login'
     }
-    console.log(homeUrl, configStore.userName)
     return (
       <div>
 

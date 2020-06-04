@@ -2,22 +2,11 @@ import { JsonApi, JsonApiErrorParsed } from "./json-api";
 import { KubeJsonApi } from "./kube-json-api";
 import { Notifications } from "../components/notifications";
 import { clientVars } from "../../server/config";
-import { configStore } from "../config.store"
 //-- JSON HTTP APIS
-console.log("------configStore", configStore);
 
-let _token = "";
-if (configStore) {
-    _token = configStore.getConfigToken()
-}
 export const apiBase = new JsonApi({
     debug: !clientVars.IS_PRODUCTION,
     apiPrefix: clientVars.API_PREFIX.BASE,
-
-}, {
-    headers: {
-        Authorization: _token
-    }
 });
 
 export const apiPermission = new JsonApi({
@@ -54,6 +43,10 @@ function onApiError(error: JsonApiErrorParsed, res: Response) {
             error.isUsedForNotification = true;
             Notifications.error(error);
             break;
+        case 401:
+            error.isUsedForNotification = true;
+            Notifications.error('401 Unauthorized');
+            break;    
     }
 }
 

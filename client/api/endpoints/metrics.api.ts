@@ -96,7 +96,9 @@ export function getItemMetrics(metrics: { [key: string]: IMetrics }, itemName: s
 
 export function getMetricLastPoints(metrics: { [key: string]: IMetrics }) {
   const result: Partial<{[metric: string]: number}> = {};
-
+  if(!metrics){
+    return result
+  }
   Object.keys(metrics).forEach(metricName => {
     try {
       const metric = metrics[metricName];
@@ -107,6 +109,5 @@ export function getMetricLastPoints(metrics: { [key: string]: IMetrics }) {
     }
     return result;
   }, {});
-
   return result;
 }

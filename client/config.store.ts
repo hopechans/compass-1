@@ -1,5 +1,4 @@
 // Client-side config
-
 import { observable, when } from "mobx";
 import { autobind, interval } from "./utils";
 import { IConfig } from "../server/common/config";
@@ -21,12 +20,15 @@ export class ConfigStore {
   @observable isLoaded = false;
 
   constructor() {
-    this.updater.start();
+    // this.updater.start();
   }
 
   load() {
     return configApi.getConfig().then((config: any) => {
       this.config = config;
+      if(config.token == ''){
+        console.log(1)
+      }
       this.isLoaded = true;
     });
   }
@@ -70,5 +72,4 @@ export class ConfigStore {
     this.config = {};
   }
 }
-
 export const configStore = new ConfigStore();
