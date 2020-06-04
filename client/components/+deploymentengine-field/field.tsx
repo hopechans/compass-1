@@ -35,6 +35,7 @@ export class Fields extends React.Component<Props> {
         return (
             <>
                 <KubeObjectListLayout
+                    onDetails={() => {}}
                     className="Fields" store={fieldStore}
                     sortingCallbacks={{
                         [sortBy.name]: (item: Field) => item.getName(),

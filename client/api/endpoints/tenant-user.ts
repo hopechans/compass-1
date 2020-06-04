@@ -14,7 +14,6 @@ export class TenantUser extends KubeObject {
         email: string,
         password: string
     }
-
 }
 
 export const tenantUserApi = new KubeApi({

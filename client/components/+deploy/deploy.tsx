@@ -16,6 +16,7 @@ import { apiManager } from "../../api/api-manager";
 import { deployStore } from "./deploy.store";
 import { AddDeployDialog } from "./deploy-dialog";
 import { configStore } from "../../config.store"
+import { ConfigDeployDialog } from "./config-deploy-dialog";
 
 enum sortBy {
     templateName = "templateName",
@@ -50,13 +51,21 @@ export class Deploys extends React.Component<Props> {
                             (deploy: Deploy) => deploy.getSearchFields(),
                         ]}
 
-                    renderHeaderTitle={< Trans > Deploys </Trans >}
+                    renderHeaderTitle={< Trans> Deploys </Trans>}
                     renderTableHeader={
                         [
                             { title: <Trans>AppName</Trans>, className: "appName", sortBy: sortBy.appName },
                             { title: <Trans>TemplateName</Trans>, className: "template", sortBy: sortBy.templateName },
-                            { title: <Trans>ResourceType</Trans>, className: "resourceType", sortBy: sortBy.resourceType },
-                            { title: <Trans>GenerateTimestamp</Trans>, className: "generateTimestamp", sortBy: sortBy.generateTimestamp },
+                            {
+                                title: <Trans>ResourceType</Trans>,
+                                className: "resourceType",
+                                sortBy: sortBy.resourceType
+                            },
+                            {
+                                title: <Trans>GenerateTimestamp</Trans>,
+                                className: "generateTimestamp",
+                                sortBy: sortBy.generateTimestamp
+                            },
                             { title: <Trans>Age</Trans>, className: "age", sortBy: sortBy.age },
                         ]}
 
@@ -86,17 +95,16 @@ export class Deploys extends React.Component<Props> {
 
 export function DeployMenu(props: KubeObjectMenuProps<Deploy>) {
     const { object, toolbar } = props;
-    const namespaces = configStore.getAllowedNamespaces();
     return (
-        <KubeObjectMenu {...props} >
-            <MenuItem onClick={() => {
-                alert("选择命名空间")
-
-            }}>
-                <Icon material="control_camera" title={_i18n._(t`Deploy To`)} interactive={toolbar} />
-                <span className="title"><Trans>Deploy To</Trans></span>
-            </MenuItem >
-        </KubeObjectMenu >
+        <>
+            <ConfigDeployDialog />
+            <KubeObjectMenu {...props} >
+                <MenuItem onClick={() => { ConfigDeployDialog.open(object.getAppName(), object.getName()) }}>
+                    <Icon material="control_camera" title={_i18n._(t`Deploy`)} interactive={toolbar} />
+                    <span className="title"><Trans>Deploy</Trans></span>
+                </MenuItem>
+            </KubeObjectMenu>
+        </>
     )
 }
 

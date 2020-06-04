@@ -44,7 +44,7 @@ class App extends React.Component {
 
   static async init() {
     await i18nStore.init();
-    // await configStore.load();
+    await configStore.load();
 
     // render app
     render(<App />, App.rootElem);

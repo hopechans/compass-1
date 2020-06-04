@@ -35,7 +35,7 @@ class LoginComponet extends React.Component<Props, State>{
 
   onFinish = (values: any) => {
     this.setState({ loading: true })
-    axios.post('/user-login', values)
+    axios.post('/user', values)
       .then((res: any) => {
         configStore.isLoaded = true
         configStore.setConfig(res.data)

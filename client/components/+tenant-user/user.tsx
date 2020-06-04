@@ -7,8 +7,11 @@ import {KubeObjectListLayout} from "../kube-object";
 import {tenantUserStore} from "./user.store";
 import {TenantUser, tenantUserApi} from "../../api/endpoints";
 import {apiManager} from "../../api/api-manager";
-
 import {AddUserDialog} from "./add-user-dialog";
+import {ConfigUserDialog} from "./config-user-dialog";
+import {MenuItem} from "../menu";
+import {Icon} from "../icon";
+import {_i18n} from "../../i18n";
 
 enum sortBy {
     name = "name",
@@ -17,7 +20,8 @@ enum sortBy {
 }
 
 
-interface UserProps {}
+interface UserProps {
+}
 
 interface Props extends RouteComponentProps<UserProps> {
 }
@@ -30,6 +34,8 @@ export class TenantUsers extends React.Component<Props> {
         return (
             <>
                 <KubeObjectListLayout
+                    onDetails={() => {
+                    }}
                     className="Users" store={tenantUserStore}
                     sortingCallbacks={{
                         [sortBy.name]: (item: TenantUser) => item.getName(),
@@ -60,16 +66,23 @@ export class TenantUsers extends React.Component<Props> {
                     }}
                 />
                 <AddUserDialog/>
+                <ConfigUserDialog/>
             </>
         );
     }
 }
 
 export function TenantUserMenu(props: KubeObjectMenuProps<TenantUser>) {
+
+    const {object, toolbar} = props;
+
     return (
-        <>
-            <KubeObjectMenu {...props} />
-        </>
+        <KubeObjectMenu {...props}>
+            <MenuItem onClick={() => ConfigUserDialog.open(object)}>
+                <Icon material="toc" title={_i18n._(t`Config`)} interactive={toolbar}/>
+                <span className="config"><Trans>Config</Trans></span>
+            </MenuItem>
+        </KubeObjectMenu>
     )
 }
 

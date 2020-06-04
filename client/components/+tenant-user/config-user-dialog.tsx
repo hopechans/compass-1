@@ -8,7 +8,6 @@ import {t, Trans} from "@lingui/macro";
 import {SubTitle} from "../layout/sub-title";
 import {Input} from "../input";
 import {_i18n} from "../../i18n";
-import {systemName} from "../input/input.validators";
 import {Notifications} from "../notifications";
 import {BaseDepartmentSelect} from "../+tenant-department/department-select";
 
@@ -16,26 +15,38 @@ interface Props extends Partial<DialogProps> {
 }
 
 @observer
-export class AddUserDialog extends React.Component<Props> {
+export class ConfigUserDialog extends React.Component<Props> {
 
     @observable static isOpen = false;
-
-    static open() {
-        AddUserDialog.isOpen = true;
-    }
-
-    static close() {
-        AddUserDialog.isOpen = false;
-    }
-
+    @observable static data: TenantUser = null;
     @observable name = "";
     @observable namespace = "kube-system";
     @observable display = "";
     @observable email = "";
     @observable department_id = "";
 
+    static open(user: TenantUser) {
+        ConfigUserDialog.isOpen = true;
+        ConfigUserDialog.data = user;
+    }
+
+    static close() {
+        ConfigUserDialog.isOpen = false;
+    }
+
     close = () => {
-        AddUserDialog.close();
+        ConfigUserDialog.close();
+    }
+
+    get user() {
+        return ConfigUserDialog.data;
+    }
+
+    onOpen = () => {
+        this.name = this.user.getName();
+        this.department_id = this.user.spec.department_id;
+        this.display = this.user.spec.display;
+        this.email = this.user.spec.email;
     }
 
     reset = () => {
@@ -45,7 +56,7 @@ export class AddUserDialog extends React.Component<Props> {
         this.department_id = "";
     }
 
-    createUser = async () => {
+    updateUser = async () => {
         const {name, namespace, department_id, display, email} = this;
         const user: Partial<TenantUser> = {
             spec: {
@@ -68,33 +79,25 @@ export class AddUserDialog extends React.Component<Props> {
 
     render() {
         const {...dialogProps} = this.props;
-        const {name, display, email} = this;
-        const header = <h5><Trans>Create User</Trans></h5>;
+        const {display, email, department_id} = this;
+        const header = <h5><Trans>Update User</Trans></h5>;
         return (
             <Dialog
                 {...dialogProps}
-                className="AddUserDialog"
-                isOpen={AddUserDialog.isOpen}
+                className="ConfigUserDialog"
+                isOpen={ConfigUserDialog.isOpen}
+                onOpen={this.onOpen}
                 close={this.close}
             >
                 <Wizard header={header} done={this.close}>
-                    <WizardStep contentClass="flow column" nextLabel={<Trans>Create</Trans>} next={this.createUser}>
+                    <WizardStep contentClass="flow column" nextLabel={<Trans>Apply</Trans>} next={this.updateUser}>
                         <div className="tenant-department">
                             <SubTitle title={<Trans>Tenant Department</Trans>}/>
                             <BaseDepartmentSelect
                                 placeholder={_i18n._(t`Tenant Department`)}
                                 themeName="light"
                                 className="box grow"
-                                value={this.department_id} onChange={({ value }) => this.department_id = value}
-                            />
-                        </div>
-                        <div className="user-name">
-                            <SubTitle title={<Trans>User name</Trans>}/>
-                            <Input
-                                autoFocus required
-                                placeholder={_i18n._(t`Name`)}
-                                validators={systemName}
-                                value={name} onChange={v => this.name = v}
+                                value={department_id} onChange={({value}) => this.department_id = value}
                             />
                         </div>
                         <div className="display">

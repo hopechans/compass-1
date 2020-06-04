@@ -1,18 +1,18 @@
 import * as React from "react";
-import {observer} from "mobx-react";
-import {RouteComponentProps} from "react-router";
-import {t, Trans} from "@lingui/macro";
-import {KubeObjectMenu, KubeObjectMenuProps} from "../kube-object";
-import {KubeObjectListLayout} from "../kube-object";
-import {TenantRole, tenantRoleApi} from "../../api/endpoints";
-import {apiManager} from "../../api/api-manager";
-import {tenantRoleStore} from "./role.store"
+import { observer } from "mobx-react";
+import { RouteComponentProps } from "react-router";
+import { t, Trans } from "@lingui/macro";
+import { KubeObjectMenu, KubeObjectMenuProps } from "../kube-object";
+import { KubeObjectListLayout } from "../kube-object";
+import { TenantRole, tenantRoleApi } from "../../api/endpoints";
+import { apiManager } from "../../api/api-manager";
+import { tenantRoleStore } from "./role.store"
 
-import {AddRoleDialog} from "./add-role-dialog";
-import {ConfigRoleDialog} from "./config-role-dialog";
-import {MenuItem} from "../menu";
-import {Icon} from "../icon";
-import {_i18n} from "../../i18n";
+import { AddRoleDialog } from "./add-role-dialog";
+import { ConfigRoleDialog } from "./config-role-dialog";
+import { MenuItem } from "../menu";
+import { Icon } from "../icon";
+import { _i18n } from "../../i18n";
 
 enum sortBy {
     name = "name",
@@ -29,12 +29,12 @@ interface Props extends RouteComponentProps<RoleProps> {
 
 @observer
 export class TenantRoles extends React.Component<Props> {
-    spec: { scaleTargetRef: any; };
 
     render() {
         return (
             <>
                 <KubeObjectListLayout
+                    onDetails={() => { }}
                     className="TenantRoles" store={tenantRoleStore}
                     sortingCallbacks={{
                         [sortBy.name]: (item: TenantRole) => item.getName(),
@@ -45,9 +45,9 @@ export class TenantRoles extends React.Component<Props> {
                     ]}
                     renderHeaderTitle={<Trans>Roles</Trans>}
                     renderTableHeader={[
-                        {title: <Trans>Name</Trans>, className: "name", sortBy: sortBy.name},
-                        {title: <Trans>Namespace</Trans>, className: "namespace", sortBy: sortBy.namespace},
-                        {title: <Trans>Age</Trans>, className: "age", sortBy: sortBy.age},
+                        { title: <Trans>Name</Trans>, className: "name", sortBy: sortBy.name },
+                        { title: <Trans>Namespace</Trans>, className: "namespace", sortBy: sortBy.namespace },
+                        { title: <Trans>Age</Trans>, className: "age", sortBy: sortBy.age },
                     ]}
                     renderTableContents={(role: TenantRole) => [
                         role.getName(),
@@ -55,7 +55,7 @@ export class TenantRoles extends React.Component<Props> {
                         role.getAge(),
                     ]}
                     renderItemMenu={(item: TenantRole) => {
-                        return <RoleMenu object={item}/>
+                        return <RoleMenu object={item} />
                     }}
                     addRemoveButtons={{
                         onAdd: () => AddRoleDialog.open(),
@@ -63,6 +63,7 @@ export class TenantRoles extends React.Component<Props> {
                     }}
                 />
                 <AddRoleDialog/>
+                <ConfigRoleDialog/>
             </>
         );
     }
@@ -70,18 +71,15 @@ export class TenantRoles extends React.Component<Props> {
 
 export function RoleMenu(props: KubeObjectMenuProps<TenantRole>) {
 
-    const {object, toolbar} = props;
+    const { object, toolbar } = props;
 
     return (
-        <>
-            <KubeObjectMenu {...props}>
-                <MenuItem onClick={() => ConfigRoleDialog.open(object)}>
-                    <Icon material="toc" title={_i18n._(t`Config`)} interactive={toolbar}/>
-                    <span className="config"><Trans>Config</Trans></span>
-                </MenuItem>
-            </KubeObjectMenu>
-            <ConfigRoleDialog/>
-        </>
+        <KubeObjectMenu {...props}>
+            <MenuItem onClick={() => ConfigRoleDialog.open(object)}>
+                <Icon material="toc" title={_i18n._(t`Config`)} interactive={toolbar}/>
+                <span className="config"><Trans>Config</Trans></span>
+            </MenuItem>
+        </KubeObjectMenu>
     )
 }
 
