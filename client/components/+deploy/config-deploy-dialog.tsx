@@ -1,23 +1,14 @@
 import React from "react";
-import {observer} from "mobx-react";
-import {Dialog, DialogProps} from "../dialog";
-import {computed, observable} from "mobx";
-import {
-    TenantDepartment,
-    tenantDepartmentApi,
-    Namespace,
-    tenantRoleApi, TenantRole, Deploy
-} from "../../api/endpoints";
-import {Wizard, WizardStep} from "../wizard";
-import {t, Trans} from "@lingui/macro";
-import {SubTitle} from "../layout/sub-title";
-import {Input} from "../input";
-import {_i18n} from "../../i18n";
-import {systemName} from "../input/input.validators";
-import {Notifications} from "../notifications";
-import {NamespaceSelect} from "../+namespaces/namespace-select";
-import {SelectOption} from "../select";
-import {apiBase} from "../../api";
+import { observer } from "mobx-react";
+import { Dialog, DialogProps } from "../dialog";
+import { observable } from "mobx";
+import { Wizard, WizardStep } from "../wizard";
+import { t, Trans } from "@lingui/macro";
+import { SubTitle } from "../layout/sub-title";
+import { Input } from "../input";
+import { _i18n } from "../../i18n";
+import { NamespaceSelect } from "../+namespaces/namespace-select";
+import { apiBase } from "../../api";
 
 interface Props extends Partial<DialogProps> {
 }
@@ -29,6 +20,7 @@ export class ConfigDeployDialog extends React.Component<Props> {
     @observable static appName = "";
     @observable static templateName = "";
     @observable namespace = "";
+    @observable replicas = "1";
 
     static open(appName: string, templateName: string) {
         ConfigDeployDialog.isOpen = true;
@@ -40,11 +32,11 @@ export class ConfigDeployDialog extends React.Component<Props> {
         ConfigDeployDialog.isOpen = false;
     }
 
-    get appName () {
+    get appName() {
         return ConfigDeployDialog.appName;
     }
 
-    get templateName () {
+    get templateName() {
         return ConfigDeployDialog.templateName;
     }
 
@@ -59,17 +51,23 @@ export class ConfigDeployDialog extends React.Component<Props> {
     }
 
     updateDeploy = async () => {
-        const data = {appName: this.appName, templateName:this.templateName, namespace: this.namespace}
-        await apiBase.post("/deploy", {data}).then(
-            (data) => {
-                this.reset();
-                this.close();
-            }
-        )
+        const data = {
+            appName: this.appName,
+            templateName: this.templateName,
+            namespace: this.namespace,
+            replicas: this.replicas,
+        }
+        await apiBase.post("/deploy", { data }).
+            then(
+                (data) => {
+                    this.reset();
+                    this.close();
+                }
+            )
     }
 
     render() {
-        const {...dialogProps} = this.props;
+        const { ...dialogProps } = this.props;
         const header = <h5><Trans>Deploy</Trans></h5>;
         return (
             <Dialog
@@ -80,15 +78,22 @@ export class ConfigDeployDialog extends React.Component<Props> {
             >
                 <Wizard header={header} done={this.close}>
                     <WizardStep contentClass="flow column" nextLabel={<Trans>Create</Trans>}
-                                next={this.updateDeploy}>
+                        next={this.updateDeploy}>
                         <div className="namespace">
-                            <SubTitle title={<Trans>Namespace</Trans>}/>
+                            <SubTitle title={<Trans>Namespace</Trans>} />
                             <NamespaceSelect
                                 value={this.namespace}
                                 placeholder={_i18n._(t`Namespace`)}
                                 themeName="light"
                                 className="box grow"
-                                onChange={(v) => {this.namespace = v}}
+                                onChange={(v) => { this.namespace = v }}
+                            />
+                            <SubTitle title={<Trans>Replicas</Trans>} />
+                            <Input
+                                autoFocus
+                                placeholder={_i18n._(t`Replicas`)}
+                                value={this.replicas}
+                                onChange={v => this.replicas = v}
                             />
                         </div>
                     </WizardStep>

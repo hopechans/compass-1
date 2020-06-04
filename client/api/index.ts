@@ -4,19 +4,19 @@ import { Notifications } from "../components/notifications";
 import { clientVars } from "../../server/config";
 import { configStore } from "../config.store"
 //-- JSON HTTP APIS
-console.log("------configStore", configStore);
+// console.log("------configStore", configStore);
 
-let _token = "";
-if (configStore) {
-    _token = configStore.getConfigToken()
-}
+// let _token = "";
+// if (configStore) {
+//     _token = configStore.getConfigToken()
+// }
 export const apiBase = new JsonApi({
     debug: !clientVars.IS_PRODUCTION,
     apiPrefix: clientVars.API_PREFIX.BASE,
 
 }, {
     headers: {
-        Authorization: _token
+        Authorization: ''
     }
 });
 

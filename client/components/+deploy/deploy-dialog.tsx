@@ -99,8 +99,8 @@ class Resource {
   limits: Limitation;
   requests: Limitation;
   constructor() {
-    this.limits = new Limitation(170, 170);
-    this.requests = new Limitation(100, 30);
+    this.limits = new Limitation(0.3, 170);
+    this.requests = new Limitation(0.1, 30);
   }
 }
 
@@ -174,8 +174,8 @@ export class AddDeployDialog extends React.Component<Props, State>{
 
   default_container() {
     let resource: Resource = {
-      limits: { cpu: 170, memory: 170 },
-      requests: { cpu: 100, memory: 30 },
+      limits: { cpu: 0.3, memory: 170 },
+      requests: { cpu: 0.1, memory: 30 },
     };
     return {
       id: this.random(),
@@ -187,7 +187,6 @@ export class AddDeployDialog extends React.Component<Props, State>{
       command: new Array<string>(),
       args: new Array<string>(),
       oneEnvConfig: new Array<string>(),
-      multipleEnvConfig: new Array<string>(),
       readyProbe: new Probe(),
       aliveProbe: new Probe(),
       lifeCycle: new LifeCycle(),
@@ -203,7 +202,7 @@ export class AddDeployDialog extends React.Component<Props, State>{
     let deployTemplate: DeployTemplate = {
       type: 'Stone',
       name: 'app-name',
-      strategy: 'Aplha',
+      strategy: 'Release',
       forms: [
         this.default_container(),
       ],
@@ -695,7 +694,7 @@ export class AddDeployDialog extends React.Component<Props, State>{
 
                       <Row className="mt-10">
                         <Col span={4} className="text-right fs-14 top-form-text">Limit CPU:&nbsp;</Col>
-                        <Col span={6} className="text-right fs-14 top-form-text"><InputNumber min={0} style={{ width: '100%' }} size="small" placeholder="Limit CPU" value={forms[index].resource.limits.cpu} onChange={(e) => this.changeInputCpuAndMemory(index, e, 'limits', 'cpu')} /> (M) </Col>
+                        <Col span={6} className="text-right fs-14 top-form-text"><InputNumber min={0} style={{ width: '100%' }} size="small" placeholder="Limit CPU: eg 1/0.1" value={forms[index].resource.limits.cpu} onChange={(e) => this.changeInputCpuAndMemory(index, e, 'limits', 'cpu')} /></Col>
                         <Col span={2}></Col>
                         <Col span={5} className="text-right fs-14 top-form-text">Limit Memory:&nbsp;</Col>
                         <Col span={5} className="text-right fs-14 top-form-text"><InputNumber min={0} style={{ width: '100%' }} size="small" placeholder="Limit Memory" value={forms[index].resource.limits.memory} onChange={(e) => this.changeInputCpuAndMemory(index, e, 'limits', 'memory')} /> (Mi) </Col>
@@ -703,7 +702,7 @@ export class AddDeployDialog extends React.Component<Props, State>{
 
                       <Row className="mt-10">
                         <Col span={4} className="text-right fs-14 top-form-text">Require CPU:&nbsp;</Col>
-                        <Col span={6} className="text-right fs-14 top-form-text"><InputNumber min={0} style={{ width: '100%' }} size="small" placeholder="Require CPU" value={forms[index].resource.requests.cpu} onChange={(e) => this.changeInputCpuAndMemory(index, e, 'requests', 'cpu')} /> (M) </Col>
+                        <Col span={6} className="text-right fs-14 top-form-text"><InputNumber min={0} style={{ width: '100%' }} size="small" placeholder="Require CPU: eg 1/0.1" value={forms[index].resource.requests.cpu} onChange={(e) => this.changeInputCpuAndMemory(index, e, 'requests', 'cpu')} /></Col>
                         <Col span={2}></Col>
                         <Col span={5} className="text-right fs-14 top-form-text">Require Memory:&nbsp;</Col>
                         <Col span={5} className="text-right fs-14 top-form-text"><InputNumber min={0} style={{ width: '100%' }} size="small" placeholder="Require Memory" value={forms[index].resource.requests.memory} onChange={(e) => this.changeInputCpuAndMemory(index, e, 'requests', 'memory')} /> (Mi) </Col>
