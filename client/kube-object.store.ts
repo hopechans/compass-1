@@ -57,9 +57,10 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
     }
   }
   protected async loadItems(namespaces?: string[]): Promise<T[]> {
-    // if (!configStore.isClusterAdmin && !this.api.isNamespaced) {
-    //   return []
-    // }
+    const isClusterAdmin = localStorage.getItem('u_admin')
+    if (isClusterAdmin != 'true' && !this.api.isNamespaced) {
+      return []
+    }
     if (!namespaces || namespaces.length === 0) {
       const { limit } = this;
       const query: IKubeApiQueryParams = limit ? { limit } : {};

@@ -13,8 +13,9 @@ import { ClusterMetricSwitchers } from "./cluster-metric-switchers";
 import { getMetricLastPoints } from "../../api/endpoints/metrics.api";
 
 export const ClusterMetrics = observer(() => {
+
   const { metricType, metricNodeRole, getMetricsValues, metricsLoaded, metrics, liveMetrics } = clusterStore;
-  const { memoryCapacity, cpuCapacity } = getMetricLastPoints(clusterStore.metrics);
+  let { memoryCapacity, cpuCapacity } = getMetricLastPoints(clusterStore.metrics);
   const metricValues = getMetricsValues(metrics);
   const liveMetricValues = getMetricsValues(liveMetrics);
   const colors = { cpu: "#3D90CE", memory: "#C93DCE" };
@@ -22,7 +23,6 @@ export const ClusterMetrics = observer(() => {
     x: value[0],
     y: parseFloat(value[1]).toFixed(3)
   }));
-
   const datasets = [{
     id: metricType + metricNodeRole,
     label: metricType.toUpperCase() + " usage",

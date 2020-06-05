@@ -1,5 +1,4 @@
 // Kubernetes watch-api consumer
-
 import { computed, observable, reaction } from "mobx";
 import { stringify } from "querystring"
 import { autobind, EventEmitter, interval } from "../utils";
@@ -9,7 +8,8 @@ import { KubeObjectStore } from "../kube-object.store";
 import { KubeApi } from "./kube-api";
 import { configStore } from "../config.store";
 import { apiManager } from "./api-manager";
-
+const obj = require('event-source-polyfill/src/eventsource.min.js');
+let EventSource = obj.EventSourcePolyfill
 export {
   IKubeWatchEvent
 }
@@ -70,7 +70,12 @@ export class KubeWatchApi {
     }
     const query = this.getQuery();
     const apiUrl = this.apiUrl + "?" + stringify(query);
-    this.evtSource = new EventSource(apiUrl);
+    let token = window.localStorage.getItem('u_token');
+    this.evtSource = new EventSource(apiUrl,{
+      headers: {
+        "Authorization": token
+      }
+    });
     this.evtSource.onmessage = this.onMessage;
     this.evtSource.onerror = this.onError;
     this.writeLog("CONNECTING", query.api);

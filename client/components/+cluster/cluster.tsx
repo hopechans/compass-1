@@ -43,14 +43,15 @@ export class Cluster extends React.Component {
   }
 
   @computed get isLoaded() {
+    const userName = localStorage.getItem('u_userName')
+    if(userName == null) return false
+    if(!clusterStore.metrics) return false
     return (
-      nodesStore.isLoaded &&
-      podsStore.isLoaded
+      nodesStore.isLoaded && podsStore.isLoaded
     )
   }
-
   render() {
-    const { isLoaded } = this;
+    let { isLoaded } = this;
     return (
       <MainLayout>
         <div className="Cluster">

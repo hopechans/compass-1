@@ -180,7 +180,6 @@ export class KubeApi<T extends KubeObject = any> {
 
     async create({name = "", namespace = "default"} = {}, data?: Partial<T>): Promise<T> {
         const apiUrl = this.getUrl({namespace});
-        console.log(apiUrl);
         return this.request.post(apiUrl, {
             data: merge({
                 kind: this.kind,
