@@ -1,7 +1,9 @@
 import "./namespaces.scss"
-
 import * as React from "react";
-import { Trans } from "@lingui/macro";
+import { t, Trans } from "@lingui/macro";
+import { MenuItem } from "../menu";
+import { Icon } from "../icon";
+import { _i18n } from "../../i18n"
 import { Namespace, namespacesApi, NamespaceStatus } from "../../api/endpoints";
 import { AddNamespaceDialog } from "./add-namespace-dialog";
 import { MainLayout } from "../layout/main-layout";
@@ -12,6 +14,7 @@ import { KubeObjectListLayout } from "../kube-object";
 import { INamespacesRouteParams } from "./namespaces.route";
 import { namespaceStore } from "./namespace.store";
 import { apiManager } from "../../api/api-manager";
+import { NamespaceNodeRangeLimitDialog } from "./namespace-nodelimit-dialog";
 
 enum sortBy {
   name = "name",
@@ -50,12 +53,12 @@ export class Namespaces extends React.Component<Props> {
           ]}
           renderTableContents={(item: Namespace) => [
             item.getName(),
-            item.getLabels().map(label => <Badge key={label} label={label}/>),
+            item.getLabels().map(label => <Badge key={label} label={label} />),
             item.getAge(),
             { title: item.getStatus(), className: item.getStatus().toLowerCase() },
           ]}
           renderItemMenu={(item: Namespace) => {
-            return <NamespaceMenu object={item}/>
+            return <NamespaceMenu object={item} />
           }}
           addRemoveButtons={{
             addTooltip: <Trans>Add Namespace</Trans>,
@@ -65,15 +68,23 @@ export class Namespaces extends React.Component<Props> {
             disabled: item.getStatus() === NamespaceStatus.TERMINATING,
           })}
         />
-        <AddNamespaceDialog/>
+        <AddNamespaceDialog />
+        <NamespaceNodeRangeLimitDialog />
       </MainLayout>
     )
   }
 }
 
 export function NamespaceMenu(props: KubeObjectMenuProps<Namespace>) {
+  const { object, toolbar } = props;
   return (
-    <KubeObjectMenu {...props}/>
+    <KubeObjectMenu {...props} >
+      <MenuItem onClick={() => { NamespaceNodeRangeLimitDialog.open(object); }}>
+        <Icon material="turned_in_not" title={_i18n._(t`Annotate`)} interactive={toolbar} />
+        <span className="title"><Trans>Annotate</Trans></span>
+      </MenuItem>
+    </KubeObjectMenu>
+
   )
 }
 
