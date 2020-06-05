@@ -22,6 +22,8 @@ import { Badge } from "../badge";
 import { themeStore } from "../../theme.store";
 import {withRouter,RouteComponentProps } from 'react-router';
 import { Notifications } from "../notifications";
+import { message } from 'antd';
+
 
 export interface TabRoute extends RouteProps {
   title: React.ReactNode;
@@ -88,9 +90,10 @@ export class Layout extends React.Component<Props,State> {
   ifLogin():any{
     const userName = localStorage.getItem('u_userName')
     if(!userName||userName == ''){
-      Notifications.error('Login Failed...')
+      message.error('Token Expired')
       setTimeout(()=>{
           this.props.history.push('/login')
+          Notifications.info('Please Login Again')
       },2000)
       return null
     }

@@ -83,10 +83,12 @@ export class ClusterStore extends KubeObjectStore<Cluster> {
   }
 
   getMetricsValues(source: Partial<IClusterMetrics>) {
+    if(!source) return []
     const metrics =
       this.metricType === MetricType.CPU ? source.cpuUsage :
         this.metricType === MetricType.MEMORY ? source.memoryUsage
           : null;
+
     if (!metrics) {
       return [];
     }

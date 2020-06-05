@@ -26,9 +26,6 @@ export class ConfigStore {
   load() {
     return configApi.getConfig().then((config: any) => {
       this.config = config;
-      if(config.token == ''){
-        console.log(1)
-      }
       this.isLoaded = true;
     });
   }
