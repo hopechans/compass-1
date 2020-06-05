@@ -70,7 +70,8 @@ export class KubeWatchApi {
     }
     const query = this.getQuery();
     const apiUrl = this.apiUrl + "?" + stringify(query);
-    let token = window.localStorage.getItem('u_token');
+    const userConifg = JSON.parse(localStorage.getItem('u_config'))
+    let token = userConifg.token
     this.evtSource = new EventSource(apiUrl,{
       headers: {
         "Authorization": token

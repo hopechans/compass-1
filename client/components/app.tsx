@@ -50,17 +50,15 @@ class App extends React.Component {
     render(<App />, App.rootElem);
   };
 
-  async stratConfigStoreLoad() {
-    await configStore.load();
-  }
-
   render() {
     let homeUrl = ''
-    const userName = localStorage.getItem('u_userName')
-    const admin = localStorage.getItem('u_admin')
-    if (userName) {
+    const userConifg = JSON.parse(localStorage.getItem('u_config'))
+    if(userConifg){
+      configStore.setConfig(userConifg)
+      let admin = userConifg.isClusterAdmin
       homeUrl = admin == 'true' ? clusterURL() : workloadsURL();
-    } else {
+    }
+    else {
       homeUrl = '/login'
     }
     return (
@@ -83,7 +81,7 @@ class App extends React.Component {
                 <Route component={Tekton} {...tektonRoute} />
                 <Route component={CustomResources} {...crdRoute} />
                 <Route component={UserManagement} {...usersManagementRoute} /> */}
-                    <Route component={Apps} {...appsRoute} />
+                <Route component={Apps} {...appsRoute} />
                 <Route component={Tenant} {...tenantRoute} />
                 <Route component={Login} path="/login" />
                 <Redirect exact from="/" to={homeUrl} />
