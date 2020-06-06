@@ -52,58 +52,52 @@ export class NamespaceNodeRangeLimitDialog extends React.Component<Props> {
             data.nodes.push(node);
         })
 
-        // await namespaceStore.update(
-        //     NamespaceNodeRangeLimitDialog.namespace,
-        //     {
-
-        //     }).then("");
-        //   this.close();
-        // try {
-        //     await apiBase.patch("/v1/namespaces", { data }).
-        //         then((data) => {
-        //             this.reset();
-        //             this.close();
-        //         })
-        //     Notifications.ok(
-        //         <>
-        //             {NamespaceNodeRangeLimitDialog.namespace.getName()} annotation successed
-        //         </>);
-        // } catch (err) {
-        //     Notifications.error(err);
-        // }
+        try {
+            await apiBase.post("/namespaces/annotation/node", { data }).
+                then((data) => {
+                    this.reset();
+                    this.close();
+                })
+            Notifications.ok(
+                <>
+                    {NamespaceNodeRangeLimitDialog.namespace.getName()} annotation successed
+                </>);
+        } catch (err) {
+            Notifications.error(err);
+        }
     }
 
-render() {
-    const { ...dialogProps } = this.props;
-    const unwrapNodes = (options: SelectOption[]) => options.map(option => option.value);
-    const header = <h5><Trans>Annotate Node</Trans></h5>;
-    return (
-        <Dialog
-            {...dialogProps}
-            className="NamespaceNodeRangeLimitDialog"
-            isOpen={NamespaceNodeRangeLimitDialog.isOpen}
-            close={this.close}
-        >
-            <Wizard header={header} done={this.close}>
-                <WizardStep contentClass="flow column" nextLabel={<Trans>Annotate</Trans>}
-                    next={this.updateAnnotate}>
-                    <div className="node">
-                        <SubTitle title={<Trans>Annotate Node</Trans>} />
-                        <NodeSelect
-                            isMulti
-                            value={this.nodes}
-                            placeholder={_i18n._(t`Namespace`)}
-                            themeName="light"
-                            className="box grow"
-                            onChange={(opts: SelectOption[]) => {
-                                if (!opts) opts = [];
-                                this.nodes.replace(unwrapNodes(opts));
-                            }}
-                        />
-                    </div>
-                </WizardStep>
-            </Wizard>
-        </Dialog>
-    )
-}
+    render() {
+        const { ...dialogProps } = this.props;
+        const unwrapNodes = (options: SelectOption[]) => options.map(option => option.value);
+        const header = <h5><Trans>Annotate Node</Trans></h5>;
+        return (
+            <Dialog
+                {...dialogProps}
+                className="NamespaceNodeRangeLimitDialog"
+                isOpen={NamespaceNodeRangeLimitDialog.isOpen}
+                close={this.close}
+            >
+                <Wizard header={header} done={this.close}>
+                    <WizardStep contentClass="flow column" nextLabel={<Trans>Annotate</Trans>}
+                        next={this.updateAnnotate}>
+                        <div className="node">
+                            <SubTitle title={<Trans>Annotate Node</Trans>} />
+                            <NodeSelect
+                                isMulti
+                                value={this.nodes}
+                                placeholder={_i18n._(t`Namespace`)}
+                                themeName="light"
+                                className="box grow"
+                                onChange={(opts: SelectOption[]) => {
+                                    if (!opts) opts = [];
+                                    this.nodes.replace(unwrapNodes(opts));
+                                }}
+                            />
+                        </div>
+                    </WizardStep>
+                </Wizard>
+            </Dialog>
+        )
+    }
 }
