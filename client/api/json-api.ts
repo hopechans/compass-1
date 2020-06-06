@@ -3,7 +3,7 @@
 import { stringify } from "querystring";
 import { EventEmitter } from "../utils/eventEmitter";
 import { cancelableFetch } from "../utils/cancelableFetch";
-
+import { configStore } from '../config.store'
 export interface JsonApiData {
 }
 
@@ -30,7 +30,6 @@ export interface JsonApiConfig {
   apiPrefix: string;
   debug?: boolean;
 }
-
 export class JsonApi<D = JsonApiData, P extends JsonApiParams = JsonApiParams> {
   static reqInitDefault: RequestInit = {
     headers: {
@@ -52,23 +51,38 @@ export class JsonApi<D = JsonApiData, P extends JsonApiParams = JsonApiParams> {
   public onError = new EventEmitter<[JsonApiErrorParsed, Response]>();
 
   get<T = D>(path: string, params?: P, reqInit: RequestInit = {}) {
-    return this.request<T>(path, params, { ...reqInit, method: "get" });
+    let token = window.localStorage.getItem('u_token')
+    if(!token) return
+    let reqConfig = { ...reqInit, method: "get", headers:{Authorization:token}}
+    return this.request<T>(path, params, { ...reqConfig });
   }
 
   post<T = D>(path: string, params?: P, reqInit: RequestInit = {}) {
-    return this.request<T>(path, params, { ...reqInit, method: "post" });
+    let token = window.localStorage.getItem('u_token')
+    if(!token) return
+    let reqConfig = {...reqInit,method: "post",headers:{Authorization:token}}
+    return this.request<T>(path, params, {...reqConfig  });
   }
 
   put<T = D>(path: string, params?: P, reqInit: RequestInit = {}) {
-    return this.request<T>(path, params, { ...reqInit, method: "put" });
+    let token = window.localStorage.getItem('u_token')
+    if(!token) return
+    let reqConfig = {...reqInit,method: "put",headers:{Authorization:token}}
+    return this.request<T>(path, params, { ...reqConfig });
   }
 
   patch<T = D>(path: string, params?: P, reqInit: RequestInit = {}) {
-    return this.request<T>(path, params, { ...reqInit, method: "patch" });
+    let token = window.localStorage.getItem('u_token')
+    if(!token) return
+    let reqConfig = {...reqInit,method: "patch",headers:{Authorization:token}}
+    return this.request<T>(path, params, { ...reqConfig });
   }
 
   del<T = D>(path: string, params?: P, reqInit: RequestInit = {}) {
-    return this.request<T>(path, params, { ...reqInit, method: "delete" });
+    let token = window.localStorage.getItem('u_token')
+    if(!token) return
+    let reqConfig = {...reqInit,method: "delete",headers:{Authorization:token}}
+    return this.request<T>(path, params, { ...reqConfig });
   }
 
   protected request<D>(path: string, params?: P, init: RequestInit = {}) {

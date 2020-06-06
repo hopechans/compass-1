@@ -2,7 +2,8 @@ import React from 'react'
 import axios from 'axios'
 import { Trans } from "@lingui/macro";
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
-import { Form, Input, Button, Checkbox, message } from 'antd';
+import { Form, Input, Button, Checkbox, message,Alert  } from 'antd';
+import { createStorage } from "../../utils";
 import { configStore } from "../../config.store";
 import { Notifications } from "../notifications";
 import {withRouter,RouteComponentProps } from 'react-router';
@@ -34,15 +35,26 @@ class LoginComponet extends React.Component<Props, State>{
 
   onFinish = (values: any) => {
     this.setState({ loading: true })
-    axios.post('/user', values)
+    axios.post('/user-login', values)
       .then((res: any) => {
         configStore.isLoaded = true
         configStore.setConfig(res.data)
-        Notifications.ok('login success')
-        this.setState({ loading: false })
+        window.localStorage.setItem('u_token',res.data.token)
+        window.localStorage.setItem('u_userName',res.data.userName)
+        window.localStorage.setItem('u_admin',res.data.isClusterAdmin)
+        Notifications.ok('Login Success')
+        const hide = message.loading('Watting..', 2500);
+        setTimeout(hide, 2500);
+        this.setState({ loading: true })
         setTimeout(()=>{
-          this.props.history.push('/')
-        },1000)
+          if(res.data.isClusterAdmin === true){
+            this.props.history.push('/cluster')
+            
+          }else{
+            this.props.history.push('/workloads')
+          }
+          this.setState({ loading: false })
+        },1500)
         
       }).catch(err => {
         this.setState({ loading: false })
@@ -97,8 +109,10 @@ class LoginComponet extends React.Component<Props, State>{
               </Button>
             </Form.Item>
           </Form>
+
         </div>
         <div className="footer">
+          <Alert message="Only supports Chrome browser" showIcon type="warning" closable style={{marginTop:'50px'}}/>   
         </div>
       </div>
     );

@@ -21,6 +21,9 @@ import { i18nStore } from "../../i18n";
 import { Badge } from "../badge";
 import { themeStore } from "../../theme.store";
 import {withRouter,RouteComponentProps } from 'react-router';
+import { Notifications } from "../notifications";
+import { message } from 'antd';
+
 
 export interface TabRoute extends RouteProps {
   title: React.ReactNode;
@@ -70,6 +73,7 @@ export class Layout extends React.Component<Props,State> {
 
   loginout = () => {
     configStore.reset()
+    window.localStorage.clear()
     this.props.history.push('/login')
   }
 
@@ -83,8 +87,20 @@ export class Layout extends React.Component<Props,State> {
     }
   }
 
+  ifLogin():any{
+    const userName = localStorage.getItem('u_userName')
+    if(!userName||userName == ''){
+      message.error('Token Expired')
+      setTimeout(()=>{
+          this.props.history.push('/login')
+          Notifications.info('Please Login Again')
+      },2000)
+      return null
+    }
+  }
+
   renderUserMenu(){
-    const { userName } = configStore.config;
+    const userName = localStorage.getItem('u_userName')
     return (
       <div className="header-right">
           <span>{userName}</span>
@@ -113,6 +129,7 @@ export class Layout extends React.Component<Props,State> {
     const { clusterName, lensVersion, kubectlAccess } = configStore.config;
     const { pathname } = navigation.location;
     const { languages, setLocale, activeLang } = i18nStore;
+    this.ifLogin()
     return (
       <div className={cssNames("MainLayout", className, themeStore.activeTheme.type)}>
         <header className={cssNames("flex gaps align-center", headerClass)}>
