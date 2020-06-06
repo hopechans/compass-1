@@ -10,6 +10,7 @@ import { SubTitle } from "../layout/sub-title";
 import { _i18n } from "../../i18n";
 import { NamespaceSelect } from "../+namespaces/namespace-select";
 import { apiBase } from "../../api";
+import { Notifications } from "../notifications";
 
 interface Props extends Partial<DialogProps> {
 }
@@ -58,13 +59,15 @@ export class ConfigDeployDialog extends React.Component<Props> {
             namespace: this.namespace,
             replicas: this.replicas,
         }
-        await apiBase.post("/deploy", { data }).
-            then(
-                (data) => {
+        try {
+            await apiBase.post("/deploy", { data }).
+                then((data) => {
                     this.reset();
                     this.close();
-                }
-            )
+                })
+        } catch (err) {
+            Notifications.error(err);
+        }
     }
 
     render() {
