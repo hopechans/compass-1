@@ -88,6 +88,7 @@ export class Deploys extends React.Component<Props> {
                     }}
                 />
                 <AddDeployDialog />
+                <ConfigDeployDialog />
             </MainLayout>
         )
     }
@@ -97,7 +98,6 @@ export function DeployMenu(props: KubeObjectMenuProps<Deploy>) {
     const { object, toolbar } = props;
     return (
         <>
-            <ConfigDeployDialog />
             <KubeObjectMenu {...props} >
                 <MenuItem onClick={() => { ConfigDeployDialog.open(object.getAppName(), object.getName()) }}>
                     <Icon material="control_camera" title={_i18n._(t`Deploy`)} interactive={toolbar} />
