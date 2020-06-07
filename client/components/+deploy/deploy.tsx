@@ -89,7 +89,7 @@ export class Deploys extends React.Component<Props> {
                     }}
                 />
                 <AddDeployDialog />
-                <ConfigDeployDialog />
+                <CopyAddDeployDialog />
             </MainLayout>
         )
     }
