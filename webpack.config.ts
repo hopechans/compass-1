@@ -23,7 +23,7 @@ export default () => {
     },
     output: {
       //path: buildDir,
-      path:path.resolve(__dirname,'./dist'),
+      path: path.resolve(__dirname, './dist'),
       publicPath: '/',
       filename: '[name].js',
       chunkFilename: 'chunks/[name].js',
@@ -31,7 +31,7 @@ export default () => {
     resolve: {
       extensions: ['.ts', '.tsx', '.js', '.json']
     },
-    devServer:{
+    devServer: {
       //项目根目录
       host: '0.0.0.0',
       port: '8087',
@@ -39,11 +39,12 @@ export default () => {
       historyApiFallback: true,
       overlay: true,
       publicPath: '',
-      proxy:{
+      proxy: {
         '/base': {
-          target: 'http://0.0.0.0:8081',
+          target: 'http://127.0.0.1:8080',
           secure: false,
           changeOrigin: true,
+          // pathRewrite: { '^/base': '' }
         },
         '/api-kube': {
           target: 'http://127.0.0.1:8080/',
@@ -58,14 +59,14 @@ export default () => {
           pathRewrite: { '^/api-resource': '/workload' }
         },
 
-        '/login': {
+        '/user-login': {
           target: 'http://127.0.0.1:8080/',
           secure: false,  // 如果是https接口，需要配置这个参数
           changeOrigin: true, // 如果接口跨域，需要进行这个参数配置
         },
 
         '/api/config': {
-          target: 'http://127.0.0.1:8080/',   
+          target: 'http://127.0.0.1:8080/',
           secure: false,  // 如果是https接口，需要配置这个参数
           changeOrigin: true, // 如果接口跨域，需要进行这个参数配置
           pathRewrite: { '^/api/config': '/config' }
@@ -77,7 +78,6 @@ export default () => {
           changeOrigin: true, // 如果接口跨域，需要进行这个参数配置
           pathRewrite: { '^/api': '/workload' }
         },
-
       }
     },
     mode: IS_PRODUCTION ? "production" : "development",
@@ -147,10 +147,10 @@ export default () => {
           test: /\.s?css$/,
           use: [
             IS_PRODUCTION ? MiniCssExtractPlugin.loader :
-            {
-              loader: "style-loader",
-              options: {}
-            },
+              {
+                loader: "style-loader",
+                options: {}
+              },
             {
               loader: "css-loader",
               options: {
@@ -203,25 +203,25 @@ export default () => {
 };
 
 function getNetworkIp() {
-	let needHost = ''; // 打开的host
-	try {
-		// 获得网络接口列表
-		let network = os.networkInterfaces();
-		for (let dev in network) {
-			let iface = network[dev];
-			for (let i = 0; i < iface.length; i++) {
+  let needHost = ''; // 打开的host
+  try {
+    // 获得网络接口列表
+    let network = os.networkInterfaces();
+    for (let dev in network) {
+      let iface = network[dev];
+      for (let i = 0; i < iface.length; i++) {
         let alias = iface[i];
-				if (alias.family === 'IPv4' && !alias.internal && alias.address.includes('10')) {
+        if (alias.family === 'IPv4' && !alias.internal && alias.address.includes('10')) {
           needHost = alias.address;
           return needHost
         }
-        else{
+        else {
           needHost = 'localhost'
         }
-			}
-		}
-	} catch (e) {
+      }
+    }
+  } catch (e) {
     needHost = 'localhost';
-	}
-	return needHost;
+  }
+  return needHost;
 }

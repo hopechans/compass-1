@@ -14,7 +14,7 @@ module.exports = {
         "(as a percentage of request)": "(as a percentage of request)",
         "(empty) (Allowing the specific traffic to all pods in this namespace)": "(empty) (Allowing the specific traffic to all pods in this namespace)",
         "<0>Filtered</0>: {itemsCount} / {allItemsCount}": ["<0>Filtered</0>: ", ["itemsCount"], " / ", ["allItemsCount"]],
-        "<0>Your browser does not support all Kontena Lens features. </0> Please consider using another browser.": "<0>Your browser does not support all Kontena Lens features. </0> Please consider using another browser.",
+        "<0>Your browser does not support all Yametec features. </0> Please consider using another browser.": "<0>Your browser does not support all Yametec features. </0> Please consider using another browser.",
         "<0>{0}</0> successfully created": ["<0>", ["0"], "</0> successfully created"],
         "API Group": "API Group",
         "Access Control": "访问控制",
