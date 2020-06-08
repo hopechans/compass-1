@@ -32,7 +32,7 @@ export class Notifications extends React.Component {
   static info(message: IMessage) {
     return notificationsStore.add({
       message: message,
-      timeout: 0,
+      timeout: 5000,
       status: "info"
     });
   }
