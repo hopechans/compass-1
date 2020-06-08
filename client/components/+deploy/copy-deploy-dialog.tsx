@@ -152,8 +152,8 @@ export class CopyAddDeployDialog extends React.Component<Props> {
     }
 
     removeContainer = () => {
-        if (this.containers.length > 0 && this.step > 1) {
-            this.containers.splice(this.step-2, 1);
+        if (this.containers.length > 0) {
+            this.containers.splice(this.step - 2, 1);
         }
     }
 
@@ -168,8 +168,8 @@ export class CopyAddDeployDialog extends React.Component<Props> {
             <div className="moreButtons">
                 <Button primary onClick={this.addContainer}><Trans>Add container</Trans></Button>&nbsp;
                 {
-                    this.containers.length > 0 && this.step > 1 ?
-                        <Button primary onClick={this.removeContainer}><Trans>Remove container</Trans></Button> : ""
+                    this.containers.length > 0 &&  (this.step - 1) != this.containers.length ?
+                        <Button primary onClick={this.removeContainer}><Trans>Remove next container</Trans></Button> : ""
                 }
             </div>
         )
