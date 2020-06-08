@@ -15,8 +15,8 @@ import { IDeployWorkloadsParams } from "../+deploy";
 import { apiManager } from "../../api/api-manager";
 import { deployStore } from "./deploy.store";
 import { AddDeployDialog } from "./deploy-dialog";
-import { configStore } from "../../config.store"
 import { ConfigDeployDialog } from "./config-deploy-dialog";
+import {CopyAddDeployDialog} from "./copy-deploy-dialog";
 
 enum sortBy {
     templateName = "templateName",
@@ -84,10 +84,12 @@ export class Deploys extends React.Component<Props> {
 
                     addRemoveButtons={{
                         addTooltip: <Trans>AddDeployDialog</Trans>,
-                        onAdd: () => AddDeployDialog.open(),
+                        // onAdd: () => AddDeployDialog.open(),
+                        onAdd: () => CopyAddDeployDialog.open()
                     }}
                 />
                 <AddDeployDialog />
+                <ConfigDeployDialog />
             </MainLayout>
         )
     }
@@ -97,7 +99,6 @@ export function DeployMenu(props: KubeObjectMenuProps<Deploy>) {
     const { object, toolbar } = props;
     return (
         <>
-            <ConfigDeployDialog />
             <KubeObjectMenu {...props} >
                 <MenuItem onClick={() => { ConfigDeployDialog.open(object.getAppName(), object.getName()) }}>
                     <Icon material="control_camera" title={_i18n._(t`Deploy`)} interactive={toolbar} />

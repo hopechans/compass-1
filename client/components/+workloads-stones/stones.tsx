@@ -23,7 +23,6 @@ enum sortBy {
   statefulsets = "statefulsets",
   strategy = "strategy",
   age = "age",
-
 }
 
 interface Props extends RouteComponentProps<IStatefulSetsRouteParams> {
@@ -38,6 +37,7 @@ export class Stones extends React.Component<Props> {
   getEnhanceStatefulSetLength(stone: Stone) {
     return stoneStore.getChildEnhanceStatefulset(stone).length;
   }
+
 
 
   render() {

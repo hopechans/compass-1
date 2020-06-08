@@ -80,7 +80,7 @@ export class Sidebar extends React.Component<Props> {
             <SidebarContext.Provider value={{pinned: isPinned}}>
                 <div className={cssNames("Sidebar flex column", className, {pinned: isPinned})}>
                     <div className="header flex align-center">
-                        <NavLink exact to="/" className="box grow">
+                        <NavLink exact to="/workloads" className="box grow">
                             <Icon svg="compass" className="logo-icon"/>
                             <div className="logo-text">Compass</div>
                         </NavLink>
