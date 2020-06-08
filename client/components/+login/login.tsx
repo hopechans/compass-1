@@ -54,6 +54,9 @@ class LoginComponet extends React.Component<Props, State>{
         },1500)
         
       }).catch(err => {
+        if(err && err.response){
+          Notifications.error(err.response.data)
+        }
         this.setState({ loading: false })
       })
   };

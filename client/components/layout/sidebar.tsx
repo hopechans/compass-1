@@ -94,12 +94,14 @@ export class Sidebar extends React.Component<Props> {
                     </div>
                     <div className="sidebar-nav flex column box grow-fixed">
                         <SidebarNavItem
+                            isHidden={!isClusterAdmin}
                             id="cluster"
                             url={clusterURL()}
                             text={<Trans>Cluster</Trans>}
                             icon={<Icon svg="kube"/>}
                         />
                         <SidebarNavItem
+                            isHidden={!isClusterAdmin}
                             id="nodes"
                             url={nodesURL()}
                             text={<Trans>Nodes</Trans>}
@@ -166,6 +168,7 @@ export class Sidebar extends React.Component<Props> {
                             text={<Trans>Tekton</Trans>}
                         />
                         <SidebarNavItem
+                            isHidden={!isClusterAdmin}
                             id="tenant"
                             url={tenantURL({query})}
                             routePath={tenantRoute.path}
@@ -174,6 +177,7 @@ export class Sidebar extends React.Component<Props> {
                             icon={<Icon material="people"/>}
                         />
                         <SidebarNavItem
+                            isHidden={!isClusterAdmin}
                             id="deploymentEngine"
                             url={deploymentEngineURL()}
                             routePath={deploymentEngineRoute.path}
@@ -190,6 +194,7 @@ export class Sidebar extends React.Component<Props> {
                             text={<Trans>Apps</Trans>}
                         />
                         <SidebarNavItem
+                            isHidden={!isClusterAdmin}
                             id="users"
                             url={usersManagementURL({query})}
                             routePath={usersManagementRoute.path}
@@ -198,6 +203,7 @@ export class Sidebar extends React.Component<Props> {
                             text={<Trans>Access Control</Trans>}
                         />
                         <SidebarNavItem
+                            isHidden={!isClusterAdmin}
                             id="custom-resources"
                             url={crdURL()}
                             subMenus={CustomResources.tabRoutes}

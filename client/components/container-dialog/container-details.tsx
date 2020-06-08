@@ -36,7 +36,7 @@ export class ContainerDetails extends React.Component<ContainerProps> {
     private theme = this.props.themeName || themeStore.activeTheme.type;
     private divider = this.props.divider;
 
-    @observable base: Base = {
+    @observable base: Base = this.props.value.base || {
         name:  "default",
         image: "app:latest",
         imagePullPolicy: "IfNotPresent",
@@ -51,10 +51,10 @@ export class ContainerDetails extends React.Component<ContainerProps> {
             }
         }
     };
-    @observable commands: string[] = [];
-    @observable args: string[] = [];
-    @observable environment: Environment[] = [];
-    @observable readyProbe: Probe = {
+    @observable commands: string[] = this.props.value.commands || [];
+    @observable args: string[] = this.props.value.args || [];
+    @observable environment: Environment[] = this.props.value.environment || [];
+    @observable readyProbe: Probe = this.props.value.readyProbe || {
         status: false,
         timeout: "",
         cycle: "",
@@ -68,7 +68,7 @@ export class ContainerDetails extends React.Component<ContainerProps> {
             command: "",
         }
     };
-    @observable liveProbe: Probe = {
+    @observable liveProbe: Probe = this.props.value.liveProbe || {
         status: false,
         timeout: "",
         cycle: "",
@@ -82,7 +82,7 @@ export class ContainerDetails extends React.Component<ContainerProps> {
             command: "",
         }
     };
-    @observable lifeCycle: LifeCycle = {
+    @observable lifeCycle: LifeCycle = this.props.value.lifeCycle || {
         status: false,
         postStart: {
             type: "HTTP",
@@ -100,7 +100,7 @@ export class ContainerDetails extends React.Component<ContainerProps> {
         }
     };
 
-    @observable value = {
+    @observable value = this.props.value || {
         name: this.base.name ,
         image: this.base.image,
         imagePullPolicy: this.base.imagePullPolicy,
