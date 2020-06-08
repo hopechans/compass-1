@@ -39,9 +39,7 @@ class LoginComponet extends React.Component<Props, State>{
       .then((res: any) => {
         configStore.isLoaded = true
         configStore.setConfig(res.data)
-        window.localStorage.setItem('u_token',res.data.token)
-        window.localStorage.setItem('u_userName',res.data.userName)
-        window.localStorage.setItem('u_admin',res.data.isClusterAdmin)
+        window.localStorage.setItem('u_config',JSON.stringify(res.data))
         Notifications.ok('Login Success')
         const hide = message.loading('Watting..', 2500);
         setTimeout(hide, 2500);
@@ -49,7 +47,6 @@ class LoginComponet extends React.Component<Props, State>{
         setTimeout(()=>{
           if(res.data.isClusterAdmin === true){
             this.props.history.push('/cluster')
-            
           }else{
             this.props.history.push('/workloads')
           }
@@ -57,6 +54,9 @@ class LoginComponet extends React.Component<Props, State>{
         },1500)
         
       }).catch(err => {
+        if(err && err.response){
+          Notifications.error(err.response.data)
+        }
         this.setState({ loading: false })
       })
   };

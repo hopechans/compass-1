@@ -1,5 +1,5 @@
 // Client-side config
-import { observable, when } from "mobx";
+import { observable, when, action } from "mobx";
 import { autobind, interval } from "./utils";
 import { IConfig } from "../server/common/config";
 import { IClientVars } from "../server/config";
@@ -14,7 +14,7 @@ export class ConfigStore {
   readonly buildVersion = BUILD_VERSION;
 
   // auto-update config
-  protected updater = interval(60, this.load);
+  //protected updater = interval(60, this.load);
 
   @observable config: Partial<IConfig> = {};
   @observable isLoaded = false;
@@ -22,6 +22,7 @@ export class ConfigStore {
   constructor() {
     // this.updater.start();
   }
+  
 
   load() {
     return configApi.getConfig().then((config: any) => {
@@ -60,6 +61,7 @@ export class ConfigStore {
     return this.config.allowedNamespaces
   }
 
+  @action
   public setConfig(res: any) {
     this.config = res;
   }
