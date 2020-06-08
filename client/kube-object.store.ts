@@ -57,8 +57,12 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
     }
   }
   protected async loadItems(namespaces?: string[]): Promise<T[]> {
-    const isClusterAdmin = localStorage.getItem('u_admin')
-    if (isClusterAdmin != 'true' && !this.api.isNamespaced) {
+    let isClusterAdmin = false
+    const userConifg = JSON.parse(localStorage.getItem('u_config'))
+    if(userConifg){
+      isClusterAdmin = userConifg.isClusterAdmin
+    }
+    if (isClusterAdmin != true && !this.api.isNamespaced) {
       return []
     }
     if (!namespaces || namespaces.length === 0) {
@@ -73,22 +77,6 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
     }
   }
 
-
-  protected async loadItems1(namespaces?: string[]): Promise<T[]> {
-    if (!configStore.isClusterAdmin && !this.api.isNamespaced) {
-      return []
-    }
-    if (!namespaces) {
-      const { limit } = this;
-      const query: IKubeApiQueryParams = limit ? { limit } : {};
-      return this.api.list({}, query);
-    }
-    else {
-      return Promise
-        .all(namespaces.map(namespace => this.api.list({ namespace })))
-        .then(items => items.flat())
-    }
-  }
 
   protected filterItemsOnLoad(items: T[]) {
     return items;

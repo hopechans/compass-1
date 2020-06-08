@@ -88,10 +88,11 @@ export class Layout extends React.Component<Props,State> {
   }
 
   ifLogin():any{
-    const userName = localStorage.getItem('u_userName')
-    if(!userName||userName == ''){
+    const userConifg = JSON.parse(localStorage.getItem('u_config'))
+    if(!userConifg){
       message.error('Token Expired')
       setTimeout(()=>{
+          configStore.reset()
           this.props.history.push('/login')
           Notifications.info('Please Login Again')
       },2000)
@@ -100,7 +101,8 @@ export class Layout extends React.Component<Props,State> {
   }
 
   renderUserMenu(){
-    const userName = localStorage.getItem('u_userName')
+    const userConifg = JSON.parse(localStorage.getItem('u_config'))
+    let userName = userConifg?userConifg.userName:''
     return (
       <div className="header-right">
           <span>{userName}</span>
