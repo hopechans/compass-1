@@ -26,6 +26,7 @@ import { Config, configRoute } from "./+config";
 import { Events } from "./+events/events";
 import { Login } from "./+login";
 import { Tekton, tektonRoute } from "./+tekton";
+import { Ovn, ovnRoute } from "./+ovn";
 import { eventRoute } from "./+events";
 import { ErrorBoundary } from "./error-boundary";
 import { Apps, appsRoute, appsURL } from "./+apps";
@@ -79,6 +80,7 @@ class App extends React.Component {
                 <Route component={Namespaces} {...namespacesRoute} />
                 <Route component={Events} {...eventRoute} />
                 <Route component={Tekton} {...tektonRoute} />
+                <Route component={Ovn} {...ovnRoute} />
                 <Route component={CustomResources} {...crdRoute} />
                 <Route component={UserManagement} {...usersManagementRoute} /> */}
                 <Route component={Apps} {...appsRoute} />
