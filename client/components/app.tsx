@@ -52,11 +52,13 @@ class App extends React.Component {
 
   render() {
     let homeUrl = ''
-    const userName = localStorage.getItem('u_userName')
-    const admin = localStorage.getItem('u_admin')
-    if (userName) {
+    const userConifg = JSON.parse(localStorage.getItem('u_config'))
+    if(userConifg){
+      configStore.setConfig(userConifg)
+      let admin = userConifg.isClusterAdmin
       homeUrl = admin == 'true' ? clusterURL() : workloadsURL();
-    } else {
+    }
+    else {
       homeUrl = '/login'
     }
     return (

@@ -1,5 +1,5 @@
 // Client-side config
-import { observable, when } from "mobx";
+import { observable, when, action } from "mobx";
 import { autobind, interval } from "./utils";
 import { IConfig } from "../server/common/config";
 import { IClientVars } from "../server/config";
@@ -22,6 +22,7 @@ export class ConfigStore {
   constructor() {
     // this.updater.start();
   }
+  
 
   load() {
     this.updater.start();
@@ -61,6 +62,7 @@ export class ConfigStore {
     return this.config.allowedNamespaces
   }
 
+  @action
   public setConfig(res: any) {
     this.config = res;
   }

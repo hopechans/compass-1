@@ -51,35 +51,40 @@ export class JsonApi<D = JsonApiData, P extends JsonApiParams = JsonApiParams> {
   public onError = new EventEmitter<[JsonApiErrorParsed, Response]>();
 
   get<T = D>(path: string, params?: P, reqInit: RequestInit = {}) {
-    let token = window.localStorage.getItem('u_token')
+    const userConifg = JSON.parse(localStorage.getItem('u_config'))
+    const token = userConifg.token
     if(!token) return
     let reqConfig = { ...reqInit, method: "get", headers:{Authorization:token}}
     return this.request<T>(path, params, { ...reqConfig });
   }
 
   post<T = D>(path: string, params?: P, reqInit: RequestInit = {}) {
-    let token = window.localStorage.getItem('u_token')
+    const userConifg = JSON.parse(localStorage.getItem('u_config'))
+    const token = userConifg.token
     if(!token) return
     let reqConfig = {...reqInit,method: "post",headers:{Authorization:token}}
     return this.request<T>(path, params, {...reqConfig  });
   }
 
   put<T = D>(path: string, params?: P, reqInit: RequestInit = {}) {
-    let token = window.localStorage.getItem('u_token')
+    const userConifg = JSON.parse(localStorage.getItem('u_config'))
+    const token = userConifg.token
     if(!token) return
     let reqConfig = {...reqInit,method: "put",headers:{Authorization:token}}
     return this.request<T>(path, params, { ...reqConfig });
   }
 
   patch<T = D>(path: string, params?: P, reqInit: RequestInit = {}) {
-    let token = window.localStorage.getItem('u_token')
+    const userConifg = JSON.parse(localStorage.getItem('u_config'))
+    const token = userConifg.token
     if(!token) return
     let reqConfig = {...reqInit,method: "patch",headers:{Authorization:token}}
     return this.request<T>(path, params, { ...reqConfig });
   }
 
   del<T = D>(path: string, params?: P, reqInit: RequestInit = {}) {
-    let token = window.localStorage.getItem('u_token')
+    const userConifg = JSON.parse(localStorage.getItem('u_config'))
+    const token = userConifg.token
     if(!token) return
     let reqConfig = {...reqInit,method: "delete",headers:{Authorization:token}}
     return this.request<T>(path, params, { ...reqConfig });
