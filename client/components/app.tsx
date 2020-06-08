@@ -50,10 +50,6 @@ class App extends React.Component {
     render(<App />, App.rootElem);
   };
 
-  async stratConfigStoreLoad() {
-    await configStore.load();
-  }
-
   render() {
     let homeUrl = ''
     const userName = localStorage.getItem('u_userName')
@@ -83,7 +79,7 @@ class App extends React.Component {
                 <Route component={Tekton} {...tektonRoute} />
                 <Route component={CustomResources} {...crdRoute} />
                 <Route component={UserManagement} {...usersManagementRoute} /> */}
-                    <Route component={Apps} {...appsRoute} />
+                <Route component={Apps} {...appsRoute} />
                 <Route component={Tenant} {...tenantRoute} />
                 <Route component={Login} path="/login" />
                 <Redirect exact from="/" to={homeUrl} />

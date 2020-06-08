@@ -16,7 +16,7 @@ import { apiManager } from "../../api/api-manager";
 import { deployStore } from "./deploy.store";
 import { AddDeployDialog } from "./deploy-dialog";
 import { ConfigDeployDialog } from "./config-deploy-dialog";
-import {CopyAddDeployDialog} from "./copy-deploy-dialog";
+import { CopyAddDeployDialog } from "./copy-deploy-dialog";
 
 enum sortBy {
     templateName = "templateName",
@@ -84,10 +84,11 @@ export class Deploys extends React.Component<Props> {
 
                     addRemoveButtons={{
                         addTooltip: <Trans>AddDeployDialog</Trans>,
-                        // onAdd: () => AddDeployDialog.open(),
-                        onAdd: () => CopyAddDeployDialog.open()
+                        onAdd: () => AddDeployDialog.open(),
+                        // onAdd: () => CopyAddDeployDialog.open()
                     }}
                 />
+                {/* <CopyAddDeployDialog /> */}
                 <AddDeployDialog />
                 <CopyAddDeployDialog />
             </MainLayout>

@@ -2,11 +2,11 @@ import React from 'react'
 import axios from 'axios'
 import { Trans } from "@lingui/macro";
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
-import { Form, Input, Button, Checkbox, message,Alert  } from 'antd';
+import { Form, Input, Button, Checkbox, message, Alert } from 'antd';
 import { createStorage } from "../../utils";
 import { configStore } from "../../config.store";
 import { Notifications } from "../notifications";
-import {withRouter,RouteComponentProps } from 'react-router';
+import { withRouter, RouteComponentProps } from 'react-router';
 import './login.scss'
 const layout = {
   labelCol: { span: 0 },
@@ -16,7 +16,7 @@ const tailLayout = {
   wrapperCol: { offset: 0, span: 24 },
 };
 
-interface Props extends RouteComponentProps{
+interface Props extends RouteComponentProps {
   history: any
 }
 
@@ -33,29 +33,33 @@ class LoginComponet extends React.Component<Props, State>{
     }
   }
 
+  async stratConfigStoreLoad() {
+    await configStore.load()
+  }
+
   onFinish = (values: any) => {
     this.setState({ loading: true })
     axios.post('/user-login', values)
       .then((res: any) => {
         configStore.isLoaded = true
         configStore.setConfig(res.data)
-        window.localStorage.setItem('u_token',res.data.token)
-        window.localStorage.setItem('u_userName',res.data.userName)
-        window.localStorage.setItem('u_admin',res.data.isClusterAdmin)
+        window.localStorage.setItem('u_token', res.data.token)
+        window.localStorage.setItem('u_userName', res.data.userName)
+        window.localStorage.setItem('u_admin', res.data.isClusterAdmin)
         Notifications.ok('Login Success')
         const hide = message.loading('Watting..', 2500);
         setTimeout(hide, 2500);
         this.setState({ loading: true })
-        setTimeout(()=>{
-          if(res.data.isClusterAdmin === true){
+        setTimeout(() => {
+          if (res.data.isClusterAdmin === true) {
             this.props.history.push('/cluster')
-            
-          }else{
+          } else {
             this.props.history.push('/workloads')
           }
           this.setState({ loading: false })
-        },1500)
-        
+        }, 1500)
+
+        // this.stratConfigStoreLoad()
       }).catch(err => {
         this.setState({ loading: false })
       })
@@ -112,11 +116,11 @@ class LoginComponet extends React.Component<Props, State>{
 
         </div>
         <div className="footer">
-          <Alert message="Only supports Chrome browser" showIcon type="warning" closable style={{marginTop:'50px'}}/>   
+          <Alert message="Only supports Chrome browser" showIcon type="warning" closable style={{ marginTop: '50px' }} />
         </div>
       </div>
     );
   }
 }
 
-export const Login =  withRouter(LoginComponet);
+export const Login = withRouter(LoginComponet);

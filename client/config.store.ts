@@ -14,7 +14,7 @@ export class ConfigStore {
   readonly buildVersion = BUILD_VERSION;
 
   // auto-update config
-  protected updater = interval(60, this.load);
+  protected updater = interval(5, this.load);
 
   @observable config: Partial<IConfig> = {};
   @observable isLoaded = false;
@@ -24,6 +24,7 @@ export class ConfigStore {
   }
 
   load() {
+    this.updater.start();
     return configApi.getConfig().then((config: any) => {
       this.config = config;
       this.isLoaded = true;
