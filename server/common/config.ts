@@ -8,4 +8,5 @@ export interface IConfig extends Partial<IClusterInfo> {
   isClusterAdmin?: boolean;
   chartsEnabled: boolean;
   kubectlAccess?: boolean;  // User accessed via kubectl-lens plugin
+  defaultNamespace?: string;
 }

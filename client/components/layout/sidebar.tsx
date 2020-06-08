@@ -107,13 +107,6 @@ export class Sidebar extends React.Component<Props> {
                             text={<Trans>Nodes</Trans>}
                             icon={<Icon svg="nodes"/>}
                         />
-                         <SidebarNavItem
-                            id="deploy"
-                            url={deployURL({query})}
-                            routePath={deployRoute.path}
-                            text={<Trans>Deploy</Trans>}
-                            icon={<Icon material="open_in_browser"/>}
-                        />
                         <SidebarNavItem
                             id="workloads"
                             url={workloadsURL({query})}
@@ -121,6 +114,28 @@ export class Sidebar extends React.Component<Props> {
                             subMenus={Workloads.tabRoutes}
                             text={<Trans>Workloads</Trans>}
                             icon={<Icon svg="workloads"/>}
+                        />
+                        <SidebarNavItem
+                            id="deploy"
+                            url={deployURL({query})}
+                            routePath={deployRoute.path}
+                            text={<Trans>Deploy</Trans>}
+                            icon={<Icon material="open_in_browser"/>}
+                        />
+                        <SidebarNavItem
+                            id="tekton"
+                            url={tektonURL({query})}
+                            routePath={tektonRoute.path}
+                            subMenus={Tekton.tabRoutes}
+                            icon={<Icon material="clear_all"/>}
+                            text={<Trans>Tekton</Trans>}
+                        />
+                        <SidebarNavItem
+                            id="events"
+                            url={eventsURL({query})}
+                            routePath={eventRoute.path}
+                            icon={<Icon material="access_time"/>}
+                            text={<Trans>Events</Trans>}
                         />
                         <SidebarNavItem
                             id="config"
@@ -147,25 +162,11 @@ export class Sidebar extends React.Component<Props> {
                             text={<Trans>Storage</Trans>}
                         />
                         <SidebarNavItem
+                            isHidden={!isClusterAdmin}
                             id="namespaces"
                             url={namespacesURL()}
                             icon={<Icon material="layers"/>}
                             text={<Trans>Namespaces</Trans>}
-                        />
-                        <SidebarNavItem
-                            id="events"
-                            url={eventsURL({query})}
-                            routePath={eventRoute.path}
-                            icon={<Icon material="access_time"/>}
-                            text={<Trans>Events</Trans>}
-                        />
-                        <SidebarNavItem
-                            id="tekton"
-                            url={tektonURL({query})}
-                            routePath={tektonRoute.path}
-                            subMenus={Tekton.tabRoutes}
-                            icon={<Icon material="clear_all"/>}
-                            text={<Trans>Tekton</Trans>}
                         />
                         <SidebarNavItem
                             isHidden={!isClusterAdmin}

@@ -5,7 +5,12 @@ import { IConfig } from "../server/common/config";
 import { IClientVars } from "../server/config";
 import { configApi } from "./api/endpoints/config.api";
 
-const { IS_PRODUCTION, API_PREFIX, LOCAL_SERVER_PORT, BUILD_VERSION } = process.env as any as IClientVars;
+const {
+  IS_PRODUCTION,
+  API_PREFIX,
+  LOCAL_SERVER_PORT,
+  BUILD_VERSION,
+} = (process.env as any) as IClientVars;
 
 @autobind()
 export class ConfigStore {
@@ -22,7 +27,6 @@ export class ConfigStore {
   constructor() {
     // this.updater.start();
   }
-  
 
   load() {
     this.updater.start();
@@ -58,8 +62,12 @@ export class ConfigStore {
     return this.config.isClusterAdmin;
   }
 
+  public getDefaultNamespace(): string {
+    return this.config.defaultNamespace;
+  }
+
   public getAllowedNamespaces() {
-    return this.config.allowedNamespaces
+    return this.config.allowedNamespaces;
   }
 
   @action

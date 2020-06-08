@@ -33,7 +33,7 @@ export class NamespaceSelect extends React.Component<Props> {
   private unsubscribe = noop;
 
   async componentDidMount() {
-    if (!namespaceStore.isLoaded) await namespaceStore.loadAll();
+    if (true) await namespaceStore.loadAll();
     this.unsubscribe = namespaceStore.subscribe();
   }
 
