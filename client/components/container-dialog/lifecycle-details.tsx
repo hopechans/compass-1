@@ -62,13 +62,6 @@ export class LifeCycleDetails extends React.Component<LifeCycleProps> {
         );
     }
 
-    @autobind()
-    onChange(value: string[], meta: ActionMeta) {
-        if (this.props.onChange) {
-            this.props.onChange(this.value, meta);
-        }
-    }
-
     render() {
         return (
             <>
@@ -92,6 +85,7 @@ export class LifeCycleDetails extends React.Component<LifeCycleProps> {
                             {
                                 this.value.postStart.type == "HTTP" ?
                                     <>
+                                        <br/>
                                         <Row>
                                             <Col span="10">
                                                 <SubTitle title={<Trans>HTTP</Trans>}/>
@@ -139,6 +133,7 @@ export class LifeCycleDetails extends React.Component<LifeCycleProps> {
                                         />
                                     </> : <></>
                             }
+                            <br/>
                             <SubTitle title={<Trans>preStop</Trans>}/>
                             <Select
                                 formatOptionLabel={this.formatOptionLabel}
@@ -149,6 +144,7 @@ export class LifeCycleDetails extends React.Component<LifeCycleProps> {
                             {
                                 this.value.preStop.type == "HTTP" ?
                                     <>
+                                        <br/>
                                         <Row>
                                             <Col span="10">
                                                 <SubTitle title={<Trans>HTTP</Trans>}/>
