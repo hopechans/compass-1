@@ -2,7 +2,6 @@ import {ActionMeta} from "react-select/src/types";
 import {observer} from "mobx-react";
 import React from "react";
 import {observable} from "mobx";
-import {autobind} from "../../utils";
 import {SubTitle} from "../layout/sub-title";
 import {Icon} from "../icon";
 import {_i18n} from "../../i18n";
@@ -12,37 +11,22 @@ import {Input} from "../input";
 import {Checkbox} from "../checkbox";
 import {isNumber} from "../input/input.validators";
 import {Select, SelectOption} from "../select";
-import {LifeCycle} from "./common";
-import { Divider } from 'antd';
+import {lifeCycle, LifeCycle} from "./common";
+import {Divider} from 'antd';
 
 
-export interface LifeCycleProps<T = any> extends Partial<LifeCycleProps> {
+interface Props<T = any> extends Partial<Props> {
     value?: T;
     themeName?: "dark" | "light" | "outlined";
-    divider?:true;
+    divider?: true;
+
     onChange?(option: T, meta?: ActionMeta): void;
 }
 
 @observer
-export class LifeCycleDetails extends React.Component<LifeCycleProps> {
+export class LifeCycleDetails extends React.Component<Props> {
 
-    @observable value: LifeCycle = this.props.value || {
-        status: false,
-        postStart: {
-            type: "HTTP",
-            httpPort: "8080",
-            url: "",
-            tcpPort: "0",
-            command: "",
-        },
-        preStop: {
-            type: "HTTP",
-            httpPort: "8080",
-            url: "",
-            tcpPort: "0",
-            command: "",
-        }
-    };
+    @observable value: LifeCycle = this.props.value || lifeCycle
 
     get selectOptions() {
         return [
@@ -65,7 +49,7 @@ export class LifeCycleDetails extends React.Component<LifeCycleProps> {
     render() {
         return (
             <>
-                {this.props.divider?<Divider />: <></>}
+                {this.props.divider ? <Divider/> : <></>}
                 <Checkbox
                     theme="light"
                     label={<Trans>Lifecycle</Trans>}

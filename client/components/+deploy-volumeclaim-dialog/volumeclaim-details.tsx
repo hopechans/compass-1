@@ -1,7 +1,7 @@
 import {observer} from "mobx-react";
 import React from "react";
 import {observable} from "mobx";
-import {annotations, VolumeClaimTemplate} from "./common";
+import {volumeClaim, VolumeClaimTemplate} from "./common";
 import {ActionMeta} from "react-select/src/types";
 import {Checkbox} from "../checkbox";
 import {t, Trans} from "@lingui/macro";
@@ -21,22 +21,7 @@ export interface VolumeClaimProps<T =any> extends Partial<VolumeClaimProps> {
 export class VolumeClaimDetails extends React.Component<VolumeClaimProps> {
 
 
-    @observable value: VolumeClaimTemplate = this.props.value ||  {
-        metadata: {
-            isUseDefaultStorageClass: true,
-            name: "",
-            annotations: annotations()
-        },
-        spec: {
-            accessModes: [ "ReadWriteOnce" ],
-            storageClassName: "default-storage-class",
-            resources: {
-                requests: {
-                    storage: "200",
-                }
-            }
-        }
-    }
+    @observable value: VolumeClaimTemplate = this.props.value || volumeClaim
 
     render() {
         return (

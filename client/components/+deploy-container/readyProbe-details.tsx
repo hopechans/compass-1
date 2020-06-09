@@ -2,7 +2,6 @@ import {ActionMeta} from "react-select/src/types";
 import {observer} from "mobx-react";
 import React from "react";
 import {observable} from "mobx";
-import {autobind} from "../../utils";
 import {SubTitle} from "../layout/sub-title";
 import {Icon} from "../icon";
 import {_i18n} from "../../i18n";
@@ -12,33 +11,21 @@ import {Input} from "../input";
 import {Checkbox} from "../checkbox";
 import {isNumber} from "../input/input.validators";
 import {Select, SelectOption} from "../select";
-import {Probe} from "./common";
-import { Divider } from 'antd';
+import {Probe, readyProbe} from "./common";
+import {Divider} from 'antd';
 
-export interface ReadyProbeProps<T = any> extends Partial<ReadyProbeProps> {
+interface Props<T = any> extends Partial<Props> {
     value?: T;
     themeName?: "dark" | "light" | "outlined";
     divider?: true;
+
     onChange?(option: T, meta?: ActionMeta): void;
 }
 
 @observer
-export class ReadyProbeDetails extends React.Component<ReadyProbeProps> {
+export class ReadyProbeDetails extends React.Component<Props> {
 
-    @observable value: Probe = this.props.value || {
-        status: false,
-        timeout: "0",
-        cycle: "0",
-        retryCount: "0",
-        delay: "0",
-        pattern: {
-            type: "HTTP",
-            httpPort: "8080",
-            url: "",
-            tcpPort: "0",
-            command: "",
-        }
-    };
+    @observable value: Probe = this.props.value || readyProbe;
 
     get selectOptions() {
         return [
@@ -61,7 +48,7 @@ export class ReadyProbeDetails extends React.Component<ReadyProbeProps> {
     render() {
         return (
             <>
-                {this.props.divider?<Divider />: <></>}
+                {this.props.divider ? <Divider/> : <></>}
                 <Checkbox
                     theme="light"
                     label={<Trans>Readiness Probe</Trans>}

@@ -10,19 +10,20 @@ import {_i18n} from "../../i18n";
 import {isNumber} from "../input/input.validators";
 import {Col, Row} from "antd";
 import {ActionMeta} from "react-select/src/types";
-import {Base} from "./common";
+import {base, Base} from "./common";
 
-export interface BaseProps<T =any> extends Partial<BaseProps> {
+interface Props<T = any> extends Partial<Props> {
     value?: T;
     themeName?: "dark" | "light" | "outlined";
-    divider?:true;
+    divider?: true;
+
     onChange?(option: T, meta?: ActionMeta): void;
 }
 
 @observer
-export class BaseDetails extends React.Component<BaseProps> {
+export class BaseDetails extends React.Component<Props> {
 
-    @observable value: Base = this.props.value
+    @observable value: Base = this.props.value || base
 
     formatOptionLabel = (option: SelectOption) => {
         const {value, label} = option;

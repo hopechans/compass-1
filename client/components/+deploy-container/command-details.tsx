@@ -9,9 +9,9 @@ import {Input} from "../input";
 import {observable} from "mobx";
 import {Col, Row} from "antd";
 import { Divider } from 'antd';
+import {commands} from "./common";
 
-
-export interface CommandProps<T =any> extends Partial<CommandProps> {
+interface Props<T =any> extends Partial<Props> {
     value?: T;
     themeName?: "dark" | "light" | "outlined";
     divider?:true;
@@ -19,9 +19,9 @@ export interface CommandProps<T =any> extends Partial<CommandProps> {
 }
 
 @observer
-export class CommandDetails extends React.Component<CommandProps> {
+export class CommandDetails extends React.Component<Props> {
 
-    @observable value: string[] = this.props.value || [];
+    @observable value: string[] = this.props.value || commands;
 
     add = () => {
         this.value.push("");
