@@ -302,6 +302,7 @@ module.exports = {
         "Note: StatefulSet Volumes won't be deleted automatically": "Note: StatefulSet Volumes won't be deleted automatically",
         "Notes": "Notes",
         "Number of running Pods": "Number of running Pods",
+        "OVN Config":"OVN 配置",
         "OS": "OS",
         "OS Image": "OS Image",
         "Object": "Object",
