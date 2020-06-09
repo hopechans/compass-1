@@ -1,9 +1,7 @@
 import React from "react";
 import {observer} from "mobx-react";
-import {Select, SelectOption, SelectProps} from "../select";
 import {ActionMeta} from "react-select/src/types";
 import {themeStore} from "../../theme.store";
-import {autobind} from "../../utils";
 import {EnvironmentDetails} from "./env-details";
 import {BaseDetails} from "./base-details";
 import {CommandDetails} from "./command-details";
@@ -27,7 +25,7 @@ export interface ContainerProps<T = any> extends Partial<ContainerProps> {
     readyProbe?: boolean;
     liveProbe?: boolean;
     lifeCycle?: boolean;
-    divider?:true;
+    divider?: true;
 }
 
 @observer
@@ -36,8 +34,8 @@ export class ContainerDetails extends React.Component<ContainerProps> {
     private theme = this.props.themeName || themeStore.activeTheme.type;
     private divider = this.props.divider;
 
-    @observable base: Base = this.props.value.base || {
-        name:  "default",
+    base: Base = {
+        name: "default",
         image: "app:latest",
         imagePullPolicy: "IfNotPresent",
         resource: {
@@ -51,10 +49,10 @@ export class ContainerDetails extends React.Component<ContainerProps> {
             }
         }
     };
-    @observable commands: string[] = this.props.value.commands || [];
-    @observable args: string[] = this.props.value.args || [];
-    @observable environment: Environment[] = this.props.value.environment || [];
-    @observable readyProbe: Probe = this.props.value.readyProbe || {
+    commands: string[] = [];
+    args: string[] = [];
+    environment: Environment[] = [];
+    readyProbe: Probe = {
         status: false,
         timeout: "",
         cycle: "",
@@ -68,7 +66,7 @@ export class ContainerDetails extends React.Component<ContainerProps> {
             command: "",
         }
     };
-    @observable liveProbe: Probe = this.props.value.liveProbe || {
+    liveProbe: Probe = {
         status: false,
         timeout: "",
         cycle: "",
@@ -82,7 +80,7 @@ export class ContainerDetails extends React.Component<ContainerProps> {
             command: "",
         }
     };
-    @observable lifeCycle: LifeCycle = this.props.value.lifeCycle || {
+    lifeCycle: LifeCycle = {
         status: false,
         postStart: {
             type: "HTTP",
@@ -101,22 +99,13 @@ export class ContainerDetails extends React.Component<ContainerProps> {
     };
 
     @observable value = this.props.value || {
-        name: this.base.name ,
-        image: this.base.image,
-        imagePullPolicy: this.base.imagePullPolicy,
-        resource: this.base.resource,
+        base: this.base,
         commands: this.commands,
-        oneEnvConfig: this.environment.map(item => item.oneEnvConfig),
+        args: this.args,
+        oneEnvConfig: this.environment,
         readyProbe: this.readyProbe,
         liveProbe: this.liveProbe,
         lifeCycle: this.lifeCycle
-    }
-
-    @autobind()
-    onChange(meta: ActionMeta) {
-        if (this.props.onChange) {
-            this.props.onChange(this.value, meta);
-        }
     }
 
     render() {
@@ -127,60 +116,62 @@ export class ContainerDetails extends React.Component<ContainerProps> {
                 {base ?
                     <BaseDetails
                         themeName={this.theme}
-                        value={this.base}
-                        onChange={(value) => {console.log(value)}}
+                        value={this.value.base}
+                        onChange={(value) => {
+                            this.value.base = value
+                        }}
                     /> : <></>
                 }
 
                 {commands ?
                     <CommandDetails
                         themeName={this.theme}
-                        value={this.commands}
+                        value={this.value.commands}
                         divider={this.divider}
-                        onChange={(value) => this.commands = value}
+                        onChange={(value) => this.value.commands = value}
                     /> : <></>
                 }
 
                 {args ?
                     <ArgsDetails
                         themeName={this.theme}
-                        value={this.args}
+                        value={this.value.args}
                         divider={this.divider}
-                        onChange={(value) => this.args = value}
+                        onChange={(value) => this.value.args = value}
                     /> : <></>
                 }
 
                 {environment ?
                     <EnvironmentDetails
                         themeName={this.theme}
-                        value={this.environment}
+                        value={this.value.environment}
                         divider={this.divider}
-                        onChange={(value) => this.environment = value}
+                        onChange={(value) => this.value.environment = value}
                     /> : <></>
                 }
 
                 {readyProbe ?
                     <ReadyProbeDetails
                         themeName={this.theme}
-                        value={this.readyProbe}
+                        value={this.value.readyProbe}
                         divider={this.divider}
-                        onChange={(value) => this.readyProbe = value}
+                        onChange={(value) => this.value.readyProbe = value}
                     /> : <></>
                 }
                 {liveProbe ?
                     <LiveProbeDetails
                         themeName={this.theme}
-                        value={this.liveProbe}
+                        value={this.value.liveProbe}
                         divider={this.divider}
-                        onChange={(value) => this.liveProbe = value}
+                        onChange={(value) => this.value.liveProbe = value}
                     /> : <></>
                 }
                 {lifeCycle ?
                     <LifeCycleDetails
                         themeName={this.theme}
-                        value={this.lifeCycle}
+                        value={this.value.lifeCycle}
                         divider={this.divider}
-                        onChange={(value) => this.lifeCycle = value}
+                        onChange={(value) => this.value.lifeCycle = value}
                     /> : <></>
                 }
             </>

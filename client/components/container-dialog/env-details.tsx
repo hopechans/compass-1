@@ -55,13 +55,6 @@ export class EnvironmentDetails extends React.Component<EnvironmentProps> {
         this.value.splice(index, 1);
     }
 
-    @autobind()
-    onChange(value: any, meta: ActionMeta) {
-        if (this.props.onChange) {
-            this.props.onChange(value, meta);
-        }
-    }
-
     render() {
         return (
             <>

@@ -58,13 +58,6 @@ export class ReadyProbeDetails extends React.Component<ReadyProbeProps> {
         );
     }
 
-    @autobind()
-    onChange(value: string[], meta: ActionMeta) {
-        if (this.props.onChange) {
-            this.props.onChange(this.value, meta);
-        }
-    }
-
     render() {
         return (
             <>
@@ -116,6 +109,7 @@ export class ReadyProbeDetails extends React.Component<ReadyProbeProps> {
                                     />
                                 </Col>
                             </Row>
+                            <br/>
                             <Select
                                 formatOptionLabel={this.formatOptionLabel}
                                 options={this.selectOptions}
@@ -125,6 +119,7 @@ export class ReadyProbeDetails extends React.Component<ReadyProbeProps> {
                             {
                                 this.value.pattern.type == "HTTP" ?
                                     <>
+                                        <br/>
                                         <Row>
                                             <Col span="10">
                                                 <SubTitle title={<Trans>HTTP</Trans>}/>

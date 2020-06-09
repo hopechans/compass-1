@@ -32,13 +32,6 @@ export class ArgsDetails extends React.Component<ArgsProps> {
         this.value.splice(index, 1);
     }
 
-    @autobind()
-    onChange(value: string[], meta: ActionMeta) {
-        if (this.props.onChange) {
-            this.props.onChange(this.value, meta);
-        }
-    }
-
     render() {
         return (
             <>
