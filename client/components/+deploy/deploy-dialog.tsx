@@ -626,7 +626,7 @@ export class AddDeployDialog extends React.Component<Props, State>{
       );
       // label the resource labels
       newDeploy.metadata.labels = { namespace: configStore.getDefaultNamespace() }
-      await deployApi.update({ name: deployName, namespace: newDeploy.metadata.namespace }, { ...newDeploy });
+      await deployStore.update(newDeploy, { ...newDeploy });
       showDetails(newDeploy.selfLink);
       this.close();
     } catch (err) {
