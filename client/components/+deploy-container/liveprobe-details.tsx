@@ -24,7 +24,7 @@ interface Props<T = any> extends Partial<Props> {
 }
 
 @observer
-export class LiveProbeDetails extends React.Component<Props> {
+export class LiveprobeDetails extends React.Component<Props> {
 
     @observable value: Probe = this.props.value || liveProbe
 

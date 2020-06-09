@@ -23,7 +23,7 @@ interface Props<T = any> extends Partial<Props> {
 }
 
 @observer
-export class ReadyProbeDetails extends React.Component<Props> {
+export class ReadyprobeDetails extends React.Component<Props> {
 
     @observable value: Probe = this.props.value || readyProbe;
 

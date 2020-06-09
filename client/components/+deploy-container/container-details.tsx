@@ -5,8 +5,8 @@ import {themeStore} from "../../theme.store";
 import {EnvironmentDetails} from "./env-details";
 import {BaseDetails} from "./base-details";
 import {CommandDetails} from "./command-details";
-import {ReadyProbeDetails} from "./readyProbe-details"
-import {LiveProbeDetails} from "./liveProbe-details";
+import {ReadyprobeDetails} from "./readyprobe-details"
+import {LiveprobeDetails} from "./liveprobe-details";
 import {LifeCycleDetails} from "./lifecycle-details";
 import {ArgsDetails} from "./args-details";
 import {observable} from "mobx";
@@ -60,12 +60,12 @@ export class ContainerDetails extends React.Component<Props> {
                     onChange={ (value) => this.value.environment = value }
                 /> : <></>}
 
-                {readyProbe ? <ReadyProbeDetails
+                {readyProbe ? <ReadyprobeDetails
                     themeName={this.theme} value={this.value.readyProbe} divider={this.divider}
                     onChange={ (value) => this.value.readyProbe = value }
                 /> : <></>}
 
-                {liveProbe ? <LiveProbeDetails
+                {liveProbe ? <LiveprobeDetails
                     themeName={this.theme} value={this.value.liveProbe} divider={this.divider}
                     onChange={ (value) => this.value.liveProbe = value }
                 /> : <></>}
