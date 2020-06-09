@@ -29,7 +29,7 @@ interface Props<T = any> extends Partial<Props> {
 @observer
 export class MultiContainerDetails extends React.Component<Props> {
 
-    @observable value: Container[] = [];
+    @observable value: Container[] = this.props.value || [container];
 
     add() {
         this.value.push(container);
@@ -86,9 +86,7 @@ export class MultiContainerDetails extends React.Component<Props> {
                                     lifeCycle={true}
                                     divider={true}
                                     value={this.value[index]}
-                                    onChange={(value: any) => {
-                                        this.value[index] = value
-                                    }}
+                                    onChange={(value: any) => { this.value[index] = value }}
                                 />
                             </Panel>
                         )
