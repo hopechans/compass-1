@@ -10,7 +10,6 @@ import {_i18n} from "../../i18n";
 import {isNumber} from "../input/input.validators";
 import {Col, Row} from "antd";
 import {ActionMeta} from "react-select/src/types";
-import {autobind} from "../../utils";
 import {Base} from "./common";
 
 export interface BaseProps<T =any> extends Partial<BaseProps> {
@@ -23,28 +22,7 @@ export interface BaseProps<T =any> extends Partial<BaseProps> {
 @observer
 export class BaseDetails extends React.Component<BaseProps> {
 
-    @observable value: Base = this.props.value || {
-        name:  "default",
-        image: "app:latest",
-        imagePullPolicy: "IfNotPresent",
-        resource: {
-            limits: {
-                cpu: "0.3",
-                memory: "170",
-            },
-            requests: {
-                cpu: "0.1",
-                memory: "30"
-            }
-        }
-    };
-
-    @autobind()
-    onChange(meta: ActionMeta) {
-        if (this.props.onChange) {
-            this.props.onChange(this.value, meta);
-        }
-    }
+    @observable value: Base = this.props.value
 
     formatOptionLabel = (option: SelectOption) => {
         const {value, label} = option;
@@ -86,6 +64,7 @@ export class BaseDetails extends React.Component<BaseProps> {
                     value={this.value.imagePullPolicy}
                     onChange={value => this.value.imagePullPolicy = value}
                 />
+                <br/>
                 <Row justify="space-between">
                     <Col span="10">
                         <SubTitle title={<Trans>Limit CPU</Trans>}/>

@@ -8,7 +8,6 @@ import {t, Trans} from "@lingui/macro";
 import {Input} from "../input";
 import {observable} from "mobx";
 import {Col, Row} from "antd";
-import {autobind} from "../../utils";
 import { Divider } from 'antd';
 
 
@@ -30,13 +29,6 @@ export class CommandDetails extends React.Component<CommandProps> {
 
     remove = (index: number) => {
         this.value.splice(index, 1);
-    }
-
-    @autobind()
-    onChange(value: string[], meta: ActionMeta) {
-        if (this.props.onChange) {
-            this.props.onChange(this.value, meta);
-        }
     }
 
     render() {
