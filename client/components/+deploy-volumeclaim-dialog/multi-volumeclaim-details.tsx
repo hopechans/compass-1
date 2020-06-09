@@ -1,19 +1,16 @@
 import {observer} from "mobx-react";
 import React from "react";
 import {observable} from "mobx";
-import {annotations, VolumeClaimTemplate} from "./common";
-import {Checkbox} from "../checkbox";
-import {number, t, Trans} from "@lingui/macro";
-import {SubTitle} from "../layout/sub-title";
-import {Input} from "../input";
-import {_i18n} from "../../i18n";
-import {isNumber} from "../input/input.validators";
 import {ActionMeta} from "react-select/src/types";
 import {Button} from "../button";
-import {Collapse, Popconfirm} from "antd";
-const {Panel} = Collapse;
-import {DeleteOutlined} from '@ant-design/icons';
 import {VolumeClaimDetails} from "./volumeclaim-details";
+import {DeleteOutlined} from '@ant-design/icons';
+import {Collapse, Popconfirm} from "antd";
+
+const {Panel} = Collapse;
+
+
+import {volumeClaim, VolumeClaimTemplate} from "./common";
 
 
 export interface VolumeClaimTemplateProps<T = any> extends Partial<VolumeClaimTemplateProps> {
@@ -25,45 +22,17 @@ export interface VolumeClaimTemplateProps<T = any> extends Partial<VolumeClaimTe
 }
 
 @observer
-export class VolumeClaimTemplateDetails extends React.Component<VolumeClaimTemplateProps> {
+export class MultiVolumeClaimDetails extends React.Component<VolumeClaimTemplateProps> {
 
 
-    @observable value: VolumeClaimTemplate[] = this.props.value || [{
-        metadata: {
-            isUseDefaultStorageClass: true,
-            name: "",
-            annotations: annotations()
-        },
-        spec: {
-            accessModes: ["ReadWriteOnce"],
-            storageClassName: "default-storage-class",
-            resources: {
-                requests: {
-                    storage: "200",
-                }
-            }
-        }
-    }]
+    @observable value: VolumeClaimTemplate[] = this.props.value || [volumeClaim]
 
     add = () => {
-        this.value.push(
-            {
-                metadata: {
-                    isUseDefaultStorageClass: true,
-                    name: "",
-                    annotations: annotations()
-                },
-                spec: {
-                    accessModes: ["ReadWriteOnce"],
-                    storageClassName: "default-storage-class",
-                    resources: {
-                        requests: {
-                            storage: "200",
-                        }
-                    }
-                }
-            }
-        )
+        this.value.push(volumeClaim)
+    }
+
+    remove = (index: number) => {
+        this.value.splice(index, 1)
     }
 
     render() {
@@ -73,9 +42,9 @@ export class VolumeClaimTemplateDetails extends React.Component<VolumeClaimTempl
                 <Popconfirm
                     title="Confirm Delete?"
                     onConfirm={(event: any) => {
-                        event.preventDefault()
-                        event.stopPropagation()
-                        this.value.splice(index, 1)
+                        event.preventDefault();
+                        event.stopPropagation();
+                        this.remove(index);
                     }}
                     onCancel={(event: any) => {
                         event.preventDefault();

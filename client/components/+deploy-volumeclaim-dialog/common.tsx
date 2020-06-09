@@ -1,49 +1,3 @@
-
-export interface Limitation {
-    cpu: string;
-    memory: string;
-}
-
-export interface Resource {
-    limits: Limitation;
-    requests: Limitation;
-}
-
-export interface Base {
-    name: string,
-    image: string,
-    imagePullPolicy: string,
-    resource: Resource
-}
-
-export interface Environment {
-    type: string
-    oneEnvConfig: any
-}
-
-export interface Pattern {
-    type: string;
-    httpPort: string;
-    url: string;
-    tcpPort: string;
-    command: string;
-}
-
-export interface LifeCycle {
-    status: boolean
-    postStart: Pattern
-    preStop: Pattern
-}
-
-export interface Probe {
-    status: boolean;
-    timeout: string;
-    cycle: string
-    retryCount: string;
-    delay: string;
-    pattern?: Pattern;
-}
-
 export interface VolumeClaimTemplateMetadata {
     isUseDefaultStorageClass: boolean;
     name: string;
@@ -59,10 +13,7 @@ export interface VolumeClaimTemplateMetadata {
 }
 
 export interface VolumeClaimTemplateSpecResourcesRequests {
-    storage: number | string;
-    accessModes: string[];
-    storageClassName: string;
-    resources: any;
+    storage: string;
 
     // constructor() {
     //     this.storage = '200Mi';
@@ -89,6 +40,7 @@ export interface VolumeClaimTemplateSpecResources {
 
 export interface VolumeClaimTemplateSpec {
     accessModes: string[];
+    storageClassName: string;
     resources: VolumeClaimTemplateSpecResources;
 }
 
@@ -100,4 +52,28 @@ export interface VolumeClaimTemplate {
 export interface VolumeClaimTemplates {
     status: boolean;
     volumeClaimTemplates: Array<VolumeClaimTemplate>;
+}
+
+
+export function annotations() {
+    let map = new Map()
+    map.set("volume.alpha.kubernetes.io/storage-class", "default")
+    return map
+}
+
+export const volumeClaim: VolumeClaimTemplate = {
+    metadata: {
+        isUseDefaultStorageClass: true,
+        name: "",
+        annotations: annotations()
+    },
+    spec: {
+        accessModes: ["ReadWriteOnce"],
+        storageClassName: "default-storage-class",
+        resources: {
+            requests: {
+                storage: "200",
+            }
+        }
+    }
 }

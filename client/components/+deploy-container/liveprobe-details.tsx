@@ -12,33 +12,21 @@ import {Input} from "../input";
 import {Checkbox} from "../checkbox";
 import {isNumber} from "../input/input.validators";
 import {Select, SelectOption} from "../select";
-import {Probe} from "./common";
-import { Divider } from 'antd';
+import {liveProbe, Probe} from "./common";
+import {Divider} from 'antd';
 
-export interface LiveProbeProps<T = any> extends Partial<LiveProbeProps> {
+interface Props<T = any> extends Partial<Props> {
     value?: T;
     themeName?: "dark" | "light" | "outlined";
-    divider?:true
+    divider?: true
+
     onChange?(option: T, meta?: ActionMeta): void;
 }
 
 @observer
-export class LiveProbeDetails extends React.Component<LiveProbeProps> {
+export class LiveprobeDetails extends React.Component<Props> {
 
-    @observable value: Probe = this.props.value || {
-        status: false,
-        timeout: "0",
-        cycle: "0",
-        retryCount: "0",
-        delay: "0",
-        pattern: {
-            type: "HTTP",
-            httpPort: "8080",
-            url: "",
-            tcpPort: "0",
-            command: "",
-        }
-    };
+    @observable value: Probe = this.props.value || liveProbe
 
     get selectOptions() {
         return [
@@ -61,7 +49,7 @@ export class LiveProbeDetails extends React.Component<LiveProbeProps> {
     render() {
         return (
             <>
-                {this.props.divider?<Divider />: <></>}
+                {this.props.divider ? <Divider/> : <></>}
                 <Checkbox
                     theme="light"
                     label={<Trans>Liveness Probe</Trans>}
