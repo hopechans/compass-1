@@ -79,12 +79,12 @@ export class Deploys extends React.Component<Props> {
 
                     addRemoveButtons={{
                         addTooltip: <Trans>AddDeployDialog</Trans>,
-                        onAdd: () => AddDeployDialog.open(),
-                        // onAdd: () => CopyAddDeployDialog.open()
+                        // onAdd: () => AddDeployDialog.open(),
+                        onAdd: () => CopyAddDeployDialog.open()
                     }}
                 />
-                {/* <CopyAddDeployDialog /> */}
-                <AddDeployDialog />
+                <CopyAddDeployDialog />
+                {/* <AddDeployDialog /> */}
                 <ConfigDeployDialog />
             </MainLayout>
         )
