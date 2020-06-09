@@ -2,7 +2,7 @@ import React from "react";
 import {observer} from "mobx-react";
 import {Dialog, DialogProps} from "../dialog";
 import {observable} from "mobx";
-import {TenantRole, tenantRoleApi} from "../../api/endpoints";
+import {Namespace, TenantRole, tenantRoleApi} from "../../api/endpoints";
 import {Wizard, WizardStep} from "../wizard";
 import {t, Trans} from "@lingui/macro";
 import {SubTitle} from "../layout/sub-title";

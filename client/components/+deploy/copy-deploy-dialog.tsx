@@ -6,10 +6,9 @@ import {Dialog, DialogProps} from "../dialog";
 import {observable} from "mobx";
 import {number, t, Trans} from "@lingui/macro";
 import {Wizard, WizardStep} from "../wizard";
-import {Container, container} from "../+deploy-container";
+import {Container, container, MultiContainerDetails} from "../+deploy-container";
 import {Collapse} from "antd";
 import {deployService, DeployServiceDetails, Service} from "../+deploy-service";
-import {MultiContainerDetails} from "../+deploy-container/multi-container-details";
 import {MultiVolumeClaimDetails, VolumeClaimTemplate} from "../+deploy-volumeclaim-dialog";
 import {app, App} from "../+deploy-app";
 import {AppDetails} from "../+deploy-app";
@@ -60,7 +59,7 @@ export class CopyAddDeployDialog extends React.Component<Props> {
                 close={this.close}
             >
                 <Wizard className="CopyAddDeployDialog" header={header} done={this.close}>
-                    <WizardStep contentClass="flex gaps column">
+                    <WizardStep contentClass="flex gaps column" done={this.addDeployDialog}>
                         <div className="init-form">
                             <Collapse defaultActiveKey={'App'}>
                                 <Panel header={`App`} key="App">
