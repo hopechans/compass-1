@@ -110,7 +110,7 @@ export class ConfigDepartmentDialog extends React.Component<Props> {
                             />
                         </div>
                         <div className="default_namespace">
-                            <SubTitle title={<Trans>Namespace</Trans>}/>
+                            <SubTitle title={<Trans>Default Namespace</Trans>}/>
                             <Select
                                 value={this.defaultNamespace}
                                 placeholder={_i18n._(t`Default Namespace`)}
