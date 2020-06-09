@@ -44,6 +44,7 @@ export class AddDepartmentDialog extends React.Component<Props> {
 
     reset = () => {
         this.name = "";
+        this.defaultNamespace = "";
         this.namespaces.replace([]);
     }
 
