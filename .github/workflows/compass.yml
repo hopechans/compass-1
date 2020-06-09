@@ -4,34 +4,33 @@ on:
     branches:
       - master
     paths-ignore:
-      - '**.md'
+      - "**.md"
   pull_request:
     paths-ignore:
-      - '**.md'
+      - "**.md"
 
 jobs:
-
   build:
     name: Build
 
     strategy:
       matrix:
-        runs-on: [ubuntu-latest, macOS-latest, windows-latest]
+        runs-on: [ubuntu-latest, macOS-latest]
       fail-fast: false
 
     runs-on: ${{ matrix.runs-on }}
 
     steps:
-    - name: Checkout
-      uses: actions/checkout@v2
+      - name: Checkout
+        uses: actions/checkout@v2
 
-    - name: Set Node.js 12.x
-      uses: actions/setup-node@v1
-      with:
-        node-version: 12.x
+      - name: Set Node.js 12.x
+        uses: actions/setup-node@v1
+        with:
+          node-version: 12.x
 
-    - name: yarn install
-      run: yarn install
+      - name: yarn install
+        run: yarn install
 
-    - name: yarn build
-      run: npm run build
+      - name: yarn build
+        run: npm run build
