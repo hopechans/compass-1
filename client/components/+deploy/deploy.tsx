@@ -21,6 +21,7 @@ import { CopyAddDeployDialog } from "./copy-deploy-dialog";
 enum sortBy {
     templateName = "templateName",
     appName = "appName",
+    ownerNamespace = "ownerNamespace",
     resourceType = "resourceType",
     generateTimestamp = "generateTimestamp",
     age = "age",
@@ -40,6 +41,7 @@ export class Deploys extends React.Component<Props> {
                     sortingCallbacks={{
                         [sortBy.templateName]: (deploy: Deploy) => deploy.getName(),
                         [sortBy.appName]: (deploy: Deploy) => deploy.getAppName(),
+                        [sortBy.ownerNamespace]: (deploy: Deploy) => deploy.getOwnerNamespace(),
                         [sortBy.resourceType]: (deploy: Deploy) => deploy.getResourceType(),
                         [sortBy.generateTimestamp]: (deploy: Deploy) => deploy.getGenerateTimestamp(),
                         [sortBy.age]: (deploy: Deploy) => deploy.getAge(false),
@@ -56,24 +58,17 @@ export class Deploys extends React.Component<Props> {
                         [
                             { title: <Trans>AppName</Trans>, className: "appName", sortBy: sortBy.appName },
                             { title: <Trans>TemplateName</Trans>, className: "template", sortBy: sortBy.templateName },
-                            {
-                                title: <Trans>ResourceType</Trans>,
-                                className: "resourceType",
-                                sortBy: sortBy.resourceType
-                            },
-                            {
-                                title: <Trans>GenerateTimestamp</Trans>,
-                                className: "generateTimestamp",
-                                sortBy: sortBy.generateTimestamp
-                            },
+                            { title: <Trans>OwnerNamespace</Trans>, className: "OwnerNamespace", sortBy: sortBy.ownerNamespace },
+                            {title: <Trans>ResourceType</Trans>,className: "resourceType",sortBy: sortBy.resourceType},
+                            {title: <Trans>GenerateTimestamp</Trans>,className: "generateTimestamp",sortBy: sortBy.generateTimestamp},
                             { title: <Trans>Age</Trans>, className: "age", sortBy: sortBy.age },
                         ]}
 
                     renderTableContents={(deploy: Deploy) => [
                         deploy.getAppName(),
                         deploy.getName(),
+                        deploy.getOwnerNamespace(),
                         deploy.getResourceType(),
-                        // new Date( * 1e3).toISOString(),
                         deploy.getGenerateTimestamp(),
                         deploy.getAge(),
                     ]}

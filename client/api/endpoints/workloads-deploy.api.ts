@@ -14,6 +14,10 @@ export class Deploy extends WorkloadKubeObject {
     }
     status: {}
 
+    getOwnerNamespace(): string {
+        return get(this, "metadata.labels.namespace")
+    }
+
     getAppName() {
         return get(this, "spec.appName")
     }
