@@ -13,6 +13,7 @@ export class TenantUser extends KubeObject {
         display: string,
         email: string,
         password: string
+        roles?: string[]
     }
 }
 

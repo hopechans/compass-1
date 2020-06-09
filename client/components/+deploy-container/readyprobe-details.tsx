@@ -2,43 +2,30 @@ import {ActionMeta} from "react-select/src/types";
 import {observer} from "mobx-react";
 import React from "react";
 import {observable} from "mobx";
-import {autobind} from "../../utils";
 import {SubTitle} from "../layout/sub-title";
 import {Icon} from "../icon";
 import {_i18n} from "../../i18n";
-import {number, t, Trans} from "@lingui/macro";
+import {t, Trans} from "@lingui/macro";
 import {Col, Row} from "antd";
 import {Input} from "../input";
 import {Checkbox} from "../checkbox";
 import {isNumber} from "../input/input.validators";
 import {Select, SelectOption} from "../select";
-import {Probe} from "./common";
-import { Divider } from 'antd';
+import {Probe, readyProbe} from "./common";
+import {Divider} from 'antd';
 
-export interface LiveProbeProps<T = any> extends Partial<LiveProbeProps> {
+interface Props<T = any> extends Partial<Props> {
     value?: T;
     themeName?: "dark" | "light" | "outlined";
-    divider?:true
+    divider?: true;
+
     onChange?(option: T, meta?: ActionMeta): void;
 }
 
 @observer
-export class LiveProbeDetails extends React.Component<LiveProbeProps> {
+export class ReadyprobeDetails extends React.Component<Props> {
 
-    @observable value: Probe = this.props.value || {
-        status: false,
-        timeout: "0",
-        cycle: "0",
-        retryCount: "0",
-        delay: "0",
-        pattern: {
-            type: "HTTP",
-            httpPort: "8080",
-            url: "",
-            tcpPort: "0",
-            command: "",
-        }
-    };
+    @observable value: Probe = this.props.value || readyProbe;
 
     get selectOptions() {
         return [
@@ -58,20 +45,13 @@ export class LiveProbeDetails extends React.Component<LiveProbeProps> {
         );
     }
 
-    @autobind()
-    onChange(value: string[], meta: ActionMeta) {
-        if (this.props.onChange) {
-            this.props.onChange(this.value, meta);
-        }
-    }
-
     render() {
         return (
             <>
-                {this.props.divider?<Divider />: <></>}
+                {this.props.divider ? <Divider/> : <></>}
                 <Checkbox
                     theme="light"
-                    label={<Trans>Liveness Probe</Trans>}
+                    label={<Trans>Readiness Probe</Trans>}
                     value={this.value.status}
                     onChange={v => this.value.status = v}
                 />
@@ -116,6 +96,7 @@ export class LiveProbeDetails extends React.Component<LiveProbeProps> {
                                     />
                                 </Col>
                             </Row>
+                            <br/>
                             <Select
                                 formatOptionLabel={this.formatOptionLabel}
                                 options={this.selectOptions}
@@ -125,6 +106,7 @@ export class LiveProbeDetails extends React.Component<LiveProbeProps> {
                             {
                                 this.value.pattern.type == "HTTP" ?
                                     <>
+                                        <br/>
                                         <Row>
                                             <Col span="10">
                                                 <SubTitle title={<Trans>HTTP</Trans>}/>

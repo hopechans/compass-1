@@ -6,39 +6,27 @@ import {autobind} from "../../utils";
 import {SubTitle} from "../layout/sub-title";
 import {Icon} from "../icon";
 import {_i18n} from "../../i18n";
-import {t, Trans} from "@lingui/macro";
+import {number, t, Trans} from "@lingui/macro";
 import {Col, Row} from "antd";
 import {Input} from "../input";
 import {Checkbox} from "../checkbox";
 import {isNumber} from "../input/input.validators";
 import {Select, SelectOption} from "../select";
-import {Probe} from "./common";
-import { Divider } from 'antd';
+import {liveProbe, Probe} from "./common";
+import {Divider} from 'antd';
 
-export interface ReadyProbeProps<T = any> extends Partial<ReadyProbeProps> {
+interface Props<T = any> extends Partial<Props> {
     value?: T;
     themeName?: "dark" | "light" | "outlined";
-    divider?: true;
+    divider?: true
+
     onChange?(option: T, meta?: ActionMeta): void;
 }
 
 @observer
-export class ReadyProbeDetails extends React.Component<ReadyProbeProps> {
+export class LiveprobeDetails extends React.Component<Props> {
 
-    @observable value: Probe = this.props.value || {
-        status: false,
-        timeout: "0",
-        cycle: "0",
-        retryCount: "0",
-        delay: "0",
-        pattern: {
-            type: "HTTP",
-            httpPort: "8080",
-            url: "",
-            tcpPort: "0",
-            command: "",
-        }
-    };
+    @observable value: Probe = this.props.value || liveProbe
 
     get selectOptions() {
         return [
@@ -58,20 +46,13 @@ export class ReadyProbeDetails extends React.Component<ReadyProbeProps> {
         );
     }
 
-    @autobind()
-    onChange(value: string[], meta: ActionMeta) {
-        if (this.props.onChange) {
-            this.props.onChange(this.value, meta);
-        }
-    }
-
     render() {
         return (
             <>
-                {this.props.divider?<Divider />: <></>}
+                {this.props.divider ? <Divider/> : <></>}
                 <Checkbox
                     theme="light"
-                    label={<Trans>Readiness Probe</Trans>}
+                    label={<Trans>Liveness Probe</Trans>}
                     value={this.value.status}
                     onChange={v => this.value.status = v}
                 />
@@ -116,6 +97,7 @@ export class ReadyProbeDetails extends React.Component<ReadyProbeProps> {
                                     />
                                 </Col>
                             </Row>
+                            <br/>
                             <Select
                                 formatOptionLabel={this.formatOptionLabel}
                                 options={this.selectOptions}
@@ -125,6 +107,7 @@ export class ReadyProbeDetails extends React.Component<ReadyProbeProps> {
                             {
                                 this.value.pattern.type == "HTTP" ?
                                     <>
+                                        <br/>
                                         <Row>
                                             <Col span="10">
                                                 <SubTitle title={<Trans>HTTP</Trans>}/>

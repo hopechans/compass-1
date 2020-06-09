@@ -8,22 +8,21 @@ import {t, Trans} from "@lingui/macro";
 import {Select, SelectOption} from "../select";
 import {Input} from "../input";
 import {observable} from "mobx";
-import {autobind} from "../../utils";
-import {Environment} from "./common";
+import {environment, Environment} from "./common";
 import {Divider} from "antd";
 
-
-export interface EnvironmentProps<T =any> extends Partial<EnvironmentProps> {
+interface Props<T = any> extends Partial<Props> {
     value?: T;
     themeName?: "dark" | "light" | "outlined";
-    divider?:true;
+    divider?: true;
+
     onChange?(option: T, meta?: ActionMeta): void;
 }
 
 @observer
-export class EnvironmentDetails extends React.Component<EnvironmentProps> {
+export class EnvironmentDetails extends React.Component<Props> {
 
-    @observable value: Environment[] = this.props.value || [];
+    @observable value: Environment[] = this.props.value || environment;
 
     formatOptionLabel = (option: SelectOption) => {
         const {value} = option;
@@ -55,17 +54,10 @@ export class EnvironmentDetails extends React.Component<EnvironmentProps> {
         this.value.splice(index, 1);
     }
 
-    @autobind()
-    onChange(value: any, meta: ActionMeta) {
-        if (this.props.onChange) {
-            this.props.onChange(value, meta);
-        }
-    }
-
     render() {
         return (
             <>
-                {this.props.divider?<Divider />: <></>}
+                {this.props.divider ? <Divider/> : <></>}
                 <SubTitle compact className="fields-title" title="Environment">
                     <Icon
                         small

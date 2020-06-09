@@ -8,21 +8,22 @@ import {t, Trans} from "@lingui/macro";
 import {Input} from "../input";
 import {observable} from "mobx";
 import {Col, Row} from "antd";
-import {autobind} from "../../utils";
-import { Divider } from 'antd';
+import {Divider} from 'antd';
+import {args} from "./common";
 
 
-export interface ArgsProps<T =any> extends Partial<ArgsProps> {
+interface ArgsProps<T = any> extends Partial<ArgsProps> {
     value?: T;
     themeName?: "dark" | "light" | "outlined";
-    divider?:true;
+    divider?: true;
+
     onChange?(option: T, meta?: ActionMeta): void;
 }
 
 @observer
 export class ArgsDetails extends React.Component<ArgsProps> {
 
-    @observable value: string[] = [];
+    @observable value: string[] = this.props.value || args;
 
     add = () => {
         this.value.push("");
@@ -32,23 +33,19 @@ export class ArgsDetails extends React.Component<ArgsProps> {
         this.value.splice(index, 1);
     }
 
-    @autobind()
-    onChange(value: string[], meta: ActionMeta) {
-        if (this.props.onChange) {
-            this.props.onChange(this.value, meta);
-        }
-    }
-
     render() {
         return (
             <>
-                {this.props.divider?<Divider />: <></>}
+                {this.props.divider ? <Divider/> : <></>}
                 <SubTitle className="fields-title" title="Args">
                     <Icon
                         small
                         tooltip={_i18n._(t`Args`)}
                         material="add_circle_outline"
-                        onClick={(e) => {this.add(); e.stopPropagation()}}
+                        onClick={(e) => {
+                            this.add();
+                            e.stopPropagation()
+                        }}
                     />
                 </SubTitle>
                 <div className="args">
@@ -62,7 +59,9 @@ export class ArgsDetails extends React.Component<ArgsProps> {
                                             placeholder={_i18n._(t`Args`)}
                                             title={this.value[index]}
                                             value={this.value[index]}
-                                            onChange={value => {this.value[index] = value}}
+                                            onChange={value => {
+                                                this.value[index] = value
+                                            }}
                                         />
                                     </Col>
                                     <Col span="1">

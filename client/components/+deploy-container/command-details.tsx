@@ -8,11 +8,10 @@ import {t, Trans} from "@lingui/macro";
 import {Input} from "../input";
 import {observable} from "mobx";
 import {Col, Row} from "antd";
-import {autobind} from "../../utils";
 import { Divider } from 'antd';
+import {commands} from "./common";
 
-
-export interface CommandProps<T =any> extends Partial<CommandProps> {
+interface Props<T =any> extends Partial<Props> {
     value?: T;
     themeName?: "dark" | "light" | "outlined";
     divider?:true;
@@ -20,9 +19,9 @@ export interface CommandProps<T =any> extends Partial<CommandProps> {
 }
 
 @observer
-export class CommandDetails extends React.Component<CommandProps> {
+export class CommandDetails extends React.Component<Props> {
 
-    @observable value: string[] = this.props.value || [];
+    @observable value: string[] = this.props.value || commands;
 
     add = () => {
         this.value.push("");
@@ -30,13 +29,6 @@ export class CommandDetails extends React.Component<CommandProps> {
 
     remove = (index: number) => {
         this.value.splice(index, 1);
-    }
-
-    @autobind()
-    onChange(value: string[], meta: ActionMeta) {
-        if (this.props.onChange) {
-            this.props.onChange(this.value, meta);
-        }
     }
 
     render() {

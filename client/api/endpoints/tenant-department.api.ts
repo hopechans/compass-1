@@ -10,6 +10,7 @@ export class TenantDepartment extends KubeObject {
 
     spec: {
         namespace: Namespace[];
+        defaultNamespace: string;
     }
 }
 
