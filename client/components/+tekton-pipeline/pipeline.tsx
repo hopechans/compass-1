@@ -22,18 +22,21 @@ import { AddDeployDialog } from "../+deploy/deploy-dialog";
 import { Drawer } from "../drawer";
 import "./registerShape";
 import G6 from "@antv/g6";
-import { MultiContainerDetails } from "../+deploy-container/multi-container-details";
+import { Icon } from "../icon";
 // import { Input } from "../input";
 // import { Select } from "../select";
 // import { ContainerDetails } from "./container-details";
+import { _i18n } from "../../i18n";
 import {
   TextField,
   MenuItem,
   InputLabel,
   Select,
   Button,
+  Typography,
   Grid,
 } from "@material-ui/core";
+import Card from "@material-ui/core/Card";
 
 enum sortBy {
   name = "name",
@@ -51,6 +54,8 @@ export class Pipelines extends React.Component<Props> {
   @observable taskName: string = "";
   @observable graph: any;
   @observable currentNode: any;
+  @observable addParams: string[] = [];
+  @observable addResources: string[] = [];
 
   @action
   openTaskDrawer() {
@@ -69,28 +74,123 @@ export class Pipelines extends React.Component<Props> {
   };
 
   handleTaskName = (e: any) => {
-    // console.log("正在改变数据呢");
     this.taskName = e.target.value;
-    // const data = {
-    //   nodes: [
-    //     {
-    //       id: "1",
-    //       x: 0,
-    //       y: 0,
-    //       taskName: "task2",
-    //       anchorPoints: [
-    //         [0, 0.5],
-    //         [1, 0.5],
-    //       ],
-    //     },
-    //   ],
-    // };
-    // console.log(data);
-    // console.log(this.graph);
-    // this.graph.changeData({ data });
-    console.log("---------------------------->", this.currentNode);
     this.graph.setItemState(this.currentNode, "click", this.taskName);
   };
+
+  addParam = () => {
+    this.addParams.push("");
+  };
+
+  removeParam = (index: number) => {
+    this.addParams.splice(index, 1);
+  };
+
+  addResource = () => {
+    this.addParams.push("");
+  };
+
+  removeResource = (index: number) => {
+    this.addParams.splice(index, 1);
+  };
+
+
+  renderResource() {
+    
+  }
+
+  renderParamsHeader() {
+    return (
+      <Grid container spacing={2}>
+        <Grid item xs={12}></Grid>
+        <Grid item xs={12}>
+          <Icon
+            small
+            tooltip={"Params"}
+            material="add_circle_outline"
+            onClick={(e) => {
+              this.addParam();
+              e.stopPropagation();
+            }}
+          />
+          <Trans> Add Pipeline Params:</Trans>
+        </Grid>
+        <Grid item xs={3}>
+          <Trans>Name</Trans>
+        </Grid>
+        <Grid item xs={3}>
+          <Trans>Type</Trans>
+        </Grid>
+        <Grid item xs={3}>
+          <Trans>Description</Trans>
+        </Grid>
+        <Grid item xs={3}>
+          <Trans>Default</Trans>
+        </Grid>
+      </Grid>
+    );
+  }
+
+  renderParams() {
+    return (
+      <div className="args">
+        {this.renderParamsHeader()}
+
+        {this.addParams.map((item, index) => {
+          return (
+            <Grid container spacing={2}>
+              <Grid item xs={3}>
+                <TextField
+                  variant="outlined"
+                  InputProps={{ style: { height: 30 } }}
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                />
+              </Grid>
+              <Grid item xs={3}>
+                <TextField
+                  variant="outlined"
+                  InputProps={{ style: { height: 30 } }}
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                />
+              </Grid>
+              <Grid item xs={3}>
+                <TextField
+                  variant="outlined"
+                  InputProps={{ style: { height: 30 } }}
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                />
+              </Grid>
+              <Grid item xs={2}>
+                <TextField
+                  variant="outlined"
+                  InputProps={{ style: { height: 30 } }}
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                />
+              </Grid>
+              <Grid item xs={1}>
+                <Icon
+                  small
+                  material="remove_circle_outline"
+                  onClick={(e) => {
+                    this.removeParam(index);
+                    e.stopPropagation();
+                  }}
+                />
+              </Grid>
+            </Grid>
+          );
+        })}
+      </div>
+    );
+  }
 
   renderTaskDrawer() {
     const { taskDrawer } = this;
@@ -101,32 +201,20 @@ export class Pipelines extends React.Component<Props> {
         title="Task Detail"
         onClose={() => this.closeTaskDrawer()}
       >
-        <div className="task">
-          <div className="taskName">
-            <Grid container spacing={5}>
-              <Grid item xs={10}></Grid>
-              <Grid item xs>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  size="small"
-                  // className={classes.button}
-                  // startIcon={<SaveIcon />}
-                >
-                  Save
-                </Button>
-              </Grid>
-            </Grid>
-            <DrawerItem name={<Trans>Task Name：</Trans>}>
-              <TextField
-                id="standard-basic"
-                label="Task Name"
-                value={this.taskName}
-                style={{ width: "60ch" }}
-                onChange={this.handleTaskName}
-              />
-            </DrawerItem>
-            <DrawerItem name={<Trans>Repository:</Trans>}>
+        <div className="taskName">
+          <DrawerItem name={<Trans>Task Name:</Trans>}>
+            <TextField
+              id="standard-basic"
+              label="Task Name"
+              value={this.taskName}
+              style={{ width: "60ch" }}
+              onChange={this.handleTaskName}
+            />
+          </DrawerItem>
+
+          {this.renderParams()}
+
+          {/* <DrawerItem name={<Trans>Repository:</Trans>}>
               <InputLabel id="demo-controlled-open-select-label">
                 Repository
               </InputLabel>
@@ -172,8 +260,7 @@ export class Pipelines extends React.Component<Props> {
               </Select>
             </DrawerItem>
             <DrawerItem name={<Trans>Step:</Trans>}></DrawerItem>
-            <MultiContainerDetails />
-          </div>
+            <MultiContainerDetails /> */}
         </div>
       </Drawer>
     );
