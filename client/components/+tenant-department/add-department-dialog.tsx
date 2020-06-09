@@ -16,7 +16,7 @@ import {_i18n} from "../../i18n";
 import {systemName} from "../input/input.validators";
 import {Notifications} from "../notifications";
 import {NamespaceSelect} from "../+namespaces/namespace-select";
-import {SelectOption} from "../select";
+import {Select, SelectOption} from "../select";
 
 interface Props extends Partial<DialogProps> {
 }
@@ -36,6 +36,7 @@ export class AddDepartmentDialog extends React.Component<Props> {
 
     @observable name = "";
     @observable namespaces = observable.array<Namespace>([], {deep: false});
+    @observable defaultNamespace = "";
 
     close = () => {
         AddDepartmentDialog.close();
@@ -43,6 +44,8 @@ export class AddDepartmentDialog extends React.Component<Props> {
 
     reset = () => {
         this.name = "";
+        this.defaultNamespace = "";
+        this.namespaces.replace([]);
     }
 
     @computed get selectedNamespaces() {
@@ -55,7 +58,8 @@ export class AddDepartmentDialog extends React.Component<Props> {
         const {name} = this;
         const department: Partial<TenantDepartment> = {
             spec: {
-                namespace: this.selectedNamespaces
+                namespace: this.selectedNamespaces,
+                defaultNamespace: this.defaultNamespace
             }
         }
         const departmentAdminRole: Partial<TenantRole> = {
@@ -118,6 +122,17 @@ export class AddDepartmentDialog extends React.Component<Props> {
                                     if (!opts) opts = [];
                                     this.namespaces.replace(unwrapNamespaces(opts));
                                 }}
+                            />
+                        </div>
+                        <div className="default_namespace">
+                            <SubTitle title={<Trans>Default Namespace</Trans>}/>
+                            <Select
+                                value={this.defaultNamespace}
+                                placeholder={_i18n._(t`Default Namespace`)}
+                                options={this.namespaces}
+                                themeName="light"
+                                className="box grow"
+                                onChange={value => this.defaultNamespace = value.value}
                             />
                         </div>
                     </WizardStep>
