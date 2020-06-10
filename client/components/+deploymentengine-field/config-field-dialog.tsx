@@ -4,7 +4,7 @@ import React from "react";
 import {observer} from "mobx-react";
 import {Dialog, DialogProps} from "../dialog";
 import {observable} from "mobx";
-import {Field, fieldApi, FormDataConfig, LooseObject} from "../../api/endpoints";
+import {Field, fieldApi, LooseObject} from "../../api/endpoints";
 import {Wizard, WizardStep} from "../wizard";
 import {t, Trans} from "@lingui/macro";
 import {Notifications} from "../notifications";
@@ -166,10 +166,9 @@ export class ConfigFieldDialog extends React.Component<Props> {
     @observable static isOpen = false;
     @observable static data: Field = null;
 
-    @observable formData: FormDataConfig = {
-        name: "",
-        description: "",
-
+    @observable formData = {
+        name: "default name",
+        description: "default description",
     };
     @observable name = "";
     @observable field_type = "";
@@ -190,9 +189,9 @@ export class ConfigFieldDialog extends React.Component<Props> {
 
     onOpen = () => {
         const {field} = this;
-        this.formData = field.spec.form_data_config;
         this.name = field.getName();
         this.field_type = field.spec.field_type;
+        this.formData = JSON.parse(field.spec.form_data_config);
     }
 
     close = () => {
@@ -200,7 +199,10 @@ export class ConfigFieldDialog extends React.Component<Props> {
     }
 
     reset = () => {
-        this.formData = {name: "", description: "", select: []};
+        this.formData = {
+            name: "default name",
+            description: "default description"
+        };
         this.name = "";
     }
 
@@ -235,11 +237,8 @@ export class ConfigFieldDialog extends React.Component<Props> {
     updateField = async () => {
         const {namespace} = this;
 
-        if (!this.formData.hasOwnProperty("select")) {
-            this.formData.select = [];
-        }
-        this.field.spec.form_data_config = this.formData
-        this.field.spec.props_schema = this.adorn(this.formData, this.field.spec.field_type)
+        this.field.spec.form_data_config = JSON.stringify(this.formData)
+        this.field.spec.props_schema = JSON.stringify(this.adorn(this.formData, this.field.spec.field_type))
 
         try {
             await fieldApi.create({name, namespace}, this.field);
@@ -264,9 +263,7 @@ export class ConfigFieldDialog extends React.Component<Props> {
                         <FRender
                             propsSchema={propsSchema(this.field_type)}
                             formData={this.formData}
-                            onChange={(values: any) => {
-                                this.formData = values
-                            }}
+                            onChange={(values: any) => { this.formData = values }}
                         />
                     </WizardStep>
                 </Wizard>

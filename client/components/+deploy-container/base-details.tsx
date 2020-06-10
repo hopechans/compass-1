@@ -12,8 +12,22 @@ import {Col, Row} from "antd";
 import {ActionMeta} from "react-select/src/types";
 import {base, Base} from "./common";
 
+
 interface Props<T = any> extends Partial<Props> {
     value?: T;
+
+    lowerCase?: boolean
+    containerNameTitle?: string
+    imageAddressTitle?: string
+    imagePullPolicyTitle?: string
+    limitCPUTitle?: string
+    limitMemoryTitle?: string
+    requiredCPUTitle?: string
+    requireMemoryTitle?: string
+    setImagePullPolicy?: boolean
+    setImageAddress?: boolean
+    setResource?: boolean
+
     themeName?: "dark" | "light" | "outlined";
     divider?: true;
 
@@ -22,6 +36,17 @@ interface Props<T = any> extends Partial<Props> {
 
 @observer
 export class BaseDetails extends React.Component<Props> {
+
+    static defaultProps = {
+        lowerCase: true,
+        containerNameTitle: 'ContainerName',
+        imageAddressTitle: 'ImageAddress',
+        imagePullPolicyTitle: 'ImagePullPolicy',
+        limitCPUTitle: 'Limit CPU',
+        limitMemoryTitle: 'Limit Memory',
+        requiredCPUTitle: 'Required CPU',
+        requireMemoryTitle: 'Required Memory'
+    }
 
     @observable value: Base = this.props.value || base
 
@@ -44,21 +69,25 @@ export class BaseDetails extends React.Component<Props> {
     }
 
     render() {
+
+        const { lowerCase, containerNameTitle, imageAddressTitle, imagePullPolicyTitle,
+            limitCPUTitle, limitMemoryTitle, requiredCPUTitle, requireMemoryTitle } = this.props
+
         return (
             <>
-                <SubTitle title={<Trans>ContainerName</Trans>}/>
+                {lowerCase?<b>{containerNameTitle}</b>:<SubTitle title={containerNameTitle}/>}
                 <Input
-                    placeholder={_i18n._(t`ContainerName`)}
+                    placeholder={_i18n._(containerNameTitle)}
                     value={this.value.name}
                     onChange={v => this.value.name = v}
                 />
-                <SubTitle title={<Trans>ImageAddress</Trans>}/>
+                {lowerCase?<><br/><b>{imageAddressTitle}</b></>:<SubTitle title={imageAddressTitle}/>}
                 <Input
-                    placeholder={_i18n._(t`ImageAddress`)}
+                    placeholder={_i18n._(imageAddressTitle)}
                     value={this.value.image}
                     onChange={v => this.value.image = v}
                 />
-                <SubTitle title={<Trans>ImagePullPolicy</Trans>}/>
+                {lowerCase?<><br/><b>{imagePullPolicyTitle}</b><br/><br/></>:<SubTitle title={imagePullPolicyTitle}/>}
                 <Select
                     formatOptionLabel={this.formatOptionLabel}
                     options={this.selectOptions}
@@ -68,9 +97,9 @@ export class BaseDetails extends React.Component<Props> {
                 <br/>
                 <Row justify="space-between">
                     <Col span="10">
-                        <SubTitle title={<Trans>Limit CPU</Trans>}/>
+                        {lowerCase?<><br/><b>{limitCPUTitle}</b></>:<SubTitle title={limitCPUTitle}/>}
                         <Input
-                            placeholder={_i18n._(t`Limit CPU`)}
+                            placeholder={_i18n._(limitCPUTitle)}
                             type="number"
                             validators={isNumber}
                             value={this.value.resource.limits.cpu}
@@ -78,9 +107,9 @@ export class BaseDetails extends React.Component<Props> {
                         />
                     </Col>
                     <Col span="10">
-                        <SubTitle title={<Trans>Limit Memory</Trans>}/>
+                        {lowerCase?<><br/><b>{limitMemoryTitle}</b></>:<SubTitle title={limitMemoryTitle}/>}
                         <Input
-                            placeholder={_i18n._(t`Limit Memory`)}
+                            placeholder={_i18n._(limitMemoryTitle)}
                             type="number"
                             validators={isNumber}
                             value={this.value.resource.limits.memory}
@@ -90,9 +119,9 @@ export class BaseDetails extends React.Component<Props> {
                 </Row>
                 <Row justify="space-between">
                     <Col span="10">
-                        <SubTitle title={<Trans>Require CPU</Trans>}/>
+                        {lowerCase?<><br/><b>{requiredCPUTitle}</b></>:<SubTitle title={requiredCPUTitle}/>}
                         <Input
-                            placeholder={_i18n._(t`Required CPU`)}
+                            placeholder={_i18n._(requiredCPUTitle)}
                             type="number"
                             validators={isNumber}
                             value={this.value.resource.requests.cpu}
@@ -100,9 +129,9 @@ export class BaseDetails extends React.Component<Props> {
                         />
                     </Col>
                     <Col span="10">
-                        <SubTitle title={<Trans>Require Memory</Trans>}/>
+                        {lowerCase?<><br/><b>{requireMemoryTitle}</b></>:<SubTitle title={requireMemoryTitle}/>}
                         <Input
-                            placeholder={_i18n._(t`Require Memory`)}
+                            placeholder={_i18n._(requireMemoryTitle)}
                             type="number"
                             validators={isNumber}
                             value={this.value.resource.requests.memory}

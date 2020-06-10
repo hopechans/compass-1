@@ -8,8 +8,8 @@ import { _i18n } from "../../i18n"
 import { RouteComponentProps } from "react-router";
 import { t, Trans, select } from "@lingui/macro";
 import { Deploy, deployApi } from "../../api/endpoints";
-import { KubeObjectMenu, KubeObjectMenuProps } from "../kube-object/kube-object-menu";
-import { MainLayout, TabRoute } from "../layout/main-layout";
+import { KubeObjectMenu, KubeObjectMenuProps } from "../kube-object";
+import { MainLayout } from "../layout/main-layout";
 import { KubeObjectListLayout } from "../kube-object";
 import { IDeployWorkloadsParams } from "../+deploy";
 import { apiManager } from "../../api/api-manager";
@@ -83,6 +83,7 @@ export class Deploys extends React.Component<Props> {
                         onAdd: () => CopyAddDeployDialog.open()
                     }}
                 />
+                {/*<AddDeployDialog />*/}
                 <CopyAddDeployDialog />
                 {/* <AddDeployDialog /> */}
                 <ConfigDeployDialog />

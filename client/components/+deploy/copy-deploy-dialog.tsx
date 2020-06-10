@@ -1,20 +1,19 @@
 import "./copy-deploy-dialog.scss"
 
-import React, { ReactElement } from "react";
-import { observer } from "mobx-react";
-import { Dialog, DialogProps } from "../dialog";
-import { computed, observable } from "mobx";
-import { number, t, Trans } from "@lingui/macro";
-import { Wizard, WizardStep } from "../wizard";
-import { base, Container, container, MultiContainerDetails } from "../+deploy-container";
-import { Collapse } from "antd";
-import { deployService, DeployServiceDetails, Service } from "../+deploy-service";
-import { MultiVolumeClaimDetails, VolumeClaimTemplate } from "../+deploy-volumeclaim-dialog";
-import { app, App } from "../+deploy-app";
-import { AppDetails } from "../+deploy-app";
-import { deployStore } from "./deploy.store";
-import { Notifications } from "../notifications";
-import { configStore } from "../../../client/config.store";
+import React, {ReactElement} from "react";
+import {observer} from "mobx-react";
+import {Dialog, DialogProps} from "../dialog";
+import {computed, observable} from "mobx";
+import {number, t, Trans} from "@lingui/macro";
+import {Wizard, WizardStep} from "../wizard";
+import {base, Container, container, MultiContainerDetails} from "../+deploy-container";
+import {Collapse} from "antd";
+import {deployService, DeployServiceDetails, Service} from "../+deploy-service";
+import {MultiVolumeClaimDetails, VolumeClaimTemplate} from "../+deploy-volumeclaim-dialog";
+import {app, App} from "../+deploy-app";
+import {AppDetails} from "../+deploy-app";
+import {deployStore} from "./deploy.store";
+import {Notifications} from "../notifications";
 
 const { Panel } = Collapse;
 
@@ -90,9 +89,24 @@ export class CopyAddDeployDialog extends React.Component<Props> {
                             </Collapse>
                             <br />
                             <Collapse>
+<<<<<<< HEAD
                                 <Panel key={"MultiContainer"} header={"Containers"}>
                                     <MultiContainerDetails value={this.containers}
                                         onChange={value => this.containers = value} />
+=======
+                                <Panel key={"MultiContainer"} header={"MultiContainer"}>
+                                    <MultiContainerDetails
+                                        base={true}
+                                        commands={true}
+                                        args={true}
+                                        environment={true}
+                                        readyProbe={true}
+                                        liveProbe={true}
+                                        lifeCycle={true}
+                                        divider={true}
+                                        value={this.containers}
+                                        onChange={value => this.containers = value}/>
+>>>>>>> a65b06b20621f6a4ef332b33ec218d5022984e48
                                 </Panel>
                             </Collapse>
                             <br />

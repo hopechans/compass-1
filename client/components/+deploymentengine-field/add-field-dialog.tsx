@@ -4,7 +4,7 @@ import React from "react";
 import {observer} from "mobx-react";
 import {Dialog, DialogProps} from "../dialog";
 import {observable} from "mobx";
-import {Field, fieldApi, FormDataConfig} from "../../api/endpoints";
+import {Field, fieldApi} from "../../api/endpoints";
 import {Wizard, WizardStep} from "../wizard";
 import {t, Trans} from "@lingui/macro";
 import {SubTitle} from "../layout/sub-title";
@@ -34,7 +34,7 @@ export class AddFieldDialog extends React.Component<Props> {
     @observable name = "";
     @observable field_type = "string";
     @observable namespace = "kube-system";
-    @observable form_data_config: FormDataConfig = {
+    @observable form_data_config = {
         name: "",
         description: "",
     };
@@ -46,7 +46,10 @@ export class AddFieldDialog extends React.Component<Props> {
     reset = () => {
         this.name = "";
         this.field_type = "string";
-        this.form_data_config = {};
+        this.form_data_config = {
+            name: "",
+            description: "",
+        };
     }
 
     get types() {
@@ -62,8 +65,8 @@ export class AddFieldDialog extends React.Component<Props> {
         const field: Partial<Field> = {
             spec: {
                 field_type: field_type,
-                form_data_config: form_data_config,
-                props_schema: {},
+                form_data_config: JSON.stringify(form_data_config),
+                props_schema: JSON.stringify({}),
             }
         }
         try {
