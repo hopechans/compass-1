@@ -1,18 +1,18 @@
-import {ActionMeta} from "react-select/src/types";
-import {observer} from "mobx-react";
+import { ActionMeta } from "react-select/src/types";
+import { observer } from "mobx-react";
 import React from "react";
-import {observable} from "mobx";
-import {SubTitle} from "../layout/sub-title";
-import {Icon} from "../icon";
-import {_i18n} from "../../i18n";
-import {t, Trans} from "@lingui/macro";
-import {Col, Row} from "antd";
-import {Input} from "../input";
-import {Checkbox} from "../checkbox";
-import {isNumber} from "../input/input.validators";
-import {Select, SelectOption} from "../select";
-import {Probe, readyProbe} from "./common";
-import {Divider} from 'antd';
+import { observable } from "mobx";
+import { SubTitle } from "../layout/sub-title";
+import { Icon } from "../icon";
+import { _i18n } from "../../i18n";
+import { t, Trans } from "@lingui/macro";
+import { Col, Row } from "antd";
+import { Input } from "../input";
+import { Checkbox } from "../checkbox";
+import { isNumber } from "../input/input.validators";
+import { Select, SelectOption } from "../select";
+import { Probe, readyProbe } from "./common";
+import { Divider } from 'antd';
 
 interface Props<T = any> extends Partial<Props> {
     value?: T;
@@ -36,10 +36,10 @@ export class ReadyprobeDetails extends React.Component<Props> {
     }
 
     formatOptionLabel = (option: SelectOption) => {
-        const {value, label} = option;
+        const { value, label } = option;
         return label || (
             <>
-                <Icon small material="layers"/>
+                <Icon small material="layers" />
                 {value}
             </>
         );
@@ -49,7 +49,7 @@ export class ReadyprobeDetails extends React.Component<Props> {
         
         return (
             <>
-                {this.props.divider ? <Divider/> : <></>}
+                {this.props.divider ? <Divider /> : <></>}
                 <Checkbox
                     theme="light"
                     label={<Trans>Readiness Probe</Trans>}
@@ -97,7 +97,7 @@ export class ReadyprobeDetails extends React.Component<Props> {
                                     />
                                 </Col>
                             </Row>
-                            <br/>
+                            <br />
                             <Select
                                 formatOptionLabel={this.formatOptionLabel}
                                 options={this.selectOptions}
@@ -107,7 +107,7 @@ export class ReadyprobeDetails extends React.Component<Props> {
                             {
                                 this.value.pattern.type == "HTTP" ?
                                     <>
-                                        <br/>
+                                        <br />
                                         <Row>
                                             <Col span="10">
                                                 <SubTitle title={<Trans>HTTP</Trans>}/>

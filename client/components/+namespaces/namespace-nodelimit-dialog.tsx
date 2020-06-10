@@ -86,7 +86,7 @@ export class NamespaceNodeRangeLimitDialog extends React.Component<Props> {
                             <NodeSelect
                                 isMulti
                                 value={this.nodes}
-                                placeholder={_i18n._(t`Namespace`)}
+                                placeholder={_i18n._(t`Node`)}
                                 themeName="light"
                                 className="box grow"
                                 onChange={(opts: SelectOption[]) => {

@@ -1,21 +1,20 @@
-import {ActionMeta} from "react-select/src/types";
-import {observer} from "mobx-react";
+import { ActionMeta } from "react-select/src/types";
+import { observer } from "mobx-react";
 import React from "react";
-import {SubTitle} from "../layout/sub-title";
-import {Icon} from "../icon";
-import {_i18n} from "../../i18n";
-import {t, Trans} from "@lingui/macro";
-import {Input} from "../input";
-import {observable} from "mobx";
-import {Col, Row} from "antd";
+import { SubTitle } from "../layout/sub-title";
+import { Icon } from "../icon";
+import { _i18n } from "../../i18n";
+import { t, Trans } from "@lingui/macro";
+import { Input } from "../input";
+import { observable } from "mobx";
+import { Col, Row } from "antd";
 import { Divider } from 'antd';
-import {commands} from "./common";
+import { commands } from "./common";
 
-interface Props<T =any> extends Partial<Props> {
+interface Props<T = any> extends Partial<Props> {
     value?: T;
     themeName?: "dark" | "light" | "outlined";
     divider?:true;
-
     onChange?(option: T, meta?: ActionMeta): void;
 }
 
@@ -63,7 +62,7 @@ export class CommandDetails extends React.Component<Props> {
                                             placeholder={_i18n._(t`Command`)}
                                             title={this.value[index]}
                                             value={this.value[index]}
-                                            onChange={value => {this.value[index] = value}}
+                                            onChange={value => { this.value[index] = value }}
                                         />
                                     </Col>
                                     <Col span="1">
@@ -72,7 +71,7 @@ export class CommandDetails extends React.Component<Props> {
                                             tooltip={<Trans>Remove Command</Trans>}
                                             className="remove-icon"
                                             material="remove_circle_outline"
-                                            onClick={(e) => {this.remove(index); e.stopPropagation()}}
+                                            onClick={(e) => { this.remove(index); e.stopPropagation() }}
                                         />
                                     </Col>
                                 </Row>

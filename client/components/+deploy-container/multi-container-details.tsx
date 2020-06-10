@@ -1,14 +1,14 @@
-import {ActionMeta} from "react-select/src/types";
-import {observer} from "mobx-react";
+import { ActionMeta } from "react-select/src/types";
+import { observer } from "mobx-react";
 import React from "react";
-import {Button} from "../button";
-import {Collapse, Popconfirm} from "antd";
-import {ContainerDetails} from "./container-details";
-import {observable} from "mobx";
-import {DeleteOutlined} from '@ant-design/icons';
-import {container, Container} from "./common";
+import { Button } from "../button";
+import { Collapse, Popconfirm } from "antd";
+import { ContainerDetails } from "./container-details";
+import { observable } from "mobx";
+import { DeleteOutlined } from '@ant-design/icons';
+import { container, Container } from "./common";
 
-const {Panel} = Collapse;
+const { Panel } = Collapse;
 
 interface Props<T = any> extends Partial<Props> {
     value?: T;
@@ -69,7 +69,7 @@ export class MultiContainerDetails extends React.Component<Props> {
                         okText="Yes"
                         cancelText="No">
                         <DeleteOutlined
-                            translate style={{color: '#ff4d4f'}}
+                            translate style={{ color: '#ff4d4f' }}
                             onClick={(event) => {
                                 event.preventDefault();
                                 event.stopPropagation();
@@ -84,18 +84,20 @@ export class MultiContainerDetails extends React.Component<Props> {
         return (
             <>
                 <Button primary onClick={() => this.add()}><span>Addition Container</span></Button>
-                <br/><br/>
+                <br /><br />
                 <Collapse>
                     {this.value.map((item, index) => {
                         return (
                             <Panel header={`Container`} key={index} extra={genExtra(index)}>
                                 <ContainerDetails
-                                    base={this.props.base}
-                                    commands={this.props.commands} args={this.props.args}
-                                    environment={this.props.environment}
-                                    readyProbe={this.props.readyProbe} liveProbe={this.props.liveProbe}
-                                    lifeCycle={this.props.lifeCycle}
-                                    divider={this.props.divider}
+                                    base={true}
+                                    commands={true}
+                                    args={true}
+                                    environment={true}
+                                    readyProbe={true}
+                                    liveProbe={true}
+                                    lifeCycle={true}
+                                    divider={true}
                                     value={this.value[index]}
                                     onChange={(value: any) => { this.value[index] = value }}
                                 />

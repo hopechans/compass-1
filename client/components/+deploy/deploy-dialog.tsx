@@ -11,6 +11,8 @@ import { Wizard, WizardStep } from "../wizard";
 import { Deploy, deployApi } from "../../api/endpoints";
 import { Notifications } from "../notifications";
 import { deployStore } from './deploy.store'
+import { configStore } from '../../config.store';
+import { showDetails } from '../../../client/navigation'
 
 const { Panel } = Collapse;
 const { Option } = Select;
@@ -604,23 +606,34 @@ export class AddDeployDialog extends React.Component<Props, State>{
     AddDeployDialog.close();
   }
 
+
   addDeployDialog = async () => {
     const data = this.getData();
     const { onSuccess, onError } = this.props;
+    const deploy: Partial<Deploy> = {
+      spec: {
+        appName: data.name,
+        resourceType: data.type,
+        metadata: JSON.stringify(data.forms),
+      },
+    }
+
     try {
-      await deployStore.create(
-        { name: data.name + '-' + Math.floor(Date.now() / 1000), namespace: '' }, {
-        spec: {
-          appName: data.name,
-          resourceType: data.type,
-          metadata: JSON.stringify(data.forms),
-        },
-      }).then(onSuccess);
+      const deployName = data.name + '-' + Math.floor(Date.now() / 1000);
+      let newDeploy = await deployStore.create(
+        { name: deployName, namespace: '' },
+        deploy,
+      );
+      // label the resource labels
+      newDeploy.metadata.labels = { namespace: configStore.getDefaultNamespace() }
+      await deployStore.update(newDeploy, { ...newDeploy });
+      // showDetails(newDeploy.selfLink);
       this.close();
     } catch (err) {
       Notifications.error(err);
       onError && onError(err);
     }
+
   }
 
   render() {
