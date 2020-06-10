@@ -12,7 +12,6 @@ import {deployService, DeployServiceDetails, Service} from "../+deploy-service";
 import {MultiVolumeClaimDetails, VolumeClaimTemplate} from "../+deploy-volumeclaim-dialog";
 import {app, App} from "../+deploy-app";
 import {AppDetails} from "../+deploy-app";
-import {value} from "jsonpath";
 import {deployStore} from "./deploy.store";
 import {Notifications} from "../notifications";
 
@@ -94,6 +93,7 @@ export class CopyAddDeployDialog extends React.Component<Props> {
                                         readyProbe={true}
                                         liveProbe={true}
                                         lifeCycle={true}
+                                        divider={true}
                                         value={this.containers}
                                         onChange={value => this.containers = value}/>
                                 </Panel>
