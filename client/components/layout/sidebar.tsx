@@ -155,6 +155,21 @@ export class Sidebar extends React.Component<Props> {
                             text={<Trans>Tekton</Trans>}
                         />
                         <SidebarNavItem
+                            id="config"
+                            url={configURL({ query })}
+                            routePath={configRoute.path}
+                            subMenus={Config.tabRoutes}
+                            text={<Trans>Configuration</Trans>}
+                            icon={<Icon material="list" />}
+                        />
+                        <SidebarNavItem
+                            isHidden={!isClusterAdmin}
+                            id="namespaces"
+                            url={namespacesURL()}
+                            icon={<Icon material="layers" />}
+                            text={<Trans>Namespaces</Trans>}
+                        />
+                        <SidebarNavItem
                             id="ovn"
                             url={ovnURL({query})}
                             routePath={ovnRoute.path}
