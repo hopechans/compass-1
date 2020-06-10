@@ -17,21 +17,13 @@ interface ArgsProps<T = any> extends Partial<ArgsProps> {
     themeName?: "dark" | "light" | "outlined";
     divider?: true;
 
-    lowerCase?: boolean;
-
     onChange?(option: T, meta?: ActionMeta): void;
 }
 
 @observer
 export class ArgsDetails extends React.Component<ArgsProps> {
 
-
-
     @observable value: string[] = this.props.value || args;
-
-    static defaultProps = {
-        lowerCase: true
-    }
 
     add = () => {
         this.value.push("");
@@ -57,14 +49,10 @@ export class ArgsDetails extends React.Component<ArgsProps> {
 
     render() {
 
-        const {lowerCase} = this.props;
-
         return (
             <>
                 {this.props.divider ? <Divider/> : <></>}
-                {lowerCase?
-                    <><b>Args  </b>{this.renderAdd()}<br/><br/></>:
-                    <SubTitle className="fields-title" title="Args">{this.renderAdd()}</SubTitle>}
+                <SubTitle  className="fields-title" title="Args">{this.renderAdd()}</SubTitle>
                 <div className="args">
                     {this.value.map((item, index) => {
                         return (
