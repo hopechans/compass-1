@@ -1,18 +1,18 @@
-import {ActionMeta} from "react-select/src/types";
-import {observer} from "mobx-react";
+import { ActionMeta } from "react-select/src/types";
+import { observer } from "mobx-react";
 import React from "react";
-import {observable} from "mobx";
-import {SubTitle} from "../layout/sub-title";
-import {Icon} from "../icon";
-import {_i18n} from "../../i18n";
-import {t, Trans} from "@lingui/macro";
-import {Col, Row} from "antd";
-import {Input} from "../input";
-import {Checkbox} from "../checkbox";
-import {isNumber} from "../input/input.validators";
-import {Select, SelectOption} from "../select";
-import {Probe, readyProbe} from "./common";
-import {Divider} from 'antd';
+import { observable } from "mobx";
+import { SubTitle } from "../layout/sub-title";
+import { Icon } from "../icon";
+import { _i18n } from "../../i18n";
+import { t, Trans } from "@lingui/macro";
+import { Col, Row } from "antd";
+import { Input } from "../input";
+import { Checkbox } from "../checkbox";
+import { isNumber } from "../input/input.validators";
+import { Select, SelectOption } from "../select";
+import { Probe, readyProbe } from "./common";
+import { Divider } from 'antd';
 
 interface Props<T = any> extends Partial<Props> {
     value?: T;
@@ -36,10 +36,10 @@ export class ReadyprobeDetails extends React.Component<Props> {
     }
 
     formatOptionLabel = (option: SelectOption) => {
-        const {value, label} = option;
+        const { value, label } = option;
         return label || (
             <>
-                <Icon small material="layers"/>
+                <Icon small material="layers" />
                 {value}
             </>
         );
@@ -48,7 +48,7 @@ export class ReadyprobeDetails extends React.Component<Props> {
     render() {
         return (
             <>
-                {this.props.divider ? <Divider/> : <></>}
+                {this.props.divider ? <Divider /> : <></>}
                 <Checkbox
                     theme="light"
                     label={<Trans>Readiness Probe</Trans>}
@@ -60,7 +60,7 @@ export class ReadyprobeDetails extends React.Component<Props> {
                         <>
                             <Row>
                                 <Col span="10">
-                                    <SubTitle title={<Trans>Timeout</Trans>}/>
+                                    <SubTitle title={<Trans>Timeout</Trans>} />
                                     <Input
                                         placeholder={_i18n._(t`Timeout`)}
                                         type="number"
@@ -68,7 +68,7 @@ export class ReadyprobeDetails extends React.Component<Props> {
                                         value={this.value.timeout}
                                         onChange={value => this.value.timeout = value}
                                     />
-                                    <SubTitle title={<Trans>Period</Trans>}/>
+                                    <SubTitle title={<Trans>Period</Trans>} />
                                     <Input
                                         placeholder={_i18n._(t`Period`)}
                                         type="number"
@@ -78,7 +78,7 @@ export class ReadyprobeDetails extends React.Component<Props> {
                                     />
                                 </Col>
                                 <Col span="10" offset="4">
-                                    <SubTitle title={<Trans>Failure</Trans>}/>
+                                    <SubTitle title={<Trans>Failure</Trans>} />
                                     <Input
                                         placeholder={_i18n._(t`Failure`)}
                                         type="number"
@@ -86,7 +86,7 @@ export class ReadyprobeDetails extends React.Component<Props> {
                                         value={this.value.retryCount}
                                         onChange={value => this.value.retryCount = value}
                                     />
-                                    <SubTitle title={<Trans>InitialDelay</Trans>}/>
+                                    <SubTitle title={<Trans>InitialDelay</Trans>} />
                                     <Input
                                         placeholder={_i18n._(t`InitialDelay`)}
                                         type="number"
@@ -96,7 +96,7 @@ export class ReadyprobeDetails extends React.Component<Props> {
                                     />
                                 </Col>
                             </Row>
-                            <br/>
+                            <br />
                             <Select
                                 formatOptionLabel={this.formatOptionLabel}
                                 options={this.selectOptions}
@@ -106,10 +106,10 @@ export class ReadyprobeDetails extends React.Component<Props> {
                             {
                                 this.value.pattern.type == "HTTP" ?
                                     <>
-                                        <br/>
+                                        <br />
                                         <Row>
                                             <Col span="10">
-                                                <SubTitle title={<Trans>HTTP</Trans>}/>
+                                                <SubTitle title={<Trans>HTTP</Trans>} />
                                                 <Input
                                                     placeholder={_i18n._(t`HTTP`)}
                                                     type="number"
@@ -119,7 +119,7 @@ export class ReadyprobeDetails extends React.Component<Props> {
                                                 />
                                             </Col>
                                             <Col span="10" offset="4">
-                                                <SubTitle title={<Trans>URL</Trans>}/>
+                                                <SubTitle title={<Trans>URL</Trans>} />
                                                 <Input
                                                     placeholder={_i18n._(t`URL`)}
                                                     value={this.value.pattern.url}
@@ -132,7 +132,7 @@ export class ReadyprobeDetails extends React.Component<Props> {
                             {
                                 this.value.pattern.type == "TCP" ?
                                     <>
-                                        <SubTitle title={<Trans>TCP</Trans>}/>
+                                        <SubTitle title={<Trans>TCP</Trans>} />
                                         <Input
                                             placeholder={_i18n._(t`TCP`)}
                                             type="number"
@@ -145,7 +145,7 @@ export class ReadyprobeDetails extends React.Component<Props> {
                             {
                                 this.value.pattern.type == "Command" ?
                                     <>
-                                        <SubTitle title={<Trans>Command</Trans>}/>
+                                        <SubTitle title={<Trans>Command</Trans>} />
                                         <Input
                                             placeholder={_i18n._(t`Command`)}
                                             multiLine={true}

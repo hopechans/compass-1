@@ -35,17 +35,17 @@ export class VolumeClaimDetails extends React.Component<VolumeClaimProps> {
                 {
                     !this.value.metadata.isUseDefaultStorageClass ?
                         <>
-                            <SubTitle title={<Trans>StorageClassName</Trans>}/>
+                            <SubTitle title={<Trans>StorageClass Name</Trans>}/>
                             <Input
-                                placeholder={_i18n._(t`StorageClassName`)}
+                                placeholder={_i18n._(t`StorageClass Name`)}
                                 value={this.value.spec.storageClassName}
                                 onChange={value => this.value.spec.storageClassName = value}
                             />
                         </>:<></>
                 }
-                <SubTitle title={<Trans>Storage</Trans>}/>
+                <SubTitle title={<Trans>Request Storage Size</Trans>}/>
                 <Input
-                    placeholder={_i18n._(t`Storage`)}
+                    placeholder={_i18n._(t`Request Storage Size(MB)`)}
                     type="number"
                     validators={isNumber}
                     value={this.value.spec.resources.requests.storage}

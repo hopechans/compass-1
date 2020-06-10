@@ -12,7 +12,7 @@ export interface Service {
 }
 
 export const deployPort: ServicePorts = {
-    name: "default-web-port",
+    name: "web-port",
     protocol: "TCP",
     port: "80",
     targetPort: "80"

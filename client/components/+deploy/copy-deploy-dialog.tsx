@@ -90,21 +90,21 @@ export class CopyAddDeployDialog extends React.Component<Props> {
                             </Collapse>
                             <br />
                             <Collapse>
-                                <Panel key={"MultiContainer"} header={"MultiContainer"}>
+                                <Panel key={"MultiContainer"} header={"Containers"}>
                                     <MultiContainerDetails value={this.containers}
                                         onChange={value => this.containers = value} />
                                 </Panel>
                             </Collapse>
                             <br />
                             <Collapse>
-                                <Panel key={"DeployService"} header={"DeployService"}>
+                                <Panel key={"DeployService"} header={"Service"}>
                                     <DeployServiceDetails value={this.service}
                                         onChange={value => this.service = value} />
                                 </Panel>
                             </Collapse>
                             <br />
                             <Collapse>
-                                <Panel key={"MultiVolumeClaim"} header={"MultiVolumeClaim"}>
+                                <Panel key={"MultiVolumeClaim"} header={"VolumeClaims"}>
                                     <MultiVolumeClaimDetails value={this.volumeClaims}
                                         onChange={value => this.volumeClaims = value} />
                                 </Panel>

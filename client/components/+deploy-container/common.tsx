@@ -43,6 +43,14 @@ export interface LifeCycle {
     preStop: Pattern
 }
 
+export interface VolumeMount {
+    name: string,
+    mountPath: string,
+}
+export interface VolumeMounts {
+    status: boolean,
+    items: VolumeMount[],
+}
 
 export interface Container {
     base: Base,
@@ -51,7 +59,8 @@ export interface Container {
     environment: Environment[],
     readyProbe: Probe,
     liveProbe: Probe,
-    lifeCycle: LifeCycle
+    lifeCycle: LifeCycle,
+    volumeMounts: VolumeMounts
 }
 
 
@@ -75,6 +84,8 @@ export const commands: string[] = [];
 export const args: string[] = [];
 
 export const environment: Environment[] = [];
+
+export const volumeMount: VolumeMount[] = [];
 
 export const readyProbe: Probe = {
     status: false,
@@ -121,6 +132,10 @@ export const lifeCycle: LifeCycle = {
         command: "",
     }
 };
+export const volumeMounts: VolumeMounts = {
+    status: false,
+    items: volumeMount,
+};
 
 export const container: Container = {
     base: base,
@@ -129,5 +144,6 @@ export const container: Container = {
     environment: environment,
     readyProbe: readyProbe,
     liveProbe: liveProbe,
-    lifeCycle: lifeCycle
+    lifeCycle: lifeCycle,
+    volumeMounts: volumeMounts,
 }

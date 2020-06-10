@@ -1,18 +1,18 @@
 import React from "react";
-import {observer} from "mobx-react";
-import {Col, Collapse, Row} from "antd";
-import {SubTitle} from "../layout/sub-title";
-import {t, Trans} from "@lingui/macro";
-import {Select, SelectOption} from "../select";
-import {Icon} from "../icon";
-import {_i18n} from "../../i18n";
-import {Input} from "../input";
-import {isNumber} from "../input/input.validators";
-import {observable} from "mobx";
-import {deployPort, deployService, Service} from "./common";
-import {ActionMeta} from "react-select/src/types";
+import { observer } from "mobx-react";
+import { Col, Collapse, Row } from "antd";
+import { SubTitle } from "../layout/sub-title";
+import { t, Trans } from "@lingui/macro";
+import { Select, SelectOption } from "../select";
+import { Icon } from "../icon";
+import { _i18n } from "../../i18n";
+import { Input } from "../input";
+import { isNumber } from "../input/input.validators";
+import { observable } from "mobx";
+import { deployPort, deployService, Service } from "./common";
+import { ActionMeta } from "react-select/src/types";
 
-const {Panel} = Collapse;
+const { Panel } = Collapse;
 
 
 export interface Props<T = any> extends Partial<Props> {
@@ -29,11 +29,11 @@ export class DeployServiceDetails extends React.Component<Props> {
     @observable value: Service = this.props.value || deployService;
 
     formatOptionLabel = (option: SelectOption) => {
-        const {showIcons} = this.props;
-        const {value, label} = option;
+        const { showIcons } = this.props;
+        const { value, label } = option;
         return label || (
             <>
-                {showIcons && <Icon small material="layers"/>}
+                {showIcons && <Icon small material="layers" />}
                 {value}
             </>
         );
@@ -42,6 +42,8 @@ export class DeployServiceDetails extends React.Component<Props> {
     get typeOptions() {
         return [
             "NodePort",
+            "ClusterIP",
+            "LoadBalancer",
         ]
     }
 
@@ -63,7 +65,7 @@ export class DeployServiceDetails extends React.Component<Props> {
     render() {
         return (
             <>
-                <SubTitle title={<Trans>Service</Trans>}/>
+                <SubTitle title={<Trans>Service Type</Trans>} />
                 <Select
                     formatOptionLabel={this.formatOptionLabel}
                     options={this.typeOptions}
@@ -87,7 +89,7 @@ export class DeployServiceDetails extends React.Component<Props> {
                     {this.value.ports.map((item, index) => {
                         return (
                             <div key={index}>
-                                <br/>
+                                <br />
                                 <Row>
                                     <Col>
                                         <Icon
@@ -103,7 +105,7 @@ export class DeployServiceDetails extends React.Component<Props> {
                                     </Col>
                                     <Col offset={1}><p>---------------- {index + 1} ----------------</p></Col>
                                 </Row>
-                                <SubTitle title={<Trans>Name</Trans>}/>
+                                <SubTitle title={<Trans>Name</Trans>} />
                                 <Input
                                     className="item"
                                     placeholder={_i18n._(t`Name`)}
@@ -113,7 +115,7 @@ export class DeployServiceDetails extends React.Component<Props> {
                                         this.value.ports[index].name = value
                                     }}
                                 />
-                                <SubTitle title={<Trans>Protocol</Trans>}/>
+                                <SubTitle title={<Trans>Protocol</Trans>} />
                                 <Select
                                     formatOptionLabel={this.formatOptionLabel}
                                     options={this.protocolOptions}
@@ -122,10 +124,10 @@ export class DeployServiceDetails extends React.Component<Props> {
                                         this.value.ports[index].protocol = v.value;
                                     }}
                                 />
-                                <br/>
+                                <br />
                                 <Row>
                                     <Col span={10}>
-                                        <SubTitle title={<Trans>Port</Trans>}/>
+                                        <SubTitle title={<Trans>Port</Trans>} />
                                         <Input
                                             placeholder={_i18n._(t`Port`)}
                                             type="number"
@@ -135,7 +137,7 @@ export class DeployServiceDetails extends React.Component<Props> {
                                         />
                                     </Col>
                                     <Col span={10} offset={4}>
-                                        <SubTitle title={<Trans>TargetPort</Trans>}/>
+                                        <SubTitle title={<Trans>TargetPort</Trans>} />
                                         <Input
                                             placeholder={_i18n._(t`TargetPort`)}
                                             type="number"

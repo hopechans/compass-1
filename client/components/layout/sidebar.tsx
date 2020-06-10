@@ -1,39 +1,39 @@
 import "./sidebar.scss";
 
 import * as React from "react";
-import {computed, observable, reaction} from "mobx";
-import {observer} from "mobx-react";
-import {matchPath, NavLink} from "react-router-dom";
-import {Trans} from "@lingui/macro";
-import {configStore} from "../../config.store";
-import {createStorage, cssNames} from "../../utils";
-import {Icon} from "../icon";
-import {workloadsRoute, workloadsURL} from "../+workloads/workloads.route";
-import {namespacesURL} from "../+namespaces/namespaces.route";
-import {nodesURL} from "../+nodes/nodes.route";
-import {usersManagementRoute, usersManagementURL} from "../+user-management/user-management.routes";
-import {networkRoute, networkURL} from "../+network/network.route";
-import {storageRoute, storageURL} from "../+storage/storage.route";
-import {deploymentEngineRoute, deploymentEngineURL} from "../+deploymentengine/deploymentengine.route"
-import {DeploymentEngine} from "../+deploymentengine/deploymentengine"
-import {clusterURL} from "../+cluster";
-import {tektonURL, tektonRoute, Tekton} from "../+tekton";
-import {ovnURL, ovnRoute, Ovn} from "../+ovn";
-import {Config, configRoute, configURL} from "../+config";
-import {eventRoute, eventsURL} from "../+events";
-import {tenantRoute, tenantURL, Tenant} from "../+tenant";
-import {deployRoute, deployURL, Deploys} from "../+deploy";
-import {Apps, appsRoute, appsURL} from "../+apps";
-import {namespaceStore} from "../+namespaces/namespace.store";
-import {TabRoute} from "./main-layout";
-import {Workloads} from "../+workloads";
-import {UserManagement} from "../+user-management";
-import {Storage} from "../+storage";
-import {Network} from "../+network";
-import {crdStore} from "../+custom-resources/crd.store";
-import {CrdList, crdResourcesRoute, crdRoute, crdURL} from "../+custom-resources";
-import {CustomResources} from "../+custom-resources/custom-resources";
-import {navigation} from "../../navigation";
+import { computed, observable, reaction } from "mobx";
+import { observer } from "mobx-react";
+import { matchPath, NavLink } from "react-router-dom";
+import { Trans } from "@lingui/macro";
+import { configStore } from "../../config.store";
+import { createStorage, cssNames } from "../../utils";
+import { Icon } from "../icon";
+import { workloadsRoute, workloadsURL } from "../+workloads/workloads.route";
+import { namespacesURL } from "../+namespaces/namespaces.route";
+import { nodesURL } from "../+nodes/nodes.route";
+import { usersManagementRoute, usersManagementURL } from "../+user-management/user-management.routes";
+import { networkRoute, networkURL } from "../+network/network.route";
+import { storageRoute, storageURL } from "../+storage/storage.route";
+import { deploymentEngineRoute, deploymentEngineURL } from "../+deploymentengine/deploymentengine.route"
+import { DeploymentEngine } from "../+deploymentengine/deploymentengine"
+import { clusterURL } from "../+cluster";
+import { tektonURL, tektonRoute, Tekton } from "../+tekton";
+import { ovnURL, ovnRoute, Ovn } from "../+ovn";
+import { Config, configRoute, configURL } from "../+config";
+import { eventRoute, eventsURL } from "../+events";
+import { tenantRoute, tenantURL, Tenant } from "../+tenant";
+import { deployRoute, deployURL, Deploys } from "../+deploy";
+import { Apps, appsRoute, appsURL } from "../+apps";
+import { namespaceStore } from "../+namespaces/namespace.store";
+import { TabRoute } from "./main-layout";
+import { Workloads } from "../+workloads";
+import { UserManagement } from "../+user-management";
+import { Storage } from "../+storage";
+import { Network } from "../+network";
+import { crdStore } from "../+custom-resources/crd.store";
+import { CrdList, crdResourcesRoute, crdRoute, crdURL } from "../+custom-resources";
+import { CustomResources } from "../+custom-resources/custom-resources";
+import { navigation } from "../../navigation";
 
 
 const SidebarContext = React.createContext<SidebarContextValue>({ pinned: false });
@@ -170,11 +170,12 @@ export class Sidebar extends React.Component<Props> {
                             text={<Trans>Namespaces</Trans>}
                         />
                         <SidebarNavItem
+                            isHidden={!isClusterAdmin}
                             id="ovn"
-                            url={ovnURL({query})}
+                            url={ovnURL({ query })}
                             routePath={ovnRoute.path}
                             subMenus={Ovn.tabRoutes}
-                            icon={<Icon material="wifi_tethering"/>}
+                            icon={<Icon material="wifi_tethering" />}
                             text={<Trans>OVN Config</Trans>}
                         />
                         <SidebarNavItem
