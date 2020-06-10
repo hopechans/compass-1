@@ -16,17 +16,11 @@ interface Props<T = any> extends Partial<Props> {
     themeName?: "dark" | "light" | "outlined";
     divider?: true;
 
-    lowerCase?: boolean;
-
     onChange?(option: T, meta?: ActionMeta): void;
 }
 
 @observer
 export class EnvironmentDetails extends React.Component<Props> {
-
-    static defaultProps = {
-        lowerCase: true
-    }
 
     @observable value: Environment[] = this.props.value || environment;
 
@@ -76,14 +70,10 @@ export class EnvironmentDetails extends React.Component<Props> {
 
     render() {
 
-        const {lowerCase} = this.props;
-
         return (
             <>
                 {this.props.divider ? <Divider/> : <></>}
-                {lowerCase?
-                    <><b>Environment  </b>{this.renderAdd()}<br/><br/></>:
-                    <SubTitle className="fields-title" title="Environment">{this.renderAdd()}</SubTitle>}
+                <SubTitle className="fields-title" title="Environment">{this.renderAdd()}</SubTitle>
                 <div className="Environment">
                     {this.value.map((item, index) => {
                         return (
@@ -111,13 +101,13 @@ export class EnvironmentDetails extends React.Component<Props> {
                                     {
                                         this.value[index].type == "Custom Environment" ?
                                             <>
-                                                {lowerCase?<><br/><b>Name</b><br/><br/></>:<SubTitle title={<Trans>Name</Trans>}/>}
+                                                <SubTitle title={<Trans>Name</Trans>}/>
                                                 <Input
                                                     placeholder={_i18n._(t`Name`)}
                                                     value={this.value[index].oneEnvConfig.name}
                                                     onChange={value => this.value[index].oneEnvConfig.name = value}
                                                 />
-                                                {lowerCase?<><br/><b>Value</b><br/><br/></>:<SubTitle title={<Trans>Value</Trans>}/>}
+                                                <SubTitle title={<Trans>Value</Trans>}/>
                                                 <Input
                                                     placeholder={_i18n._(t`Value`)}
                                                     value={this.value[index].oneEnvConfig.value}
@@ -128,13 +118,13 @@ export class EnvironmentDetails extends React.Component<Props> {
                                     {
                                         this.value[index].type == "From Configuration" ?
                                             <>
-                                                {lowerCase?<><br/><b>Environment</b><br/><br/></>:<SubTitle title={<Trans>Environment</Trans>}/>}
+                                                <SubTitle title={<Trans>Environment</Trans>}/>
                                                 <Input
                                                     placeholder={_i18n._(t`Environment`)}
                                                     value={this.value[index].oneEnvConfig.value}
                                                     onChange={value => this.value[index].oneEnvConfig.value = value}
                                                 />
-                                                {lowerCase?<><br/><b>Configure</b><br/><br/></>:<SubTitle title={<Trans>Configure</Trans>}/>}
+                                                <SubTitle title={<Trans>Configure</Trans>}/>
                                                 <Input
                                                     placeholder={_i18n._(t`Configure`)}
                                                     value={this.value[index].oneEnvConfig.configure}
@@ -142,7 +132,7 @@ export class EnvironmentDetails extends React.Component<Props> {
                                                         value => this.value[index].oneEnvConfig.configure = value
                                                     }
                                                 />
-                                                {lowerCase?<><br/><b>Key</b><br/><br/></>:<SubTitle title={<Trans>Key</Trans>}/>}
+                                                <SubTitle title={<Trans>Key</Trans>}/>
                                                 <Input
                                                     placeholder={_i18n._(t`Key`)}
                                                     value={this.value[index].oneEnvConfig.key}
@@ -153,19 +143,19 @@ export class EnvironmentDetails extends React.Component<Props> {
                                     {
                                         this.value[index].type == "From Secret" ?
                                             <>
-                                                {lowerCase?<><br/><b>Name</b><br/><br/></>:<SubTitle title={<Trans>Name</Trans>}/>}
+                                                <SubTitle title={<Trans>Name</Trans>}/>
                                                 <Input
                                                     placeholder={_i18n._(t`Name`)}
                                                     value={this.value[index].oneEnvConfig.name}
                                                     onChange={value => this.value[index].oneEnvConfig.name = value}
                                                 />
-                                                {lowerCase?<><br/><b>Secret Name</b><br/><br/></>:<SubTitle title={<Trans>Secret Name</Trans>}/>}
+                                                <SubTitle title={<Trans>Secret Name</Trans>}/>
                                                 <Input
                                                     placeholder={_i18n._(t`Secret Name`)}
                                                     value={this.value[index].oneEnvConfig.selectName}
                                                     onChange={value => this.value[index].oneEnvConfig.selectName = value}
                                                 />
-                                                {lowerCase?<><br/><b>Secret Key</b><br/><br/></>:<SubTitle title={<Trans>Secret Key</Trans>}/>}
+                                                <SubTitle title={<Trans>Secret Key</Trans>}/>
                                                 <Input
                                                     placeholder={_i18n._(t`Secret Key`)}
                                                     value={this.value[index].oneEnvConfig.selectKey}
@@ -176,7 +166,7 @@ export class EnvironmentDetails extends React.Component<Props> {
                                     {
                                         this.value[index].type == "Other" ?
                                             <>
-                                                {lowerCase?<><br/><b>Command</b><br/><br/></>:<SubTitle title={<Trans>Command</Trans>}/>}
+                                                <SubTitle title={<Trans>Command</Trans>}/>
                                                 <Input
                                                     placeholder={_i18n._(t`Command`)}
                                                     multiLine={true}

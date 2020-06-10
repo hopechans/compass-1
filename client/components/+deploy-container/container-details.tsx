@@ -31,6 +31,17 @@ interface Props<T = any> extends Partial<Props> {
 @observer
 export class ContainerDetails extends React.Component<Props> {
 
+    static defaultProps = {
+        base: true,
+        commands: true,
+        args: true,
+        environment: true,
+        readyProbe: true,
+        liveProbe: true,
+        lifeCycle: true,
+        divider: true,
+    }
+
     private theme = this.props.themeName || themeStore.activeTheme.type;
     private divider = this.props.divider;
 
@@ -43,12 +54,12 @@ export class ContainerDetails extends React.Component<Props> {
             <>
                 {base ? <BaseDetails
                     themeName={this.theme} value={this.value.base}
-                    onChange={ (value) => this.value.base = value }
+                    onChange={(value) => this.value.base = value}
                 /> : <></>}
 
                 {commands ? <CommandDetails
                     themeName={this.theme} value={this.value.commands} divider={this.divider}
-                    onChange={ (value) => this.value.commands = value }
+                    onChange={(value) => this.value.commands = value}
                 /> : <></>}
 
                 {args ? <ArgsDetails themeName={this.theme} value={this.value.args} divider={this.divider}
@@ -57,22 +68,22 @@ export class ContainerDetails extends React.Component<Props> {
 
                 {environment ? <EnvironmentDetails
                     themeName={this.theme} value={this.value.environment} divider={this.divider}
-                    onChange={ (value) => this.value.environment = value }
+                    onChange={(value) => this.value.environment = value}
                 /> : <></>}
 
                 {readyProbe ? <ReadyprobeDetails
                     themeName={this.theme} value={this.value.readyProbe} divider={this.divider}
-                    onChange={ (value) => this.value.readyProbe = value }
+                    onChange={(value) => this.value.readyProbe = value}
                 /> : <></>}
 
                 {liveProbe ? <LiveprobeDetails
                     themeName={this.theme} value={this.value.liveProbe} divider={this.divider}
-                    onChange={ (value) => this.value.liveProbe = value }
+                    onChange={(value) => this.value.liveProbe = value}
                 /> : <></>}
 
                 {lifeCycle ? <LifeCycleDetails
                     themeName={this.theme} value={this.value.lifeCycle} divider={this.divider}
-                    onChange={ (value) => this.value.lifeCycle = value }
+                    onChange={(value) => this.value.lifeCycle = value}
                 /> : <></>}
             </>
         )
