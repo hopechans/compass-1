@@ -15,7 +15,7 @@ export interface ILanguage {
 
 export const _i18n = setupI18n({
   missing: (message, id) => {
-    console.warn('Missing localization:', message, id);
+    // console.warn('Missing localization:', message, id);
     return id;
   }
 });
@@ -27,7 +27,7 @@ export class LocalizationStore {
 
   public languages: ILanguage[] = orderBy<ILanguage>([
     { code: "en", title: "English", nativeTitle: "English" },
-    { code: "ru", title: "Russian", nativeTitle: "Русский" },
+    // { code: "ru", title: "Russian", nativeTitle: "Русский" },
     // { code: "fi", title: "Finnish", nativeTitle: "Suomi" },
   ], "title");
 

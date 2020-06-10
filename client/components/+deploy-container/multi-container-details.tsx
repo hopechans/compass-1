@@ -29,6 +29,17 @@ interface Props<T = any> extends Partial<Props> {
 @observer
 export class MultiContainerDetails extends React.Component<Props> {
 
+    static defaultProps = {
+        base: true,
+        commands: true,
+        args: true,
+        environment: true,
+        readyProbe: true,
+        liveProbe: true,
+        lifeCycle: true,
+        divider: true,
+    }
+
     @observable value: Container[] = this.props.value || [container];
 
     add() {
