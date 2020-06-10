@@ -86,8 +86,16 @@ export class CopyAddDeployDialog extends React.Component<Props> {
                             <br/>
                             <Collapse>
                                 <Panel key={"MultiContainer"} header={"MultiContainer"}>
-                                    <MultiContainerDetails value={this.containers}
-                                                           onChange={value => this.containers = value}/>
+                                    <MultiContainerDetails
+                                        base={true}
+                                        commands={true}
+                                        args={true}
+                                        environment={true}
+                                        readyProbe={true}
+                                        liveProbe={true}
+                                        lifeCycle={true}
+                                        value={this.containers}
+                                        onChange={value => this.containers = value}/>
                                 </Panel>
                             </Collapse>
                             <br/>
