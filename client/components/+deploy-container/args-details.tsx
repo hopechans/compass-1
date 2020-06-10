@@ -17,13 +17,21 @@ interface ArgsProps<T = any> extends Partial<ArgsProps> {
     themeName?: "dark" | "light" | "outlined";
     divider?: true;
 
+    lowerCase?: boolean;
+
     onChange?(option: T, meta?: ActionMeta): void;
 }
 
 @observer
 export class ArgsDetails extends React.Component<ArgsProps> {
 
+
+
     @observable value: string[] = this.props.value || args;
+
+    static defaultProps = {
+        lowerCase: true
+    }
 
     add = () => {
         this.value.push("");
@@ -33,21 +41,30 @@ export class ArgsDetails extends React.Component<ArgsProps> {
         this.value.splice(index, 1);
     }
 
+    renderAdd() {
+        return (
+            <Icon
+                small
+                tooltip={_i18n._(t`Args`)}
+                material="add_circle_outline"
+                onClick={(e) => {
+                    this.add();
+                    e.stopPropagation()
+                }}
+            />
+        )
+    }
+
     render() {
+
+        const {lowerCase} = this.props;
+
         return (
             <>
                 {this.props.divider ? <Divider/> : <></>}
-                <SubTitle className="fields-title" title="Args">
-                    <Icon
-                        small
-                        tooltip={_i18n._(t`Args`)}
-                        material="add_circle_outline"
-                        onClick={(e) => {
-                            this.add();
-                            e.stopPropagation()
-                        }}
-                    />
-                </SubTitle>
+                {lowerCase?
+                    <><b>Args  </b>{this.renderAdd()}<br/><br/></>:
+                    <SubTitle className="fields-title" title="Args">{this.renderAdd()}</SubTitle>}
                 <div className="args">
                     {this.value.map((item, index) => {
                         return (
