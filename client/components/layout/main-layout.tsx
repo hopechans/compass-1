@@ -23,7 +23,7 @@ import { themeStore } from "../../theme.store";
 import {withRouter,RouteComponentProps } from 'react-router';
 import { Notifications } from "../notifications";
 import { message } from 'antd';
-
+import {kubeWatchApi } from '../../api/kube-watch-api'
 
 export interface TabRoute extends RouteProps {
   title: React.ReactNode;
@@ -73,6 +73,7 @@ export class Layout extends React.Component<Props,State> {
 
   loginout = () => {
     configStore.reset()
+    kubeWatchApi.reset()
     window.localStorage.clear()
     this.props.history.push('/login')
   }

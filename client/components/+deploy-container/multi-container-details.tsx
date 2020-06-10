@@ -29,7 +29,7 @@ interface Props<T = any> extends Partial<Props> {
 @observer
 export class MultiContainerDetails extends React.Component<Props> {
 
-    @observable value: Container[] = [];
+    @observable value: Container[] = this.props.value || [container];
 
     add() {
         this.value.push(container);
@@ -79,16 +79,14 @@ export class MultiContainerDetails extends React.Component<Props> {
                         return (
                             <Panel header={`Container`} key={index} extra={genExtra(index)}>
                                 <ContainerDetails
-                                    base={true}
-                                    commands={true} args={true}
-                                    environment={true}
-                                    readyProbe={true} liveProbe={true}
-                                    lifeCycle={true}
-                                    divider={true}
+                                    base={this.props.base}
+                                    commands={this.props.commands} args={this.props.args}
+                                    environment={this.props.environment}
+                                    readyProbe={this.props.readyProbe} liveProbe={this.props.liveProbe}
+                                    lifeCycle={this.props.lifeCycle}
+                                    divider={this.props.divider}
                                     value={this.value[index]}
-                                    onChange={(value: any) => {
-                                        this.value[index] = value
-                                    }}
+                                    onChange={(value: any) => { this.value[index] = value }}
                                 />
                             </Panel>
                         )

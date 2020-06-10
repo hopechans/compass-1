@@ -18,6 +18,7 @@ import {deploymentEngineRoute, deploymentEngineURL} from "../+deploymentengine/d
 import {DeploymentEngine} from "../+deploymentengine/deploymentengine"
 import {clusterURL} from "../+cluster";
 import {tektonURL, tektonRoute, Tekton} from "../+tekton";
+import {ovnURL, ovnRoute, Ovn} from "../+ovn";
 import {Config, configRoute, configURL} from "../+config";
 import {eventRoute, eventsURL} from "../+events";
 import {tenantRoute, tenantURL, Tenant} from "../+tenant";
@@ -112,7 +113,7 @@ export class Sidebar extends React.Component<Props> {
                             url={deployURL({query})}
                             routePath={deployRoute.path}
                             text={<Trans>Deploy</Trans>}
-                            icon={<Icon material="open_in_browser"/>}
+                            icon={<Icon material="backup"/>}
                         />
                         <SidebarNavItem
                             id="workloads"
@@ -147,6 +148,7 @@ export class Sidebar extends React.Component<Props> {
                             text={<Trans>Storage</Trans>}
                         />
                         <SidebarNavItem
+                            isHidden={!isClusterAdmin}
                             id="namespaces"
                             url={namespacesURL()}
                             icon={<Icon material="layers"/>}
@@ -166,6 +168,14 @@ export class Sidebar extends React.Component<Props> {
                             subMenus={Tekton.tabRoutes}
                             icon={<Icon material="clear_all"/>}
                             text={<Trans>Tekton</Trans>}
+                        />
+                        <SidebarNavItem
+                            id="ovn"
+                            url={ovnURL({query})}
+                            routePath={ovnRoute.path}
+                            subMenus={Ovn.tabRoutes}
+                            icon={<Icon material="wifi_tethering"/>}
+                            text={<Trans>OVN Config</Trans>}
                         />
                         <SidebarNavItem
                             isHidden={!isClusterAdmin}
