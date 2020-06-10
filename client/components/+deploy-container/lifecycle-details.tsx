@@ -20,6 +20,8 @@ interface Props<T = any> extends Partial<Props> {
     themeName?: "dark" | "light" | "outlined";
     divider?: true;
 
+    lowerCase?: boolean;
+
     onChange?(option: T, meta?: ActionMeta): void;
 }
 
@@ -27,6 +29,10 @@ interface Props<T = any> extends Partial<Props> {
 export class LifeCycleDetails extends React.Component<Props> {
 
     @observable value: LifeCycle = this.props.value || lifeCycle
+
+    static defaultProps = {
+        lowerCase: true
+    }
 
     get selectOptions() {
         return [
@@ -47,6 +53,9 @@ export class LifeCycleDetails extends React.Component<Props> {
     }
 
     render() {
+
+        const {lowerCase} = this.props
+
         return (
             <>
                 {this.props.divider ? <Divider/> : <></>}
@@ -59,7 +68,7 @@ export class LifeCycleDetails extends React.Component<Props> {
                 {
                     this.value.status ?
                         <>
-                            <SubTitle title={<Trans>postStart</Trans>}/>
+                            {lowerCase?<><br/><b>PostStart</b><br/><br/></>:<SubTitle title={<Trans>PostStart</Trans>}/>}
                             <Select
                                 formatOptionLabel={this.formatOptionLabel}
                                 options={this.selectOptions}
@@ -72,7 +81,7 @@ export class LifeCycleDetails extends React.Component<Props> {
                                         <br/>
                                         <Row>
                                             <Col span="10">
-                                                <SubTitle title={<Trans>HTTP</Trans>}/>
+                                                {lowerCase?<><br/><b>HTTP</b><br/><br/></>:<SubTitle title={<Trans>HTTP</Trans>}/>}
                                                 <Input
                                                     placeholder={_i18n._(t`HTTP`)}
                                                     type="number"
@@ -82,7 +91,7 @@ export class LifeCycleDetails extends React.Component<Props> {
                                                 />
                                             </Col>
                                             <Col span="10" offset="4">
-                                                <SubTitle title={<Trans>URL</Trans>}/>
+                                                {lowerCase?<><br/><b>URL</b><br/><br/></>:<SubTitle title={<Trans>URL</Trans>}/>}
                                                 <Input
                                                     placeholder={_i18n._(t`URL`)}
                                                     value={this.value.postStart.url}
@@ -95,7 +104,7 @@ export class LifeCycleDetails extends React.Component<Props> {
                             {
                                 this.value.postStart.type == "TCP" ?
                                     <>
-                                        <SubTitle title={<Trans>TCP</Trans>}/>
+                                        {lowerCase?<><br/><b>TCP</b><br/><br/></>:<SubTitle title={<Trans>TCP</Trans>}/>}
                                         <Input
                                             placeholder={_i18n._(t`TCP`)}
                                             type="number"
@@ -108,7 +117,7 @@ export class LifeCycleDetails extends React.Component<Props> {
                             {
                                 this.value.postStart.type == "Command" ?
                                     <>
-                                        <SubTitle title={<Trans>Command</Trans>}/>
+                                        {lowerCase?<><br/><b>Command</b><br/><br/></>:<SubTitle title={<Trans>Command</Trans>}/>}
                                         <Input
                                             placeholder={_i18n._(t`Command`)}
                                             multiLine={true}
@@ -117,8 +126,7 @@ export class LifeCycleDetails extends React.Component<Props> {
                                         />
                                     </> : <></>
                             }
-                            <br/>
-                            <SubTitle title={<Trans>preStop</Trans>}/>
+                            {lowerCase?<><br/><b>PreStop</b><br/><br/></>:<SubTitle title={<Trans>PreStop</Trans>}/>}
                             <Select
                                 formatOptionLabel={this.formatOptionLabel}
                                 options={this.selectOptions}
@@ -131,7 +139,7 @@ export class LifeCycleDetails extends React.Component<Props> {
                                         <br/>
                                         <Row>
                                             <Col span="10">
-                                                <SubTitle title={<Trans>HTTP</Trans>}/>
+                                                {lowerCase?<><br/><b>HTTP</b><br/><br/></>:<SubTitle title={<Trans>HTTP</Trans>}/>}
                                                 <Input
                                                     placeholder={_i18n._(t`HTTP`)}
                                                     type="number"
@@ -141,7 +149,7 @@ export class LifeCycleDetails extends React.Component<Props> {
                                                 />
                                             </Col>
                                             <Col span="10" offset="4">
-                                                <SubTitle title={<Trans>URL</Trans>}/>
+                                                {lowerCase?<><br/><b>URL</b><br/><br/></>:<SubTitle title={<Trans>URL</Trans>}/>}
                                                 <Input
                                                     placeholder={_i18n._(t`URL`)}
                                                     value={this.value.preStop.url}
@@ -154,7 +162,7 @@ export class LifeCycleDetails extends React.Component<Props> {
                             {
                                 this.value.preStop.type == "TCP" ?
                                     <>
-                                        <SubTitle title={<Trans>TCP</Trans>}/>
+                                        {lowerCase?<><br/><b>TCP</b><br/><br/></>:<SubTitle title={<Trans>TCP</Trans>}/>}
                                         <Input
                                             placeholder={_i18n._(t`TCP`)}
                                             type="number"
@@ -167,7 +175,7 @@ export class LifeCycleDetails extends React.Component<Props> {
                             {
                                 this.value.preStop.type == "Command" ?
                                     <>
-                                        <SubTitle title={<Trans>Command</Trans>}/>
+                                        {lowerCase?<><br/><b>Command</b><br/><br/></>:<SubTitle title={<Trans>Command</Trans>}/>}
                                         <Input
                                             placeholder={_i18n._(t`Command`)}
                                             multiLine={true}

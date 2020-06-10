@@ -15,6 +15,9 @@ interface Props<T =any> extends Partial<Props> {
     value?: T;
     themeName?: "dark" | "light" | "outlined";
     divider?:true;
+
+    lowerCase?: boolean
+
     onChange?(option: T, meta?: ActionMeta): void;
 }
 
@@ -22,6 +25,10 @@ interface Props<T =any> extends Partial<Props> {
 export class CommandDetails extends React.Component<Props> {
 
     @observable value: string[] = this.props.value || commands;
+
+    static defaultProps = {
+        lowerCase: true
+    }
 
     add = () => {
         this.value.push("");
@@ -31,21 +38,30 @@ export class CommandDetails extends React.Component<Props> {
         this.value.splice(index, 1);
     }
 
+    renderAdd() {
+        return (
+            <Icon
+                small
+                tooltip={_i18n._(t`Command`)}
+                material="add_circle_outline"
+                onClick={(e) => {
+                    this.add();
+                    e.stopPropagation();
+                }}
+            />
+        )
+    }
+
     render() {
+
+        const {lowerCase} = this.props;
+
         return (
             <>
                 {this.props.divider?<Divider />: <></>}
-                <SubTitle className="fields-title" title="Command">
-                    <Icon
-                        small
-                        tooltip={_i18n._(t`Command`)}
-                        material="add_circle_outline"
-                        onClick={(e) => {
-                            this.add();
-                            e.stopPropagation();
-                        }}
-                    />
-                </SubTitle>
+                {lowerCase?
+                    <><b>Command  </b>{this.renderAdd()}<br/><br/></>:
+                    <SubTitle className="fields-title" title="Command">{this.renderAdd()}</SubTitle>}
                 <div className="command">
                     {this.value.map((item, index) => {
                         return (
