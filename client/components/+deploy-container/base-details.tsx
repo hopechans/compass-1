@@ -4,7 +4,6 @@ import {observable} from "mobx";
 import {Select, SelectOption} from "../select";
 import {Icon} from "../icon";
 import {SubTitle} from "../layout/sub-title";
-import {t, Trans} from "@lingui/macro";
 import {Input} from "../input";
 import {_i18n} from "../../i18n";
 import {isNumber} from "../input/input.validators";
@@ -16,7 +15,6 @@ import {base, Base} from "./common";
 interface Props<T = any> extends Partial<Props> {
     value?: T;
 
-    lowerCase?: boolean
     containerNameTitle?: string
     imageAddressTitle?: string
     imagePullPolicyTitle?: string
@@ -70,24 +68,24 @@ export class BaseDetails extends React.Component<Props> {
 
     render() {
 
-        const { lowerCase, containerNameTitle, imageAddressTitle, imagePullPolicyTitle,
+        const { containerNameTitle, imageAddressTitle, imagePullPolicyTitle,
             limitCPUTitle, limitMemoryTitle, requiredCPUTitle, requireMemoryTitle } = this.props
 
         return (
             <>
-                {lowerCase?<b>{containerNameTitle}</b>:<SubTitle title={containerNameTitle}/>}
+                <SubTitle title={containerNameTitle}/>
                 <Input
                     placeholder={_i18n._(containerNameTitle)}
                     value={this.value.name}
                     onChange={v => this.value.name = v}
                 />
-                {lowerCase?<><br/><b>{imageAddressTitle}</b></>:<SubTitle title={imageAddressTitle}/>}
+                <SubTitle title={imageAddressTitle}/>
                 <Input
                     placeholder={_i18n._(imageAddressTitle)}
                     value={this.value.image}
                     onChange={v => this.value.image = v}
                 />
-                {lowerCase?<><br/><b>{imagePullPolicyTitle}</b><br/><br/></>:<SubTitle title={imagePullPolicyTitle}/>}
+                <SubTitle title={imagePullPolicyTitle}/>
                 <Select
                     formatOptionLabel={this.formatOptionLabel}
                     options={this.selectOptions}
@@ -97,7 +95,7 @@ export class BaseDetails extends React.Component<Props> {
                 <br/>
                 <Row justify="space-between">
                     <Col span="10">
-                        {lowerCase?<><br/><b>{limitCPUTitle}</b></>:<SubTitle title={limitCPUTitle}/>}
+                        <SubTitle title={limitCPUTitle}/>
                         <Input
                             placeholder={_i18n._(limitCPUTitle)}
                             type="number"
@@ -107,7 +105,7 @@ export class BaseDetails extends React.Component<Props> {
                         />
                     </Col>
                     <Col span="10">
-                        {lowerCase?<><br/><b>{limitMemoryTitle}</b></>:<SubTitle title={limitMemoryTitle}/>}
+                        <SubTitle title={limitMemoryTitle}/>
                         <Input
                             placeholder={_i18n._(limitMemoryTitle)}
                             type="number"
@@ -119,7 +117,7 @@ export class BaseDetails extends React.Component<Props> {
                 </Row>
                 <Row justify="space-between">
                     <Col span="10">
-                        {lowerCase?<><br/><b>{requiredCPUTitle}</b></>:<SubTitle title={requiredCPUTitle}/>}
+                        <SubTitle title={requiredCPUTitle}/>
                         <Input
                             placeholder={_i18n._(requiredCPUTitle)}
                             type="number"
@@ -129,7 +127,7 @@ export class BaseDetails extends React.Component<Props> {
                         />
                     </Col>
                     <Col span="10">
-                        {lowerCase?<><br/><b>{requireMemoryTitle}</b></>:<SubTitle title={requireMemoryTitle}/>}
+                        <SubTitle title={requireMemoryTitle}/>
                         <Input
                             placeholder={_i18n._(requireMemoryTitle)}
                             type="number"
