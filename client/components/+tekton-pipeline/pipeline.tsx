@@ -25,7 +25,7 @@ import G6 from "@antv/g6";
 import { Icon } from "../icon";
 // import { Input } from "../input";
 // import { Select } from "../select";
-// import { ContainerDetails } from "./container-details";
+import { MultiContainerDetails } from "../+deploy-container";
 import { _i18n } from "../../i18n";
 import {
   TextField,
@@ -35,8 +35,10 @@ import {
   Button,
   Typography,
   Grid,
+  Divider,
 } from "@material-ui/core";
-import Card from "@material-ui/core/Card";
+import Step from "./steps";
+import { Input } from "../input";
 
 enum sortBy {
   name = "name",
@@ -87,93 +89,177 @@ export class Pipelines extends React.Component<Props> {
   };
 
   addResource = () => {
-    this.addParams.push("");
+    this.addResources.push("");
   };
 
   removeResource = (index: number) => {
-    this.addParams.splice(index, 1);
+    this.addResources.splice(index, 1);
   };
 
-
-  renderResource() {
-    
-  }
-
-  renderParamsHeader() {
+  renderResourceHeader = () => {
     return (
       <Grid container spacing={2}>
         <Grid item xs={12}></Grid>
         <Grid item xs={12}>
+          <Divider />
           <Icon
             small
-            tooltip={"Params"}
+            tooltip={"resource"}
             material="add_circle_outline"
             onClick={(e) => {
-              this.addParam();
+              this.addResource();
               e.stopPropagation();
             }}
           />
-          <Trans> Add Pipeline Params:</Trans>
+          <b> Add Pipeline Resources:</b>
         </Grid>
-        <Grid item xs={3}>
+        <Grid item xs={5}>
           <Trans>Name</Trans>
         </Grid>
-        <Grid item xs={3}>
-          <Trans>Type</Trans>
+        <Grid item xs={5}>
+          <Trans>ResourceType</Trans>
         </Grid>
+      </Grid>
+    );
+  };
+
+  renderInputs() {
+    return (
+      <Grid container spacing={2}>
+        <Grid item xs={12}></Grid>
+        <Grid item xs={1}></Grid>
         <Grid item xs={3}>
-          <Trans>Description</Trans>
-        </Grid>
-        <Grid item xs={3}>
-          <Trans>Default</Trans>
+          <Icon
+            small
+            tooltip={"inputs"}
+            material="add_circle_outline"
+            onClick={(e) => {
+              this.addResource();
+              e.stopPropagation();
+            }}
+          />
+          <b> Add Pipeline Inputs:</b>
         </Grid>
       </Grid>
     );
   }
 
+  renderResource() {
+    return (
+      <div className="Resource">
+        {this.renderResourceHeader()}
+        {this.addResources.map((item, index) => {
+          return (
+            <Grid container spacing={2}>
+              <Grid item xs={5}>
+                <Select
+                  labelId="demo-controlled-open-select-label"
+                  id="demo-controlled-open-select"
+                  style={{ width: "50ch" }}
+                  // open={open}
+                  // onClose={handleClose}
+                  // onOpen={handleOpen}
+                  // value={age}
+                  onChange={(e: any) => {
+                    {
+                      e.stopPropagation();
+                    }
+                  }}
+                >
+                  <MenuItem value={10}>test1</MenuItem>
+                  <MenuItem value={20}>test2</MenuItem>
+                </Select>
+              </Grid>
+              <Grid item xs={5}>
+                <Select
+                  labelId="demo-controlled-open-select-label"
+                  id="demo-controlled-open-select"
+                  style={{ width: "50ch" }}
+                  // open={open}
+                  // onClose={handleClose}
+                  // onOpen={handleOpen}
+                  // value={age}
+                  onChange={(e: any) => {
+                    {
+                      e.stopPropagation();
+                    }
+                  }}
+                >
+                  <MenuItem value={10}>git</MenuItem>
+                  <MenuItem value={20}>image</MenuItem>
+                </Select>
+              </Grid>
+              <Grid item xs={1}>
+                <Icon
+                  small
+                  material="remove_circle_outline"
+                  onClick={(e) => {
+                    this.removeResource(index);
+                    e.stopPropagation();
+                  }}
+                />
+              </Grid>
+            </Grid>
+          );
+        })}
+      </div>
+    );
+  }
+
+  renderParamsHeader() {
+    return (
+      <div>
+        <Grid container spacing={2}>
+          <Grid item xs={12}></Grid>
+          <Grid item xs={12}>
+            <Icon
+              small
+              tooltip={"Params"}
+              material="add_circle_outline"
+              onClick={(e) => {
+                this.addParam();
+                e.stopPropagation();
+              }}
+            />
+
+            <b>Add Pipeline Params:</b>
+          </Grid>
+          <Grid item xs={3}>
+            <Trans>Name</Trans>
+          </Grid>
+          <Grid item xs={3}>
+            <Trans>Type</Trans>
+          </Grid>
+          <Grid item xs={3}>
+            <Trans>Description</Trans>
+          </Grid>
+          <Grid item xs={3}>
+            <Trans>Default</Trans>
+          </Grid>
+        </Grid>
+      </div>
+    );
+  }
+
   renderParams() {
     return (
-      <div className="args">
+      <div className="params">
         {this.renderParamsHeader()}
 
         {this.addParams.map((item, index) => {
           return (
             <Grid container spacing={2}>
               <Grid item xs={3}>
-                <TextField
-                  variant="outlined"
-                  InputProps={{ style: { height: 30 } }}
-                  InputLabelProps={{
-                    shrink: true,
-                  }}
-                />
+                <Input />
               </Grid>
               <Grid item xs={3}>
-                <TextField
-                  variant="outlined"
-                  InputProps={{ style: { height: 30 } }}
-                  InputLabelProps={{
-                    shrink: true,
-                  }}
-                />
+                <Input />
               </Grid>
               <Grid item xs={3}>
-                <TextField
-                  variant="outlined"
-                  InputProps={{ style: { height: 30 } }}
-                  InputLabelProps={{
-                    shrink: true,
-                  }}
-                />
+                <Input />
               </Grid>
               <Grid item xs={2}>
-                <TextField
-                  variant="outlined"
-                  InputProps={{ style: { height: 30 } }}
-                  InputLabelProps={{
-                    shrink: true,
-                  }}
-                />
+                <Input />
               </Grid>
               <Grid item xs={1}>
                 <Icon
@@ -202,18 +288,18 @@ export class Pipelines extends React.Component<Props> {
         onClose={() => this.closeTaskDrawer()}
       >
         <div className="taskName">
-          <DrawerItem name={<Trans>Task Name:</Trans>}>
-            <TextField
-              id="standard-basic"
-              label="Task Name"
+          <DrawerItem name={<b>Task Name:</b>}>
+            <Input
+              placeholder={"Task Name"}
               value={this.taskName}
-              style={{ width: "60ch" }}
               onChange={this.handleTaskName}
             />
           </DrawerItem>
 
           {this.renderParams()}
-
+          {this.renderResource()}
+          <Divider />
+          <Step />
           {/* <DrawerItem name={<Trans>Repository:</Trans>}>
               <InputLabel id="demo-controlled-open-select-label">
                 Repository
