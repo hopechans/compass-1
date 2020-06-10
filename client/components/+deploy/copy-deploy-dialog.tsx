@@ -14,6 +14,7 @@ import {app, App} from "../+deploy-app";
 import {AppDetails} from "../+deploy-app";
 import {deployStore} from "./deploy.store";
 import {Notifications} from "../notifications";
+import { configStore } from "../../../client/config.store";
 
 const { Panel } = Collapse;
 
@@ -89,24 +90,9 @@ export class CopyAddDeployDialog extends React.Component<Props> {
                             </Collapse>
                             <br />
                             <Collapse>
-<<<<<<< HEAD
                                 <Panel key={"MultiContainer"} header={"Containers"}>
                                     <MultiContainerDetails value={this.containers}
                                         onChange={value => this.containers = value} />
-=======
-                                <Panel key={"MultiContainer"} header={"MultiContainer"}>
-                                    <MultiContainerDetails
-                                        base={true}
-                                        commands={true}
-                                        args={true}
-                                        environment={true}
-                                        readyProbe={true}
-                                        liveProbe={true}
-                                        lifeCycle={true}
-                                        divider={true}
-                                        value={this.containers}
-                                        onChange={value => this.containers = value}/>
->>>>>>> a65b06b20621f6a4ef332b33ec218d5022984e48
                                 </Panel>
                             </Collapse>
                             <br />
