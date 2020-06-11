@@ -22,20 +22,9 @@ import { Drawer } from "../drawer";
 import "./registerShape";
 import G6 from "@antv/g6";
 import { Icon } from "../icon";
-// import { Input } from "../input";
-// import { Select } from "../select";
-import { MultiContainerDetails } from "../+deploy-container";
+import { Select } from "../select";
 import { _i18n } from "../../i18n";
-import {
-  TextField,
-  MenuItem,
-  InputLabel,
-  Select,
-  Button,
-  Typography,
-  Grid,
-  Divider,
-} from "@material-ui/core";
+import { Grid, Divider } from "@material-ui/core";
 import Step from "./steps";
 import { Input } from "../input";
 
@@ -57,6 +46,10 @@ export class Pipelines extends React.Component<Props> {
   @observable currentNode: any;
   @observable addParams: string[] = [];
   @observable addResources: string[] = [];
+  @observable currentSelectResource: [] = [];
+  @observable selectResource: [] = [];
+  @observable defaultresourceType: string[] = ["git", "image"];
+  @observable currentSelectResourceType: string;
 
   @action
   openTaskDrawer() {
@@ -75,7 +68,7 @@ export class Pipelines extends React.Component<Props> {
   };
 
   handleTaskName = (e: any) => {
-    this.taskName = e.target.value;
+    this.taskName = e;
     this.graph.setItemState(this.currentNode, "click", this.taskName);
   };
 
@@ -152,41 +145,15 @@ export class Pipelines extends React.Component<Props> {
             <Grid container spacing={2}>
               <Grid item xs={5}>
                 <Select
-                  labelId="demo-controlled-open-select-label"
-                  id="demo-controlled-open-select"
-                  style={{ width: "50ch" }}
-                  // open={open}
-                  // onClose={handleClose}
-                  // onOpen={handleOpen}
-                  // value={age}
-                  onChange={(e: any) => {
-                    {
-                      e.stopPropagation();
-                    }
-                  }}
-                >
-                  <MenuItem value={10}>test1</MenuItem>
-                  <MenuItem value={20}>test2</MenuItem>
-                </Select>
+                  value={this.currentSelectResource}
+                  options={this.selectResource}
+                ></Select>
               </Grid>
               <Grid item xs={5}>
                 <Select
-                  labelId="demo-controlled-open-select-label"
-                  id="demo-controlled-open-select"
-                  style={{ width: "50ch" }}
-                  // open={open}
-                  // onClose={handleClose}
-                  // onOpen={handleOpen}
-                  // value={age}
-                  onChange={(e: any) => {
-                    {
-                      e.stopPropagation();
-                    }
-                  }}
-                >
-                  <MenuItem value={10}>git</MenuItem>
-                  <MenuItem value={20}>image</MenuItem>
-                </Select>
+                  value={this.currentSelectResourceType}
+                  options={this.defaultresourceType}
+                ></Select>
               </Grid>
               <Grid item xs={1}>
                 <Icon
@@ -221,7 +188,7 @@ export class Pipelines extends React.Component<Props> {
               }}
             />
 
-            <b>Add Pipeline Params:</b>
+            <b> Add Pipeline Params:</b>
           </Grid>
           <Grid item xs={3}>
             <Trans>Name</Trans>
@@ -291,61 +258,17 @@ export class Pipelines extends React.Component<Props> {
             <Input
               placeholder={"Task Name"}
               value={this.taskName}
-              onChange={this.handleTaskName}
+              onChange={(e: any) => {
+                this.handleTaskName(e);
+              }}
             />
           </DrawerItem>
 
           {this.renderParams()}
           {this.renderResource()}
           <Divider />
+          <br />
           <Step />
-          {/* <DrawerItem name={<Trans>Repository:</Trans>}>
-              <InputLabel id="demo-controlled-open-select-label">
-                Repository
-              </InputLabel>
-              <Select
-                labelId="demo-controlled-open-select-label"
-                id="demo-controlled-open-select"
-                style={{ width: "80ch" }}
-                // open={open}
-                // onClose={handleClose}
-                // onOpen={handleOpen}
-                // value={age}
-                onChange={(e: any) => {
-                  {
-                    e.stopPropagation();
-                  }
-                }}
-              >
-                <MenuItem value={10}>github.com/yametech/compass</MenuItem>
-                <MenuItem value={20}>github.com/yametech/fuxi</MenuItem>
-              </Select>
-            </DrawerItem>
-
-            <DrawerItem name={<Trans>image:</Trans>}>
-              <InputLabel id="demo-controlled-open-select-label">
-                Repository
-              </InputLabel>
-              <Select
-                labelId="demo-controlled-open-select-label"
-                id="demo-controlled-open-select"
-                style={{ width: "80ch" }}
-                // open={open}
-                // onClose={handleClose}
-                // onOpen={handleOpen}
-                // value={age}
-                onChange={(e: any) => {
-                  {
-                    e.stopPropagation();
-                  }
-                }}
-              >
-                <MenuItem value={10}>yametech/compass</MenuItem>
-                <MenuItem value={20}>yametech/fuxi</MenuItem>
-              </Select>
-            </DrawerItem>
-            <DrawerItem name={<Trans>Step:</Trans>}></DrawerItem>
-            <MultiContainerDetails /> */}
         </div>
       </Drawer>
     );

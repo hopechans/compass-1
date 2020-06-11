@@ -34,6 +34,7 @@ interface Props<T = any> extends Partial<Props> {
 export default class Step extends React.Component<Props> {
   @observable value: Container[] = this.props.value || [container];
   @observable stepname: string;
+  @observable imagename: string;
 
   add() {
     this.value.push(container);
@@ -96,8 +97,8 @@ export default class Step extends React.Component<Props> {
                 <b>Image</b>
                 <Input
                   placeholder={"Image"}
-                  value={this.stepname}
-                  onChange={(v) => (this.stepname = v)}
+                  value={this.imagename}
+                  onChange={(v) => (this.imagename = v)}
                 />
                 <br />
                 <ArgsDetails />
