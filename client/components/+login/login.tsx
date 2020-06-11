@@ -45,7 +45,7 @@ class LoginComponet extends React.Component<Props, State>{
         configStore.setConfig(res.data)
         window.localStorage.setItem('u_config',JSON.stringify(res.data))
         Notifications.ok('Login Success')
-        const hide = message.loading('Watting..', 1500);
+        const hide = message.loading('Loading..', 1500);
         setTimeout(hide, 1500);
         this.setState({ loading: true })
         setTimeout(() => {
