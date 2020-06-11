@@ -85,7 +85,7 @@ export const args: string[] = [];
 
 export const environment: Environment[] = [];
 
-export const volumeMount: VolumeMount[] = [];
+export const volumeMountItems: VolumeMount[] = [];
 
 export const readyProbe: Probe = {
     status: false,
@@ -132,9 +132,14 @@ export const lifeCycle: LifeCycle = {
         command: "",
     }
 };
+export const volumeMount: VolumeMount = {
+    name: "",
+    mountPath: "",
+}
+
 export const volumeMounts: VolumeMounts = {
     status: false,
-    items: volumeMount,
+    items: volumeMountItems,
 };
 
 export const container: Container = {
