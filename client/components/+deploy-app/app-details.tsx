@@ -26,9 +26,9 @@ export class AppDetails extends React.Component<Props> {
     get typeOptions() {
         return [
             "Stone",
-            "Water",
-            "Deployment",
-            "Statefulset"
+            // "Water",
+            // "Deployment",
+            // "Statefulset"
         ]
     }
 
@@ -46,14 +46,14 @@ export class AppDetails extends React.Component<Props> {
     render() {
         return (
             <>
-                <SubTitle title={<Trans>Type</Trans>}/>
+                <SubTitle title={<Trans>App Type</Trans>}/>
                 <Select
                     formatOptionLabel={this.formatOptionLabel}
                     options={this.typeOptions}
                     value={this.value.type}
                     onChange={v => this.value.type = v}
                 />
-                <SubTitle title={<Trans>Field name</Trans>}/>
+                <SubTitle title={<Trans>App Name</Trans>}/>
                 <Input
                     autoFocus required
                     placeholder={_i18n._(t`Name`)}

@@ -14,20 +14,13 @@ import {app, App} from "../+deploy-app";
 import {AppDetails} from "../+deploy-app";
 import {deployStore} from "./deploy.store";
 import {Notifications} from "../notifications";
+import { configStore } from "../../../client/config.store";
 
-const {Panel} = Collapse;
+const { Panel } = Collapse;
 
 interface Props extends DialogProps {
 
 }
-
-// export interface DeployTemplate {
-//     type: string,
-//     name: string,
-//     strategy: string,
-//     forms: any[],
-//     volumeClaimTemplates: VolumeClaimTemplates,
-// }
 
 @observer
 export class CopyAddDeployDialog extends React.Component<Props> {
@@ -50,17 +43,30 @@ export class CopyAddDeployDialog extends React.Component<Props> {
         CopyAddDeployDialog.close();
     }
 
-    addDeployDialog = async () => {
+    reset = () => {
+        this.app = app;
+        this.service = deployService;
+        this.containers = [container];
+        this.volumeClaims = [];
+    }
 
+    addDeployDialog = async () => {
         try {
-            await deployStore.create(
-                {name: this.app.name+ '-' + Math.floor(Date.now() / 1000), namespace: ''}, {
-                    spec: {
-                        appName: this.app.name,
-                        resourceType: this.app.type,
-                        metadata: JSON.stringify(this.containers),
-                    },
-                }).then();
+            const newDeploy = await deployStore.create(
+                { name: this.app.name + '-' + Math.floor(Date.now() / 1000), namespace: '' }, {
+                spec: {
+                    appName: this.app.name,
+                    resourceType: this.app.type,
+                    metadata: JSON.stringify(this.containers),
+                    service: JSON.stringify(this.service),
+                    volumeClaims: JSON.stringify(this.volumeClaims),
+                }, 
+            });
+            // label the resource labels
+            newDeploy.metadata.labels = { namespace: configStore.getDefaultNamespace() }
+            await deployStore.update(newDeploy, { ...newDeploy });
+            this.reset();
+            this.close();
         } catch (err) {
             Notifications.error(err);
         }
@@ -79,37 +85,28 @@ export class CopyAddDeployDialog extends React.Component<Props> {
                         <div className="init-form">
                             <Collapse defaultActiveKey={'App'}>
                                 <Panel header={`App`} key="App">
-                                    <AppDetails value={this.app} onChange={value => this.app = value}/>
+                                    <AppDetails value={this.app} onChange={value => this.app = value} />
                                 </Panel>
                             </Collapse>
-                            <br/>
+                            <br />
                             <Collapse>
-                                <Panel key={"MultiContainer"} header={"MultiContainer"}>
-                                    <MultiContainerDetails
-                                        base={true}
-                                        commands={true}
-                                        args={true}
-                                        environment={true}
-                                        readyProbe={true}
-                                        liveProbe={true}
-                                        lifeCycle={true}
-                                        divider={true}
-                                        value={this.containers}
-                                        onChange={value => this.containers = value}/>
+                                <Panel key={"MultiContainer"} header={"Containers"}>
+                                    <MultiContainerDetails value={this.containers}
+                                        onChange={value => this.containers = value} />
                                 </Panel>
                             </Collapse>
-                            <br/>
+                            <br />
                             <Collapse>
-                                <Panel key={"DeployService"} header={"DeployService"}>
+                                <Panel key={"DeployService"} header={"Service"}>
                                     <DeployServiceDetails value={this.service}
-                                                          onChange={value => this.service = value}/>
+                                        onChange={value => this.service = value} />
                                 </Panel>
                             </Collapse>
-                            <br/>
+                            <br />
                             <Collapse>
-                                <Panel key={"MultiVolumeClaim"} header={"MultiVolumeClaim"}>
+                                <Panel key={"MultiVolumeClaim"} header={"VolumeClaims"}>
                                     <MultiVolumeClaimDetails value={this.volumeClaims}
-                                                             onChange={value => this.volumeClaims = value}/>
+                                        onChange={value => this.volumeClaims = value} />
                                 </Panel>
                             </Collapse>
                         </div>

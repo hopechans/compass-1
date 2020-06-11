@@ -10,6 +10,8 @@ import {Input} from "../input";
 import {_i18n} from "../../i18n";
 import {systemName} from "../input/input.validators";
 import {Notifications} from "../notifications";
+import { tenantRoleStore } from "./role.store";
+import { showDetails } from "../../navigation";
 
 interface Props extends Partial<DialogProps> {
 }
@@ -49,8 +51,8 @@ export class AddRoleDialog extends React.Component<Props> {
             }
         }
         try {
-            const newRole = await tenantRoleApi.create({namespace, name}, role);
-            // showDetails(newRole.selfLink);
+            const newRole = await tenantRoleStore.create({namespace, name}, role);
+            showDetails(newRole.selfLink);
             this.reset();
             this.close();
         } catch (err) {

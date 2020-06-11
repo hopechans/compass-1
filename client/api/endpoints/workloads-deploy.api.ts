@@ -2,6 +2,9 @@ import get from "lodash/get";
 import { WorkloadKubeObject } from "../workload-kube-object";
 import { autobind } from "../../utils";
 import { KubeApi } from "../kube-api";
+import { Service } from "client/components/+deploy-service/common";
+import { Container } from "client/components/+deploy-container/common";
+import { VolumeClaimTemplate } from "client/components/+deploy-volumeclaim-dialog/common";
 
 @autobind()
 export class Deploy extends WorkloadKubeObject {
@@ -10,9 +13,16 @@ export class Deploy extends WorkloadKubeObject {
     spec: {
         appName: string,  // the app name
         resourceType: string;
-        metadata: string; // the field record array container configuration
+        metadata: string | Container[]; // the field record array container configuration
+        service?: string | Service;
+        volumeClaims?: string | VolumeClaimTemplate[];
     }
+
     status: {}
+
+    getOwnerNamespace(): string {
+        return get(this, "metadata.labels.namespace")
+    }
 
     getAppName() {
         return get(this, "spec.appName")
