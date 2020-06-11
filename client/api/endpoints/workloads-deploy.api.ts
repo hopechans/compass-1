@@ -2,20 +2,18 @@ import get from "lodash/get";
 import { WorkloadKubeObject } from "../workload-kube-object";
 import { autobind } from "../../utils";
 import { KubeApi } from "../kube-api";
-import { Service } from "client/components/+deploy-service/common";
-import { Container } from "client/components/+deploy-container/common";
-import { VolumeClaimTemplate } from "client/components/+deploy-volumeclaim-dialog/common";
 
 @autobind()
 export class Deploy extends WorkloadKubeObject {
     static kind = "Workloads"
 
     spec: {
+        // 这里需要优化,引用到外部的interface
         appName: string,  // the app name
         resourceType: string;
-        metadata: string | Container[]; // the field record array container configuration
-        service?: string | Service;
-        volumeClaims?: string | VolumeClaimTemplate[];
+        metadata: string; // the field record array container configuration
+        service?: string;
+        volumeClaims?: string;
     }
 
     status: {}
