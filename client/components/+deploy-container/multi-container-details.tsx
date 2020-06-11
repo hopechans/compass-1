@@ -38,6 +38,7 @@ export class MultiContainerDetails extends React.Component<Props> {
         liveProbe: true,
         lifeCycle: true,
         divider: true,
+        volumeClaims: true,
     }
 
     @observable value: Container[] = this.props.value || [container];
@@ -98,6 +99,7 @@ export class MultiContainerDetails extends React.Component<Props> {
                                     liveProbe={true}
                                     lifeCycle={true}
                                     divider={true}
+                                    volumeMounts={true}
                                     value={this.value[index]}
                                     onChange={(value: any) => { this.value[index] = value }}
                                 />

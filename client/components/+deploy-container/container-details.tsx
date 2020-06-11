@@ -1,16 +1,17 @@
 import React from "react";
-import {observer} from "mobx-react";
-import {ActionMeta} from "react-select/src/types";
-import {themeStore} from "../../theme.store";
-import {EnvironmentDetails} from "./env-details";
-import {BaseDetails} from "./base-details";
-import {CommandDetails} from "./command-details";
-import {ReadyprobeDetails} from "./readyprobe-details"
-import {LiveprobeDetails} from "./liveprobe-details";
-import {LifeCycleDetails} from "./lifecycle-details";
-import {ArgsDetails} from "./args-details";
-import {observable} from "mobx";
-import {container} from "./common";
+import { observer } from "mobx-react";
+import { ActionMeta } from "react-select/src/types";
+import { themeStore } from "../../theme.store";
+import { EnvironmentDetails } from "./env-details";
+import { BaseDetails } from "./base-details";
+import { CommandDetails } from "./command-details";
+import { ReadyprobeDetails } from "./readyprobe-details"
+import { LiveprobeDetails } from "./liveprobe-details";
+import { LifeCycleDetails } from "./lifecycle-details";
+import { ArgsDetails } from "./args-details";
+import { observable } from "mobx";
+import { container } from "./common";
+import { VolumeMountDetails } from "./volume-mount";
 
 interface Props<T = any> extends Partial<Props> {
     value?: T;
@@ -26,6 +27,7 @@ interface Props<T = any> extends Partial<Props> {
     liveProbe?: boolean;
     lifeCycle?: boolean;
     divider?: true;
+    volumeMounts?: boolean;
 }
 
 @observer
@@ -40,6 +42,7 @@ export class ContainerDetails extends React.Component<Props> {
         liveProbe: true,
         lifeCycle: true,
         divider: true,
+        volumeMounts: true,
     }
 
     private theme = this.props.themeName || themeStore.activeTheme.type;
@@ -48,7 +51,7 @@ export class ContainerDetails extends React.Component<Props> {
     @observable value = this.props.value || container
 
     render() {
-        const {base, commands, args, environment, readyProbe, liveProbe, lifeCycle} = this.props;
+        const { base, commands, args, environment, readyProbe, liveProbe, lifeCycle, volumeMounts } = this.props;
 
         return (
             <>
@@ -63,7 +66,7 @@ export class ContainerDetails extends React.Component<Props> {
                 /> : <></>}
 
                 {args ? <ArgsDetails themeName={this.theme} value={this.value.args} divider={this.divider}
-                                     onChange={(value) => this.value.args = value}
+                    onChange={(value) => this.value.args = value}
                 /> : <></>}
 
                 {environment ? <EnvironmentDetails
@@ -84,6 +87,11 @@ export class ContainerDetails extends React.Component<Props> {
                 {lifeCycle ? <LifeCycleDetails
                     themeName={this.theme} value={this.value.lifeCycle} divider={this.divider}
                     onChange={(value) => this.value.lifeCycle = value}
+                /> : <></>}
+
+                {volumeMounts ? <VolumeMountDetails
+                    themeName={this.theme} value={this.value.volumeMounts} divider={this.divider}
+                    onChange={(value) => this.value.volumeMounts = value}
                 /> : <></>}
             </>
         )
