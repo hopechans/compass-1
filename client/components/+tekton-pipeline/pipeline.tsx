@@ -18,7 +18,6 @@ import { KubeObjectListLayout } from "../kube-object";
 import { KubeEventIcon } from "../+events/kube-event-icon";
 import { apiManager } from "../../api/api-manager";
 import { DrawerItem, DrawerTitle } from "../drawer";
-import { AddDeployDialog } from "../+deploy/deploy-dialog";
 import { Drawer } from "../drawer";
 import "./registerShape";
 import G6 from "@antv/g6";
