@@ -75,7 +75,7 @@ export class Layout extends React.Component<Props,State> {
     configStore.reset()
     kubeWatchApi.reset()
     window.localStorage.clear()
-    this.props.history.push('/login')
+    window.location.replace('/login')
   }
 
   changeLanguage = () => {
@@ -93,8 +93,7 @@ export class Layout extends React.Component<Props,State> {
     if(!userConifg){
       message.error('Token Expired')
       setTimeout(()=>{
-          configStore.reset()
-          this.props.history.push('/login')
+          this.loginout()
           Notifications.info('Please Login Again')
       },2000)
       return null
