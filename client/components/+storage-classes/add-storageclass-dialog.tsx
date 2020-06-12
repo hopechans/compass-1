@@ -4,7 +4,7 @@ import React from "react";
 import {Dialog, DialogProps} from "../dialog";
 import {t, Trans} from "@lingui/macro";
 import {Wizard, WizardStep} from "../wizard";
-import {computed, observable} from "mobx";
+import {observable} from "mobx";
 import {observer} from "mobx-react";
 import {storageClassStore} from "./storage-class.store";
 import {Input} from "../input";
@@ -15,8 +15,6 @@ import {SubTitle} from "../layout/sub-title";
 import {cephParams, CephParams} from "./common";
 import {SecretsSelect} from "../+config-secrets/secrets-select";
 import {NamespaceSelect} from "../+namespaces/namespace-select";
-import {secretsApi} from "../../api/endpoints";
-import {showDetails} from "../../navigation";
 import {Notifications} from "../notifications";
 
 interface Props extends DialogProps {
