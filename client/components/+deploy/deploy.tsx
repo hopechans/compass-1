@@ -14,9 +14,9 @@ import { KubeObjectListLayout } from "../kube-object";
 import { IDeployWorkloadsParams } from "../+deploy";
 import { apiManager } from "../../api/api-manager";
 import { deployStore } from "./deploy.store";
-import { AddDeployDialog } from "./deploy-dialog";
 import { ConfigDeployDialog } from "./config-deploy-dialog";
 import { CopyAddDeployDialog } from "./copy-deploy-dialog";
+import { ConfigCopyAddDeployDialog } from "./config-copy-deploy-dialog";
 
 enum sortBy {
     templateName = "templateName",
@@ -37,6 +37,8 @@ export class Deploys extends React.Component<Props> {
         return (
             <MainLayout>
                 <KubeObjectListLayout
+                    onDetails={() => {
+                    }}
                     className="Deploy" store={deployStore}
                     sortingCallbacks={{
                         [sortBy.templateName]: (deploy: Deploy) => deploy.getName(),
@@ -59,8 +61,8 @@ export class Deploys extends React.Component<Props> {
                             { title: <Trans>AppName</Trans>, className: "appName", sortBy: sortBy.appName },
                             { title: <Trans>TemplateName</Trans>, className: "template", sortBy: sortBy.templateName },
                             { title: <Trans>OwnerNamespace</Trans>, className: "OwnerNamespace", sortBy: sortBy.ownerNamespace },
-                            {title: <Trans>ResourceType</Trans>,className: "resourceType",sortBy: sortBy.resourceType},
-                            {title: <Trans>GenerateTimestamp</Trans>,className: "generateTimestamp",sortBy: sortBy.generateTimestamp},
+                            { title: <Trans>ResourceType</Trans>, className: "resourceType", sortBy: sortBy.resourceType },
+                            { title: <Trans>GenerateTimestamp</Trans>, className: "generateTimestamp", sortBy: sortBy.generateTimestamp },
                             { title: <Trans>Age</Trans>, className: "age", sortBy: sortBy.age },
                         ]}
 
@@ -79,14 +81,14 @@ export class Deploys extends React.Component<Props> {
 
                     addRemoveButtons={{
                         addTooltip: <Trans>AddDeployDialog</Trans>,
-                        // onAdd: () => AddDeployDialog.open(),
                         onAdd: () => CopyAddDeployDialog.open()
                     }}
                 />
-                {/*<AddDeployDialog />*/}
+
                 <CopyAddDeployDialog />
-                {/* <AddDeployDialog /> */}
+                <ConfigCopyAddDeployDialog />
                 <ConfigDeployDialog />
+                
             </MainLayout>
         )
     }
@@ -98,8 +100,12 @@ export function DeployMenu(props: KubeObjectMenuProps<Deploy>) {
         <>
             <KubeObjectMenu {...props} >
                 <MenuItem onClick={() => { ConfigDeployDialog.open(object.getAppName(), object.getName()) }}>
-                    <Icon material="control_camera" title={_i18n._(t`Deploy`)} interactive={toolbar} />
+                    <Icon material="play_circle_filled" title={_i18n._(t`Deploy`)} interactive={toolbar} />
                     <span className="title"><Trans>Deploy</Trans></span>
+                </MenuItem>
+                <MenuItem onClick={() => { ConfigCopyAddDeployDialog.open(object) }}>
+                    <Icon material="playlist_add" title={_i18n._(t`Config`)} interactive={toolbar} />
+                    <span className="title"><Trans>Config</Trans></span>
                 </MenuItem>
             </KubeObjectMenu>
         </>

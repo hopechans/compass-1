@@ -9,6 +9,7 @@ import { container, Container } from "../+deploy-container/common";
 import { ArgsDetails } from "../+deploy-container/args-details";
 import { CommandDetails } from "../+deploy-container/command-details";
 import { EnvironmentDetails } from "../+deploy-container/env-details";
+import { VolumeMountDetails } from "../+deploy-container/volume-mount";
 import { Input } from "../input";
 import { Divider } from "@material-ui/core";
 
@@ -34,6 +35,7 @@ interface Props<T = any> extends Partial<Props> {
 export default class Step extends React.Component<Props> {
   @observable value: Container[] = this.props.value || [container];
   @observable stepname: string;
+  @observable imagename: string;
 
   add() {
     this.value.push(container);
@@ -96,8 +98,8 @@ export default class Step extends React.Component<Props> {
                 <b>Image</b>
                 <Input
                   placeholder={"Image"}
-                  value={this.stepname}
-                  onChange={(v) => (this.stepname = v)}
+                  value={this.imagename}
+                  onChange={(v) => (this.imagename = v)}
                 />
                 <br />
                 <ArgsDetails />
@@ -107,6 +109,9 @@ export default class Step extends React.Component<Props> {
                 <Divider />
                 <br />
                 <EnvironmentDetails />
+                <Divider />
+                <br />
+                <VolumeMountDetails />
                 <Divider />
               </Panel>
             );
