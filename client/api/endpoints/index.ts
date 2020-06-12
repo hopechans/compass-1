@@ -48,3 +48,4 @@ export * from './tekton-taskrun.api'
 export * from "./tenant-department.api"
 export * from "./tenant-user"
 export * from "./tenant-role.api"
+export * from "./subnet.api"

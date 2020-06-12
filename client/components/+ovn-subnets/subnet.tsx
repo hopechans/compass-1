@@ -8,7 +8,6 @@ import {apiManager} from "../../api/api-manager";
 import {SubNet, subNetApi} from "../../api/endpoints/subnet.api";
 import {subNetStore} from "./subnet.route";
 import {ISubNetRouteParams} from "./subnet.store";
-import {CopyAddDeployDialog} from "../+deploy/copy-deploy-dialog";
 import {AddSubNetDialog} from "./add-subnet-dialog";
 
 
