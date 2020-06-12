@@ -27,6 +27,8 @@ import { _i18n } from "../../i18n";
 import { Grid, Divider } from "@material-ui/core";
 import Step from "./steps";
 import { Input } from "../input";
+import { MenuItem } from "../menu";
+import { Button } from "../button";
 
 enum sortBy {
   name = "name",
@@ -36,7 +38,7 @@ enum sortBy {
   age = "age",
 }
 
-interface Props extends RouteComponentProps {}
+interface Props extends RouteComponentProps { }
 
 @observer
 export class Pipelines extends React.Component<Props> {
@@ -50,7 +52,9 @@ export class Pipelines extends React.Component<Props> {
   @observable selectResource: [] = [];
   @observable defaultresourceType: string[] = ["git", "image"];
   @observable currentSelectResourceType: string;
-
+  @observable addVolumes: string[] = [];
+  @observable static isHiddenPipelineGraph: boolean = false;
+  drawer: Map<string, Map<string, string>>;
   @action
   openTaskDrawer() {
     setTimeout(() => {
@@ -86,6 +90,41 @@ export class Pipelines extends React.Component<Props> {
 
   removeResource = (index: number) => {
     this.addResources.splice(index, 1);
+  };
+
+  addVolume = () => {
+    this.addVolumes.push("");
+  };
+
+  removeVolume = (index: number) => {
+    this.addVolumes.splice(index, 1);
+  };
+
+  renderVolumeHeader = () => {
+    return (
+      <Grid container spacing={2}>
+        <Grid item xs={12}></Grid>
+        <Grid item xs={12}>
+          <Divider />
+          <Icon
+            small
+            tooltip={"resource"}
+            material="add_circle_outline"
+            onClick={(e) => {
+              this.addVolume();
+              e.stopPropagation();
+            }}
+          />
+          <b> Add Pipeline Volume:</b>
+        </Grid>
+        <Grid item xs={5}>
+          <Trans>Name</Trans>
+        </Grid>
+        <Grid item xs={5}>
+          <Trans>ResourceType</Trans>
+        </Grid>
+      </Grid>
+    );
   };
 
   renderResourceHeader = () => {
@@ -244,7 +283,7 @@ export class Pipelines extends React.Component<Props> {
     );
   }
 
-  renderTaskDrawer() {
+  renderTaskDrawer(data: any) {
     const { taskDrawer } = this;
     return (
       <Drawer
@@ -287,47 +326,13 @@ export class Pipelines extends React.Component<Props> {
             [1, 0.5],
           ],
         },
-        // {
-        //   id: '2',
-        //   // x: 50,
-        //   // y: 50,
-        //   buildName: "打包镜像并推送到harbor",
-        //   anchorPoints: [
-        //     [0, 0.5],
-        //     [1, 0.5],
-        //   ],
-        // },
-        // {
-        //   id: '3',
-        //   // x: 100,
-        //   // y: 100,
-        //   buildName: "发布到k8s开发环境",
-        //   anchorPoints: [
-        //     [0, 0.5],
-        //     [1, 0.5],
-        //   ],
-        // }
       ],
-      // edges: [
-      //   {
-      //     id: 'edge1',
-      //     target: '1',
-      //     source: '2',
-      //     // type: 'hvh',
-      //   },
-      //   {
-      //     id: 'edge2',
-      //     target: '2',
-      //     source: '3',
-      //     // type: 'hvh',
-      //   },
-      // ],
     };
 
     this.graph = new G6.Graph({
       container: "container",
-      width: 1400,
-      height: 200,
+      width: 1150,
+      height: 305,
       renderer: "svg",
       // layout: {
       //   type: "dagre",
@@ -363,11 +368,8 @@ export class Pipelines extends React.Component<Props> {
         type: "card-node",
         size: [120, 40],
         linkPoints: {
-          // top: true,
-          // bottom: true,
           left: true,
           right: true,
-          // fill: 'red',
           size: 5,
         },
       },
@@ -390,13 +392,9 @@ export class Pipelines extends React.Component<Props> {
         }
         const model = item.getModel();
         const { endPoint } = model;
-        // y=endPoint.y - height / 2，在同一水平线上，x值=endPoint.x - width - 10
         const y = endPoint.y - 35;
         const x = endPoint.x - 150 - 10;
         const point = this.graph.getCanvasByPoint(x, y);
-        //   setEdgeTooltipX(point.x)
-        //   setEdgeTooltipY(point.y)
-        //   setShowEdgeTooltip(true)
       });
     };
 
@@ -478,6 +476,7 @@ export class Pipelines extends React.Component<Props> {
       let group = item.getContainer();
       let title = group.get("children")[2];
       this.taskName = title.cfg.el.innerHTML;
+      this.renderTaskDrawer({})
       this.openTaskDrawer();
     });
   }
@@ -485,8 +484,36 @@ export class Pipelines extends React.Component<Props> {
   render() {
     return (
       <>
-        <div className="graph" id="container">
-          {/* <h5 className="title"><Trans>Pipeline Visualization </Trans></h5> */}
+        <div hidden={
+          Pipelines.isHiddenPipelineGraph ?? true
+        }>
+          <Grid container spacing={1}>
+
+            <Grid item xs={3}>
+              <h5 className="title">
+                <Trans>Pipeline Visualization</Trans>
+              </h5>
+            </Grid>
+            <Grid item xs={3}></Grid>
+            <Grid item xs={4}></Grid>
+            <Grid item xs={1}>
+            </Grid>
+            <Grid item xs="auto">
+              <Button primary onClick={() => console.log("test")}>
+                <span>Run</span>
+              </Button>
+            </Grid>
+          </Grid>
+        </div>
+
+        <div
+          className="graph"
+          id="container"
+          hidden={
+            Pipelines.isHiddenPipelineGraph ?? true
+          }
+        >
+
         </div>
         <KubeObjectListLayout
           className="Pipelines"
@@ -539,15 +566,45 @@ export class Pipelines extends React.Component<Props> {
               return lines * lineHeight + paddings;
             },
           }}
+          addRemoveButtons={{
+            addTooltip: <Trans>Pipeline</Trans>,
+            onAdd: () => {
+              if (Pipelines.isHiddenPipelineGraph === undefined) {
+                Pipelines.isHiddenPipelineGraph = true;
+              }
+              Pipelines.isHiddenPipelineGraph ? Pipelines.isHiddenPipelineGraph = false : Pipelines.isHiddenPipelineGraph = true
+              console.log(Pipelines.isHiddenPipelineGraph);
+            }
+          }}
         />
-        {this.renderTaskDrawer()}
+        {this.renderTaskDrawer({})}
       </>
     );
   }
 }
 
 export function PipelineMenu(props: KubeObjectMenuProps<Pipeline>) {
-  return <KubeObjectMenu {...props} />;
+  const { object, toolbar } = props;
+  return (
+    <KubeObjectMenu {...props}>
+      {/* <MenuItem onClick={() => {
+        if (Pipelines.isHiddenPipelineGraph === undefined) {
+          Pipelines.isHiddenPipelineGraph = true;
+        }
+        Pipelines.isHiddenPipelineGraph ? Pipelines.isHiddenPipelineGraph = false : Pipelines.isHiddenPipelineGraph = true
+        console.log(Pipelines.isHiddenPipelineGraph);
+      }}>
+        <Icon
+          material="format_align_left"
+          title={"Pipeline"}
+          interactive={toolbar}
+        />
+        <span className="title">
+          <Trans>Pipeline</Trans>
+        </span>
+      </MenuItem> */}
+    </KubeObjectMenu >
+  );
 }
 
 apiManager.registerViews(pipelineApi, { Menu: PipelineMenu });
