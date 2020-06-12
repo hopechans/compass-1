@@ -23,6 +23,10 @@ export class CRDStore extends KubeObjectStore<CustomResourceDefinition> {
     })
   }
 
+  getCrdItems(){
+    this.loadAll()
+  }
+
   protected sortItems(items: CustomResourceDefinition[]) {
     return super.sortItems(items, [
       crd => crd.getGroup(),
