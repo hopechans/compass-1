@@ -42,12 +42,18 @@ export class SubNets extends React.Component<Props> {
                     renderHeaderTitle={<Trans>SubNet</Trans>}
                     renderTableHeader={[
                         {title: <Trans>Name</Trans>, className: "name", sortBy: sortBy.name},
-                        {title: <Trans>Namespace</Trans>, className: "namespace", sortBy: sortBy.namespace},
+                        {title: <Trans>Protocol</Trans>, className: "protocol"},
+                        {title: <Trans>GateWay</Trans>, className: "gateway"},
+                        {title: <Trans>CIDR Block</Trans>, className: "cidrBlock"},
+                        {title: <Trans>ExcludeIP</Trans>, className: "excludeIps"},
                         {title: <Trans>Age</Trans>, className: "age", sortBy: sortBy.age},
                     ]}
                     renderTableContents={(field: SubNet) => [
                         field.getName(),
-                        field.getNs(),
+                        field.spec.protocol,
+                        field.spec.gateway,
+                        field.spec.cidrBlock,
+                        field.spec.excludeIps,
                         field.getAge(),
                     ]}
                     renderItemMenu={(item: SubNet) => {
