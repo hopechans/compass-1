@@ -75,18 +75,21 @@ export class BaseDetails extends React.Component<Props> {
             <>
                 <SubTitle title={containerNameTitle}/>
                 <Input
+                    required={true}
                     placeholder={_i18n._(containerNameTitle)}
                     value={this.value.name}
                     onChange={v => this.value.name = v}
                 />
                 <SubTitle title={imageAddressTitle}/>
                 <Input
+                    required={true}
                     placeholder={_i18n._(imageAddressTitle)}
                     value={this.value.image}
                     onChange={v => this.value.image = v}
                 />
                 <SubTitle title={imagePullPolicyTitle}/>
                 <Select
+                    required={true}
                     formatOptionLabel={this.formatOptionLabel}
                     options={this.selectOptions}
                     value={this.value.imagePullPolicy}
@@ -97,6 +100,7 @@ export class BaseDetails extends React.Component<Props> {
                     <Col span="10">
                         <SubTitle title={limitCPUTitle}/>
                         <Input
+                            required={true}
                             placeholder={_i18n._(limitCPUTitle)}
                             type="number"
                             validators={isNumber}
@@ -107,6 +111,7 @@ export class BaseDetails extends React.Component<Props> {
                     <Col span="10">
                         <SubTitle title={limitMemoryTitle}/>
                         <Input
+                            required={true}
                             placeholder={_i18n._(limitMemoryTitle)}
                             type="number"
                             validators={isNumber}
@@ -119,6 +124,7 @@ export class BaseDetails extends React.Component<Props> {
                     <Col span="10">
                         <SubTitle title={requiredCPUTitle}/>
                         <Input
+                            required={true}
                             placeholder={_i18n._(requiredCPUTitle)}
                             type="number"
                             validators={isNumber}
@@ -129,6 +135,7 @@ export class BaseDetails extends React.Component<Props> {
                     <Col span="10">
                         <SubTitle title={requireMemoryTitle}/>
                         <Input
+                            required={true}
                             placeholder={_i18n._(requireMemoryTitle)}
                             type="number"
                             validators={isNumber}

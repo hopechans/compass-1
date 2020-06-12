@@ -17,7 +17,7 @@ export interface Base {
 
 export interface Environment {
     type: string
-    oneEnvConfig: any
+    envConfig: any
 }
 
 export interface Pattern {
@@ -65,8 +65,8 @@ export interface Container {
 
 
 export const base: Base = {
-    name: "default",
-    image: "app:latest",
+    name: "",
+    image: "",
     imagePullPolicy: "IfNotPresent",
     resource: {
         limits: {
@@ -94,7 +94,7 @@ export const readyProbe: Probe = {
     retryCount: "",
     delay: "",
     pattern: {
-        type: "HTTP",
+        type: "",
         httpPort: "8081",
         url: "",
         tcpPort: "0",

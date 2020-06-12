@@ -60,34 +60,27 @@ export class VolumeMountDetails extends React.Component<ArgsProps> {
                         return (
                             <div key={index}>
                                 <Row justify="space-between">
-                                    <SubTitle title={<Trans>Name</Trans>} />
-                                    <Col span="8">
-                                        <Input
-                                            placeholder={_i18n._(t`Name eg: volumeClaims name`)}
-                                            value={this.value.items[index].name}
-                                            onChange={value => this.value.items[index].name = value}
-                                        />
-                                    </Col>
-                                    <SubTitle title={<Trans>MountPath</Trans>} />
-                                    <Col span="8">
-                                        <Input
-                                            title={"MountPath"}
-                                            placeholder={_i18n._(t`MountPath eg: /data`)}
-                                            value={this.value.items[index].mountPath}
-                                            onChange={
-                                                value => this.value.items[index].mountPath = value
-                                            }
-                                        />
-                                    </Col>
-                                    <Col span="1">
-                                        <Icon
-                                            small
-                                            tooltip={<Trans>Remove MountPath</Trans>}
-                                            className="remove-icon"
-                                            material="remove_circle_outline"
-                                            onClick={(e) => { this.remove(index); e.stopPropagation() }}
-                                        />
-                                    </Col>
+                                    <Input
+                                        required={true}
+                                        placeholder={_i18n._(t`Name eg: volumeClaims name`)}
+                                        value={this.value.items[index].name}
+                                        onChange={value => this.value.items[index].name = value}
+                                    />
+                                    <Input
+                                        required={true}
+                                        placeholder={_i18n._(t`MountPath eg: /data`)}
+                                        value={this.value.items[index].mountPath}
+                                        onChange={
+                                            value => this.value.items[index].mountPath = value
+                                        }
+                                    />
+                                    <Icon
+                                        small
+                                        tooltip={<Trans>Remove MountPath</Trans>}
+                                        className="remove-icon"
+                                        material="remove_circle_outline"
+                                        onClick={(e) => { this.remove(index); e.stopPropagation() }}
+                                    />
                                 </Row>
                             </div>
                         )

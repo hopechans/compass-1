@@ -108,6 +108,7 @@ export class DeployServiceDetails extends React.Component<Props> {
                                 <SubTitle title={<Trans>Name</Trans>} />
                                 <Input
                                     className="item"
+                                    required={true}
                                     placeholder={_i18n._(t`Name`)}
                                     title={this.value.ports[index].name}
                                     value={this.value.ports[index].name}
@@ -129,6 +130,7 @@ export class DeployServiceDetails extends React.Component<Props> {
                                     <Col span={10}>
                                         <SubTitle title={<Trans>Port</Trans>} />
                                         <Input
+                                            required={true}
                                             placeholder={_i18n._(t`Port`)}
                                             type="number"
                                             validators={isNumber}
@@ -139,6 +141,7 @@ export class DeployServiceDetails extends React.Component<Props> {
                                     <Col span={10} offset={4}>
                                         <SubTitle title={<Trans>TargetPort</Trans>} />
                                         <Input
+                                            required={true}
                                             placeholder={_i18n._(t`TargetPort`)}
                                             type="number"
                                             validators={isNumber}
