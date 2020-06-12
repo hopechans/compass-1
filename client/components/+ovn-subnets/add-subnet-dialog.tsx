@@ -133,6 +133,13 @@ export class AddSubNetDialog extends React.Component<Props> {
                             value={this.gateway}
                             onChange={(value: string) => this.gateway = value}
                         />
+                        <SubTitle title={<Trans>CIDR Block</Trans>}/>
+                        <Input
+                            required autoFocus
+                            placeholder={_i18n._(t`CIDR Block`)}
+                            value={this.cidrBlock}
+                            onChange={(value: string) => this.cidrBlock = value}
+                        />
                         <ExcludeIPsDetails
                             value={this.excludeIps} onChange={value => {this.excludeIps = value}}/>
                     </WizardStep>
