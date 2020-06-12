@@ -9,6 +9,7 @@ import { container, Container } from "../+deploy-container/common";
 import { ArgsDetails } from "../+deploy-container/args-details";
 import { CommandDetails } from "../+deploy-container/command-details";
 import { EnvironmentDetails } from "../+deploy-container/env-details";
+import { VolumeMountDetails } from "../+deploy-container/volume-mount";
 import { Input } from "../input";
 import { Divider } from "@material-ui/core";
 
@@ -108,6 +109,9 @@ export default class Step extends React.Component<Props> {
                 <Divider />
                 <br />
                 <EnvironmentDetails />
+                <Divider />
+                <br />
+                <VolumeMountDetails />
                 <Divider />
               </Panel>
             );
