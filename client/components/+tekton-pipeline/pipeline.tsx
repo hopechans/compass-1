@@ -38,7 +38,7 @@ enum sortBy {
   age = "age",
 }
 
-interface Props extends RouteComponentProps {}
+interface Props extends RouteComponentProps { }
 
 @observer
 export class Pipelines extends React.Component<Props> {
@@ -53,8 +53,8 @@ export class Pipelines extends React.Component<Props> {
   @observable defaultresourceType: string[] = ["git", "image"];
   @observable currentSelectResourceType: string;
   @observable addVolumes: string[] = [];
-  @observable isHiddenPipelineGraph: boolean = false;
-
+  @observable static isHiddenPipelineGraph: boolean = false;
+  drawer: Map<string, Map<string, string>>;
   @action
   openTaskDrawer() {
     setTimeout(() => {
@@ -283,7 +283,7 @@ export class Pipelines extends React.Component<Props> {
     );
   }
 
-  renderTaskDrawer() {
+  renderTaskDrawer(data: any) {
     const { taskDrawer } = this;
     return (
       <Drawer
@@ -326,47 +326,13 @@ export class Pipelines extends React.Component<Props> {
             [1, 0.5],
           ],
         },
-        // {
-        //   id: '2',
-        //   // x: 50,
-        //   // y: 50,
-        //   buildName: "打包镜像并推送到harbor",
-        //   anchorPoints: [
-        //     [0, 0.5],
-        //     [1, 0.5],
-        //   ],
-        // },
-        // {
-        //   id: '3',
-        //   // x: 100,
-        //   // y: 100,
-        //   buildName: "发布到k8s开发环境",
-        //   anchorPoints: [
-        //     [0, 0.5],
-        //     [1, 0.5],
-        //   ],
-        // }
       ],
-      // edges: [
-      //   {
-      //     id: 'edge1',
-      //     target: '1',
-      //     source: '2',
-      //     // type: 'hvh',
-      //   },
-      //   {
-      //     id: 'edge2',
-      //     target: '2',
-      //     source: '3',
-      //     // type: 'hvh',
-      //   },
-      // ],
     };
 
     this.graph = new G6.Graph({
       container: "container",
-      width: 1400,
-      height: 200,
+      width: 1150,
+      height: 305,
       renderer: "svg",
       // layout: {
       //   type: "dagre",
@@ -402,11 +368,8 @@ export class Pipelines extends React.Component<Props> {
         type: "card-node",
         size: [120, 40],
         linkPoints: {
-          // top: true,
-          // bottom: true,
           left: true,
           right: true,
-          // fill: 'red',
           size: 5,
         },
       },
@@ -429,13 +392,9 @@ export class Pipelines extends React.Component<Props> {
         }
         const model = item.getModel();
         const { endPoint } = model;
-        // y=endPoint.y - height / 2，在同一水平线上，x值=endPoint.x - width - 10
         const y = endPoint.y - 35;
         const x = endPoint.x - 150 - 10;
         const point = this.graph.getCanvasByPoint(x, y);
-        //   setEdgeTooltipX(point.x)
-        //   setEdgeTooltipY(point.y)
-        //   setShowEdgeTooltip(true)
       });
     };
 
@@ -517,6 +476,7 @@ export class Pipelines extends React.Component<Props> {
       let group = item.getContainer();
       let title = group.get("children")[2];
       this.taskName = title.cfg.el.innerHTML;
+      this.renderTaskDrawer({})
       this.openTaskDrawer();
     });
   }
@@ -524,21 +484,36 @@ export class Pipelines extends React.Component<Props> {
   render() {
     return (
       <>
-        <h5 className="title">
-          <Trans>Pipeline Visualization </Trans>
-        </h5>
+        <div hidden={
+          Pipelines.isHiddenPipelineGraph ?? true
+        }>
+          <Grid container spacing={1}>
+
+            <Grid item xs={3}>
+              <h5 className="title">
+                <Trans>Pipeline Visualization</Trans>
+              </h5>
+            </Grid>
+            <Grid item xs={3}></Grid>
+            <Grid item xs={4}></Grid>
+            <Grid item xs={1}>
+            </Grid>
+            <Grid item xs="auto">
+              <Button primary onClick={() => console.log("test")}>
+                <span>Run</span>
+              </Button>
+            </Grid>
+          </Grid>
+        </div>
 
         <div
           className="graph"
           id="container"
-          hidden={this.isHiddenPipelineGraph}
+          hidden={
+            Pipelines.isHiddenPipelineGraph ?? true
+          }
         >
-          <Button primary onClick={() => console.log("test")}>
-            <span>Save Pipeline</span>
-          </Button>
-          <Button primary onClick={() => console.log("test")}>
-            <span> Pipeline</span>
-          </Button>
+
         </div>
         <KubeObjectListLayout
           className="Pipelines"
@@ -591,8 +566,18 @@ export class Pipelines extends React.Component<Props> {
               return lines * lineHeight + paddings;
             },
           }}
+          addRemoveButtons={{
+            addTooltip: <Trans>Pipeline</Trans>,
+            onAdd: () => {
+              if (Pipelines.isHiddenPipelineGraph === undefined) {
+                Pipelines.isHiddenPipelineGraph = true;
+              }
+              Pipelines.isHiddenPipelineGraph ? Pipelines.isHiddenPipelineGraph = false : Pipelines.isHiddenPipelineGraph = true
+              console.log(Pipelines.isHiddenPipelineGraph);
+            }
+          }}
         />
-        {this.renderTaskDrawer()}
+        {this.renderTaskDrawer({})}
       </>
     );
   }
@@ -602,17 +587,23 @@ export function PipelineMenu(props: KubeObjectMenuProps<Pipeline>) {
   const { object, toolbar } = props;
   return (
     <KubeObjectMenu {...props}>
-      <MenuItem>
+      {/* <MenuItem onClick={() => {
+        if (Pipelines.isHiddenPipelineGraph === undefined) {
+          Pipelines.isHiddenPipelineGraph = true;
+        }
+        Pipelines.isHiddenPipelineGraph ? Pipelines.isHiddenPipelineGraph = false : Pipelines.isHiddenPipelineGraph = true
+        console.log(Pipelines.isHiddenPipelineGraph);
+      }}>
         <Icon
-          material="play_circle_filled"
-          title={"Deploy"}
+          material="format_align_left"
+          title={"Pipeline"}
           interactive={toolbar}
         />
         <span className="title">
           <Trans>Pipeline</Trans>
         </span>
-      </MenuItem>
-    </KubeObjectMenu>
+      </MenuItem> */}
+    </KubeObjectMenu >
   );
 }
 

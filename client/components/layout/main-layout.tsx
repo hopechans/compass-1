@@ -94,8 +94,7 @@ export class Layout extends React.Component<Props,State> {
       message.error('Token Expired')
       setTimeout(()=>{
           this.loginout()
-          Notifications.info('Please Login Again')
-      },2000)
+      },1000)
       return null
     }
   }

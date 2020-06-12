@@ -7,6 +7,7 @@ import { createStorage } from "../../utils";
 import { configStore } from "../../config.store";
 import { Notifications } from "../notifications";
 import { withRouter, RouteComponentProps } from 'react-router';
+import {crdStore } from '../+custom-resources'
 import './login.scss'
 const layout = {
   labelCol: { span: 0 },
@@ -44,6 +45,7 @@ class LoginComponet extends React.Component<Props, State>{
         configStore.isLoaded = true
         configStore.setConfig(res.data)
         window.localStorage.setItem('u_config',JSON.stringify(res.data))
+        crdStore.loadAll()
         Notifications.ok('Login Success')
         const hide = message.loading('Loading..', 1500);
         setTimeout(hide, 1500);
