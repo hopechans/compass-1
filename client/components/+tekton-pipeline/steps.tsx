@@ -5,7 +5,7 @@ import { Button } from "../button";
 import { Collapse, Popconfirm } from "antd";
 import { observable } from "mobx";
 import { DeleteOutlined } from "@ant-design/icons";
-import { container, Container } from "../+deploy-container/common";
+import { container, Environment, VolumeMounts, commands, args, environment, volumeMounts } from "../+deploy-container/common";
 import { ArgsDetails } from "../+deploy-container/args-details";
 import { CommandDetails } from "../+deploy-container/command-details";
 import { EnvironmentDetails } from "../+deploy-container/env-details";
@@ -21,24 +21,33 @@ interface Props<T = any> extends Partial<Props> {
 
   onChange?(option: T, meta?: ActionMeta): void;
 
-  base?: boolean;
-  commands?: boolean;
-  args?: boolean;
-  environment?: boolean;
-  readyProbe?: boolean;
-  liveProbe?: boolean;
-  lifeCycle?: boolean;
-  divider?: true;
+}
+
+export interface StepUp {
+  stepname: string,
+  image: string,
+  commands: string[],
+  args: string[],
+  environment: Environment[],
+  volumeMounts: VolumeMounts
+}
+
+
+export const stepUp: StepUp = {
+  stepname: '',
+  image: '',
+  commands: commands,
+  args: args,
+  environment: environment,
+  volumeMounts: volumeMounts,
 }
 
 @observer
-export default class Step extends React.Component<Props> {
-  @observable value: Container[] = this.props.value || [container];
-  @observable stepname: string;
-  @observable imagename: string;
+export class Step extends React.Component<Props> {
+  @observable value: StepUp[] = this.props.value || [stepUp];
 
   add() {
-    this.value.push(container);
+    this.value.push(stepUp);
   }
 
   remove(index: number) {
@@ -91,27 +100,24 @@ export default class Step extends React.Component<Props> {
                 <b>StepName</b>
                 <Input
                   placeholder={"StepName"}
-                  value={this.stepname}
-                  onChange={(v) => (this.stepname = v)}
+                  value={this.value[index].stepname}
+                  onChange={(v) => (this.value[index].stepname = v)}
                 />
                 <br />
                 <b>Image</b>
                 <Input
                   placeholder={"Image"}
-                  value={this.imagename}
-                  onChange={(v) => (this.imagename = v)}
+                  value={this.value[index].image}
+                  onChange={(v) => (this.value[index].image = v)}
                 />
                 <br />
-                <ArgsDetails />
+                <ArgsDetails value={this.value[index].args} onChange={value => this.value[index].args = value} />
                 <Divider />
                 <br />
-                <CommandDetails />
+                <CommandDetails value={this.value[index].commands} onChange={value => this.value[index].commands = value} />
                 <Divider />
                 <br />
-                <EnvironmentDetails />
-                <Divider />
-                <br />
-                <VolumeMountDetails />
+                <EnvironmentDetails value={this.value[index].environment} onChange={value => this.value[index].environment = value} />
                 <Divider />
               </Panel>
             );
