@@ -1,31 +1,15 @@
-# ---- Base Node ----
-FROM node:carbon AS base
-# 创建 app 目录
-WORKDIR /app
+FROM node:14.3.0 AS builder
+WORKDIR /app 
+COPY package.json /app/ 
 
-# ---- Dependencies ----
-FROM base AS dependencies  
-# 使用通配符复制 package.json 与 package-lock.json
-COPY package*.json ./
-# 安装在‘devDependencies’中包含的依赖
-RUN npm install
+COPY . /app   
+RUN curl -o- -L https://yarnpkg.com/install.sh | bash
+RUN $HOME/.yarn/bin/yarn install
+RUN npm install -g webpack && yarn install && yarn build
 
-# ---- Copy Files/Build ----
-FROM dependencies AS build  
-WORKDIR /app
-COPY src /app
-# 如需对 react/vue/angular 打包，生成静态文件，使用：
-# RUN npm run build
+FROM nginx
+COPY --from=builder app/dist /usr/share/nginx/html/
+COPY --from=builder app/nginx.conf /etc/nginx/nginx.conf
 
-# --- Release with Alpine ----
-FROM node:8.9-alpine AS release  
-# 创建 app 目录
-WORKDIR /app
-# 可选命令：
-# RUN npm -g install serve
-COPY --from=dependencies /app/package.json ./
-# 安装 app 依赖
-RUN npm install --only=production
-COPY --from=build /app ./
-#CMD ["serve", "-s", "dist", "-p", "8080"]
-CMD ["node", "server.js"]
+#暴露容器80端口
+EXPOSE 80
