@@ -60,6 +60,7 @@ export class AddSecretDialog extends React.Component<Props> {
     },
     [SecretType.DockerConfigJson]: {},
     [SecretType.Dockercfg]: {},
+    [SecretType.CephProvisioner]: {},
   }
 
   get types() {

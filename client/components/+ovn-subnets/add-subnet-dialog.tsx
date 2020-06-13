@@ -12,7 +12,7 @@ import { _i18n } from "../../i18n";
 import { Select, SelectOption } from "../select";
 import { Icon } from "../icon";
 import { NamespaceSelect } from "../+namespaces/namespace-select";
-import { Namespace } from "../../api/endpoints";
+import { Namespace, subNetApi } from "../../api/endpoints";
 import { ExcludeIPsDetails } from "./excludeips-details";
 
 interface Props extends DialogProps {
@@ -57,17 +57,15 @@ export class AddSubNetDialog extends React.Component<Props> {
     addSubNet = async () => {
 
         try {
-            await subNetStore.create(
-                { name: this.name, namespace: '' },
-                {
-                    spec: {
-                        protocol: this.protocol,
-                        cidrBlock: this.cidrBlock,
-                        gateway: this.gateway,
-                        namespaces: this.namespaces,
-                        excludeIps: this.excludeIps
-                    }
-                })
+            await subNetApi.create({ name: this.name, namespace: '' }, {
+                spec: {
+                    protocol: this.protocol,
+                    cidrBlock: this.cidrBlock,
+                    gateway: this.gateway,
+                    namespaces: this.namespaces,
+                    excludeIps: this.excludeIps
+                }
+            })
             this.reset();
             this.close();
         } catch (err) {
