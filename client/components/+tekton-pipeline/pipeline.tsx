@@ -25,7 +25,7 @@ import { Icon } from "../icon";
 import { Select } from "../select";
 import { _i18n } from "../../i18n";
 import { Grid, Divider } from "@material-ui/core";
-import Step from "./steps";
+import { Step, StepUp, stepUp } from "./steps";
 import { Input } from "../input";
 import { MenuItem } from "../menu";
 import { Button } from "../button";
@@ -38,7 +38,9 @@ enum sortBy {
   age = "age",
 }
 
-interface Props extends RouteComponentProps { }
+interface Props extends RouteComponentProps {
+
+}
 
 @observer
 export class Pipelines extends React.Component<Props> {
@@ -54,7 +56,9 @@ export class Pipelines extends React.Component<Props> {
   @observable currentSelectResourceType: string;
   @observable addVolumes: string[] = [];
   @observable static isHiddenPipelineGraph: boolean = false;
-  drawer: Map<string, Map<string, string>>;
+  @observable drawer: Map<string, Map<string, string>> = new Map<string, Map<string, string>>();
+  @observable step: StepUp[] = [stepUp];
+
   @action
   openTaskDrawer() {
     setTimeout(() => {
@@ -307,7 +311,18 @@ export class Pipelines extends React.Component<Props> {
           {this.renderResource()}
           <Divider />
           <br />
-          <Step />
+          <Step value={this.step} onChange={(v) => this.step = v} />
+          <br />
+          <br />
+          <Grid container spacing={2}>
+            <Grid item xs={11}>
+            </Grid>
+            <Grid item xs={1}>
+              <Button primary onClick={(e) => { console.log(e) }}>
+                <span>Save</span>
+              </Button>
+            </Grid>
+          </Grid>
         </div>
       </Drawer>
     );
