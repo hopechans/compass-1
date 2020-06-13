@@ -3,7 +3,7 @@ import {KubeApi} from "../kube-api";
 
 
 export class SubNet extends KubeObject {
-    static kind = "SubNet";
+    static kind = "Subnet";
 
     spec: {
         protocol: string,

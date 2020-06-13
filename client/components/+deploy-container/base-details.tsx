@@ -1,15 +1,16 @@
-import {observer} from "mobx-react";
+import { observer } from "mobx-react";
 import React from "react";
-import {observable} from "mobx";
-import {Select, SelectOption} from "../select";
-import {Icon} from "../icon";
-import {SubTitle} from "../layout/sub-title";
-import {Input} from "../input";
-import {_i18n} from "../../i18n";
-import {isNumber} from "../input/input.validators";
-import {Col, Row} from "antd";
-import {ActionMeta} from "react-select/src/types";
-import {base, Base} from "./common";
+import { observable } from "mobx";
+import { Select, SelectOption } from "../select";
+import { Icon } from "../icon";
+import { SubTitle } from "../layout/sub-title";
+import { Input } from "../input";
+import { _i18n } from "../../i18n";
+import { isNumber } from "../input/input.validators";
+import { Col, Row } from "antd";
+import { ActionMeta } from "react-select/src/types";
+import { base, Base } from "./common";
+import { SecretsSelect } from "../+config-secrets/secrets-select";
 
 
 interface Props<T = any> extends Partial<Props> {
@@ -25,6 +26,7 @@ interface Props<T = any> extends Partial<Props> {
     setImagePullPolicy?: boolean
     setImageAddress?: boolean
     setResource?: boolean
+    imagePullSecrets?: string
 
     themeName?: "dark" | "light" | "outlined";
     divider?: true;
@@ -37,22 +39,23 @@ export class BaseDetails extends React.Component<Props> {
 
     static defaultProps = {
         lowerCase: true,
-        containerNameTitle: 'ContainerName',
-        imageAddressTitle: 'ImageAddress',
-        imagePullPolicyTitle: 'ImagePullPolicy',
+        containerNameTitle: 'Container Name',
+        imageAddressTitle: 'Image Address',
+        imagePullPolicyTitle: 'Image PullPolicy',
         limitCPUTitle: 'Limit CPU',
         limitMemoryTitle: 'Limit Memory',
         requiredCPUTitle: 'Required CPU',
-        requireMemoryTitle: 'Required Memory'
+        requireMemoryTitle: 'Required Memory',
+        imagePullSecrets: 'Image PullSecrets',
     }
 
     @observable value: Base = this.props.value || base
 
     formatOptionLabel = (option: SelectOption) => {
-        const {value, label} = option;
+        const { value, label } = option;
         return label || (
             <>
-                <Icon small material="layers"/>
+                <Icon small material="layers" />
                 {value}
             </>
         );
@@ -66,28 +69,91 @@ export class BaseDetails extends React.Component<Props> {
         ];
     }
 
+
+    formatOptionSelectImageAddressLabel = (option: SelectOption) => {
+        const { value } = option;
+        return (
+            <>
+                <Icon small material="layers" />
+                {value}
+            </>
+        );
+    }
+
+    get selectImageAddressOptions() {
+        return [
+            "PublicRegistry",
+            "CloudRegistry",
+            "YourRegistry",
+        ]
+    }
+
     render() {
 
         const { containerNameTitle, imageAddressTitle, imagePullPolicyTitle,
-            limitCPUTitle, limitMemoryTitle, requiredCPUTitle, requireMemoryTitle } = this.props
+            limitCPUTitle, limitMemoryTitle, requiredCPUTitle, requireMemoryTitle, imagePullSecrets } = this.props
 
         return (
             <>
-                <SubTitle title={containerNameTitle}/>
+                <SubTitle title={containerNameTitle} />
                 <Input
                     required={true}
                     placeholder={_i18n._(containerNameTitle)}
                     value={this.value.name}
                     onChange={v => this.value.name = v}
                 />
-                <SubTitle title={imageAddressTitle}/>
-                <Input
-                    required={true}
-                    placeholder={_i18n._(imageAddressTitle)}
-                    value={this.value.image}
-                    onChange={v => this.value.image = v}
+                <SubTitle title={"Image From"} />
+                <Select
+                    formatOptionLabel={this.formatOptionSelectImageAddressLabel}
+                    options={this.selectImageAddressOptions}
+                    value={this.value.imgaeFrom}
+                    onChange={v => {
+                        this.value.imgaeFrom = v.value;
+                    }}
                 />
-                <SubTitle title={imagePullPolicyTitle}/>
+                <br />
+                {
+                    this.value.imgaeFrom == "PublicRegistry" ?
+                        <>
+                            <Input
+                                required={true}
+                                placeholder={_i18n._(imageAddressTitle)}
+                                value={this.value.image}
+                                onChange={v => this.value.image = v}
+                            />
+                        </> : <></>
+                }
+                {
+                    this.value.imgaeFrom == "CloudRegistry" ?
+                        <>
+                            <Input
+                                required={true}
+                                placeholder={_i18n._(imageAddressTitle)}
+                                value={this.value.image}
+                                onChange={v => this.value.image = v}
+                            />
+                        </> : <></>
+                }
+                {
+                    this.value.imgaeFrom == "YourRegistry" ?
+                        <>
+                            <Input
+                                required autoFocus
+                                placeholder={_i18n._(imageAddressTitle)}
+                                value={this.value.image}
+                                onChange={v => this.value.image = v}
+                            />
+                            <SubTitle title={imagePullSecrets} />
+                            <SecretsSelect
+                                required autoFocus
+                                value={this.value.imagePullSecret}
+                                namespace={this.value.imagePullSecret}
+                                onChange={value => this.value.imagePullSecret = value.value}
+                            />
+                        </> : <></>
+                }
+                <br />
+                <SubTitle title={imagePullPolicyTitle} />
                 <Select
                     required={true}
                     formatOptionLabel={this.formatOptionLabel}
@@ -95,10 +161,11 @@ export class BaseDetails extends React.Component<Props> {
                     value={this.value.imagePullPolicy}
                     onChange={value => this.value.imagePullPolicy = value}
                 />
-                <br/>
+
+                <br />
                 <Row justify="space-between">
                     <Col span="10">
-                        <SubTitle title={limitCPUTitle}/>
+                        <SubTitle title={limitCPUTitle} />
                         <Input
                             required={true}
                             placeholder={_i18n._(limitCPUTitle)}
@@ -109,7 +176,7 @@ export class BaseDetails extends React.Component<Props> {
                         />
                     </Col>
                     <Col span="10">
-                        <SubTitle title={limitMemoryTitle}/>
+                        <SubTitle title={limitMemoryTitle} />
                         <Input
                             required={true}
                             placeholder={_i18n._(limitMemoryTitle)}
@@ -122,7 +189,7 @@ export class BaseDetails extends React.Component<Props> {
                 </Row>
                 <Row justify="space-between">
                     <Col span="10">
-                        <SubTitle title={requiredCPUTitle}/>
+                        <SubTitle title={requiredCPUTitle} />
                         <Input
                             required={true}
                             placeholder={_i18n._(requiredCPUTitle)}
@@ -133,7 +200,7 @@ export class BaseDetails extends React.Component<Props> {
                         />
                     </Col>
                     <Col span="10">
-                        <SubTitle title={requireMemoryTitle}/>
+                        <SubTitle title={requireMemoryTitle} />
                         <Input
                             required={true}
                             placeholder={_i18n._(requireMemoryTitle)}

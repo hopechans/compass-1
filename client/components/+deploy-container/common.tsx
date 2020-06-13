@@ -10,9 +10,11 @@ export interface Resource {
 
 export interface Base {
     name: string,
+    imgaeFrom?: string,
     image: string,
     imagePullPolicy: string,
     resource: Resource
+    imagePullSecret?: string,
 }
 
 export interface Environment {
@@ -77,7 +79,7 @@ export const base: Base = {
             cpu: "0.1",
             memory: "30"
         }
-    }
+    },
 };
 export const commands: string[] = [];
 

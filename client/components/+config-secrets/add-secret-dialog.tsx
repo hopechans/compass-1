@@ -58,6 +58,8 @@ export class AddSecretDialog extends React.Component<Props> {
         { key: "kubernetes.io/service-account.uid", required: true }
       ],
     },
+    [SecretType.DockerConfigJson]: {},
+    [SecretType.Dockercfg]: {},
   }
 
   get types() {
@@ -184,7 +186,7 @@ export class AddSecretDialog extends React.Component<Props> {
         <Wizard header={header} done={this.close}>
           <WizardStep contentClass="flow column" nextLabel={<Trans>Create</Trans>} next={this.createSecret}>
             <div className="secret-name">
-              <SubTitle title={<Trans>Secret name</Trans>}/>
+              <SubTitle title={<Trans>Secret name</Trans>} />
               <Input
                 autoFocus required
                 placeholder={_i18n._(t`Name`)}
@@ -194,7 +196,7 @@ export class AddSecretDialog extends React.Component<Props> {
             </div>
             <div className="flex auto gaps">
               <div className="secret-namespace">
-                <SubTitle title={<Trans>Namespace</Trans>}/>
+                <SubTitle title={<Trans>Namespace</Trans>} />
                 <NamespaceSelect
                   themeName="light"
                   value={namespace}
@@ -202,7 +204,7 @@ export class AddSecretDialog extends React.Component<Props> {
                 />
               </div>
               <div className="secret-type">
-                <SubTitle title={<Trans>Secret type</Trans>}/>
+                <SubTitle title={<Trans>Secret type</Trans>} />
                 <Select
                   themeName="light"
                   options={this.types}
