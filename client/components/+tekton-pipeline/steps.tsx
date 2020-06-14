@@ -5,11 +5,10 @@ import { Button } from "../button";
 import { Collapse, Popconfirm } from "antd";
 import { observable } from "mobx";
 import { DeleteOutlined } from "@ant-design/icons";
-import { container, Environment, VolumeMounts, commands, args, environment, volumeMounts } from "../+deploy-container/common";
+import { Environment, VolumeMounts, commands, args, environment, volumeMounts } from "../+deploy-container/common";
 import { ArgsDetails } from "../+deploy-container/args-details";
 import { CommandDetails } from "../+deploy-container/command-details";
 import { EnvironmentDetails } from "../+deploy-container/env-details";
-import { VolumeMountDetails } from "../+deploy-container/volume-mount";
 import { Input } from "../input";
 import { Divider } from "@material-ui/core";
 
