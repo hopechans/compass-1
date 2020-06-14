@@ -2,36 +2,10 @@ export interface VolumeClaimTemplateMetadata {
     isUseDefaultStorageClass: boolean;
     name: string;
     annotations: Map<string, string>;
-
-    // constructor() {
-    //     this.name = '';
-    //     const annotations = new Map<string, string>();
-    //     if (this.isUseDefaultStorageClass) {
-    //         annotations.set('volume.alpha.kubernetes.io/storage-class', 'default')
-    //     }
-    // }
 }
 
 export interface VolumeClaimTemplateSpecResourcesRequests {
     storage: string;
-
-    // constructor() {
-    //     this.storage = '200Mi';
-    //     this.accessModes = ["ReadWriteOnce"];
-    //     this.resources = {requests: {storage: this.storage}};
-    // }
-    //
-    // setStorageClassName(name: string) {
-    //     this.storageClassName = name
-    // }
-    //
-    // setStorageSize(size: number | string) {
-    //     if (typeof size === 'string') {
-    //         this.storage = size
-    //     } else {
-    //         this.storage = size.toString() + 'Gi'
-    //     }
-    // }
 }
 
 export interface VolumeClaimTemplateSpecResources {
@@ -69,10 +43,10 @@ export const volumeClaim: VolumeClaimTemplate = {
     },
     spec: {
         accessModes: ["ReadWriteOnce"],
-        storageClassName: "default-storage-class",
+        storageClassName: "",
         resources: {
             requests: {
-                storage: "200",
+                storage: "",
             }
         }
     }

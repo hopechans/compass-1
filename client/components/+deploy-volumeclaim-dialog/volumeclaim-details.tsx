@@ -45,12 +45,14 @@ export class VolumeClaimDetails extends React.Component<VolumeClaimProps> {
                 }
                 <SubTitle title={<Trans>Name</Trans>}/>
                 <Input
+                    required={true}
                     placeholder={_i18n._(t`Name`)}
                     value={this.value.metadata.name}
                     onChange={value => this.value.metadata.name = value}
                 />
                 <SubTitle title={<Trans>Request Storage Size</Trans>}/>
                 <Input
+                    required={true}
                     placeholder={_i18n._(t`Request Storage Size(MB)`)}
                     type="number"
                     validators={isNumber}

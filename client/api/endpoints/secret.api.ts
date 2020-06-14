@@ -12,6 +12,7 @@ export enum SecretType {
   SSHAuth = "kubernetes.io/ssh-auth",
   TLS = "kubernetes.io/tls",
   BootstrapToken = "bootstrap.kubernetes.io/token",
+  CephProvisioner = "kubernetes.io/rbd"
 }
 
 export interface ISecretRef {

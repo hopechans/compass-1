@@ -10,14 +10,16 @@ export interface Resource {
 
 export interface Base {
     name: string,
+    imgaeFrom?: string,
     image: string,
     imagePullPolicy: string,
     resource: Resource
+    imagePullSecret?: string,
 }
 
 export interface Environment {
     type: string
-    oneEnvConfig: any
+    envConfig: any
 }
 
 export interface Pattern {
@@ -65,8 +67,8 @@ export interface Container {
 
 
 export const base: Base = {
-    name: "default",
-    image: "app:latest",
+    name: "",
+    image: "",
     imagePullPolicy: "IfNotPresent",
     resource: {
         limits: {
@@ -77,7 +79,7 @@ export const base: Base = {
             cpu: "0.1",
             memory: "30"
         }
-    }
+    },
 };
 export const commands: string[] = [];
 
@@ -94,7 +96,7 @@ export const readyProbe: Probe = {
     retryCount: "",
     delay: "",
     pattern: {
-        type: "HTTP",
+        type: "",
         httpPort: "8081",
         url: "",
         tcpPort: "0",
