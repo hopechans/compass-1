@@ -165,7 +165,7 @@ export class Pipelines extends React.Component<Props> {
       // 关闭该节点的 hover 状态
       this.graph.setItemState(node, "hover", false);
     });
-
+    var index = 0;
     this.graph.on("node:click", (evt: any) => {
       const { item } = evt;
 
@@ -225,7 +225,26 @@ export class Pipelines extends React.Component<Props> {
       let group = item.getContainer();
       let title = group.get("children")[2];
       this.taskName = title.cfg.el.innerHTML;
-      // TaskDrawer.openTaskDrawer();
+      let status = group.get("children")[5];
+      if (index === 0) {
+        this.graph.setItemState(item, "succeed", '');
+
+
+      }
+      if (index === 1) {
+        this.graph.setItemState(item, "failed", '');
+
+      }
+      if (index === 2) {
+        this.graph.setItemState(item, "pending", '');
+      }
+      index++;
+      if (index === 3) {
+        index = 0;
+      }
+
+
+
     });
   }
 
@@ -243,12 +262,20 @@ export class Pipelines extends React.Component<Props> {
               </h5>
             </Grid>
             <Grid item xs={3}></Grid>
-            <Grid item xs={4}></Grid>
-            <Grid item xs={1}>
-            </Grid>
+            <Grid item xs={3}></Grid>
             <Grid item xs="auto">
               <Button primary onClick={() => console.log("test")}>
                 <span>Run</span>
+              </Button>
+            </Grid>
+            <Grid item xs="auto">
+              <Button primary onClick={() => console.log("test")}>
+                <span>ReRun</span>
+              </Button>
+            </Grid>
+            <Grid item xs="auto">
+              <Button primary onClick={() => console.log("test")}>
+                <span>Cancel</span>
               </Button>
             </Grid>
           </Grid>
@@ -326,7 +353,6 @@ export class Pipelines extends React.Component<Props> {
           }}
         />
         {this.renderTaskDrawer()}
-        {/* {this.renderTaskDrawer(taskDrawerEntity)} */}
       </>
     );
   }
