@@ -33,7 +33,7 @@ export default () => {
     },
     devServer: {
       //项目根目录
-      host: '0.0.0.0',
+      host: '127.0.0.1',
       port: '8087',
       contentBase: path.join(__dirname, "./dist"),
       historyApiFallback: true,
@@ -41,39 +41,39 @@ export default () => {
       publicPath: '',
       proxy: {
         '/base': {
-          target: 'http://sdmssd.io:8080',
+          target: 'http://127.0.0.1:8080/',
           secure: false,
           changeOrigin: true,
           // pathRewrite: { '^/base': '' }
         },
         '/api-kube': {
-          target: 'http://sdmssd.io:8080/',
+          target: 'http://127.0.0.1:8080/',
           secure: false,  // 如果是https接口，需要配置这个参数
           changeOrigin: true, // 如果接口跨域，需要进行这个参数配置
           pathRewrite: { '^/api-kube': '/workload' },
         },
         '/api-resource': {
-          target: 'http://sdmssd.io:8080/',
+          target: 'http://127.0.0.1:8080/',
           secure: false,  // 如果是https接口，需要配置这个参数
           changeOrigin: true, // 如果接口跨域，需要进行这个参数配置
           pathRewrite: { '^/api-resource': '/workload' }
         },
 
         '/user-login': {
-          target: 'http://sdmssd.io:8080/',
+          target: 'http://127.0.0.1:8080/',
           secure: false,  // 如果是https接口，需要配置这个参数
           changeOrigin: true, // 如果接口跨域，需要进行这个参数配置
         },
 
         '/api/config': {
-          target: 'http://sdmssd.io:8080/',
+          target: 'http://127.0.0.1:8080/',
           secure: false,  // 如果是https接口，需要配置这个参数
           changeOrigin: true, // 如果接口跨域，需要进行这个参数配置
-          pathRewrite: { '^/api/config': '/config' }
+          pathRewrite: { '^/api/config': '/workload/config' }
         },
 
         '/api': {
-          target: 'http://sdmssd.io:8080/',
+          target: 'http://127.0.0.1:8080/',
           secure: false,  // 如果是https接口，需要配置这个参数
           changeOrigin: true, // 如果接口跨域，需要进行这个参数配置
           pathRewrite: { '^/api': '/workload' }
