@@ -61,7 +61,7 @@ export const taskDrawerEntity: TaskDrawerEntity = {
 @observer
 export class TaskDrawer extends React.Component<Props> {
     @observable value: TaskDrawerEntity = this.props.value || taskDrawerEntity;
-    @observable taskDrawer = this.props.value.taskDrawer || false;
+    @observable taskDrawer = false;
 
     @action
     openTaskDrawer() {
