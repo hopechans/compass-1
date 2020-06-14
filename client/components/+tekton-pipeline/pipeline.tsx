@@ -29,6 +29,7 @@ import { Step, StepUp, stepUp } from "./steps";
 import { Input } from "../input";
 import { MenuItem } from "../menu";
 import { Button } from "../button";
+import { TaskDrawer, taskDrawerEntity, TaskDrawerEntity } from "./task-drawer"
 
 enum sortBy {
   name = "name",
@@ -44,288 +45,21 @@ interface Props extends RouteComponentProps {
 
 @observer
 export class Pipelines extends React.Component<Props> {
-  @observable taskDrawer = false;
   @observable taskName: string = "";
   @observable graph: any;
   @observable currentNode: any;
-  @observable addParams: string[] = [];
-  @observable addResources: string[] = [];
-  @observable currentSelectResource: [] = [];
-  @observable selectResource: [] = [];
-  @observable defaultresourceType: string[] = ["git", "image"];
-  @observable currentSelectResourceType: string;
-  @observable addVolumes: string[] = [];
   @observable static isHiddenPipelineGraph: boolean = false;
   @observable drawer: Map<string, Map<string, string>> = new Map<string, Map<string, string>>();
   @observable step: StepUp[] = [stepUp];
+  @observable task: any;
+  @observable isOpen: boolean = false;
 
-  @action
-  openTaskDrawer() {
-    setTimeout(() => {
-      this.taskDrawer = true;
-    }, 200);
-  }
 
-  @action
-  closeTaskDrawer() {
-    this.taskDrawer = false;
-  }
 
-  handleSelectRepo = (e: any) => {
-    e.stopPropagation();
-  };
-
-  handleTaskName = (e: any) => {
-    this.taskName = e;
-    this.graph.setItemState(this.currentNode, "click", this.taskName);
-  };
-
-  addParam = () => {
-    this.addParams.push("");
-  };
-
-  removeParam = (index: number) => {
-    this.addParams.splice(index, 1);
-  };
-
-  addResource = () => {
-    this.addResources.push("");
-  };
-
-  removeResource = (index: number) => {
-    this.addResources.splice(index, 1);
-  };
-
-  addVolume = () => {
-    this.addVolumes.push("");
-  };
-
-  removeVolume = (index: number) => {
-    this.addVolumes.splice(index, 1);
-  };
-
-  renderVolumeHeader = () => {
+  renderTaskDrawer() {
     return (
-      <Grid container spacing={2}>
-        <Grid item xs={12}></Grid>
-        <Grid item xs={12}>
-          <Divider />
-          <Icon
-            small
-            tooltip={"resource"}
-            material="add_circle_outline"
-            onClick={(e) => {
-              this.addVolume();
-              e.stopPropagation();
-            }}
-          />
-          <b> Add Pipeline Volume:</b>
-        </Grid>
-        <Grid item xs={5}>
-          <Trans>Name</Trans>
-        </Grid>
-        <Grid item xs={5}>
-          <Trans>ResourceType</Trans>
-        </Grid>
-      </Grid>
-    );
-  };
-
-  renderResourceHeader = () => {
-    return (
-      <Grid container spacing={2}>
-        <Grid item xs={12}></Grid>
-        <Grid item xs={12}>
-          <Divider />
-          <Icon
-            small
-            tooltip={"resource"}
-            material="add_circle_outline"
-            onClick={(e) => {
-              this.addResource();
-              e.stopPropagation();
-            }}
-          />
-          <b> Add Pipeline Resources:</b>
-        </Grid>
-        <Grid item xs={5}>
-          <Trans>Name</Trans>
-        </Grid>
-        <Grid item xs={5}>
-          <Trans>ResourceType</Trans>
-        </Grid>
-      </Grid>
-    );
-  };
-
-  renderInputs() {
-    return (
-      <Grid container spacing={2}>
-        <Grid item xs={12}></Grid>
-        <Grid item xs={1}></Grid>
-        <Grid item xs={3}>
-          <Icon
-            small
-            tooltip={"inputs"}
-            material="add_circle_outline"
-            onClick={(e) => {
-              this.addResource();
-              e.stopPropagation();
-            }}
-          />
-          <b> Add Pipeline Inputs:</b>
-        </Grid>
-      </Grid>
-    );
-  }
-
-  renderResource() {
-    return (
-      <div className="Resource">
-        {this.renderResourceHeader()}
-        {this.addResources.map((item, index) => {
-          return (
-            <Grid container spacing={2}>
-              <Grid item xs={5}>
-                <Select
-                  value={this.currentSelectResource}
-                  options={this.selectResource}
-                ></Select>
-              </Grid>
-              <Grid item xs={5}>
-                <Select
-                  value={this.currentSelectResourceType}
-                  options={this.defaultresourceType}
-                ></Select>
-              </Grid>
-              <Grid item xs={1}>
-                <Icon
-                  small
-                  material="remove_circle_outline"
-                  onClick={(e) => {
-                    this.removeResource(index);
-                    e.stopPropagation();
-                  }}
-                />
-              </Grid>
-            </Grid>
-          );
-        })}
-      </div>
-    );
-  }
-
-  renderParamsHeader() {
-    return (
-      <div>
-        <Grid container spacing={2}>
-          <Grid item xs={12}></Grid>
-          <Grid item xs={12}>
-            <Icon
-              small
-              tooltip={"Params"}
-              material="add_circle_outline"
-              onClick={(e) => {
-                this.addParam();
-                e.stopPropagation();
-              }}
-            />
-
-            <b> Add Pipeline Params:</b>
-          </Grid>
-          <Grid item xs={3}>
-            <Trans>Name</Trans>
-          </Grid>
-          <Grid item xs={3}>
-            <Trans>Type</Trans>
-          </Grid>
-          <Grid item xs={3}>
-            <Trans>Description</Trans>
-          </Grid>
-          <Grid item xs={3}>
-            <Trans>Default</Trans>
-          </Grid>
-        </Grid>
-      </div>
-    );
-  }
-
-  renderParams() {
-    return (
-      <div className="params">
-        {this.renderParamsHeader()}
-
-        {this.addParams.map((item, index) => {
-          return (
-            <Grid container spacing={2}>
-              <Grid item xs={3}>
-                <Input />
-              </Grid>
-              <Grid item xs={3}>
-                <Input />
-              </Grid>
-              <Grid item xs={3}>
-                <Input />
-              </Grid>
-              <Grid item xs={2}>
-                <Input />
-              </Grid>
-              <Grid item xs={1}>
-                <Icon
-                  small
-                  material="remove_circle_outline"
-                  onClick={(e) => {
-                    this.removeParam(index);
-                    e.stopPropagation();
-                  }}
-                />
-              </Grid>
-            </Grid>
-          );
-        })}
-      </div>
-    );
-  }
-
-  renderTaskDrawer(data: any) {
-    const { taskDrawer } = this;
-    return (
-      <Drawer
-        className="flex column"
-        open={taskDrawer}
-        title="Task Detail"
-        onClose={() => this.closeTaskDrawer()}
-      >
-        <div className="taskName">
-          <DrawerItem name={<b>Task Name:</b>}>
-            <Input
-              placeholder={"Task Name"}
-              value={this.taskName}
-              onChange={(e: any) => {
-                this.handleTaskName(e);
-              }}
-            />
-          </DrawerItem>
-
-          {this.renderParams()}
-          {this.renderResource()}
-          <Divider />
-          <br />
-          <Step value={this.step} onChange={(v) => this.step = v} />
-          <br />
-          <br />
-          <Grid container spacing={2}>
-            <Grid item xs={11}>
-            </Grid>
-            <Grid item xs={1}>
-              <Button primary onClick={(e) => { console.log(e) }}>
-                <span>Save</span>
-              </Button>
-            </Grid>
-          </Grid>
-        </div>
-      </Drawer>
-    );
+      <TaskDrawer />
+    )
   }
 
   componentDidMount() {
@@ -491,8 +225,7 @@ export class Pipelines extends React.Component<Props> {
       let group = item.getContainer();
       let title = group.get("children")[2];
       this.taskName = title.cfg.el.innerHTML;
-      this.renderTaskDrawer({})
-      this.openTaskDrawer();
+      // TaskDrawer.openTaskDrawer();
     });
   }
 
@@ -592,7 +325,8 @@ export class Pipelines extends React.Component<Props> {
             }
           }}
         />
-        {this.renderTaskDrawer({})}
+        {this.renderTaskDrawer()}
+        {/* {this.renderTaskDrawer(taskDrawerEntity)} */}
       </>
     );
   }
