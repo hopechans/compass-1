@@ -49,7 +49,7 @@ export class Pipelines extends React.Component<Props> {
   @observable graph: any;
   @observable currentNode: any;
   @observable static isHiddenPipelineGraph: boolean = false;
-  @observable taskArray: TaskDrawerEntity[] = [];
+  @observable static taskArray: Array<TaskDrawerEntity> = new Array<TaskDrawerEntity>();
   @observable step: StepUp[] = [stepUp];
   @observable task: any;
   @observable taskEntity: TaskDrawerEntity = taskDrawerEntity;
@@ -68,11 +68,12 @@ export class Pipelines extends React.Component<Props> {
   renderTaskDrawer() {
     this.taskEntity.graph = this.graph;
     this.taskEntity.currentNode = this.currentNode;
+    console.log("---------------------------------------------------------->current taskEntity:", Pipelines.taskArray);
     return (
       <div>
         {this.taskRecord.map((item, index) => {
           return (
-            < TaskDrawer value={this.taskEntity} />
+            < TaskDrawer value={this.taskEntity} onChange={this.SaveTask} />
           );
 
         })}
@@ -81,8 +82,8 @@ export class Pipelines extends React.Component<Props> {
   }
 
   SaveTask(taskId: number) {
-    console.log("---------------------------------------------------------->current taskId:", taskId);
-    this.taskArray[taskId] = this.taskEntity;
+    // console.log("---------------------------------------------------------->current taskId:", this.taskArray);
+    Pipelines.taskArray.splice(taskId, 0, this.taskEntity);
   }
 
   componentDidMount() {
@@ -270,16 +271,16 @@ export class Pipelines extends React.Component<Props> {
       //   this.taskEntity = currentTask;
       // }
       // this.taskEntity.addParams = [];
-      let currentTask = this.taskArray[this.currentNode._cfg.id];
-      if (currentTask != null) {
-        this.taskEntity = currentTask;
-      } else {
-        this.taskEntity.graph = this.graph;
-        this.taskEntity.currentNode = this.currentNode;
-        this.taskEntity.addParams = [];
-        this.taskEntity.addResources = [];
-        this.taskEntity.step = []
-      }
+      // let currentTask = Pipelines.taskArray.get<>(this.currentNode._cfg.id);
+      // if (currentTask != null) {
+      //   this.taskEntity = currentTask;
+      // } else {
+      //   this.taskEntity.graph = this.graph;
+      //   this.taskEntity.currentNode = this.currentNode;
+      //   this.taskEntity.addParams = [];
+      //   this.taskEntity.addResources = [];
+      //   this.taskEntity.step = []
+      // }
       this.removeTask(0);
       this.addTask();
       TaskDrawer.open();
