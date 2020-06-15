@@ -49,17 +49,41 @@ export class Pipelines extends React.Component<Props> {
   @observable graph: any;
   @observable currentNode: any;
   @observable static isHiddenPipelineGraph: boolean = false;
-  @observable drawer: Map<string, Map<string, string>> = new Map<string, Map<string, string>>();
+  @observable static taskArray: Array<TaskDrawerEntity> = new Array<TaskDrawerEntity>();
   @observable step: StepUp[] = [stepUp];
   @observable task: any;
-  @observable isOpen: boolean = false;
+  @observable taskEntity: TaskDrawerEntity = taskDrawerEntity;
+  @observable taskRecord: string[] = [];
+
+  addTask() {
+    this.taskRecord.push("");
+  }
+
+  removeTask(index: number) {
+    this.taskRecord.splice(index, 1);
+  }
 
 
 
   renderTaskDrawer() {
+    this.taskEntity.graph = this.graph;
+    this.taskEntity.currentNode = this.currentNode;
+    console.log("---------------------------------------------------------->current taskEntity:", Pipelines.taskArray);
     return (
-      <TaskDrawer />
+      <div>
+        {this.taskRecord.map((item, index) => {
+          return (
+            < TaskDrawer value={this.taskEntity} onChange={this.SaveTask} />
+          );
+
+        })}
+      </div>
     )
+  }
+
+  SaveTask(taskId: number) {
+    // console.log("---------------------------------------------------------->current taskId:", this.taskArray);
+    Pipelines.taskArray.splice(taskId, 0, this.taskEntity);
   }
 
   componentDidMount() {
@@ -168,8 +192,8 @@ export class Pipelines extends React.Component<Props> {
     var index = 0;
     this.graph.on("node:click", (evt: any) => {
       const { item } = evt;
-
       const shape = evt.target.cfg.name;
+
       if (shape === "right-plus") {
         const source = item._cfg.id;
         const target = Number(source) + 1;
@@ -225,26 +249,41 @@ export class Pipelines extends React.Component<Props> {
       let group = item.getContainer();
       let title = group.get("children")[2];
       this.taskName = title.cfg.el.innerHTML;
-      let status = group.get("children")[5];
-      if (index === 0) {
-        this.graph.setItemState(item, "succeed", '');
+      // let status = group.get("children")[5];
+      // if (index === 0) {
+      //   this.graph.setItemState(item, "succeed", '');
 
 
-      }
-      if (index === 1) {
-        this.graph.setItemState(item, "failed", '');
+      // }
+      // if (index === 1) {
+      //   this.graph.setItemState(item, "failed", '');
 
-      }
-      if (index === 2) {
-        this.graph.setItemState(item, "pending", '');
-      }
-      index++;
-      if (index === 3) {
-        index = 0;
-      }
-
-
-
+      // }
+      // if (index === 2) {
+      //   this.graph.setItemState(item, "pending", '');
+      // }
+      // index++;
+      // if (index === 3) {
+      //   index = 0;
+      // }
+      // let currentTask = this.taskMap.get(title.cfg.el.innerHTML)
+      // if (currentTask != null) {
+      //   this.taskEntity = currentTask;
+      // }
+      // this.taskEntity.addParams = [];
+      // let currentTask = Pipelines.taskArray.get<>(this.currentNode._cfg.id);
+      // if (currentTask != null) {
+      //   this.taskEntity = currentTask;
+      // } else {
+      //   this.taskEntity.graph = this.graph;
+      //   this.taskEntity.currentNode = this.currentNode;
+      //   this.taskEntity.addParams = [];
+      //   this.taskEntity.addResources = [];
+      //   this.taskEntity.step = []
+      // }
+      this.removeTask(0);
+      this.addTask();
+      TaskDrawer.open();
     });
   }
 
@@ -288,6 +327,7 @@ export class Pipelines extends React.Component<Props> {
             Pipelines.isHiddenPipelineGraph ?? true
           }
         >
+
 
         </div>
         <KubeObjectListLayout

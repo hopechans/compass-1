@@ -61,18 +61,16 @@ export const taskDrawerEntity: TaskDrawerEntity = {
 @observer
 export class TaskDrawer extends React.Component<Props> {
     @observable value: TaskDrawerEntity = this.props.value || taskDrawerEntity;
-    @observable taskDrawer = false;
+    @observable static taskDrawer = false;
 
-    @action
-    openTaskDrawer() {
+    static open() {
         setTimeout(() => {
-            this.taskDrawer = true;
-        }, 200);
+            TaskDrawer.taskDrawer = true;
+        })
     }
 
-    @action
-    closeTaskDrawer() {
-        this.taskDrawer = false;
+    static close() {
+        TaskDrawer.taskDrawer = false;
     }
 
     handleSelectRepo = (e: any) => {
@@ -295,9 +293,9 @@ export class TaskDrawer extends React.Component<Props> {
         return (
             <Drawer
                 className="flex column"
-                open={this.taskDrawer}
+                open={!!TaskDrawer.taskDrawer}
                 title="Task Detail"
-                onClose={this.closeTaskDrawer}
+                onClose={TaskDrawer.close}
             >
                 <div className="taskName">
                     <DrawerItem name={<b>Task Name:</b>}>
@@ -321,7 +319,9 @@ export class TaskDrawer extends React.Component<Props> {
                         <Grid item xs={11}>
                         </Grid>
                         <Grid item xs={1}>
-                            <Button primary onClick={(e) => { console.log(e) }}>
+                            <Button primary onClick={(e) => {
+                                this.props.onChange(this.value.currentNode._cfg.id);
+                            }}>
                                 <span>Save</span>
                             </Button>
                         </Grid>
