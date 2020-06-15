@@ -2,6 +2,7 @@ import { JsonApi, JsonApiErrorParsed } from "./json-api";
 import { KubeJsonApi } from "./kube-json-api";
 import { Notifications } from "../components/notifications";
 import { clientVars } from "../../server/config";
+import debounce from 'lodash/debounce';
 //-- JSON HTTP APIS
 
 export const apiBase = new JsonApi({
@@ -36,6 +37,17 @@ export const apiKubeResourceApplier = new KubeJsonApi({
     apiPrefix: clientVars.API_PREFIX.KUBE_RESOURCE_APPLIER,
 });
 
+const de_loginout = debounce(loginout, 800);
+function loginout(){
+    Notifications.error('401 Unauthorized, Please Login Again');
+    if(!window.location.href.includes('login')){
+        setTimeout(()=>{
+            window.location.replace('/login')
+        },2000)
+    }
+    window.localStorage.clear();  
+}
+
 // Common handler for HTTP api errors
 function onApiError(error: JsonApiErrorParsed, res: Response) {
     switch (res.status) {
@@ -44,9 +56,8 @@ function onApiError(error: JsonApiErrorParsed, res: Response) {
             Notifications.error(error);
             break;
         case 401:
-            error.isUsedForNotification = true;
-            Notifications.error('401 Unauthorized');
-            break;    
+            de_loginout()
+            break; 
     }
 }
 
