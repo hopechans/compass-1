@@ -1,46 +1,44 @@
 import React from 'react'
 import axios from 'axios'
-import { Trans } from "@lingui/macro";
-import { UserOutlined, LockOutlined } from '@ant-design/icons';
-import { Form, Input, Button, Checkbox, message, Alert } from 'antd';
-import { createStorage } from "../../utils";
+import { computed, observable } from "mobx";
+import { observer } from "mobx-react";
+import { t,Trans } from "@lingui/macro";
+import { message, Alert} from 'antd';
+import { SubTitle } from '../layout/sub-title'
+import { cssNames } from "../../utils";
+import { systemName } from "../input/input.validators";
 import { configStore } from "../../config.store";
+import { themeStore } from "../../theme.store";
 import { Notifications } from "../notifications";
 import { withRouter, RouteComponentProps } from 'react-router';
-import {crdStore } from '../+custom-resources'
+import { crdStore } from '../+custom-resources'
+import { _i18n } from "../../i18n";
+import { Input } from '../input'
+import { Button } from '../button'
 import './login.scss'
-const layout = {
-  labelCol: { span: 0 },
-  wrapperCol: { span: 24 },
-};
-const tailLayout = {
-  wrapperCol: { offset: 0, span: 24 },
-};
-
 interface Props extends RouteComponentProps {
   history: any
 }
+@observer
+class LoginComponet extends React.Component<Props>{
 
-interface State {
-  loading: boolean
-}
+  @observable username = ''
+  @observable password = ''
+  @observable loading = false
 
-class LoginComponet extends React.Component<Props, State>{
-
-  constructor(props: Props) {
-    super(props)
-    this.state = {
-      loading: false
+  onKeyDown = (e:React.KeyboardEvent) => {
+    if(e.keyCode === 13) {
+      this.onFinish()
     }
   }
 
-  async stratConfigStoreLoad() {
-    await configStore.load()
-  }
-
-  onFinish = (values: any) => {
-    this.setState({ loading: true })
-    axios.post('/user-login', values)
+  onFinish = () => {
+    if(!this.username || !this.password){
+      Notifications.error('Please enter account or password')
+      return
+    }
+    this.loading = true
+    axios.post('/user-login', {username:this.username,password:this.password})
       .then((res: any) => {
         configStore.isLoaded = true
         configStore.setConfig(res.data)
@@ -49,33 +47,26 @@ class LoginComponet extends React.Component<Props, State>{
         Notifications.ok('Login Success')
         const hide = message.loading('Loading..', 1500);
         setTimeout(hide, 1500);
-        this.setState({ loading: true })
+        this.loading = true
         setTimeout(() => {
           if (res.data.isClusterAdmin === true) {
             this.props.history.push('/cluster')
           }else{
             this.props.history.push('/workloads')
           }
-          this.setState({ loading: false })
+          this.loading = false
         }, 500)
-
-        // this.stratConfigStoreLoad()
       }).catch(err => {
         if(err && err.response){
           Notifications.error(err.response.data)
         }
-        this.setState({ loading: false })
+        this.loading = false
       })
   };
 
-  onFinishFailed = (errorInfo: any) => {
-    console.log('Failed:', errorInfo);
-  };
-
-
   render() {
     return (
-      <div className="login-main">
+      <div className={cssNames("login-main", themeStore.activeTheme.type)}>
         <div className="login-header">
           <div className="login-title">
             <img src={require("../../favicon/compass.png")} />
@@ -85,37 +76,30 @@ class LoginComponet extends React.Component<Props, State>{
 
         </div>
         <div className="login-content">
-          <Form
-            {...layout}
-            name="basic"
-            initialValues={{ remember: true }}
-            onFinish={this.onFinish}
-            onFinishFailed={this.onFinishFailed}
-          >
-            <Form.Item
-              name="username"
-              rules={[{ required: true, message: 'Please input your username!' }]}
-            >
-              <Input prefix={<UserOutlined translate className="site-form-item-icon" />} placeholder="username" />
-            </Form.Item>
-
-            <Form.Item
-              name="password"
-              rules={[{ required: true, message: 'Please input your password!' }]}
-            >
-              <Input.Password placeholder="password" prefix={<LockOutlined translate className="site-form-item-icon" />} />
-            </Form.Item>
-
-            {/* <Form.Item {...tailLayout} name="remember" valuePropName="checked">
-              <Checkbox>Remember me</Checkbox>
-            </Form.Item> */}
-
-            <Form.Item {...tailLayout}>
-              <Button type="primary" htmlType="submit" className="login-btn-submit" loading={this.state.loading}>
+          <div>
+              <SubTitle title={<Trans>Username</Trans>}/>
+              <Input
+                maxLength={30}
+                placeholder={_i18n._(t`Input your username`)}
+                value={this.username}
+                iconLeft="person"
+                validators={systemName}
+                onChange={v => this.username = v}
+              />
+              <SubTitle title={<Trans>Password</Trans>}/>
+              <Input
+                maxLength={30}
+                placeholder={_i18n._(t`Input your password`)}
+                value={this.password}
+                iconLeft="lock"
+                validators={systemName}
+                onChange={v => this.password = v}
+                onKeyDown={e=>this.onKeyDown(e)}
+              />
+              <Button className="login-btn-submit" primary waiting={this.loading} onClick={this.onFinish} >
                 Submit
               </Button>
-            </Form.Item>
-          </Form>
+            </div>
 
         </div>
         <div className="footer">
