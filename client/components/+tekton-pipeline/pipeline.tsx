@@ -2,7 +2,7 @@ import "./pipeline.scss";
 
 import React from "react";
 import { observer } from "mobx-react";
-import { computed, observable, reaction, action } from "mobx";
+import { observable } from "mobx";
 import { RouteComponentProps } from "react-router";
 import { Trans } from "@lingui/macro";
 import { Pipeline, pipelineApi } from "../../api/endpoints";
@@ -15,22 +15,13 @@ import {
   KubeObjectMenuProps,
 } from "../kube-object/kube-object-menu";
 import { KubeObjectListLayout } from "../kube-object";
-import { KubeEventIcon } from "../+events/kube-event-icon";
 import { apiManager } from "../../api/api-manager";
-import { DrawerItem, DrawerTitle } from "../drawer";
-import { Drawer } from "../drawer";
 import "./registerShape";
-import G6 from "@antv/g6";
-import { Icon } from "../icon";
-import { Select } from "../select";
 import { _i18n } from "../../i18n";
-import { Grid, Divider } from "@material-ui/core";
-import { Step, StepUp, stepUp } from "./steps";
-import { Input } from "../input";
-import { MenuItem } from "../menu";
-import { Button } from "../button";
-import { TaskDrawer, taskDrawerEntity, TaskDrawerEntity } from "./task-drawer"
+import { StepUp, stepUp } from "./steps";
+import { taskDrawerEntity, TaskDrawerEntity } from "./task-drawer"
 import { PipelineGraph } from "../+graphs/pipeline-graph"
+import { Graph } from "../+graphs/graph"
 
 enum sortBy {
   name = "name",
@@ -57,35 +48,35 @@ export class Pipelines extends React.Component<Props> {
   @observable taskRecord: string[] = [];
   private graph: PipelineGraph = null;
 
-  addTask() {
-    this.taskRecord.push("");
-  }
+  // addTask() {
+  //   this.taskRecord.push("");
+  // }
 
-  removeTask(index: number) {
-    this.taskRecord.splice(index, 1);
-  }
+  // removeTask(index: number) {
+  //   this.taskRecord.splice(index, 1);
+  // }
 
 
 
-  renderTaskDrawer() {
-    this.taskEntity.graph = this.graph;
-    this.taskEntity.currentNode = this.currentNode;
-    return (
-      <div>
+  // renderTaskDrawer() {
+  //   this.taskEntity.graph = this.graph;
+  //   this.taskEntity.currentNode = this.currentNode;
+  //   return (
+  //     <div>
 
-        {this.taskRecord.map((item, index) => {
-          return (
-            < TaskDrawer value={this.taskEntity} onChange={(taskId: number) => (this.SaveTask(taskId))} />
-          );
+  //       {this.taskRecord.map((item, index) => {
+  //         return (
+  //           < TaskDrawer value={this.taskEntity} onChange={(taskId: number) => (this.SaveTask(taskId))} />
+  //         );
 
-        })}
-      </div>
-    )
-  }
+  //       })}
+  //     </div>
+  //   )
+  // }
 
-  SaveTask(taskId: number) {
-    this.taskArray.splice(taskId, 0, this.taskEntity);
-  }
+  // SaveTask(taskId: number) {
+  //   this.taskArray.splice(taskId, 0, this.taskEntity);
+  // }
 
   componentDidMount() {
     this.graph = new PipelineGraph(0, 0);
@@ -97,46 +88,9 @@ export class Pipelines extends React.Component<Props> {
   render() {
     return (
       <>
-        <div hidden={
-          Pipelines.isHiddenPipelineGraph ?? true
-        }>
-          <Grid container spacing={1}>
 
-            <Grid item xs={3}>
-              <h5 className="title">
-                <Trans>Pipeline Visualization</Trans>
-              </h5>
-            </Grid>
-            <Grid item xs={3}></Grid>
-            <Grid item xs={3}></Grid>
-            <Grid item xs="auto">
-              <Button primary onClick={() => console.log("test")}>
-                <span>Run</span>
-              </Button>
-            </Grid>
-            <Grid item xs="auto">
-              <Button primary onClick={() => console.log("test")}>
-                <span>ReRun</span>
-              </Button>
-            </Grid>
-            <Grid item xs="auto">
-              <Button primary onClick={() => console.log("test")}>
-                <span>Cancel</span>
-              </Button>
-            </Grid>
-          </Grid>
-        </div>
+        <Graph open={Pipelines.isHiddenPipelineGraph}></Graph>
 
-        <div
-          className="graph"
-          id="container"
-          hidden={
-            Pipelines.isHiddenPipelineGraph ?? true
-          }
-        >
-
-
-        </div>
         <KubeObjectListLayout
           className="Pipelines"
           store={pipelineStore}
@@ -199,14 +153,13 @@ export class Pipelines extends React.Component<Props> {
             }
           }}
         />
-        {this.renderTaskDrawer()}
+        {/* {this.renderTaskDrawer()} */}
       </>
     );
   }
 }
 
 export function PipelineMenu(props: KubeObjectMenuProps<Pipeline>) {
-  const { object, toolbar } = props;
   return (
     <KubeObjectMenu {...props}>
       {/* <MenuItem onClick={() => {

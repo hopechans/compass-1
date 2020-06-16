@@ -13,6 +13,9 @@ import { KubeObjectMenu, KubeObjectMenuProps } from "../kube-object/kube-object-
 import { KubeObjectListLayout } from "../kube-object";
 import { KubeEventIcon } from "../+events/kube-event-icon";
 import { apiManager } from "../../api/api-manager";
+import { observable } from "mobx";
+import { PipelineGraph } from "../+graphs/pipeline-graph"
+import { Graph } from "../+graphs/graph"
 
 enum sortBy {
     name = "name",
@@ -26,39 +29,67 @@ interface Props extends RouteComponentProps {
 
 @observer
 export class PipelineRuns extends React.Component<Props> {
+
+    @observable static isHiddenPipelineGraph: boolean = false;
+    @observable graph: any = null;
+
+
+    componentDidMount() {
+        this.graph = new PipelineGraph(0, 0);
+        this.graph.bindClickOnNode(() => { });
+        this.graph.bindMouseenter();
+        this.graph.bindMouseleave();
+    }
+
     render() {
+
         return (
-            <KubeObjectListLayout
-                className="PipelineRuns" store={pipelineRunStore}
-                dependentStores={[podsStore, nodesStore, eventStore]}  // other
-                sortingCallbacks={{
-                    [sortBy.name]: (pipelineRun: PipelineRun) => pipelineRun.getName(),
-                    [sortBy.namespace]: (pipelineRun: PipelineRun) => pipelineRun.getNs(),
-                    [sortBy.age]: (pipelineRun: PipelineRun) => pipelineRun.getAge(false),
-                    // [sortBy.pods]: (pipelineRun:PipelineRun) => this.getPodsLength(statefulSet),
-                }}
-                searchFilters={[
-                    (pipelineRun: PipelineRun) => pipelineRun.getSearchFields(),
-                ]}
-                renderHeaderTitle={<Trans>PipelineRuns</Trans>}
-                renderTableHeader={[
-                    { title: <Trans>Name</Trans>, className: "name", sortBy: sortBy.name },
-                    { title: <Trans>Namespace</Trans>, className: "namespace", sortBy: sortBy.namespace },
-                    // { title: <Trans>Pods</Trans>, className: "pods", sortBy: sortBy.pods },
-                    // { className: "warning" },
-                    { title: <Trans>Age</Trans>, className: "age", sortBy: sortBy.age },
-                ]}
-                renderTableContents={(pipelineRun: PipelineRun) => [
-                    pipelineRun.getName(),
-                    pipelineRun.getNs(),
-                    // this.getPodsLength(statefulSet),
-                    // <KubeEventIcon object={statefulSet} />,
-                    pipelineRun.getAge(),
-                ]}
-                renderItemMenu={(item: PipelineRun) => {
-                    return <PipelineRunMenu object={item} />
-                }}
-            />
+            <div>
+                <Graph open={PipelineRuns.isHiddenPipelineGraph}></Graph>
+
+                <KubeObjectListLayout
+                    className="PipelineRuns" store={pipelineRunStore}
+                    dependentStores={[podsStore, nodesStore, eventStore]}  // other
+                    sortingCallbacks={{
+                        [sortBy.name]: (pipelineRun: PipelineRun) => pipelineRun.getName(),
+                        [sortBy.namespace]: (pipelineRun: PipelineRun) => pipelineRun.getNs(),
+                        [sortBy.age]: (pipelineRun: PipelineRun) => pipelineRun.getAge(false),
+                        // [sortBy.pods]: (pipelineRun:PipelineRun) => this.getPodsLength(statefulSet),
+                    }}
+                    onDetails={() => { }}
+                    searchFilters={[
+                        (pipelineRun: PipelineRun) => pipelineRun.getSearchFields(),
+                    ]}
+                    renderHeaderTitle={<Trans>PipelineRuns</Trans>}
+                    renderTableHeader={[
+                        { title: <Trans>Name</Trans>, className: "name", sortBy: sortBy.name },
+                        { title: <Trans>Namespace</Trans>, className: "namespace", sortBy: sortBy.namespace },
+                        // { title: <Trans>Pods</Trans>, className: "pods", sortBy: sortBy.pods },
+                        // { className: "warning" },
+                        { title: <Trans>Age</Trans>, className: "age", sortBy: sortBy.age },
+                    ]}
+                    renderTableContents={(pipelineRun: PipelineRun) => [
+                        pipelineRun.getName(),
+                        pipelineRun.getNs(),
+                        // this.getPodsLength(statefulSet),
+                        // <KubeEventIcon object={statefulSet} />,
+                        pipelineRun.getAge(),
+                    ]}
+                    renderItemMenu={(item: PipelineRun) => {
+                        return <PipelineRunMenu object={item} />
+                    }}
+                    addRemoveButtons={{
+                        addTooltip: <Trans>Pipeline</Trans>,
+                        onAdd: () => {
+                            if (PipelineRuns.isHiddenPipelineGraph === undefined) {
+                                PipelineRuns.isHiddenPipelineGraph = true;
+                            }
+                            PipelineRuns.isHiddenPipelineGraph ? PipelineRuns.isHiddenPipelineGraph = false : PipelineRuns.isHiddenPipelineGraph = true
+                            console.log(PipelineRuns.isHiddenPipelineGraph);
+                        }
+                    }}
+                />
+            </div>
         )
     }
 }
