@@ -95,6 +95,7 @@ class LoginComponet extends React.Component<Props>{
                 validators={systemName}
                 onChange={v => this.password = v}
                 onKeyDown={e=>this.onKeyDown(e)}
+                type="password"
               />
               <Button className="login-btn-submit" primary waiting={this.loading} onClick={this.onFinish} >
                 Submit
