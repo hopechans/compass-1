@@ -27,7 +27,7 @@ export class TerminalTab extends React.Component<Props> {
   }
 
   render() {
-    const tabIcon = <Icon svg="terminal"/>;
+    const tabIcon = <Icon material="keyboard"/>;
     const className = cssNames("TerminalTab", this.props.className, {
       disconnected: this.isDisconnected,
     });
