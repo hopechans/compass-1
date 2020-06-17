@@ -11,82 +11,81 @@ import {Col, Row} from "antd";
 import {Divider} from 'antd';
 import {args} from "./common";
 
-
 interface ArgsProps<T = any> extends Partial<ArgsProps> {
-    value?: T;
-    themeName?: "dark" | "light" | "outlined";
-    divider?: true;
+  value?: T;
+  themeName?: "dark" | "light" | "outlined";
+  divider?: true;
 
-    onChange?(option: T, meta?: ActionMeta): void;
+  onChange?(option: T, meta?: ActionMeta): void;
 }
 
 @observer
 export class ArgsDetails extends React.Component<ArgsProps> {
 
-    @observable value: string[] = this.props.value || args;
+  @observable value: string[] = this.props.value || args;
 
-    add = () => {
-        this.value.push("");
-    }
+  add = () => {
+    this.value.push("");
+  }
 
-    remove = (index: number) => {
-        this.value.splice(index, 1);
-    }
+  remove = (index: number) => {
+    this.value.splice(index, 1);
+  }
 
-    renderAdd() {
-        return (
-            <Icon
-                small
-                tooltip={_i18n._(t`Args`)}
-                material="add_circle_outline"
-                onClick={(e) => {
-                    this.add();
-                    e.stopPropagation()
-                }}
-            />
-        )
-    }
+  renderAdd() {
+    return (
+      <Icon
+        small
+        tooltip={_i18n._(t`Args`)}
+        material="add_circle_outline"
+        onClick={(e) => {
+          this.add();
+          e.stopPropagation()
+        }}
+      />
+    )
+  }
 
-    render() {
+  render() {
 
-        return (
-            <>
-                {this.props.divider ? <Divider/> : <></>}
-                <SubTitle  className="fields-title" title="Args">{this.renderAdd()}</SubTitle>
-                <div className="args">
-                    {this.value.map((item, index) => {
-                        return (
-                            <div key={index}>
-                                <Row>
-                                    <Col span="23">
-                                        <Input
-                                            className="item"
-                                            placeholder={_i18n._(t`Args`)}
-                                            title={this.value[index]}
-                                            value={this.value[index]}
-                                            onChange={value => {
-                                                this.value[index] = value
-                                            }}
-                                        />
-                                    </Col>
-                                    <Col span="1">
-                                        <Icon
-                                            small
-                                            tooltip={<Trans>Remove Args</Trans>}
-                                            className="remove-icon"
-                                            material="remove_circle_outline"
-                                            onClick={(e) => {
-                                                this.remove(index);
-                                                e.stopPropagation()
-                                            }}
-                                        />
-                                    </Col>
-                                </Row>
-                            </div>
-                        )
-                    })}
-                </div>
-            </>
-        )
-    }
+    return (
+      <>
+        {this.props.divider ? <Divider/> : <></>}
+        <SubTitle className="fields-title" title="Args">{this.renderAdd()}</SubTitle>
+        <div className="args">
+          {this.value.map((item, index) => {
+            return (
+              <div key={index}>
+                <Row>
+                  <Col span="23">
+                    <Input
+                      className="item"
+                      placeholder={_i18n._(t`Args`)}
+                      title={this.value[index]}
+                      value={this.value[index]}
+                      onChange={value => {
+                        this.value[index] = value
+                      }}
+                    />
+                  </Col>
+                  <Col span="1">
+                    <Icon
+                      small
+                      tooltip={<Trans>Remove Args</Trans>}
+                      className="remove-icon"
+                      material="remove_circle_outline"
+                      onClick={(e) => {
+                        this.remove(index);
+                        e.stopPropagation()
+                      }}
+                    />
+                  </Col>
+                </Row>
+              </div>
+            )
+          })}
+        </div>
+      </>
+    )
+  }
 }

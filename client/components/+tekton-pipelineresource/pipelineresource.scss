@@ -3,15 +3,19 @@
     &.name {
       flex-grow: 0.8;
     }
+
     &.pods {
       flex-grow: 0.3;
     }
-    &.namespace{
+
+    &.namespace {
       flex-grow: 1.2;
     }
+
     &.age {
       flex-grow: 0.3;
     }
+
     &.warning {
       @include table-cell-warning;
     }

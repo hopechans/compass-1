@@ -1,9 +1,9 @@
-import { observable } from "mobx";
-import { autobind } from "../../utils";
-import { KubeObjectStore } from "../../kube-object.store";
-import { deployApi } from "../../api/endpoints";
-import { apiManager } from "../../api/api-manager";
-import { Deploy } from "../../api/endpoints";
+import {observable} from "mobx";
+import {autobind} from "../../utils";
+import {KubeObjectStore} from "../../kube-object.store";
+import {deployApi} from "../../api/endpoints";
+import {apiManager} from "../../api/api-manager";
+import {Deploy} from "../../api/endpoints";
 
 @autobind()
 export class DeployStore extends KubeObjectStore<Deploy> {
