@@ -1,4 +1,4 @@
-import "./registerShape";
+import "./register-shape";
 import G6 from "@antv/g6";
 
 

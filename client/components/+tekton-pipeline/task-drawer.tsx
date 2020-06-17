@@ -4,7 +4,7 @@ import { observable, action, computed } from "mobx";
 import { Trans } from "@lingui/macro";
 import { DrawerItem } from "../drawer";
 import { Drawer } from "../drawer";
-import "./registerShape";
+import "./register-shape";
 import { Icon } from "../icon";
 import { Select } from "../select";
 import { _i18n } from "../../i18n";
