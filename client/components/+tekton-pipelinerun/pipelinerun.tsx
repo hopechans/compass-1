@@ -11,7 +11,6 @@ import { nodesStore } from "../+nodes/nodes.store";
 import { eventStore } from "../+events/event.store";
 import { KubeObjectMenu, KubeObjectMenuProps } from "../kube-object/kube-object-menu";
 import { KubeObjectListLayout } from "../kube-object";
-import { KubeEventIcon } from "../+events/kube-event-icon";
 import { apiManager } from "../../api/api-manager";
 import { observable } from "mobx";
 import { PipelineGraph } from "../+graphs/pipeline-graph"
@@ -45,7 +44,7 @@ export class PipelineRuns extends React.Component<Props> {
 
         return (
             <div>
-                <Graph open={PipelineRuns.isHiddenPipelineGraph}></Graph>
+                <Graph open={PipelineRuns.isHiddenPipelineGraph} showSave={true}></Graph>
 
                 <KubeObjectListLayout
                     className="PipelineRuns" store={pipelineRunStore}
@@ -56,7 +55,13 @@ export class PipelineRuns extends React.Component<Props> {
                         [sortBy.age]: (pipelineRun: PipelineRun) => pipelineRun.getAge(false),
                         // [sortBy.pods]: (pipelineRun:PipelineRun) => this.getPodsLength(statefulSet),
                     }}
-                    onDetails={() => { }}
+                    onDetails={() => {
+                        if (PipelineRuns.isHiddenPipelineGraph === undefined) {
+                            PipelineRuns.isHiddenPipelineGraph = true;
+                        }
+                        PipelineRuns.isHiddenPipelineGraph ? PipelineRuns.isHiddenPipelineGraph = false : PipelineRuns.isHiddenPipelineGraph = true
+                        console.log(PipelineRuns.isHiddenPipelineGraph);
+                    }}
                     searchFilters={[
                         (pipelineRun: PipelineRun) => pipelineRun.getSearchFields(),
                     ]}
@@ -77,16 +82,6 @@ export class PipelineRuns extends React.Component<Props> {
                     ]}
                     renderItemMenu={(item: PipelineRun) => {
                         return <PipelineRunMenu object={item} />
-                    }}
-                    addRemoveButtons={{
-                        addTooltip: <Trans>Pipeline</Trans>,
-                        onAdd: () => {
-                            if (PipelineRuns.isHiddenPipelineGraph === undefined) {
-                                PipelineRuns.isHiddenPipelineGraph = true;
-                            }
-                            PipelineRuns.isHiddenPipelineGraph ? PipelineRuns.isHiddenPipelineGraph = false : PipelineRuns.isHiddenPipelineGraph = true
-                            console.log(PipelineRuns.isHiddenPipelineGraph);
-                        }
                     }}
                 />
             </div>
