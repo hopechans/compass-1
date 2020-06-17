@@ -17,7 +17,26 @@ export interface TaskStep {
   image: string;
   args: string[];
   commands: string[];
-  environment: Environment[]
+  environment: Environment[];
+  workspaces: Workspace[];
+  workingDir: string;
+  results: Result[];
+}
+
+export interface Workspace {
+  name: string;
+  description: string;
+  mountPath: string;
+}
+
+export interface VolumeMount {
+  name: string;
+  mountPath: string;
+}
+
+export interface Result {
+  name: string;
+  description: string;
 }
 
 export const pipelineParams: PipelineParams = {
@@ -38,4 +57,23 @@ export const taskStep: TaskStep = {
   args: [],
   commands: [],
   environment: [],
+  workspaces: [],
+  workingDir: "",
+  results: [],
+}
+
+export const workspace: Workspace = {
+  name: "",
+  description: "",
+  mountPath: ""
+}
+
+export const volumeMount: VolumeMount = {
+  name: "",
+  mountPath: ""
+}
+
+export const result: Result = {
+  name: "",
+  description: "",
 }
