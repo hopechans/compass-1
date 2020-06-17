@@ -14,9 +14,9 @@ import {app, App} from "../+deploy-app";
 import {AppDetails} from "../+deploy-app";
 import {deployStore} from "./deploy.store";
 import {Notifications} from "../notifications";
-import { configStore } from "../../../client/config.store";
+import {configStore} from "../../../client/config.store";
 
-const { Panel } = Collapse;
+const {Panel} = Collapse;
 
 interface Props extends DialogProps {
 
@@ -25,94 +25,94 @@ interface Props extends DialogProps {
 @observer
 export class CopyAddDeployDialog extends React.Component<Props> {
 
-    @observable static isOpen = false;
-    @observable app: App = app;
-    @observable service: Service = deployService;
-    @observable containers: Container[] = [container];
-    @observable volumeClaims: VolumeClaimTemplate[] = [];
+  @observable static isOpen = false;
+  @observable app: App = app;
+  @observable service: Service = deployService;
+  @observable containers: Container[] = [container];
+  @observable volumeClaims: VolumeClaimTemplate[] = [];
 
-    static open() {
-        CopyAddDeployDialog.isOpen = true;
+  static open() {
+    CopyAddDeployDialog.isOpen = true;
+  }
+
+  static close() {
+    CopyAddDeployDialog.isOpen = false;
+  }
+
+  close = () => {
+    CopyAddDeployDialog.close();
+  }
+
+  reset = () => {
+    this.app = app;
+    this.service = deployService;
+    this.containers = [container];
+    this.volumeClaims = [];
+  }
+
+  addDeployDialog = async () => {
+    try {
+      const newDeploy = await deployStore.create(
+        {name: this.app.name + '-' + Math.floor(Date.now() / 1000), namespace: ''}, {
+          spec: {
+            appName: this.app.name,
+            resourceType: this.app.type,
+            metadata: JSON.stringify(this.containers),
+            service: JSON.stringify(this.service),
+            volumeClaims: JSON.stringify(this.volumeClaims),
+          },
+        });
+      // label the resource labels
+      newDeploy.metadata.labels = {namespace: configStore.getDefaultNamespace()}
+      await deployStore.update(newDeploy, {...newDeploy});
+      this.reset();
+      this.close();
+    } catch (err) {
+      Notifications.error(err);
     }
+  }
 
-    static close() {
-        CopyAddDeployDialog.isOpen = false;
-    }
+  render() {
+    const header = <h5><Trans>Apply Deploy Workload</Trans></h5>;
 
-    close = () => {
-        CopyAddDeployDialog.close();
-    }
-
-    reset = () => {
-        this.app = app;
-        this.service = deployService;
-        this.containers = [container];
-        this.volumeClaims = [];
-    }
-
-    addDeployDialog = async () => {
-        try {
-            const newDeploy = await deployStore.create(
-                { name: this.app.name + '-' + Math.floor(Date.now() / 1000), namespace: '' }, {
-                spec: {
-                    appName: this.app.name,
-                    resourceType: this.app.type,
-                    metadata: JSON.stringify(this.containers),
-                    service: JSON.stringify(this.service),
-                    volumeClaims: JSON.stringify(this.volumeClaims),
-                }, 
-            });
-            // label the resource labels
-            newDeploy.metadata.labels = { namespace: configStore.getDefaultNamespace() }
-            await deployStore.update(newDeploy, { ...newDeploy });
-            this.reset();
-            this.close();
-        } catch (err) {
-            Notifications.error(err);
-        }
-    }
-
-    render() {
-        const header = <h5><Trans>Apply Deploy Workload</Trans></h5>;
-
-        return (
-            <Dialog
-                isOpen={CopyAddDeployDialog.isOpen}
-                close={this.close}
-            >
-                <Wizard className="CopyAddDeployDialog" header={header} done={this.close}>
-                    <WizardStep contentClass="flex gaps column" next={this.addDeployDialog}>
-                        <div className="init-form">
-                            <Collapse defaultActiveKey={'App'}>
-                                <Panel header={`App`} key="App">
-                                    <AppDetails value={this.app} onChange={value => this.app = value} />
-                                </Panel>
-                            </Collapse>
-                            <br />
-                            <Collapse>
-                                <Panel key={"MultiContainer"} header={"Containers"}>
-                                    <MultiContainerDetails value={this.containers}
-                                        onChange={value => this.containers = value} />
-                                </Panel>
-                            </Collapse>
-                            <br />
-                            <Collapse>
-                                <Panel key={"DeployService"} header={"Service"}>
-                                    <DeployServiceDetails value={this.service}
-                                        onChange={value => this.service = value} />
-                                </Panel>
-                            </Collapse>
-                            <br />
-                            <Collapse>
-                                <Panel key={"MultiVolumeClaim"} header={"VolumeClaims"}>
-                                    <MultiVolumeClaimDetails value={this.volumeClaims}
-                                        onChange={value => this.volumeClaims = value} />
-                                </Panel>
-                            </Collapse>
-                        </div>
-                    </WizardStep>
-                </Wizard>
-            </Dialog>
-        )
-    }
+    return (
+      <Dialog
+        isOpen={CopyAddDeployDialog.isOpen}
+        close={this.close}
+      >
+        <Wizard className="CopyAddDeployDialog" header={header} done={this.close}>
+          <WizardStep contentClass="flex gaps column" next={this.addDeployDialog}>
+            <div className="init-form">
+              <Collapse defaultActiveKey={'App'}>
+                <Panel header={`App`} key="App">
+                  <AppDetails value={this.app} onChange={value => this.app = value}/>
+                </Panel>
+              </Collapse>
+              <br/>
+              <Collapse>
+                <Panel key={"MultiContainer"} header={"Containers"}>
+                  <MultiContainerDetails value={this.containers}
+                                         onChange={value => this.containers = value}/>
+                </Panel>
+              </Collapse>
+              <br/>
+              <Collapse>
+                <Panel key={"DeployService"} header={"Service"}>
+                  <DeployServiceDetails value={this.service}
+                                        onChange={value => this.service = value}/>
+                </Panel>
+              </Collapse>
+              <br/>
+              <Collapse>
+                <Panel key={"MultiVolumeClaim"} header={"VolumeClaims"}>
+                  <MultiVolumeClaimDetails value={this.volumeClaims}
+                                           onChange={value => this.volumeClaims = value}/>
+                </Panel>
+              </Collapse>
+            </div>
+          </WizardStep>
+        </Wizard>
+      </Dialog>
+    )
+  }
 }

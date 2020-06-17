@@ -1,9 +1,9 @@
 export interface App {
-    type: string,
-    name: string,
+  type: string,
+  name: string,
 }
 
 export const app: App = {
-    type: "Stone",
-    name: "your-app-name"
+  type: "Stone",
+  name: "your-app-name"
 }

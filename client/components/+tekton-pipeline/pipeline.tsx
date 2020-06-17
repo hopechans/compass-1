@@ -1,27 +1,30 @@
 import "./pipeline.scss";
 
 import React from "react";
-import { observer } from "mobx-react";
-import { observable } from "mobx";
-import { RouteComponentProps } from "react-router";
-import { Trans } from "@lingui/macro";
-import { Pipeline, pipelineApi } from "../../api/endpoints";
-import { podsStore } from "../+workloads-pods/pods.store";
-import { pipelineStore } from "./pipeline.store";
-import { nodesStore } from "../+nodes/nodes.store";
-import { eventStore } from "../+events/event.store";
+import {observer} from "mobx-react";
+import {observable} from "mobx";
+import {RouteComponentProps} from "react-router";
+import {Trans} from "@lingui/macro";
+import {Pipeline, pipelineApi} from "../../api/endpoints";
+import {podsStore} from "../+workloads-pods/pods.store";
+import {pipelineStore} from "./pipeline.store";
+import {nodesStore} from "../+nodes/nodes.store";
+import {eventStore} from "../+events/event.store";
 import {
   KubeObjectMenu,
   KubeObjectMenuProps,
-} from "../kube-object/kube-object-menu";
-import { KubeObjectListLayout } from "../kube-object";
-import { apiManager } from "../../api/api-manager";
+} from "../kube-object";
+import {KubeObjectListLayout} from "../kube-object";
+import {apiManager} from "../../api/api-manager";
 import "./register-shape";
-import { _i18n } from "../../i18n";
-import { StepUp, stepUp } from "./steps";
-import { taskDrawerEntity, TaskDrawerEntity } from "./task-drawer"
-import { PipelineGraph } from "../+graphs/pipeline-graph"
-import { Graph } from "../+graphs/graph"
+import {_i18n} from "../../i18n";
+import {StepUp, stepUp} from "./steps";
+import {taskDrawerEntity, TaskDrawerEntity} from "./task-drawer"
+import {PipelineGraph} from "../+graphs/pipeline-graph"
+import {Graph} from "../+graphs/graph"
+import {CopyTaskDialog} from "./copy-task-dialog";
+import {MenuItem} from "../menu";
+import {Icon} from "../icon";
 
 enum sortBy {
   name = "name",
@@ -33,6 +36,14 @@ enum sortBy {
 
 interface Props extends RouteComponentProps {
 
+}
+
+const showPipeline = () => {
+  if (Pipelines.isHiddenPipelineGraph === undefined) {
+    Pipelines.isHiddenPipelineGraph = true;
+  }
+  Pipelines.isHiddenPipelineGraph ? Pipelines.isHiddenPipelineGraph = false : Pipelines.isHiddenPipelineGraph = true
+  console.log(Pipelines.isHiddenPipelineGraph);
 }
 
 @observer
@@ -48,39 +59,10 @@ export class Pipelines extends React.Component<Props> {
   @observable taskRecord: string[] = [];
   private graph: PipelineGraph = null;
 
-  // addTask() {
-  //   this.taskRecord.push("");
-  // }
-
-  // removeTask(index: number) {
-  //   this.taskRecord.splice(index, 1);
-  // }
-
-
-
-  // renderTaskDrawer() {
-  //   this.taskEntity.graph = this.graph;
-  //   this.taskEntity.currentNode = this.currentNode;
-  //   return (
-  //     <div>
-
-  //       {this.taskRecord.map((item, index) => {
-  //         return (
-  //           < TaskDrawer value={this.taskEntity} onChange={(taskId: number) => (this.SaveTask(taskId))} />
-  //         );
-
-  //       })}
-  //     </div>
-  //   )
-  // }
-
-  // SaveTask(taskId: number) {
-  //   this.taskArray.splice(taskId, 0, this.taskEntity);
-  // }
-
   componentDidMount() {
     this.graph = new PipelineGraph(0, 0);
-    this.graph.bindClickOnNode(() => { });
+    this.graph.bindClickOnNode(() => {
+    });
     this.graph.bindMouseenter();
     this.graph.bindMouseleave();
   }
@@ -88,8 +70,7 @@ export class Pipelines extends React.Component<Props> {
   render() {
     return (
       <>
-
-        <Graph open={Pipelines.isHiddenPipelineGraph} showSave={false}></Graph>
+        <Graph open={Pipelines.isHiddenPipelineGraph} showSave={false}/>
 
         <KubeObjectListLayout
           className="Pipelines"
@@ -124,7 +105,7 @@ export class Pipelines extends React.Component<Props> {
               className: "tasknames",
               sortBy: sortBy.tasknames,
             },
-            { title: <Trans>Age</Trans>, className: "age", sortBy: sortBy.age },
+            {title: <Trans>Age</Trans>, className: "age", sortBy: sortBy.age},
           ]}
           renderTableContents={(pipeline: Pipeline) => [
             pipeline.getName(),
@@ -134,7 +115,7 @@ export class Pipelines extends React.Component<Props> {
             pipeline.getAge(),
           ]}
           renderItemMenu={(item: Pipeline) => {
-            return <PipelineMenu object={item} />;
+            return <PipelineMenu object={item}/>;
           }}
           tableProps={{
             customRowHeights: (item: Pipeline, lineHeight, paddings) => {
@@ -145,29 +126,24 @@ export class Pipelines extends React.Component<Props> {
           addRemoveButtons={{
             addTooltip: <Trans>Pipeline</Trans>,
             onAdd: () => {
-              if (Pipelines.isHiddenPipelineGraph === undefined) {
-                Pipelines.isHiddenPipelineGraph = true;
-              }
-              Pipelines.isHiddenPipelineGraph ? Pipelines.isHiddenPipelineGraph = false : Pipelines.isHiddenPipelineGraph = true
-              console.log(Pipelines.isHiddenPipelineGraph);
+              CopyTaskDialog.open()
             }
           }}
+          onDetails={showPipeline}
         />
-        {/* {this.renderTaskDrawer()} */}
+        <CopyTaskDialog/>
       </>
     );
   }
 }
 
 export function PipelineMenu(props: KubeObjectMenuProps<Pipeline>) {
+
+  const {object, toolbar} = props;
+
   return (
     <KubeObjectMenu {...props}>
-      {/* <MenuItem onClick={() => {
-        if (Pipelines.isHiddenPipelineGraph === undefined) {
-          Pipelines.isHiddenPipelineGraph = true;
-        }
-        Pipelines.isHiddenPipelineGraph ? Pipelines.isHiddenPipelineGraph = false : Pipelines.isHiddenPipelineGraph = true
-        console.log(Pipelines.isHiddenPipelineGraph);
+      <MenuItem onClick={() => {
       }}>
         <Icon
           material="format_align_left"
@@ -175,11 +151,11 @@ export function PipelineMenu(props: KubeObjectMenuProps<Pipeline>) {
           interactive={toolbar}
         />
         <span className="title">
-          <Trans>Pipeline</Trans>
+          <Trans>Run</Trans>
         </span>
-      </MenuItem> */}
-    </KubeObjectMenu >
+      </MenuItem>
+    </KubeObjectMenu>
   );
 }
 
-apiManager.registerViews(pipelineApi, { Menu: PipelineMenu });
+apiManager.registerViews(pipelineApi, {Menu: PipelineMenu});
