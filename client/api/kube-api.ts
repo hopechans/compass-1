@@ -163,6 +163,9 @@ export class KubeApi<T extends KubeObject = any> {
         else if (Array.isArray(data)) {
             return data.map(data => new KubeObjectConstructor(data));
         }
+        else if (JSON.stringify(data).includes('Items')) {
+            return []
+        }
         return data;
     }
 
