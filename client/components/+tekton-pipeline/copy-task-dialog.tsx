@@ -4,7 +4,7 @@ import {
   PipelineParamsDetails,
   PipelineResourceDetails,
   TaskNameDetails,
-  MultiTaskStepDetails, PipelineParams, PipelineResources, TaskStep
+  MultiTaskStepDetails, PipelineParams, PipelineResources, TaskStep, taskStep
 } from "../+tekton-task-detail";
 import {observable} from "mobx";
 import {Dialog} from "../dialog";
@@ -19,10 +19,10 @@ interface Props<T = any> extends Partial<Props> {
 export class CopyTaskDialog extends React.Component<Props> {
 
   @observable static isOpen = false;
-  @observable taskName: string = "default";
+  @observable taskName: string = "defaultName";
   @observable pipelineParams: PipelineParams[] = [];
   @observable pipelineResources: PipelineResources[] = [];
-  @observable taskSteps: TaskStep[] = [];
+  @observable taskSteps: TaskStep[] = [taskStep];
 
   static open() {
     CopyTaskDialog.isOpen = true;
@@ -66,5 +66,4 @@ export class CopyTaskDialog extends React.Component<Props> {
       </Dialog>
     )
   }
-
 }

@@ -9,7 +9,6 @@ import {ActionMeta} from "react-select/src/types";
 interface Props<T = any> extends Partial<Props> {
   value?: T;
   themeName?: "dark" | "light" | "outlined";
-  divider?: true;
 
   onChange?(option: T, meta?: ActionMeta): void;
 }
@@ -29,7 +28,7 @@ export class TaskNameDetails extends React.Component<Props> {
           required={true}
           placeholder={_i18n._("Task Name")}
           value={this.value}
-          onChange={v => this.value = v}
+          onChange={value => this.value = value}
         />
       </div>
     )

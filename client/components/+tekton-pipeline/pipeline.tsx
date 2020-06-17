@@ -25,6 +25,7 @@ import {Graph} from "../+graphs/graph"
 import {CopyTaskDialog} from "./copy-task-dialog";
 import {MenuItem} from "../menu";
 import {Icon} from "../icon";
+import {AddPipelineDialog} from "./add-pipeline-dialog";
 
 enum sortBy {
   name = "name",
@@ -71,7 +72,7 @@ export class Pipelines extends React.Component<Props> {
   render() {
     return (
       <>
-        <Graph open={Pipelines.isHiddenPipelineGraph} showSave={false} />
+        <Graph open={Pipelines.isHiddenPipelineGraph} showSave={false}/>
 
         <KubeObjectListLayout
           className="Pipelines"
@@ -127,12 +128,13 @@ export class Pipelines extends React.Component<Props> {
           addRemoveButtons={{
             addTooltip: <Trans>Pipeline</Trans>,
             onAdd: () => {
-
+              AddPipelineDialog.open()
             }
           }}
           onDetails={showPipeline}
         />
         <CopyTaskDialog/>
+        <AddPipelineDialog/>
       </>
     );
   }
