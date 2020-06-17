@@ -89,7 +89,7 @@ export class Pipelines extends React.Component<Props> {
     return (
       <>
 
-        <Graph open={Pipelines.isHiddenPipelineGraph}></Graph>
+        <Graph open={Pipelines.isHiddenPipelineGraph} showSave={false}></Graph>
 
         <KubeObjectListLayout
           className="Pipelines"
