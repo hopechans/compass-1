@@ -29,24 +29,19 @@ export class PipelineResources extends React.Component<Props> {
           [sortBy.name]: (pipelineResource: PipelineResource) => pipelineResource.getName(),
           [sortBy.namespace]: (pipelineResource: PipelineResource) => pipelineResource.getNs(),
           [sortBy.age]: (pipelineResource: PipelineResource) => pipelineResource.getAge(false),
-          // [sortBy.pods]: (pipelineResource:PipelineResource) => this.getPodsLength(statefulSet),
         }}
         searchFilters={[
           (pipelineResource: PipelineResource) => pipelineResource.getSearchFields(),
         ]}
-        renderHeaderTitle={<Trans>Stateful Sets</Trans>}
+        renderHeaderTitle={<Trans>Pipeline Resources</Trans>}
         renderTableHeader={[
           {title: <Trans>Name</Trans>, className: "name", sortBy: sortBy.name},
           {title: <Trans>Namespace</Trans>, className: "namespace", sortBy: sortBy.namespace},
-          // { title: <Trans>Pods</Trans>, className: "pods", sortBy: sortBy.pods },
-          // { className: "warning" },
           {title: <Trans>Age</Trans>, className: "age", sortBy: sortBy.age},
         ]}
         renderTableContents={(pipelineResource: PipelineResource) => [
           pipelineResource.getName(),
           pipelineResource.getNs(),
-          // this.getPodsLength(statefulSet),
-          // <KubeEventIcon object={pipelineResource} />,
           pipelineResource.getAge(),
         ]}
         renderItemMenu={(item: PipelineResource) => {
