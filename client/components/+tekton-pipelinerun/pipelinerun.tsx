@@ -48,12 +48,10 @@ export class PipelineRuns extends React.Component<Props> {
 
         <KubeObjectListLayout
           className="PipelineRuns" store={pipelineRunStore}
-          dependentStores={[podsStore, nodesStore, eventStore]}  // other
           sortingCallbacks={{
             [sortBy.name]: (pipelineRun: PipelineRun) => pipelineRun.getName(),
             [sortBy.namespace]: (pipelineRun: PipelineRun) => pipelineRun.getNs(),
             [sortBy.age]: (pipelineRun: PipelineRun) => pipelineRun.getAge(false),
-            // [sortBy.pods]: (pipelineRun:PipelineRun) => this.getPodsLength(statefulSet),
           }}
           onDetails={() => {
             if (PipelineRuns.isHiddenPipelineGraph === undefined) {
@@ -69,15 +67,11 @@ export class PipelineRuns extends React.Component<Props> {
           renderTableHeader={[
             {title: <Trans>Name</Trans>, className: "name", sortBy: sortBy.name},
             {title: <Trans>Namespace</Trans>, className: "namespace", sortBy: sortBy.namespace},
-            // { title: <Trans>Pods</Trans>, className: "pods", sortBy: sortBy.pods },
-            // { className: "warning" },
             {title: <Trans>Age</Trans>, className: "age", sortBy: sortBy.age},
           ]}
           renderTableContents={(pipelineRun: PipelineRun) => [
             pipelineRun.getName(),
             pipelineRun.getNs(),
-            // this.getPodsLength(statefulSet),
-            // <KubeEventIcon object={statefulSet} />,
             pipelineRun.getAge(),
           ]}
           renderItemMenu={(item: PipelineRun) => {
