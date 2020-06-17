@@ -74,7 +74,7 @@ export class Layout extends React.Component<Props,State> {
   loginout = () => {
     configStore.reset()
     kubeWatchApi.reset()
-    window.localStorage.clear()
+    window.localStorage.removeItem('u_config')
     window.location.replace('/login')
   }
 
@@ -107,10 +107,10 @@ export class Layout extends React.Component<Props,State> {
           <span>{userName}</span>
           <MenuActions
             >
-              {/* <MenuItem onClick={this.changeTheme}>
-                  <Icon material="loop" />
+              <MenuItem onClick={this.changeTheme}>
+                  <Icon material="brightness_medium" />
                   <span className="title"><Trans>Theme</Trans></span>
-              </MenuItem> */}
+              </MenuItem>
               <MenuItem onClick={this.changeLanguage}>
                   <Icon material="g_translate" />
                   <span className="title"><Trans>Language</Trans></span>

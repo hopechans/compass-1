@@ -43,7 +43,7 @@ export interface TaskDrawerEntity {
 
 export const taskDrawerEntity: TaskDrawerEntity = {
     taskDrawer: false,
-    taskName: "",
+    taskName: "task",
     graph: null,
     currentNode: null,
     addParams: [],

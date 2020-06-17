@@ -45,7 +45,7 @@ function loginout(){
             window.location.replace('/login')
         },2000)
     }
-    window.localStorage.clear();  
+    window.localStorage.removeItem('u_config');  
 }
 
 // Common handler for HTTP api errors
