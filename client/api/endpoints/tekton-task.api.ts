@@ -70,14 +70,14 @@ class Step extends Container {
 @autobind()
 export class Task extends KubeObject {
     static kind = "Task"
-    spec: {
-        inputs: Inputs;
-        outputs: Outputs;
-        steps: Step[];
-        volumes: any[];
-        stepTemplate: Container;
-        sidecars: Container[];
-    }
+    // spec: {
+    //     inputs: Inputs;
+    //     outputs: Outputs;
+    //     steps: Step[];
+    //     volumes: any[];
+    //     stepTemplate: Container;
+    //     sidecars: Container[];
+    // }
 }
 
 export const taskApi = new KubeApi({

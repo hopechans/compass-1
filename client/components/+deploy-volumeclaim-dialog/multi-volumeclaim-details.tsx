@@ -9,77 +9,74 @@ import {Collapse, Popconfirm} from "antd";
 
 const {Panel} = Collapse;
 
-
 import {volumeClaim, VolumeClaimTemplate} from "./common";
 
-
 export interface VolumeClaimTemplateProps<T = any> extends Partial<VolumeClaimTemplateProps> {
-    value?: T;
-    themeName?: "dark" | "light" | "outlined";
-    divider?: true;
+  value?: T;
+  themeName?: "dark" | "light" | "outlined";
+  divider?: true;
 
-    onChange?(option: T, meta?: ActionMeta): void;
+  onChange?(option: T, meta?: ActionMeta): void;
 }
 
 @observer
 export class MultiVolumeClaimDetails extends React.Component<VolumeClaimTemplateProps> {
 
+  @observable value: VolumeClaimTemplate[] = this.props.value || [volumeClaim]
 
-    @observable value: VolumeClaimTemplate[] = this.props.value || [volumeClaim]
+  add = () => {
+    this.value.push(volumeClaim)
+  }
 
-    add = () => {
-        this.value.push(volumeClaim)
+  remove = (index: number) => {
+    this.value.splice(index, 1)
+  }
+
+  render() {
+
+    const genExtra = (index: number) => {
+      return (
+        <Popconfirm
+          title="Confirm Delete?"
+          onConfirm={(event: any) => {
+            event.preventDefault();
+            event.stopPropagation();
+            this.remove(index);
+          }}
+          onCancel={(event: any) => {
+            event.preventDefault();
+            event.stopPropagation();
+          }}
+          okText="Yes"
+          cancelText="No">
+          <DeleteOutlined
+            translate style={{color: '#ff4d4f'}}
+            onClick={(event) => {
+              event.preventDefault();
+              event.stopPropagation();
+            }}
+          />
+        </Popconfirm>
+      )
+
     }
 
-    remove = (index: number) => {
-        this.value.splice(index, 1)
-    }
-
-    render() {
-
-        const genExtra = (index: number) => {
+    return (
+      <>
+        <br/>
+        <Button primary onClick={() => this.add()}><span>Addition VolumeClaim</span></Button>
+        <br/><br/>
+        <Collapse>
+          {this.value.map((item, index) => {
             return (
-                <Popconfirm
-                    title="Confirm Delete?"
-                    onConfirm={(event: any) => {
-                        event.preventDefault();
-                        event.stopPropagation();
-                        this.remove(index);
-                    }}
-                    onCancel={(event: any) => {
-                        event.preventDefault();
-                        event.stopPropagation();
-                    }}
-                    okText="Yes"
-                    cancelText="No">
-                    <DeleteOutlined
-                        translate style={{color: '#ff4d4f'}}
-                        onClick={(event) => {
-                            event.preventDefault();
-                            event.stopPropagation();
-                        }}
-                    />
-                </Popconfirm>
+              <Panel header={`VolumeClaim`} key={index} extra={genExtra(index)}>
+                <VolumeClaimDetails
+                  value={this.value[index]} onChange={value => this.value[index] = value}/>
+              </Panel>
             )
-
-        }
-
-        return (
-            <>
-                <br/>
-                <Button primary onClick={() => this.add()}><span>Addition VolumeClaim</span></Button>
-                <br/><br/>
-                <Collapse>
-                    {this.value.map((item, index) => {
-                        return (
-                            <Panel header={`VolumeClaim`} key={index} extra={genExtra(index)}>
-                                <VolumeClaimDetails
-                                    value={this.value[index]} onChange={value => this.value[index] = value}/>
-                            </Panel>
-                        )
-                    })}
-                </Collapse>
-            </>
-        )
-    }
+          })}
+        </Collapse>
+      </>
+    )
+  }
 }

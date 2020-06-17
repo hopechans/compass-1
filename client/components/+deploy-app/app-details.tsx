@@ -11,56 +11,56 @@ import {observable} from "mobx";
 import {app, App} from "./common";
 
 interface Props<T = any> extends Partial<Props> {
-    showIcons?: boolean;
-    value?: T;
-    themeName?: "dark" | "light" | "outlined";
+  showIcons?: boolean;
+  value?: T;
+  themeName?: "dark" | "light" | "outlined";
 
-    onChange?(option: T, meta?: ActionMeta): void;
+  onChange?(option: T, meta?: ActionMeta): void;
 }
 
 @observer
 export class AppDetails extends React.Component<Props> {
 
-    @observable value: App = this.props.value || app;
+  @observable value: App = this.props.value || app;
 
-    get typeOptions() {
-        return [
-            "Stone",
-            // "Water",
-            // "Deployment",
-            // "Statefulset"
-        ]
-    }
+  get typeOptions() {
+    return [
+      "Stone",
+      // "Water",
+      // "Deployment",
+      // "Statefulset"
+    ]
+  }
 
-    formatOptionLabel = (option: SelectOption) => {
-        const {showIcons} = this.props;
-        const {value, label} = option;
-        return label || (
-            <>
-                {showIcons && <Icon small material="layers"/>}
-                {value}
-            </>
-        );
-    }
+  formatOptionLabel = (option: SelectOption) => {
+    const {showIcons} = this.props;
+    const {value, label} = option;
+    return label || (
+      <>
+        {showIcons && <Icon small material="layers"/>}
+        {value}
+      </>
+    );
+  }
 
-    render() {
-        return (
-            <>
-                <SubTitle title={<Trans>App Type</Trans>}/>
-                <Select
-                    formatOptionLabel={this.formatOptionLabel}
-                    options={this.typeOptions}
-                    value={this.value.type}
-                    onChange={v => this.value.type = v}
-                />
-                <SubTitle title={<Trans>App Name</Trans>}/>
-                <Input
-                    autoFocus required
-                    placeholder={_i18n._(t`Name`)}
-                    value={this.value.name}
-                    onChange={v => this.value.name = v}
-                />
-            </>
-        )
-    }
+  render() {
+    return (
+      <>
+        <SubTitle title={<Trans>App Type</Trans>}/>
+        <Select
+          formatOptionLabel={this.formatOptionLabel}
+          options={this.typeOptions}
+          value={this.value.type}
+          onChange={v => this.value.type = v}
+        />
+        <SubTitle title={<Trans>App Name</Trans>}/>
+        <Input
+          autoFocus required
+          placeholder={_i18n._(t`Name`)}
+          value={this.value.name}
+          onChange={v => this.value.name = v}
+        />
+      </>
+    )
+  }
 }
