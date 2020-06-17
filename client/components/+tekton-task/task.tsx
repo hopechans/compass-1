@@ -9,6 +9,7 @@ import {taskStore} from "./task.store";
 import {KubeObjectMenu, KubeObjectMenuProps} from "../kube-object";
 import {KubeObjectListLayout} from "../kube-object";
 import {apiManager} from "../../api/api-manager";
+import {CopyTaskDialog} from "../+tekton-pipeline/copy-task-dialog";
 
 enum sortBy {
   name = "name",
@@ -24,33 +25,42 @@ interface Props extends RouteComponentProps {
 export class Tasks extends React.Component<Props> {
   render() {
     return (
-      <KubeObjectListLayout
-        className="Tasks" store={taskStore}
-        sortingCallbacks={{
-          [sortBy.name]: (task: Task) => task.getName(),
-          [sortBy.namespace]: (task: Task) => task.getNs(),
-          [sortBy.age]: (task: Task) => task.getAge(false),
-        }}
-        searchFilters={[
-          (task: Task) => task.getSearchFields(),
-        ]}
-        renderHeaderTitle={<Trans>Tasks</Trans>}
-        renderTableHeader={[
-          {title: <Trans>Name</Trans>, className: "name", sortBy: sortBy.name},
-          {title: <Trans>Namespace</Trans>, className: "namespace", sortBy: sortBy.namespace},
-          {title: <Trans>Pods</Trans>, className: "pods", sortBy: sortBy.pods},
-          {className: "warning"},
-          {title: <Trans>Age</Trans>, className: "age", sortBy: sortBy.age},
-        ]}
-        renderTableContents={(task: Task) => [
-          task.getName(),
-          task.getNs(),
-          task.getAge(),
-        ]}
-        renderItemMenu={(item: Task) => {
-          return <TaskMenu object={item}/>
-        }}
-      />
+      <>
+        <KubeObjectListLayout
+          className="Tasks" store={taskStore}
+          sortingCallbacks={{
+            [sortBy.name]: (task: Task) => task.getName(),
+            [sortBy.namespace]: (task: Task) => task.getNs(),
+            [sortBy.age]: (task: Task) => task.getAge(false),
+          }}
+          searchFilters={[
+            (task: Task) => task.getSearchFields(),
+          ]}
+          renderHeaderTitle={<Trans>Tasks</Trans>}
+          renderTableHeader={[
+            {title: <Trans>Name</Trans>, className: "name", sortBy: sortBy.name},
+            {title: <Trans>Namespace</Trans>, className: "namespace", sortBy: sortBy.namespace},
+            {title: <Trans>Pods</Trans>, className: "pods", sortBy: sortBy.pods},
+            {className: "warning"},
+            {title: <Trans>Age</Trans>, className: "age", sortBy: sortBy.age},
+          ]}
+          renderTableContents={(task: Task) => [
+            task.getName(),
+            task.getNs(),
+            task.getAge(),
+          ]}
+          renderItemMenu={(item: Task) => {
+            return <TaskMenu object={item}/>
+          }}
+          addRemoveButtons={{
+            addTooltip: <Trans>Task</Trans>,
+            onAdd: () => {
+              CopyTaskDialog.open()
+            }
+          }}
+        />
+        <CopyTaskDialog/>
+      </>
     )
   }
 }
