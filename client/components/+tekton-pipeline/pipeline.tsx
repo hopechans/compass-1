@@ -16,7 +16,7 @@ import {
 } from "../kube-object/kube-object-menu";
 import { KubeObjectListLayout } from "../kube-object";
 import { apiManager } from "../../api/api-manager";
-import "./registerShape";
+import "./register-shape";
 import { _i18n } from "../../i18n";
 import { StepUp, stepUp } from "./steps";
 import { taskDrawerEntity, TaskDrawerEntity } from "./task-drawer"
