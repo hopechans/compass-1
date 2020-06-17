@@ -6,7 +6,7 @@ import {Dialog, DialogProps} from "../dialog";
 import {computed, observable} from "mobx";
 import {number, t, Trans} from "@lingui/macro";
 import {Wizard, WizardStep} from "../wizard";
-import {base, Container, container, MultiContainerDetails} from "../+deploy-container";
+import {Container, container, MultiContainerDetails} from "../+deploy-container";
 import {Collapse} from "antd";
 import {deployService, DeployServiceDetails, Service} from "../+deploy-service";
 import {MultiVolumeClaimDetails, VolumeClaimTemplate} from "../+deploy-volumeclaim-dialog";
@@ -14,7 +14,7 @@ import {app, App} from "../+deploy-app";
 import {AppDetails} from "../+deploy-app";
 import {deployStore} from "./deploy.store";
 import {Notifications} from "../notifications";
-import {configStore} from "../../../client/config.store";
+import {configStore} from "../../config.store";
 
 const {Panel} = Collapse;
 

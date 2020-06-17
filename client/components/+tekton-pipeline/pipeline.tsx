@@ -5,7 +5,7 @@ import {observer} from "mobx-react";
 import {observable} from "mobx";
 import {RouteComponentProps} from "react-router";
 import {Trans} from "@lingui/macro";
-import {Pipeline, pipelineApi} from "../../api/endpoints";
+import {Pipeline, pipelineApi, Task} from "../../api/endpoints";
 import {podsStore} from "../+workloads-pods/pods.store";
 import {pipelineStore} from "./pipeline.store";
 import {nodesStore} from "../+nodes/nodes.store";
@@ -62,6 +62,7 @@ export class Pipelines extends React.Component<Props> {
   componentDidMount() {
     this.graph = new PipelineGraph(0, 0);
     this.graph.bindClickOnNode(() => {
+      CopyTaskDialog.open()
     });
     this.graph.bindMouseenter();
     this.graph.bindMouseleave();
@@ -70,7 +71,7 @@ export class Pipelines extends React.Component<Props> {
   render() {
     return (
       <>
-        <Graph open={Pipelines.isHiddenPipelineGraph} showSave={false}/>
+        <Graph open={Pipelines.isHiddenPipelineGraph} showSave={false} />
 
         <KubeObjectListLayout
           className="Pipelines"
@@ -126,7 +127,7 @@ export class Pipelines extends React.Component<Props> {
           addRemoveButtons={{
             addTooltip: <Trans>Pipeline</Trans>,
             onAdd: () => {
-              CopyTaskDialog.open()
+
             }
           }}
           onDetails={showPipeline}
