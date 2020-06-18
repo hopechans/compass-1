@@ -148,7 +148,7 @@ export class AddSubNetDialog extends React.Component<Props> {
 
                         <ExcludeIPsDetails
                             value={this.excludeIps} onChange={value => { this.excludeIps = value }} />
-
+                        <br />
                         <Checkbox
                             theme="light"
                             label={<Trans> AllowSubnets </Trans>}

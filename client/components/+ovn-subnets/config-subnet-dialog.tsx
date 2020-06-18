@@ -65,9 +65,9 @@ export class ConfigSubNetDialog extends React.Component<Props> {
         this.cidrBlock = ConfigSubNetDialog.data.spec.cidrBlock;
         this.gateway = ConfigSubNetDialog.data.spec.gateway;
         this.namespaces.replace(ConfigSubNetDialog.data.spec.namespaces);
-        this.excludeIps.push(...ConfigSubNetDialog.data.spec.excludeIps);
+        this.excludeIps = ConfigSubNetDialog.data.spec.excludeIps;
         this._private = ConfigSubNetDialog.data.spec.private;
-        this.allowSubnets.push(...ConfigSubNetDialog.data.spec.allowSubnets);
+        this.allowSubnets = ConfigSubNetDialog.data.spec.allowSubnets;
     }
 
 
@@ -167,7 +167,7 @@ export class ConfigSubNetDialog extends React.Component<Props> {
                         />
                         <ExcludeIPsDetails
                             value={this.excludeIps} onChange={value => { this.excludeIps = value }} />
-
+                        <br/>
                         <Checkbox
                             theme="light"
                             label={<Trans> AllowSubnets </Trans>}
