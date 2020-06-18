@@ -12,6 +12,8 @@ import { environment, Environment } from "./common";
 import { Divider, Row, Col } from "antd";
 import { SecretsSelect } from "../+config-secrets/secrets-select";
 import { NamespaceSelect } from "../+namespaces/namespace-select";
+import { ConfigMapsSelect } from "../+config-maps/config-maps-select";
+import { ConfigMapsKeySelect } from "../+config-maps/config-maps-key-select";
 
 interface Props<T = any> extends Partial<Props> {
   value?: T;
@@ -135,16 +137,19 @@ export class EnvironmentDetails extends React.Component<Props> {
                           required={true}
                           placeholder={_i18n._(t`Configure`)}
                           value={this.value[index].envConfig.configName}
-                          onChange={
-                            value => this.value[index].envConfig.configName = value
-                          }
+                          onChange={value => {
+                            this.value[index].envConfig.configKey = "";
+                            this.value[index].envConfig.configName = value;
+                          }}
                         />
                         <SubTitle title={<Trans>Key</Trans>} />
                         <Input
                           required={true}
                           placeholder={_i18n._(t`Key`)}
                           value={this.value[index].envConfig.configKey}
-                          onChange={value => this.value[index].envConfig.configKey = value}
+                          onChange={value => {
+                            this.value[index].envConfig.configKey = value;
+                          }}
                         />
                       </> : <></>
                   }
