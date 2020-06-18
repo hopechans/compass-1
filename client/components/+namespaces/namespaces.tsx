@@ -15,6 +15,7 @@ import { INamespacesRouteParams } from "./namespaces.route";
 import { namespaceStore } from "./namespace.store";
 import { apiManager } from "../../api/api-manager";
 import { NamespaceNodeRangeLimitDialog } from "./namespace-nodelimit-dialog";
+import { NamespaceStorageClasslimit } from "./namespace-storageclass-dialog";
 
 enum sortBy {
   name = "name",
@@ -70,6 +71,7 @@ export class Namespaces extends React.Component<Props> {
         />
         <AddNamespaceDialog />
         <NamespaceNodeRangeLimitDialog />
+        <NamespaceStorageClasslimit />
       </MainLayout>
     )
   }
@@ -80,8 +82,12 @@ export function NamespaceMenu(props: KubeObjectMenuProps<Namespace>) {
   return (
     <KubeObjectMenu {...props} >
       <MenuItem onClick={() => { NamespaceNodeRangeLimitDialog.open(object); }}>
-        <Icon material="turned_in_not" title={_i18n._(t`Annotate`)} interactive={toolbar} />
-        <span className="title"><Trans>Annotate</Trans></span>
+        <Icon material="turned_in_not" title={_i18n._(t`Allow Node`)} interactive={toolbar} />
+        <span className="title"><Trans>Allow Node</Trans></span>
+      </MenuItem>
+      <MenuItem onClick={() => { NamespaceStorageClasslimit.open(object); }}>
+        <Icon material="turned_in_not" title={_i18n._(t`Allow StorageClass`)} interactive={toolbar} />
+        <span className="title"><Trans>Allow StorageClass</Trans></span>
       </MenuItem>
     </KubeObjectMenu>
 

@@ -14,6 +14,7 @@ import { SecretsSelect } from "../+config-secrets/secrets-select";
 import { NamespaceSelect } from "../+namespaces/namespace-select";
 import { ConfigMapsSelect } from "../+config-maps/config-maps-select";
 import { ConfigMapsKeySelect } from "../+config-maps/config-maps-key-select";
+import { SecretKeySelect } from "../+config-secrets/secret-key-select";
 
 interface Props<T = any> extends Partial<Props> {
   value?: T;
@@ -132,24 +133,33 @@ export class EnvironmentDetails extends React.Component<Props> {
                           value={this.value[index].envConfig.name}
                           onChange={value => this.value[index].envConfig.name = value}
                         />
-                        <SubTitle title={<Trans>Configure</Trans>} />
-                        <Input
-                          required={true}
-                          placeholder={_i18n._(t`Configure`)}
-                          value={this.value[index].envConfig.configName}
-                          onChange={value => {
-                            this.value[index].envConfig.configKey = "";
-                            this.value[index].envConfig.configName = value;
-                          }}
-                        />
-                        <SubTitle title={<Trans>Key</Trans>} />
-                        <Input
-                          required={true}
-                          placeholder={_i18n._(t`Key`)}
+                        <br />
+
+                        <Row justify="space-between">
+                          <Col span="10">
+                            <SubTitle title={<Trans>ConfigMap Namespace</Trans>} />
+                            <NamespaceSelect
+                              required autoFocus
+                              value={this.namespace}
+                              onChange={value => this.namespace = value.value}
+                            />
+                          </Col>
+                          <Col span="10">
+                            <SubTitle title={<Trans>ConfigMap Name</Trans>} />
+                            <ConfigMapsSelect
+                              required autoFocus
+                              value={this.value[index].envConfig.configName}
+                              namespace={this.namespace}
+                              onChange={value => this.value[index].envConfig.configName = value.value}
+                            />
+                          </Col>
+                        </Row>
+                        <SubTitle title={<Trans>ConfigMap Key</Trans>} />
+                        <ConfigMapsKeySelect
+                          required autoFocus
                           value={this.value[index].envConfig.configKey}
-                          onChange={value => {
-                            this.value[index].envConfig.configKey = value;
-                          }}
+                          name={this.value[index].envConfig.configName}
+                          onChange={value => this.value[index].envConfig.configKey = value.value}
                         />
                       </> : <></>
                   }
@@ -183,13 +193,12 @@ export class EnvironmentDetails extends React.Component<Props> {
                             />
                           </Col>
                         </Row>
-
                         <SubTitle title={<Trans>Secret Key</Trans>} />
-                        <Input
-                          required={true}
-                          placeholder={_i18n._(t`Secret Key`)}
+                        <SecretKeySelect
+                          required autoFocus
                           value={this.value[index].envConfig.secretKey}
-                          onChange={value => this.value[index].envConfig.secretKey = value}
+                          name={this.value[index].envConfig.secretName}
+                          onChange={value => this.value[index].envConfig.secretKey = value.value}
                         />
                       </> : <></>
                   }
