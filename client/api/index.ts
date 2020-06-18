@@ -48,6 +48,11 @@ function loginout(){
     window.localStorage.removeItem('u_config');  
 }
 
+const de_showMessage = debounce(showMessage, 800);
+function showMessage(msg:string){
+    Notifications.error(msg);
+}
+
 // Common handler for HTTP api errors
 function onApiError(error: JsonApiErrorParsed, res: Response) {
     switch (res.status) {
@@ -55,6 +60,9 @@ function onApiError(error: JsonApiErrorParsed, res: Response) {
             error.isUsedForNotification = true;
             Notifications.error(error);
             break;
+        case 502:
+            de_showMessage('502 Bad Gateway')
+            break;    
         case 401:
             de_loginout()
             break; 

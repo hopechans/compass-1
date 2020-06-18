@@ -39,6 +39,7 @@ export class Deploys extends React.Component<Props> {
         <KubeObjectListLayout
           onDetails={() => {
           }}
+          isClusterScoped
           className="Deploy" store={deployStore}
           sortingCallbacks={{
             [sortBy.templateName]: (deploy: Deploy) => deploy.getName(),

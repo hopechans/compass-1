@@ -9,11 +9,13 @@ import { Button } from "../button";
 interface IProps {
     open?: boolean;
     showSave?: boolean;
+    saveCallback?: () => void;
 }
 
 interface IState {
     open?: boolean;
     showSave?: boolean;
+    saveCallback?: () => void;
 }
 
 
@@ -23,6 +25,7 @@ export class Graph extends React.Component<IProps, IState> {
         this.state = {
             open: props.open || true,
             showSave: props.showSave || true,
+            saveCallback: props.saveCallback,
         }
     }
 
@@ -30,8 +33,11 @@ export class Graph extends React.Component<IProps, IState> {
         this.setState({
             open: nextProps.open,
             showSave: nextProps.showSave,
+            saveCallback: nextProps.saveCallback,
         });
     }
+
+    handleClick = () => { this.props.saveCallback(); };
 
 
     render() {
@@ -53,7 +59,7 @@ export class Graph extends React.Component<IProps, IState> {
                         <Grid item xs={3}></Grid>
                         <Grid item xs={5}></Grid>
                         <Grid item xs="auto">
-                            <Button primary onClick={() => console.log("test")} hidden={showSave}>
+                            <Button primary onClick={this.handleClick} hidden={showSave}>
                                 <span>Save</span>
                             </Button>
                         </Grid>
@@ -61,8 +67,8 @@ export class Graph extends React.Component<IProps, IState> {
                 </div>
 
                 <div
-                    className="graph"
-                    id="container"
+                    className="pipeline-graph"
+                    id="pipeline-graph"
                     hidden={
                         open
                     }
