@@ -47,7 +47,7 @@ export class NamespaceNodeRangeLimitDialog extends React.Component<Props> {
     }
 
     reset = () => {
-        this.nodes = null;
+        this.nodes = observable.array<any>([], { deep: false });
     }
 
     onOpen = () => {

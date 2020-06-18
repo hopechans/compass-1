@@ -50,7 +50,7 @@ export class NamespaceStorageClasslimit extends React.Component<Props> {
     }
 
     reset = () => {
-        this.storageClasses = null;
+        this.storageClasses = observable.array<any>([], { deep: false });
     }
 
     updateAnnotate = async () => {
