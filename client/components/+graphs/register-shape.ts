@@ -7,17 +7,15 @@ G6.registerEdge("hvh", {
     drawShape(cfg: any, group) {
         const startPoint = cfg.startPoint;
         const endPoint = cfg.endPoint;
-        console.log(startPoint);
-        console.log(endPoint);
         const shape = group.addShape("path", {
             attrs: {
                 stroke: "#959DA5",
                 lineWidth: 3,
                 path: [
                     ["M", startPoint.x, startPoint.y],
-                    ["L", endPoint.x / 3 + (2 / 3) * startPoint.x - 10, startPoint.y],
-                    ["L", endPoint.x / 3 + (2 / 3) * startPoint.x - 10, endPoint.y],
-                    ["L", endPoint.x - 10, endPoint.y],
+                    ["L", endPoint.x / 3 + (2 / 3) * startPoint.x + 50, startPoint.y],
+                    ["L", endPoint.x / 3 + (2 / 3) * startPoint.x + 50, endPoint.y],
+                    ["L", endPoint.x + 50, endPoint.y],
                 ],
             },
         });

@@ -18,6 +18,7 @@ export class ParamSpec {
 export class PipelineTask {
     name: string;
     taskRef: TaskRef;
+    runAfter: string;
 }
 
 @autobind()
