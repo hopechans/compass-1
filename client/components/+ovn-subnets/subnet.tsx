@@ -1,20 +1,25 @@
 import * as React from "react";
-import {observer} from "mobx-react";
-import {RouteComponentProps} from "react-router";
-import {t, Trans} from "@lingui/macro";
-import {KubeObjectMenu, KubeObjectMenuProps} from "../kube-object";
-import {KubeObjectListLayout} from "../kube-object";
-import {apiManager} from "../../api/api-manager";
-import {SubNet, subNetApi} from "../../api/endpoints/subnet.api";
-import {subNetStore} from "./subnet.route";
-import {ISubNetRouteParams} from "./subnet.store";
-import {AddSubNetDialog} from "./add-subnet-dialog";
+import { observer } from "mobx-react";
+import { RouteComponentProps } from "react-router";
+import { MenuItem } from "../menu";
+import { t, Trans } from "@lingui/macro";
+import { KubeObjectMenu, KubeObjectMenuProps } from "../kube-object";
+import { KubeObjectListLayout } from "../kube-object";
+import { apiManager } from "../../api/api-manager";
+import { SubNet, subNetApi } from "../../api/endpoints/subnet.api";
+import { subNetStore } from "./subnet.route";
+import { ISubNetRouteParams } from "./subnet.store";
+import { AddSubNetDialog } from "./add-subnet-dialog";
+import { Icon } from "../icon";
+import { ConfigSubNetDialog } from "./config-subnet-dialog";
+import { _i18n } from "../../../client/i18n";
 
 
 enum sortBy {
     name = "name",
     namespace = "namespace",
     age = "age",
+    allowsubnets = 'allowsubnets',
 }
 
 
@@ -40,12 +45,13 @@ export class SubNets extends React.Component<Props> {
                     ]}
                     renderHeaderTitle={<Trans>SubNet</Trans>}
                     renderTableHeader={[
-                        {title: <Trans>Name</Trans>, className: "name", sortBy: sortBy.name},
-                        {title: <Trans>Protocol</Trans>, className: "protocol"},
-                        {title: <Trans>GateWay</Trans>, className: "gateway"},
-                        {title: <Trans>CIDR Block</Trans>, className: "cidrBlock"},
-                        {title: <Trans>ExcludeIP</Trans>, className: "excludeIps"},
-                        {title: <Trans>Age</Trans>, className: "age", sortBy: sortBy.age},
+                        { title: <Trans>Name</Trans>, className: "name", sortBy: sortBy.name },
+                        { title: <Trans>Protocol</Trans>, className: "protocol" },
+                        { title: <Trans>GateWay</Trans>, className: "gateway" },
+                        { title: <Trans>CIDR Block</Trans>, className: "cidrBlock" },
+                        { title: <Trans>ExcludeIP</Trans>, className: "excludeIps" },
+                        { title: <Trans>AllowSubnets</Trans>, className: "allowSubnets", sortBy: sortBy.allowsubnets },
+                        { title: <Trans>Age</Trans>, className: "age", sortBy: sortBy.age },
                     ]}
                     renderTableContents={(field: SubNet) => [
                         field.getName(),
@@ -53,10 +59,11 @@ export class SubNets extends React.Component<Props> {
                         field.spec.gateway,
                         field.spec.cidrBlock,
                         field.spec.excludeIps,
+                        field.spec.allowSubnets,
                         field.getAge(),
                     ]}
                     renderItemMenu={(item: SubNet) => {
-                        return <SubNetMenu object={item}/>
+                        return <SubNetMenu object={item} />
                     }}
                     addRemoveButtons={{
                         addTooltip: <Trans>AddSubNetDialog</Trans>,
@@ -64,18 +71,24 @@ export class SubNets extends React.Component<Props> {
                     }}
                 />
                 <AddSubNetDialog />
+                <ConfigSubNetDialog />
             </>
         );
     }
 }
 
 export function SubNetMenu(props: KubeObjectMenuProps<SubNet>) {
-
-    const {object, toolbar} = props;
-
+    const { object, toolbar } = props;
     return (
         <>
-            <KubeObjectMenu {...props} />
+            <KubeObjectMenu {...props} >
+                <MenuItem onClick={() => {
+                    ConfigSubNetDialog.open(object)
+                }}>
+                    <Icon material="play_circle_filled" title={_i18n._(t`Config`)} interactive={toolbar} />
+                    <span className="title"><Trans>Config</Trans></span>
+                </MenuItem>
+            </KubeObjectMenu>
         </>
     )
 }

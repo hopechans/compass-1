@@ -12,7 +12,7 @@ import { _i18n } from "../../i18n";
 import { Select, SelectOption } from "../select";
 import { Icon } from "../icon";
 import { NamespaceSelect } from "../+namespaces/namespace-select";
-import { Namespace, subNetApi } from "../../api/endpoints";
+import { Namespace, subNetApi, SubNet } from "../../api/endpoints";
 import { ExcludeIPsDetails } from "./excludeips-details";
 import { AllowSubnets } from "./allow-subnets";
 import { Checkbox } from "../checkbox/checkbox";
@@ -21,28 +21,31 @@ interface Props extends DialogProps {
 }
 
 @observer
-export class AddSubNetDialog extends React.Component<Props> {
+export class ConfigSubNetDialog extends React.Component<Props> {
 
     @observable static isOpen = false;
+    @observable static data: SubNet;
     @observable name: string = "";
     @observable protocol: string = "IPV4";
     @observable cidrBlock: string = "";
     @observable gateway: string = "";
     @observable namespaces = observable.array<Namespace>([], { deep: false });
     @observable excludeIps: string[] = [];
-    @observable private: boolean = false;
+    @observable _private: boolean = false;
     @observable allowSubnets: string[] = [];
 
-    static open() {
-        AddSubNetDialog.isOpen = true;
+
+    static open(data: SubNet) {
+        ConfigSubNetDialog.isOpen = true;
+        ConfigSubNetDialog.data = data;
     }
 
     static close() {
-        AddSubNetDialog.isOpen = false;
+        ConfigSubNetDialog.isOpen = false;
     }
 
     close = () => {
-        AddSubNetDialog.close();
+        ConfigSubNetDialog.close();
     }
 
     reset() {
@@ -57,27 +60,43 @@ export class AddSubNetDialog extends React.Component<Props> {
         ]
     }
 
+    onOpen = () => {
+        this.name = ConfigSubNetDialog.data.getName();
+        this.cidrBlock = ConfigSubNetDialog.data.spec.cidrBlock;
+        this.gateway = ConfigSubNetDialog.data.spec.gateway;
+        this.namespaces.replace(ConfigSubNetDialog.data.spec.namespaces);
+        this.excludeIps.push(...ConfigSubNetDialog.data.spec.excludeIps);
+        this._private = ConfigSubNetDialog.data.spec.private;
+        this.allowSubnets.push(...ConfigSubNetDialog.data.spec.allowSubnets);
+    }
 
-    addSubNet = async () => {
+
+    updateSubnet = async () => {
+        const { protocol, cidrBlock, gateway, namespaces, excludeIps, _private, allowSubnets } = this;
+        const subnet: Partial<SubNet> = {
+            spec: {
+                protocol: protocol,
+                cidrBlock: cidrBlock,
+                gateway: gateway,
+                namespaces: namespaces,
+                excludeIps: excludeIps,
+                private: _private,
+                allowSubnets: allowSubnets,
+            }
+        }
         try {
-            await subNetApi.create({ name: this.name, namespace: '' }, {
-                spec: {
-                    protocol: this.protocol,
-                    cidrBlock: this.cidrBlock,
-                    gateway: this.gateway,
-                    namespaces: this.namespaces,
-                    excludeIps: this.excludeIps,
-                    private: this.private,
-                    allowSubnets: this.allowSubnets,
-                }
-            })
+            await subNetApi.create({
+                namespace: '',
+                name: ConfigSubNetDialog.data.metadata.name
+            },
+                { ...subnet });
             this.reset();
             this.close();
         } catch (err) {
             Notifications.error(err);
         }
-
     }
+
 
     formatOptionLabel = (option: SelectOption) => {
         const { value, label } = option;
@@ -92,18 +111,19 @@ export class AddSubNetDialog extends React.Component<Props> {
     render() {
         const { ...dialogProps } = this.props;
         const unwrapNamespaces = (options: SelectOption[]) => options.map(option => option.value);
-        const header = <h5><Trans>Create SubNet</Trans></h5>;
+        const header = <h5><Trans>Config SubNet</Trans></h5>;
         return (
             <Dialog
                 {...dialogProps}
-                isOpen={AddSubNetDialog.isOpen}
+                isOpen={ConfigSubNetDialog.isOpen}
+                onOpen={this.onOpen}
                 close={this.close}
             >
-                <Wizard className="AddSubNetDialog" header={header} done={this.close}>
+                <Wizard className="ConfigSubNetDialog" header={header} done={this.close}>
                     <WizardStep
                         contentClass="flex gaps column"
-                        nextLabel={<Trans>Create</Trans>}
-                        next={this.addSubNet}
+                        nextLabel={<Trans>Apply</Trans>}
+                        next={this.updateSubnet}
                     >
                         <SubTitle title={<Trans>Name</Trans>} />
                         <Input
@@ -145,18 +165,17 @@ export class AddSubNetDialog extends React.Component<Props> {
                             value={this.cidrBlock}
                             onChange={(value: string) => this.cidrBlock = value}
                         />
-
                         <ExcludeIPsDetails
                             value={this.excludeIps} onChange={value => { this.excludeIps = value }} />
 
                         <Checkbox
                             theme="light"
                             label={<Trans> AllowSubnets </Trans>}
-                            value={this.private}
-                            onChange={(v: boolean) => this.private = v}
+                            value={this._private}
+                            onChange={(v: boolean) => this._private = v}
                         />
                         {
-                            this.private ?
+                            this._private ?
                                 <>
                                     <AllowSubnets
                                         value={this.allowSubnets} onChange={(value => { this.allowSubnets = value })}
