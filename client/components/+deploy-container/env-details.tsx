@@ -10,6 +10,8 @@ import {Input} from "../input";
 import {observable} from "mobx";
 import {environment, Environment} from "./common";
 import {Divider} from "antd";
+import {ConfigMapsSelect} from "../+config-maps/config-maps-select";
+import {ConfigMapsKeySelect} from "../+config-maps/config-maps-key-select";
 
 interface Props<T = any> extends Partial<Props> {
   value?: T;
@@ -127,21 +129,21 @@ export class EnvironmentDetails extends React.Component<Props> {
                           value={this.value[index].envConfig.name}
                           onChange={value => this.value[index].envConfig.name = value}
                         />
-                        <SubTitle title={<Trans>Configure</Trans>}/>
-                        <Input
-                          required={true}
-                          placeholder={_i18n._(t`Configure`)}
+                        <SubTitle title={<Trans>Configure Maps</Trans>}/>
+                        <ConfigMapsSelect
                           value={this.value[index].envConfig.configName}
-                          onChange={
-                            value => this.value[index].envConfig.configName = value
-                          }
+                          onChange={value => {
+                            this.value[index].envConfig.configKey = "";
+                            this.value[index].envConfig.configName = value.value;
+                          }}
                         />
                         <SubTitle title={<Trans>Key</Trans>}/>
-                        <Input
-                          required={true}
-                          placeholder={_i18n._(t`Key`)}
+                        <ConfigMapsKeySelect
+                          name={this.value[index].envConfig.configName}
                           value={this.value[index].envConfig.configKey}
-                          onChange={value => this.value[index].envConfig.configKey = value}
+                          onChange={value => {
+                            this.value[index].envConfig.configKey = value.value;
+                          }}
                         />
                       </> : <></>
                   }
