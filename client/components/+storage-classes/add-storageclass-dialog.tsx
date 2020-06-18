@@ -16,6 +16,7 @@ import {cephParams, CephParams} from "./common";
 import {SecretsSelect} from "../+config-secrets/secrets-select";
 import {NamespaceSelect} from "../+namespaces/namespace-select";
 import {Notifications} from "../notifications";
+import {storageClassApi} from "../../api/endpoints";
 
 interface Props extends DialogProps {
 }
@@ -23,194 +24,194 @@ interface Props extends DialogProps {
 @observer
 export class AddStorageClassDialog extends React.Component<Props> {
 
-    @observable static isOpen = false;
-    @observable name: string = "";
-    @observable provisioner: string = "ceph.com/rbd";
-    @observable volumeBindingMode: string = "Immediate";
-    @observable reclaimPolicy: string = "Delete";
-    @observable params: CephParams = cephParams;
+  @observable static isOpen = false;
+  @observable name: string = "";
+  @observable provisioner: string = "ceph.com/rbd";
+  @observable volumeBindingMode: string = "Immediate";
+  @observable reclaimPolicy: string = "Delete";
+  @observable params: CephParams = cephParams;
 
-    static open() {
-        AddStorageClassDialog.isOpen = true;
-    }
+  static open() {
+    AddStorageClassDialog.isOpen = true;
+  }
 
-    static close() {
-        AddStorageClassDialog.isOpen = false;
-    }
+  static close() {
+    AddStorageClassDialog.isOpen = false;
+  }
 
-    close = () => {
-        AddStorageClassDialog.close();
-    }
+  close = () => {
+    AddStorageClassDialog.close();
+  }
 
-    reset() {
-        this.name = "";
-        this.params = cephParams;
-    }
+  reset() {
+    this.name = "";
+    this.params = cephParams;
+  }
 
-    formatOptionLabel = (option: SelectOption) => {
-        const {value, label} = option;
-        return label || (
-            <>
-                <Icon small material="layers"/>
-                {value}
-            </>
-        );
-    }
+  formatOptionLabel = (option: SelectOption) => {
+    const {value, label} = option;
+    return label || (
+      <>
+        <Icon small material="layers"/>
+        {value}
+      </>
+    );
+  }
 
-    get provisionerOptions() {
-        return [
-            "ceph.com/rbd"
-        ]
-    }
+  get provisionerOptions() {
+    return [
+      "ceph.com/rbd"
+    ]
+  }
 
-    get volumeBindingModeOptions() {
-        return [
-            "Immediate"
-        ]
-    }
+  get volumeBindingModeOptions() {
+    return [
+      "Immediate"
+    ]
+  }
 
-    get reclaimPolicyOptions() {
-        return [
-            "Delete"
-        ]
-    }
+  get reclaimPolicyOptions() {
+    return [
+      "Delete"
+    ]
+  }
 
-    addStorageClass = async () => {
+  addStorageClass = async () => {
 
-        try {
-            await storageClassStore.create({name: this.name, namespace: ''}, {
-                provisioner: this.provisioner,
-                volumeBindingMode: this.volumeBindingMode,
-                reclaimPolicy: this.reclaimPolicy,
-                parameters: {
-                    adminSecretNamespace: this.params.adminSecretNamespace,
-                    adminSecretName: this.params.adminSecretName,
-                    userSecretName: this.params.userSecretName,
-                    monitors: this.params.monitors,
-                    adminId: this.params.adminId,
-                    pool: this.params.pool,
-                    userId: this.params.userId,
-                    imageFormat: this.params.imageFormat,
-                    imageFeatures: this.params.imageFeatures
-                }
-            })
-            this.reset();
-            this.close();
-        } catch (err) {
-            Notifications.error(err);
+    try {
+      await storageClassApi.create({name: this.name, namespace: ''}, {
+        provisioner: this.provisioner,
+        volumeBindingMode: this.volumeBindingMode,
+        reclaimPolicy: this.reclaimPolicy,
+        parameters: {
+          adminSecretNamespace: this.params.adminSecretNamespace,
+          adminSecretName: this.params.adminSecretName,
+          userSecretName: this.params.userSecretName,
+          monitors: this.params.monitors,
+          adminId: this.params.adminId,
+          pool: this.params.pool,
+          userId: this.params.userId,
+          imageFormat: this.params.imageFormat,
+          imageFeatures: this.params.imageFeatures
         }
-
+      })
+      this.reset();
+      this.close();
+    } catch (err) {
+      Notifications.error(err);
     }
 
-    render() {
-        const {...dialogProps} = this.props;
-        const header = <h5><Trans>Create StorageClass</Trans></h5>;
-        return (
-            <Dialog
-                {...dialogProps}
-                isOpen={AddStorageClassDialog.isOpen}
-                close={this.close}
-            >
-                <Wizard className="AddStorageClassDialog" header={header} done={this.close}>
-                    <WizardStep
-                        contentClass="flex gaps column"
-                        nextLabel={<Trans>Create</Trans>}
-                        next={this.addStorageClass}
-                    >
-                        <SubTitle title={<Trans>Name</Trans>}/>
-                        <Input
-                            required autoFocus
-                            placeholder={_i18n._(t`Name`)}
-                            value={this.name}
-                            onChange={(value: string) => this.name = value}
-                        />
-                        <SubTitle title={<Trans>VolumeBindingMode</Trans>}/>
-                        <Select
-                            value={this.volumeBindingMode}
-                            options={this.volumeBindingModeOptions}
-                            formatOptionLabel={this.formatOptionLabel}
-                            onChange={value => this.volumeBindingMode = value.value}
-                        />
-                        <SubTitle title={<Trans>ReclaimPolicy</Trans>}/>
-                        <Select
-                            value={this.reclaimPolicy}
-                            options={this.reclaimPolicyOptions}
-                            formatOptionLabel={this.formatOptionLabel}
-                            onChange={value => this.reclaimPolicy = value.value}
-                        />
-                        <SubTitle title={<Trans>Provisioner</Trans>}/>
-                        <Select
-                            value={this.provisioner}
-                            options={this.provisionerOptions}
-                            formatOptionLabel={this.formatOptionLabel}
-                            onChange={value => this.provisioner = value.value}
-                        />
-                        {this.provisioner == "ceph.com/rbd" ?
-                            <>
-                                <SubTitle title={<Trans>Admin Secret Namespace:</Trans>}/>
-                                <NamespaceSelect
-                                    required autoFocus
-                                    value={this.params.adminSecretNamespace}
-                                    onChange={value => this.params.adminSecretNamespace = value.value}/>
-                                <SubTitle title={<Trans>Admin Secret Name</Trans>}/>
-                                <SecretsSelect
-                                    required autoFocus
-                                    value={this.params.adminSecretName}
-                                    namespace={this.params.adminSecretName}
-                                    onChange={value => this.params.adminSecretName = value.value}
-                                />
-                                <SubTitle title={<Trans>User Secret Name</Trans>}/>
-                                <SecretsSelect
-                                    required autoFocus
-                                    value={this.params.userSecretName}
-                                    namespace={this.params.userSecretName}
-                                    onChange={value => this.params.userSecretName = value.value}
-                                />
-                                <SubTitle title={<Trans>Monitors</Trans>}/>
-                                <Input
-                                    required autoFocus
-                                    placeholder={_i18n._(t`Monitors`)}
-                                    value={this.params.monitors}
-                                    onChange={(value: string) => this.params.monitors = value}
-                                />
-                                <SubTitle title={<Trans>Admin Id</Trans>}/>
-                                <Input
-                                    required autoFocus
-                                    placeholder={_i18n._(t`Admin Id`)}
-                                    value={this.params.adminId}
-                                    onChange={(value: string) => this.params.adminId = value}
-                                />
-                                <SubTitle title={<Trans>Pool</Trans>}/>
-                                <Input
-                                    placeholder={_i18n._(t`Pool`)}
-                                    value={this.params.pool}
-                                    onChange={(value: string) => this.params.pool = value}
-                                />
-                                <SubTitle title={<Trans>User Id</Trans>}/>
-                                <Input
-                                    placeholder={_i18n._(t`UserId`)}
-                                    value={this.params.userId}
-                                    onChange={(value: string) => this.params.userId = value}
-                                />
-                                <SubTitle title={<Trans>Image Format</Trans>}/>
-                                <Input
-                                    required autoFocus
-                                    placeholder={_i18n._(t`ImageFormat`)}
-                                    value={this.params.imageFormat}
-                                    onChange={(value: string) => this.params.imageFormat = value}
-                                />
-                                <SubTitle title={<Trans>Image Features</Trans>}/>
-                                <Input
-                                    required autoFocus
-                                    placeholder={_i18n._(t`ImageFeatures`)}
-                                    value={this.params.imageFeatures}
-                                    onChange={(value: string) => this.params.imageFeatures = value}
-                                />
-                            </> : <></>
-                        }
-                    </WizardStep>
-                </Wizard>
-            </Dialog>
-        )
-    }
+  }
+
+  render() {
+    const {...dialogProps} = this.props;
+    const header = <h5><Trans>Create StorageClass</Trans></h5>;
+    return (
+      <Dialog
+        {...dialogProps}
+        isOpen={AddStorageClassDialog.isOpen}
+        close={this.close}
+      >
+        <Wizard className="AddStorageClassDialog" header={header} done={this.close}>
+          <WizardStep
+            contentClass="flex gaps column"
+            nextLabel={<Trans>Create</Trans>}
+            next={this.addStorageClass}
+          >
+            <SubTitle title={<Trans>Name</Trans>}/>
+            <Input
+              required autoFocus
+              placeholder={_i18n._(t`Name`)}
+              value={this.name}
+              onChange={(value: string) => this.name = value}
+            />
+            <SubTitle title={<Trans>VolumeBindingMode</Trans>}/>
+            <Select
+              value={this.volumeBindingMode}
+              options={this.volumeBindingModeOptions}
+              formatOptionLabel={this.formatOptionLabel}
+              onChange={value => this.volumeBindingMode = value.value}
+            />
+            <SubTitle title={<Trans>ReclaimPolicy</Trans>}/>
+            <Select
+              value={this.reclaimPolicy}
+              options={this.reclaimPolicyOptions}
+              formatOptionLabel={this.formatOptionLabel}
+              onChange={value => this.reclaimPolicy = value.value}
+            />
+            <SubTitle title={<Trans>Provisioner</Trans>}/>
+            <Select
+              value={this.provisioner}
+              options={this.provisionerOptions}
+              formatOptionLabel={this.formatOptionLabel}
+              onChange={value => this.provisioner = value.value}
+            />
+            {this.provisioner == "ceph.com/rbd" ?
+              <>
+                <SubTitle title={<Trans>Admin Secret Namespace:</Trans>}/>
+                <NamespaceSelect
+                  required autoFocus
+                  value={this.params.adminSecretNamespace}
+                  onChange={value => this.params.adminSecretNamespace = value.value}/>
+                <SubTitle title={<Trans>Admin Secret Name</Trans>}/>
+                <SecretsSelect
+                  required autoFocus
+                  value={this.params.adminSecretName}
+                  namespace={this.params.adminSecretName}
+                  onChange={value => this.params.adminSecretName = value.value}
+                />
+                <SubTitle title={<Trans>User Secret Name</Trans>}/>
+                <SecretsSelect
+                  required autoFocus
+                  value={this.params.userSecretName}
+                  namespace={this.params.userSecretName}
+                  onChange={value => this.params.userSecretName = value.value}
+                />
+                <SubTitle title={<Trans>Monitors</Trans>}/>
+                <Input
+                  required autoFocus
+                  placeholder={_i18n._(t`Monitors`)}
+                  value={this.params.monitors}
+                  onChange={(value: string) => this.params.monitors = value}
+                />
+                <SubTitle title={<Trans>Admin Id</Trans>}/>
+                <Input
+                  required autoFocus
+                  placeholder={_i18n._(t`Admin Id`)}
+                  value={this.params.adminId}
+                  onChange={(value: string) => this.params.adminId = value}
+                />
+                <SubTitle title={<Trans>Pool</Trans>}/>
+                <Input
+                  placeholder={_i18n._(t`Pool`)}
+                  value={this.params.pool}
+                  onChange={(value: string) => this.params.pool = value}
+                />
+                <SubTitle title={<Trans>User Id</Trans>}/>
+                <Input
+                  placeholder={_i18n._(t`UserId`)}
+                  value={this.params.userId}
+                  onChange={(value: string) => this.params.userId = value}
+                />
+                <SubTitle title={<Trans>Image Format</Trans>}/>
+                <Input
+                  required autoFocus
+                  placeholder={_i18n._(t`ImageFormat`)}
+                  value={this.params.imageFormat}
+                  onChange={(value: string) => this.params.imageFormat = value}
+                />
+                <SubTitle title={<Trans>Image Features</Trans>}/>
+                <Input
+                  required autoFocus
+                  placeholder={_i18n._(t`ImageFeatures`)}
+                  value={this.params.imageFeatures}
+                  onChange={(value: string) => this.params.imageFeatures = value}
+                />
+              </> : <></>
+            }
+          </WizardStep>
+        </Wizard>
+      </Dialog>
+    )
+  }
 }
