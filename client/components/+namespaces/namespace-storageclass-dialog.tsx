@@ -13,75 +13,64 @@ import { Notifications } from "../notifications";
 import { Namespace } from "../../api/endpoints"
 import { SelectOption } from "../select/select";
 import { namespaceStore } from "./namespace.store";
-
-
-interface NodeResourceLimit {
-    zone: string;
-    rack: string;
-    host: string;
-}
+import { StorageClassSelect } from "../+storage-classes/storage-select";
 
 interface Props extends Partial<DialogProps> {
 }
 
 @observer
-export class NamespaceNodeRangeLimitDialog extends React.Component<Props> {
+export class NamespaceStorageClasslimit extends React.Component<Props> {
 
     @observable static isOpen = false;
     @observable static namespace: Namespace;
-    @observable nodes = observable.array<any>([], { deep: false });
+    @observable storageClasses = observable.array<any>([], { deep: false });
 
 
     static open(namespace: Namespace) {
-        NamespaceNodeRangeLimitDialog.isOpen = true;
-        NamespaceNodeRangeLimitDialog.namespace = namespace;
+        NamespaceStorageClasslimit.isOpen = true;
+        NamespaceStorageClasslimit.namespace = namespace;
     }
 
     static close() {
-        NamespaceNodeRangeLimitDialog.isOpen = false;
+        NamespaceStorageClasslimit.isOpen = false;
     }
 
 
     close = () => {
-        NamespaceNodeRangeLimitDialog.close();
-    }
-
-    reset = () => {
-        this.nodes = null;
+        NamespaceStorageClasslimit.close();
     }
 
     onOpen = () => {
-        let nodeResourceLimitTemps: NodeResourceLimit[] = [];
-        NamespaceNodeRangeLimitDialog.namespace.getAnnotations().map(annotation => {
+        NamespaceStorageClasslimit.namespace.getAnnotations().map(annotation => {
             const annotationKeyValue = annotation.split("=");
-            if (annotationKeyValue[0] == "nuwa.kubernetes.io/default_resource_limit") {
-                nodeResourceLimitTemps = JSON.parse(annotationKeyValue[1]);
+            if (annotationKeyValue[0] == "fuxi.kubernetes.io/default_storage_limit") {
+                this.storageClasses = JSON.parse(annotationKeyValue[1]);
             }
         })
-        nodeResourceLimitTemps.map(node => {
-            if (this.nodes === null) { this.nodes = observable.array<any>([], { deep: false }) };
-            this.nodes.push(node.host)
-        })
+    }
+
+    reset = () => {
+        this.storageClasses = null;
     }
 
     updateAnnotate = async () => {
         const data = {
-            namespace: NamespaceNodeRangeLimitDialog.namespace.getName(),
-            nodes: new Array<string>()
+            namespace: NamespaceStorageClasslimit.namespace.getName(),
+            storageClasses: new Array<string>()
         };
-        this.nodes.map(node => {
-            data.nodes.push(node);
+        this.storageClasses.map(storageClass => {
+            data.storageClasses.push(storageClass);
         })
 
         try {
-            await apiBase.post("/namespaces/annotation/node", { data }).
+            await apiBase.post("/namespaces/annotation/storageclass", { data }).
                 then((data) => {
                     this.reset();
                     this.close();
                 })
             Notifications.ok(
                 <>
-                    {NamespaceNodeRangeLimitDialog.namespace.getName()} annotation successed
+                    {NamespaceStorageClasslimit.namespace.getName()} annotation successed
                 </>);
         } catch (err) {
             Notifications.error(err);
@@ -90,13 +79,13 @@ export class NamespaceNodeRangeLimitDialog extends React.Component<Props> {
 
     render() {
         const { ...dialogProps } = this.props;
-        const unwrapNodes = (options: SelectOption[]) => options.map(option => option.value);
-        const header = <h5><Trans>Annotate Node</Trans></h5>;
+        const unwrapStorageClasses = (options: SelectOption[]) => options.map(option => option.value);
+        const header = <h5><Trans>Annotate StorageClass</Trans></h5>;
         return (
             <Dialog
                 {...dialogProps}
-                className="NamespaceNodeRangeLimitDialog"
-                isOpen={NamespaceNodeRangeLimitDialog.isOpen}
+                className="NamespaceStorageClasslimit"
+                isOpen={NamespaceStorageClasslimit.isOpen}
                 onOpen={this.onOpen}
                 close={this.close}
             >
@@ -104,16 +93,16 @@ export class NamespaceNodeRangeLimitDialog extends React.Component<Props> {
                     <WizardStep contentClass="flow column" nextLabel={<Trans>Annotate</Trans>}
                         next={this.updateAnnotate}>
                         <div className="node">
-                            <SubTitle title={<Trans>Annotate Node</Trans>} />
-                            <NodeSelect
+                            <SubTitle title={<Trans>Annotate StorageClass</Trans>} />
+                            <StorageClassSelect
                                 isMulti
-                                value={this.nodes}
-                                placeholder={_i18n._(t`Node`)}
+                                value={this.storageClasses}
+                                placeholder={_i18n._(t`StorageClass`)}
                                 themeName="light"
                                 className="box grow"
                                 onChange={(opts: SelectOption[]) => {
                                     if (!opts) opts = [];
-                                    this.nodes.replace(unwrapNodes(opts));
+                                    this.storageClasses.replace(unwrapStorageClasses(opts));
                                 }}
                             />
                         </div>
