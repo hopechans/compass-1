@@ -8,6 +8,7 @@ export class PipelineGraph {
     private graph: any = null;
     private width: number;
     private height: number;
+    private data: any;
 
 
     public getGraph(): any {
@@ -46,21 +47,23 @@ export class PipelineGraph {
 
     public bindClickOnNode(callback: () => any): void {
 
-        var index = 0;
         this.graph.on("node:click", (evt: any) => {
             const { item } = evt;
             const shape = evt.target.cfg.name;
 
             if (shape === "right-plus") {
-                const source = item._cfg.id;
-                const target = Number(source) + 1;
+                const source = item._cfg.id.toString();
+                let splitSource = source.split('-');
+                const target = Number(splitSource[0]) + 1;
+                splitSource[0] = target;
+
+                let tragetId = splitSource.join("-");
 
                 const model = item.getModel();
                 const { x, y } = model;
                 const point = this.graph.getCanvasByPoint(x, y);
                 this.graph.addItem("node", {
-                    id: target.toString(),
-                    buildName: "task" + target,
+                    id: tragetId,
                     x: Number(point.x) + 300,
                     y: Number(point.y),
                     anchorPoints: [
@@ -70,7 +73,7 @@ export class PipelineGraph {
                 });
 
                 this.graph.addItem("edge", {
-                    source: target.toString(),
+                    source: tragetId,
                     target: model.id,
                 });
 
@@ -79,14 +82,17 @@ export class PipelineGraph {
 
             if (shape === "bottom-plus") {
                 const source = item._cfg.id;
-                const target = Number(source) + 10;
+                let splitSource = source.split('-');
 
+                const target = Number(splitSource[1]) + 1;
+                splitSource[1] = target;
+
+                let tragetId = splitSource.join("-");
                 const model = item.getModel();
                 const { x, y } = model;
                 const point = this.graph.getCanvasByPoint(x, y);
                 this.graph.addItem("node", {
-                    buildName: "task" + target,
-                    id: target.toString(),
+                    id: tragetId,
                     x: Number(point.x),
                     y: Number(point.y) + 80,
                     anchorPoints: [
@@ -95,14 +101,29 @@ export class PipelineGraph {
                     ],
                 });
 
+                let edgeTarge = model.id.toString();
+                let splitEdgeTarge = edgeTarge.split('-');
+                let edgeTargePostion = Number(splitEdgeTarge[0]) - 1;
+                splitEdgeTarge[0] = edgeTargePostion;
+                splitEdgeTarge[1] = '1';
+                let edgeTargeId = splitEdgeTarge.join("-");
+
                 this.graph.addItem("edge", {
                     type: "hvh",
-                    source: target.toString(),
-                    target: model.id,
+                    source: edgeTargeId,
+                    target: tragetId,
                 });
                 return;
             }
-            callback();
+            // callback();
+            // console.log("===========================================>:", this.graph.save());
+            this.data = this.graph.save();
+            console.log("===========================================>:", this.data)
+            this.graph.clear();
+            setTimeout(() => {
+                this.graph.changeData(this.data);
+            }, 5000);
+
         });
     }
 
@@ -135,7 +156,7 @@ export class PipelineGraph {
         const data: any = {
             nodes: [
                 {
-                    id: "1",
+                    id: "1-1",
                     x: 0,
                     y: 0,
                     taskName: "task1",
@@ -148,16 +169,10 @@ export class PipelineGraph {
         };
 
         this.graph = new G6.Graph({
-            container: "container",
+            container: "pipeline-graph",
             width: 1150,
             height: 305,
             renderer: "svg",
-            // layout: {
-            //   type: "dagre",
-            //   rankdir: 'LR',
-            //   align: 'DL',
-            //   controlPoints: true
-            // },
             modes: {
                 default: [
                     "drag-node",

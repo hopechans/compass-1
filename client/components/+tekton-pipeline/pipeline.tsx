@@ -1,31 +1,29 @@
 import "./pipeline.scss";
 
 import React from "react";
-import {observer} from "mobx-react";
-import {observable} from "mobx";
-import {RouteComponentProps} from "react-router";
-import {Trans} from "@lingui/macro";
-import {Pipeline, pipelineApi, Task} from "../../api/endpoints";
-import {podsStore} from "../+workloads-pods/pods.store";
-import {pipelineStore} from "./pipeline.store";
-import {nodesStore} from "../+nodes/nodes.store";
-import {eventStore} from "../+events/event.store";
+import { observer } from "mobx-react";
+import { observable } from "mobx";
+import { RouteComponentProps } from "react-router";
+import { Trans } from "@lingui/macro";
+import { Pipeline, pipelineApi, Task, PipelineTask } from "../../api/endpoints";
+import { podsStore } from "../+workloads-pods/pods.store";
+import { pipelineStore } from "./pipeline.store";
+import { nodesStore } from "../+nodes/nodes.store";
+import { eventStore } from "../+events/event.store";
 import {
   KubeObjectMenu,
   KubeObjectMenuProps,
 } from "../kube-object";
-import {KubeObjectListLayout} from "../kube-object";
-import {apiManager} from "../../api/api-manager";
-import "./register-shape";
-import {_i18n} from "../../i18n";
-import {StepUp, stepUp} from "./steps";
-import {taskDrawerEntity, TaskDrawerEntity} from "./task-drawer"
-import {PipelineGraph} from "../+graphs/pipeline-graph"
-import {Graph} from "../+graphs/graph"
-import {CopyTaskDialog} from "./copy-task-dialog";
-import {MenuItem} from "../menu";
-import {Icon} from "../icon";
-import {AddPipelineDialog} from "./add-pipeline-dialog";
+import { KubeObjectListLayout } from "../kube-object";
+import { apiManager } from "../../api/api-manager";
+import { _i18n } from "../../i18n";
+import { StepUp, stepUp } from "./steps";
+import { PipelineGraph } from "../+graphs/pipeline-graph"
+import { Graph } from "../+graphs/graph"
+import { CopyTaskDialog } from "./copy-task-dialog";
+import { MenuItem } from "../menu";
+import { Icon } from "../icon";
+import { AddPipelineDialog } from "./add-pipeline-dialog";
 
 enum sortBy {
   name = "name",
@@ -50,15 +48,13 @@ const showPipeline = () => {
 @observer
 export class Pipelines extends React.Component<Props> {
   @observable taskName: string = "";
-  // @observable graph: any;
   @observable currentNode: any;
   @observable static isHiddenPipelineGraph: boolean = false;
-  @observable taskArray: Array<TaskDrawerEntity> = new Array<TaskDrawerEntity>(100);
   @observable step: StepUp[] = [stepUp];
   @observable task: any;
-  @observable taskEntity: TaskDrawerEntity = taskDrawerEntity;
   @observable taskRecord: string[] = [];
   private graph: PipelineGraph = null;
+  data: any;
 
   componentDidMount() {
     this.graph = new PipelineGraph(0, 0);
@@ -69,10 +65,31 @@ export class Pipelines extends React.Component<Props> {
     this.graph.bindMouseleave();
   }
 
+  savePipeline = () => {
+    this.data = this.graph.getGraph().save();
+    let tmpData = this.graph.getGraph().save();
+    let tasks: PipelineTask[] = [];
+    let item: any[] = [];
+    console.log("========================================>data:", this.data);
+    this.data.nodes.map((item: any, index: number) => {
+      //runAfter:run在谁的后面。
+      let id = item.id.split('-')
+      let itema: any[] = [];
+      this.data.nodes.map((itemA: any, indexA: number) => {
+        let ida = item.id.split('-');
+        if (id[0] = ida[0]) {
+          itema.push(itemA.id);
+        }
+      })
+      item.push(itema);
+    })
+    console.log("========================================>savePipeline:", item);
+  }
+
   render() {
     return (
       <>
-        <Graph open={Pipelines.isHiddenPipelineGraph} showSave={false}/>
+        <Graph open={Pipelines.isHiddenPipelineGraph} showSave={false} saveCallback={() => { this.savePipeline() }} />
 
         <KubeObjectListLayout
           className="Pipelines"
@@ -107,7 +124,7 @@ export class Pipelines extends React.Component<Props> {
               className: "tasknames",
               sortBy: sortBy.tasknames,
             },
-            {title: <Trans>Age</Trans>, className: "age", sortBy: sortBy.age},
+            { title: <Trans>Age</Trans>, className: "age", sortBy: sortBy.age },
           ]}
           renderTableContents={(pipeline: Pipeline) => [
             pipeline.getName(),
@@ -117,7 +134,7 @@ export class Pipelines extends React.Component<Props> {
             pipeline.getAge(),
           ]}
           renderItemMenu={(item: Pipeline) => {
-            return <PipelineMenu object={item}/>;
+            return <PipelineMenu object={item} />;
           }}
           tableProps={{
             customRowHeights: (item: Pipeline, lineHeight, paddings) => {
@@ -133,8 +150,8 @@ export class Pipelines extends React.Component<Props> {
           }}
           onDetails={showPipeline}
         />
-        <CopyTaskDialog/>
-        <AddPipelineDialog/>
+        <CopyTaskDialog />
+        <AddPipelineDialog />
       </>
     );
   }
@@ -142,7 +159,7 @@ export class Pipelines extends React.Component<Props> {
 
 export function PipelineMenu(props: KubeObjectMenuProps<Pipeline>) {
 
-  const {object, toolbar} = props;
+  const { object, toolbar } = props;
 
   return (
     <KubeObjectMenu {...props}>
@@ -161,4 +178,4 @@ export function PipelineMenu(props: KubeObjectMenuProps<Pipeline>) {
   );
 }
 
-apiManager.registerViews(pipelineApi, {Menu: PipelineMenu});
+apiManager.registerViews(pipelineApi, { Menu: PipelineMenu });
