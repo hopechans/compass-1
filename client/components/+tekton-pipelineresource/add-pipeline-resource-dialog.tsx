@@ -67,7 +67,7 @@ export class AddPipelineResourceDialog extends React.Component<Props> {
 
   submit = async () => {
     try {
-      await pipelineResourceApi.create({name: this.name, namespace: ""}, {
+      await pipelineResourceApi.create({name: this.name, namespace: "kube-system"}, {
         spec: {
           type: this.type,
           params: this.params,
