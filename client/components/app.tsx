@@ -85,9 +85,10 @@ class App extends React.Component {
                 <Route component={UserManagement} {...usersManagementRoute} />
                 <Route component={Apps} {...appsRoute} />
                 <Route component={Tenant} {...tenantRoute} />
+                <Redirect exact from="/" to={homeUrl} />
                 <Route component={Login} path="/login" />
                 <Route path="*" component={NotFound} />
-                <Redirect exact from="/" to={homeUrl} />
+                
               </Switch>
               <KubeObjectDetails />
               <Notifications />
