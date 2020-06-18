@@ -12,8 +12,10 @@ import {pipelineResourceApi} from "../../api/endpoints";
 import {Notifications} from "../notifications";
 import {Select, SelectOption} from "../select";
 import {Icon} from "../icon";
-import { Params } from "../+tekton-task-detail"
+import {Params} from "../+tekton-task-detail"
 import {ParamsDetails} from "../+tekton-task-detail";
+import {configStore} from "../../config.store";
+import {pipelineResourceStore} from "./pipelineresource.store";
 
 interface Props<T = any> extends Partial<Props> {
   value?: T;
@@ -21,7 +23,6 @@ interface Props<T = any> extends Partial<Props> {
 
   onChange?(option: T, meta?: ActionMeta): void;
 }
-
 
 @observer
 export class AddPipelineResourceDialog extends React.Component<Props> {
@@ -67,13 +68,16 @@ export class AddPipelineResourceDialog extends React.Component<Props> {
 
   submit = async () => {
     try {
-      await pipelineResourceApi.create({name: this.name, namespace: "kube-system"}, {
-        spec: {
-          type: this.type,
-          params: this.params,
-          secrets: []
-        }
-      });
+      let pipelineResource = await pipelineResourceApi.create(
+        {name: this.name, namespace: "kube-system"}, {
+          spec: {
+            type: this.type,
+            params: this.params,
+            secrets: []
+          }
+        });
+      pipelineResource.metadata.annotations = {"namespace": configStore.getDefaultNamespace()}
+      await pipelineResourceStore.update(pipelineResource,{...pipelineResource})
       this.reset();
       this.close();
     } catch (err) {
