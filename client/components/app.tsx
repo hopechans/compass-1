@@ -80,17 +80,15 @@ class App extends React.Component {
                 <Route component={Namespaces} {...namespacesRoute} />
                 <Route component={Events} {...eventRoute} />
                 <Route component={Tekton} {...tektonRoute} />
-                <Route component={Ovn} {...ovnRoute} />
+                <Route component={Ovn} {...ovnRoute} /> 
                 <Route component={CustomResources} {...crdRoute} />
-                <Route component={UserManagement} {...usersManagementRoute} /> */}
+                <Route component={UserManagement} {...usersManagementRoute} />
                 <Route component={Apps} {...appsRoute} />
                 <Route component={Tenant} {...tenantRoute} />
-                <Route component={Login} path="/login" />
                 <Redirect exact from="/" to={homeUrl} />
+                <Route component={Login} path="/login" />
                 <Route path="*" component={NotFound} />
-                {/* // <Route component={Cluster} {...clusterRoute}/>
-                    // <Route component={Workloads} {...workloadsRoute}/>
-                    // <Route component={Apps} path="/"/> */}
+                
               </Switch>
               <KubeObjectDetails />
               <Notifications />

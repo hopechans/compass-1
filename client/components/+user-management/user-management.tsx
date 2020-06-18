@@ -21,7 +21,11 @@ interface Props extends RouteComponentProps<{}> {
 export class UserManagement extends React.Component<Props> {
   static get tabRoutes() {
     const tabRoutes: TabRoute[] = [];
-    const { isClusterAdmin } = configStore;
+    let isClusterAdmin = false
+    const userConifg = JSON.parse(localStorage.getItem('u_config'))
+    if(userConifg){
+      isClusterAdmin = userConifg.isClusterAdmin
+    }
     const query = namespaceStore.getContextParams()
     tabRoutes.push(
       {
