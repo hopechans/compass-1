@@ -1,17 +1,21 @@
 import "./storage-classes.scss"
 
 import * as React from "react";
-import {RouteComponentProps} from "react-router-dom";
-import {observer} from "mobx-react";
-import {Trans} from "@lingui/macro";
-import {StorageClass, storageClassApi} from "../../api/endpoints/storage-class.api";
-import {KubeObjectMenu, KubeObjectMenuProps} from "../kube-object/kube-object-menu";
-import {KubeObjectListLayout} from "../kube-object";
-import {IStorageClassesRouteParams} from "./storage-classes.route";
-import {storageClassStore} from "./storage-class.store";
-import {apiManager} from "../../api/api-manager";
-import {MainLayout} from "../layout/main-layout";
-import {AddStorageClassDialog} from "./add-storageclass-dialog";
+import { RouteComponentProps } from "react-router-dom";
+import { observer } from "mobx-react";
+import { t, Trans } from "@lingui/macro";
+import { StorageClass, storageClassApi } from "../../api/endpoints/storage-class.api";
+import { KubeObjectMenu, KubeObjectMenuProps } from "../kube-object/kube-object-menu";
+import { KubeObjectListLayout } from "../kube-object";
+import { IStorageClassesRouteParams } from "./storage-classes.route";
+import { storageClassStore } from "./storage-class.store";
+import { apiManager } from "../../api/api-manager";
+import { MainLayout } from "../layout/main-layout";
+import { AddStorageClassDialog } from "./add-storageclass-dialog";
+import { ConfigStorageClassDialog } from "./config-storageclass-dialog";
+import { MenuItem } from "../menu/menu";
+import { Icon } from "../icon/icon";
+import { _i18n } from "../../../client/i18n";
 
 enum sortBy {
     name = "name",
@@ -43,15 +47,15 @@ export class StorageClasses extends React.Component<Props> {
                     ]}
                     renderHeaderTitle={<Trans>Storage Classes</Trans>}
                     renderTableHeader={[
-                        {title: <Trans>Name</Trans>, className: "name", sortBy: sortBy.name},
-                        {title: <Trans>Provisioner</Trans>, className: "provisioner", sortBy: sortBy.provisioner},
+                        { title: <Trans>Name</Trans>, className: "name", sortBy: sortBy.name },
+                        { title: <Trans>Provisioner</Trans>, className: "provisioner", sortBy: sortBy.provisioner },
                         {
                             title: <Trans>Reclaim Policy</Trans>,
                             className: "reclaim-policy",
                             sortBy: sortBy.reclaimPolicy
                         },
-                        {title: <Trans>Default</Trans>, className: "is-default"},
-                        {title: <Trans>Age</Trans>, className: "age", sortBy: sortBy.age},
+                        { title: <Trans>Default</Trans>, className: "is-default" },
+                        { title: <Trans>Age</Trans>, className: "age", sortBy: sortBy.age },
                     ]}
                     renderTableContents={(storageClass: StorageClass) => [
                         storageClass.getName(),
@@ -61,22 +65,33 @@ export class StorageClasses extends React.Component<Props> {
                         storageClass.getAge(),
                     ]}
                     renderItemMenu={(item: StorageClass) => {
-                        return <StorageClassMenu object={item}/>
+                        return <StorageClassMenu object={item} />
                     }}
                     addRemoveButtons={{
                         addTooltip: <Trans>Add StorageClass</Trans>,
                         onAdd: () => AddStorageClassDialog.open(),
                     }}
                 />
-                <AddStorageClassDialog/>
+                <AddStorageClassDialog />
+                <ConfigStorageClassDialog />
             </>
         )
     }
 }
 
 export function StorageClassMenu(props: KubeObjectMenuProps<StorageClass>) {
+    const { object, toolbar } = props;
     return (
-        <KubeObjectMenu {...props}/>
+        <>
+            <KubeObjectMenu {...props} >
+                <MenuItem onClick={() => {
+                    ConfigStorageClassDialog.open(object)
+                }}>
+                    <Icon material="play_circle_filled" title={_i18n._(t`Config`)} interactive={toolbar} />
+                    <span className="title"><Trans>Config</Trans></span>
+                </MenuItem>
+            </KubeObjectMenu>
+        </>
     )
 }
 
