@@ -1,5 +1,5 @@
-import {KubeObject} from "../kube-object";
-import {KubeApi} from "../kube-api";
+import { KubeObject } from "../kube-object";
+import { KubeApi } from "../kube-api";
 
 
 export class SubNet extends KubeObject {
@@ -11,6 +11,8 @@ export class SubNet extends KubeObject {
         gateway: string,
         namespaces: any[],
         excludeIps: string[],
+        private?: boolean,
+        allowSubnets?: string[],
     }
 }
 
