@@ -67,10 +67,11 @@ export class AddPipelineResourceDialog extends React.Component<Props> {
 
   submit = async () => {
     try {
-      await pipelineResourceApi.create({name: this.name, namespace: "ops"}, {
+      await pipelineResourceApi.create({name: this.name, namespace: ""}, {
         spec: {
           type: this.type,
-          params: this.params
+          params: this.params,
+          secrets: []
         }
       });
       this.reset();

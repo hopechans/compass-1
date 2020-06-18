@@ -11,6 +11,7 @@ export class PipelineResource extends KubeObject {
       name: string,
       value: string
     }[],
+    secrets: [],
   }
 }
 
