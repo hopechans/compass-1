@@ -39,6 +39,11 @@ export interface Result {
   description: string;
 }
 
+export interface Params {
+  name: string,
+  value: string
+}
+
 export const pipelineParams: PipelineParams = {
   name: "",
   type: "",
@@ -76,4 +81,9 @@ export const volumeMount: VolumeMount = {
 export const result: Result = {
   name: "",
   description: "",
+}
+
+export const params: Params = {
+  name: "",
+  value: ""
 }
