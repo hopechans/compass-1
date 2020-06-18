@@ -9,6 +9,7 @@ import {pipelineResourceStore} from "./pipelineresource.store";
 import {KubeObjectMenu, KubeObjectMenuProps} from "../kube-object";
 import {KubeObjectListLayout} from "../kube-object";
 import {apiManager} from "../../api/api-manager";
+import {AddPipelineResourceDialog} from "./add-pipeline-resource-dialog";
 
 enum sortBy {
   name = "name",
@@ -23,31 +24,40 @@ interface Props extends RouteComponentProps {
 export class PipelineResources extends React.Component<Props> {
   render() {
     return (
-      <KubeObjectListLayout
-        className="PipelineResources" store={pipelineResourceStore}
-        sortingCallbacks={{
-          [sortBy.name]: (pipelineResource: PipelineResource) => pipelineResource.getName(),
-          [sortBy.namespace]: (pipelineResource: PipelineResource) => pipelineResource.getNs(),
-          [sortBy.age]: (pipelineResource: PipelineResource) => pipelineResource.getAge(false),
-        }}
-        searchFilters={[
-          (pipelineResource: PipelineResource) => pipelineResource.getSearchFields(),
-        ]}
-        renderHeaderTitle={<Trans>Pipeline Resources</Trans>}
-        renderTableHeader={[
-          {title: <Trans>Name</Trans>, className: "name", sortBy: sortBy.name},
-          {title: <Trans>Namespace</Trans>, className: "namespace", sortBy: sortBy.namespace},
-          {title: <Trans>Age</Trans>, className: "age", sortBy: sortBy.age},
-        ]}
-        renderTableContents={(pipelineResource: PipelineResource) => [
-          pipelineResource.getName(),
-          pipelineResource.getNs(),
-          pipelineResource.getAge(),
-        ]}
-        renderItemMenu={(item: PipelineResource) => {
-          return <PipelineResourceMenu object={item}/>
-        }}
-      />
+      <>
+        <KubeObjectListLayout
+          className="PipelineResources" store={pipelineResourceStore}
+          sortingCallbacks={{
+            [sortBy.name]: (pipelineResource: PipelineResource) => pipelineResource.getName(),
+            [sortBy.namespace]: (pipelineResource: PipelineResource) => pipelineResource.getNs(),
+            [sortBy.age]: (pipelineResource: PipelineResource) => pipelineResource.getAge(false),
+          }}
+          searchFilters={[
+            (pipelineResource: PipelineResource) => pipelineResource.getSearchFields(),
+          ]}
+          renderHeaderTitle={<Trans>Pipeline Resources</Trans>}
+          renderTableHeader={[
+            {title: <Trans>Name</Trans>, className: "name", sortBy: sortBy.name},
+            {title: <Trans>Namespace</Trans>, className: "namespace", sortBy: sortBy.namespace},
+            {title: <Trans>Age</Trans>, className: "age", sortBy: sortBy.age},
+          ]}
+          renderTableContents={(pipelineResource: PipelineResource) => [
+            pipelineResource.getName(),
+            pipelineResource.getNs(),
+            pipelineResource.getAge(),
+          ]}
+          renderItemMenu={(item: PipelineResource) => {
+            return <PipelineResourceMenu object={item}/>
+          }}
+          addRemoveButtons={{
+            addTooltip: <Trans>Pipeline Resource</Trans>,
+            onAdd: () => {
+              AddPipelineResourceDialog.open()
+            }
+          }}
+        />
+        <AddPipelineResourceDialog />
+      </>
     )
   }
 }
