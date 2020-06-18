@@ -10,7 +10,7 @@ export interface Resource {
 
 export interface Base {
   name: string,
-  imgaeFrom?: string,
+  imageFrom?: string,
   image: string,
   imagePullPolicy: string,
   resource: Resource
@@ -97,9 +97,9 @@ export const readyProbe: Probe = {
   delay: "",
   pattern: {
     type: "",
-    httpPort: "8081",
+    httpPort: "",
     url: "",
-    tcpPort: "0",
+    tcpPort: "",
     command: "",
   }
 };
@@ -110,27 +110,27 @@ export const liveProbe: Probe = {
   retryCount: "",
   delay: "",
   pattern: {
-    type: "HTTP",
-    httpPort: "8082",
+    type: "",
+    httpPort: "",
     url: "",
-    tcpPort: "0",
+    tcpPort: "",
     command: "",
   }
 };
 export const lifeCycle: LifeCycle = {
   status: false,
   postStart: {
-    type: "HTTP",
-    httpPort: "8080",
+    type: "",
+    httpPort: "",
     url: "",
-    tcpPort: "0",
+    tcpPort: "",
     command: "",
   },
   preStop: {
-    type: "HTTP",
-    httpPort: "8080",
+    type: "",
+    httpPort: "",
     url: "",
-    tcpPort: "0",
+    tcpPort: "",
     command: "",
   }
 };

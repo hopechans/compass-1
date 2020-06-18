@@ -1,15 +1,17 @@
-import {ActionMeta} from "react-select/src/types";
-import {observer} from "mobx-react";
+import { ActionMeta } from "react-select/src/types";
+import { observer } from "mobx-react";
 import React from "react";
-import {SubTitle} from "../layout/sub-title";
-import {Icon} from "../icon";
-import {_i18n} from "../../i18n";
-import {t, Trans} from "@lingui/macro";
-import {Select, SelectOption} from "../select";
-import {Input} from "../input";
-import {observable} from "mobx";
-import {environment, Environment} from "./common";
-import {Divider} from "antd";
+import { SubTitle } from "../layout/sub-title";
+import { Icon } from "../icon";
+import { _i18n } from "../../i18n";
+import { t, Trans } from "@lingui/macro";
+import { Select, SelectOption } from "../select";
+import { Input } from "../input";
+import { observable } from "mobx";
+import { environment, Environment } from "./common";
+import { Divider, Row, Col } from "antd";
+import { SecretsSelect } from "../+config-secrets/secrets-select";
+import { NamespaceSelect } from "../+namespaces/namespace-select";
 
 interface Props<T = any> extends Partial<Props> {
   value?: T;
@@ -23,12 +25,13 @@ interface Props<T = any> extends Partial<Props> {
 export class EnvironmentDetails extends React.Component<Props> {
 
   @observable value: Environment[] = this.props.value || environment;
+  @observable namespace: string = "";
 
   formatOptionLabel = (option: SelectOption) => {
-    const {value} = option;
+    const { value } = option;
     return (
       <>
-        <Icon small material="layers"/>
+        <Icon small material="layers" />
         {value}
       </>
     );
@@ -37,8 +40,8 @@ export class EnvironmentDetails extends React.Component<Props> {
   get selectOptions() {
     return [
       "Custom",
-      "Configuration",
-      "Secret",
+      "ConfigMaps",
+      "Secrets",
       "Other"
     ]
   }
@@ -72,7 +75,7 @@ export class EnvironmentDetails extends React.Component<Props> {
 
     return (
       <>
-        {this.props.divider ? <Divider/> : <></>}
+        {this.props.divider ? <Divider /> : <></>}
         <SubTitle className="fields-title" title="Environment">{this.renderAdd()}</SubTitle>
         <div className="Environment">
           {this.value.map((item, index) => {
@@ -89,7 +92,7 @@ export class EnvironmentDetails extends React.Component<Props> {
                       e.stopPropagation();
                     }}
                   />
-                  <br/><br/>
+                  <br /><br />
                   <Select
                     formatOptionLabel={this.formatOptionLabel}
                     options={this.selectOptions}
@@ -101,14 +104,14 @@ export class EnvironmentDetails extends React.Component<Props> {
                   {
                     this.value[index].type == "Custom" ?
                       <>
-                        <SubTitle title={<Trans>Name</Trans>}/>
+                        <SubTitle title={<Trans>Environment</Trans>} />
                         <Input
                           required={true}
-                          placeholder={_i18n._(t`Name`)}
+                          placeholder={_i18n._(t`Environment`)}
                           value={this.value[index].envConfig.name}
                           onChange={value => this.value[index].envConfig.name = value}
                         />
-                        <SubTitle title={<Trans>Value</Trans>}/>
+                        <SubTitle title={<Trans>Value</Trans>} />
                         <Input
                           required={true}
                           placeholder={_i18n._(t`Value`)}
@@ -118,16 +121,16 @@ export class EnvironmentDetails extends React.Component<Props> {
                       </> : <></>
                   }
                   {
-                    this.value[index].type == "Configuration" ?
+                    this.value[index].type == "ConfigMaps" ?
                       <>
-                        <SubTitle title={<Trans>Environment</Trans>}/>
+                        <SubTitle title={<Trans>Environment</Trans>} />
                         <Input
                           required={true}
                           placeholder={_i18n._(t`Environment`)}
                           value={this.value[index].envConfig.name}
                           onChange={value => this.value[index].envConfig.name = value}
                         />
-                        <SubTitle title={<Trans>Configure</Trans>}/>
+                        <SubTitle title={<Trans>Configure</Trans>} />
                         <Input
                           required={true}
                           placeholder={_i18n._(t`Configure`)}
@@ -136,7 +139,7 @@ export class EnvironmentDetails extends React.Component<Props> {
                             value => this.value[index].envConfig.configName = value
                           }
                         />
-                        <SubTitle title={<Trans>Key</Trans>}/>
+                        <SubTitle title={<Trans>Key</Trans>} />
                         <Input
                           required={true}
                           placeholder={_i18n._(t`Key`)}
@@ -146,23 +149,37 @@ export class EnvironmentDetails extends React.Component<Props> {
                       </> : <></>
                   }
                   {
-                    this.value[index].type == "Secret" ?
+                    this.value[index].type == "Secrets" ?
                       <>
-                        <SubTitle title={<Trans>Name</Trans>}/>
+                        <SubTitle title={<Trans>Environment</Trans>} />
                         <Input
                           required={true}
-                          placeholder={_i18n._(t`Name`)}
+                          placeholder={_i18n._(t`Environment`)}
                           value={this.value[index].envConfig.name}
                           onChange={value => this.value[index].envConfig.name = value}
                         />
-                        <SubTitle title={<Trans>Secret Name</Trans>}/>
-                        <Input
-                          required={true}
-                          placeholder={_i18n._(t`Secret Name`)}
-                          value={this.value[index].envConfig.secretName}
-                          onChange={value => this.value[index].envConfig.secretName = value}
-                        />
-                        <SubTitle title={<Trans>Secret Key</Trans>}/>
+                        <br />
+                        <Row justify="space-between">
+                          <Col span="10">
+                            <SubTitle title={<Trans>Secret Namespace</Trans>} />
+                            <NamespaceSelect
+                              required autoFocus
+                              value={this.namespace}
+                              onChange={value => this.namespace = value.value}
+                            />
+                          </Col>
+                          <Col span="10">
+                            <SubTitle title={<Trans>Secret Name</Trans>} />
+                            <SecretsSelect
+                              required autoFocus
+                              value={this.value[index].envConfig.secretName}
+                              namespace={this.namespace}
+                              onChange={value => this.value[index].envConfig.secretName = value.value}
+                            />
+                          </Col>
+                        </Row>
+
+                        <SubTitle title={<Trans>Secret Key</Trans>} />
                         <Input
                           required={true}
                           placeholder={_i18n._(t`Secret Key`)}
@@ -174,7 +191,7 @@ export class EnvironmentDetails extends React.Component<Props> {
                   {
                     this.value[index].type == "Other" ?
                       <>
-                        <SubTitle title={<Trans>Command</Trans>}/>
+                        <SubTitle title={<Trans>Command</Trans>} />
                         <Input
                           required={true}
                           placeholder={_i18n._(t`Command`)}
@@ -186,7 +203,7 @@ export class EnvironmentDetails extends React.Component<Props> {
                       </> : <></>
                   }
                 </div>
-                <br/>
+                <br />
               </>
             )
           })}

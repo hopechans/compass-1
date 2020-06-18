@@ -1,16 +1,16 @@
-import {ActionMeta} from "react-select/src/types";
-import {observer} from "mobx-react";
+import { ActionMeta } from "react-select/src/types";
+import { observer } from "mobx-react";
 import React from "react";
-import {SubTitle} from "../layout/sub-title";
-import {Icon} from "../icon";
-import {_i18n} from "../../i18n";
-import {t, Trans} from "@lingui/macro";
-import {Input} from "../input";
-import {observable} from "mobx";
-import {Col, Row, Popconfirm} from "antd";
-import {Divider} from 'antd';
-import {args, VolumeMounts, volumeMount, volumeMounts} from "./common";
-import {DeleteOutlined} from "@ant-design/icons";
+import { SubTitle } from "../layout/sub-title";
+import { Icon } from "../icon";
+import { _i18n } from "../../i18n";
+import { t, Trans } from "@lingui/macro";
+import { Input } from "../input";
+import { observable } from "mobx";
+import { Col, Row, Popconfirm } from "antd";
+import { Divider } from 'antd';
+import { args, VolumeMounts, volumeMount, volumeMounts } from "./common";
+import { DeleteOutlined } from "@ant-design/icons";
 
 interface ArgsProps<T = any> extends Partial<ArgsProps> {
   value?: T;
@@ -50,27 +50,31 @@ export class VolumeMountDetails extends React.Component<ArgsProps> {
   render() {
     return (
       <>
-        {this.props.divider ? <Divider/> : <></>}
+        {this.props.divider ? <Divider /> : <></>}
         <SubTitle className="fields-title" title="VolumeMounts">{this.renderAdd()}</SubTitle>
         <div className="volumeMounts">
           {this.value.items.map((item, index) => {
             return (
               <div key={index}>
                 <Row justify="space-between">
-                  <Input
-                    required={true}
-                    placeholder={_i18n._(t`Name eg: volumeClaims name`)}
-                    value={this.value.items[index].name}
-                    onChange={value => this.value.items[index].name = value}
-                  />
-                  <Input
-                    required={true}
-                    placeholder={_i18n._(t`MountPath eg: /data`)}
-                    value={this.value.items[index].mountPath}
-                    onChange={
-                      value => this.value.items[index].mountPath = value
-                    }
-                  />
+                  <Col span="10">
+                    <Input
+                      required={true}
+                      placeholder={_i18n._(t`Name eg: volumeClaims name`)}
+                      value={this.value.items[index].name}
+                      onChange={value => this.value.items[index].name = value}
+                    />
+                  </Col>
+                  <Col span="10">
+                    <Input
+                      required={true}
+                      placeholder={_i18n._(t`MountPath eg: /data`)}
+                      value={this.value.items[index].mountPath}
+                      onChange={
+                        value => this.value.items[index].mountPath = value
+                      }
+                    />
+                  </Col>
                   <Icon
                     small
                     tooltip={<Trans>Remove MountPath</Trans>}
