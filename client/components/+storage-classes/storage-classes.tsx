@@ -87,7 +87,7 @@ export function StorageClassMenu(props: KubeObjectMenuProps<StorageClass>) {
                 <MenuItem onClick={() => {
                     ConfigStorageClassDialog.open(object)
                 }}>
-                    <Icon material="play_circle_filled" title={_i18n._(t`Config`)} interactive={toolbar} />
+                    <Icon material="settings" title={_i18n._(t`Config`)} interactive={toolbar} />
                     <span className="title"><Trans>Config</Trans></span>
                 </MenuItem>
             </KubeObjectMenu>

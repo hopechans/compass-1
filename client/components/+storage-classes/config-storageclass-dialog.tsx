@@ -45,11 +45,6 @@ export class ConfigStorageClassDialog extends React.Component<Props> {
         ConfigStorageClassDialog.close();
     }
 
-    reset() {
-        this.name = "";
-        this.params = cephParams;
-    }
-
     formatOptionLabel = (option: SelectOption) => {
         const { value, label } = option;
         return label || (
@@ -113,7 +108,6 @@ export class ConfigStorageClassDialog extends React.Component<Props> {
                     imageFeatures: this.params.imageFeatures
                 }
             })
-            this.reset();
             this.close();
         } catch (err) {
             Notifications.error(err);

@@ -82,11 +82,11 @@ export function NamespaceMenu(props: KubeObjectMenuProps<Namespace>) {
   return (
     <KubeObjectMenu {...props} >
       <MenuItem onClick={() => { NamespaceNodeRangeLimitDialog.open(object); }}>
-        <Icon material="turned_in_not" title={_i18n._(t`Allow Node`)} interactive={toolbar} />
+        <Icon material="settings_applications" title={_i18n._(t`Allow Node`)} interactive={toolbar} />
         <span className="title"><Trans>Allow Node</Trans></span>
       </MenuItem>
       <MenuItem onClick={() => { NamespaceStorageClasslimit.open(object); }}>
-        <Icon material="turned_in_not" title={_i18n._(t`Allow StorageClass`)} interactive={toolbar} />
+        <Icon material="store" title={_i18n._(t`Allow StorageClass`)} interactive={toolbar} />
         <span className="title"><Trans>Allow StorageClass</Trans></span>
       </MenuItem>
     </KubeObjectMenu>
