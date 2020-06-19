@@ -19,6 +19,7 @@ import { Tooltip, TooltipContent } from "../tooltip";
 import kebabCase from "lodash/kebabCase";
 import upperFirst from "lodash/upperFirst";
 import { apiManager } from "../../api/api-manager";
+import {NodeAnnotationDialog} from "./node-annotation-dialog";
 
 enum sortBy {
   name = "name",
@@ -176,6 +177,7 @@ export class Nodes extends React.Component<Props> {
             return <NodeMenu object={item}/>
           }}
         />
+        <NodeAnnotationDialog />
       </MainLayout>
     )
   }
