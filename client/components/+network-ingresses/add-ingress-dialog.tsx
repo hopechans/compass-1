@@ -95,7 +95,6 @@ export class AddIngressDialog extends React.Component<Props> {
                 />
               </Panel>
             </Collapse>
-
           </WizardStep>
         </Wizard>
       </Dialog>

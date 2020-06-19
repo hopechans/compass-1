@@ -4,12 +4,10 @@ import {observable} from "mobx";
 import {SubTitle} from "../layout/sub-title";
 import {_i18n} from "../../i18n";
 import {ActionMeta} from "react-select/src/types";
-import {backend, Backend, path, Path} from "./common";
-import {Divider} from "antd";
 import {Icon} from "../icon";
 import {t, Trans} from "@lingui/macro";
-import {BackendDetails} from "./backend-details";
 import {Input} from "../input";
+import {Data} from "./common";
 
 interface Props<T = any> extends Partial<Props> {
   value?: T;
@@ -19,12 +17,12 @@ interface Props<T = any> extends Partial<Props> {
 }
 
 @observer
-export class PathsDetails extends React.Component<Props> {
+export class ConfigMapDataDetails extends React.Component<Props> {
 
-  @observable value: Path[] = this.props.value || []
+  @observable value: Data[] = this.props.value || [];
 
   add = () => {
-    this.value.push(path);
+    this.value.push({key: "", value: ""});
   }
 
   remove = (index: number) => {
@@ -35,7 +33,7 @@ export class PathsDetails extends React.Component<Props> {
     return (
       <Icon
         small
-        tooltip={_i18n._(t`Paths`)}
+        tooltip={_i18n._(t`Data`)}
         material="add_circle_outline"
         onClick={(e) => {
           this.add();
@@ -48,15 +46,16 @@ export class PathsDetails extends React.Component<Props> {
   render() {
     return (
       <>
-        <SubTitle className="fields-title" title="HTTP Paths">{this.renderAdd()}</SubTitle>
-        <div className="Results">
+        <SubTitle className="fields-title" title="Data">{this.renderAdd()}</SubTitle>
+        <div className="Data">
           {this.value.map((item, index) => {
             return (
               <>
+                <br/>
                 <div key={index}>
                   <Icon
                     small
-                    tooltip={<Trans>Remove Path</Trans>}
+                    tooltip={<Trans>Remove Data</Trans>}
                     className="remove-icon"
                     material="remove_circle_outline"
                     onClick={(e) => {
@@ -64,17 +63,21 @@ export class PathsDetails extends React.Component<Props> {
                       e.stopPropagation();
                     }}
                   />
-                  <SubTitle title={"Path"}/>
+                  <SubTitle title={"Key"}/>
                   <Input
                     required={true}
-                    value={this.value[index].path}
-                    onChange={value => this.value[index].path = value}
+                    value={this.value[index].key}
+                    onChange={value => this.value[index].key = value}
                   />
-                  <BackendDetails
-                    value={this.value[index].backend}
-                    onChange={value => this.value[index].backend = value}/>
+                  <SubTitle title={"Value"}/>
+                  <Input
+                    required={true}
+                    multiLine={true}
+                    multiple={true}
+                    value={this.value[index].value}
+                    onChange={value => this.value[index].value = value}
+                  />
                 </div>
-                <br/>
               </>
             )
           })}
