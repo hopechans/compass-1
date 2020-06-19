@@ -45,7 +45,7 @@ export class PipelineGraph {
     }
 
 
-    public bindClickOnNode(callback: () => any): void {
+    public bindClickOnNode(callback: (currentNode: any) => any): void {
 
         this.graph.on("node:click", (evt: any) => {
             const { item } = evt;
@@ -115,14 +115,15 @@ export class PipelineGraph {
                 });
                 return;
             }
-            // callback();
+
+            callback(item);
             // console.log("===========================================>:", this.graph.save());
-            this.data = this.graph.save();
-            console.log("===========================================>:", this.data)
-            this.graph.clear();
-            setTimeout(() => {
-                this.graph.changeData(this.data);
-            }, 5000);
+            // this.data = this.graph.save();
+            // console.log("===========================================>:", this.data)
+            // this.graph.clear();
+            // setTimeout(() => {
+            //     this.graph.changeData(this.data);
+            // }, 5000);
 
         });
     }
