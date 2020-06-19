@@ -11,6 +11,10 @@ import { Dialog } from "../dialog";
 import { Wizard, WizardStep } from "../wizard";
 import { Trans } from "@lingui/macro";
 import { ActionMeta } from "react-select/src/types";
+import {SubTitle} from "../layout/sub-title";
+import {Input} from "../input";
+import {_i18n} from "../../i18n";
+import {Task} from "../../api/endpoints";
 
 interface Props<T = any> extends Partial<Props> {
   value?: T;
@@ -55,7 +59,6 @@ export class CopyTaskDialog extends React.Component<Props> {
   }
 
   handle = async () => {
-    console.log(this.taskName, this.pipelineParams);
   }
 
   render() {
@@ -68,11 +71,13 @@ export class CopyTaskDialog extends React.Component<Props> {
       >
         <Wizard className="CopyAddDeployDialog" header={header} done={this.close}>
           <WizardStep contentClass="flex gaps column" next={this.handle}>
-            <TaskNameDetails
-              value={this.taskName}
-              onChange={(value) => {
-                this.taskName = value
-              }} />
+            <SubTitle title={"Task Name"} />
+            <Input
+              required={true}
+              placeholder={_i18n._("Task Name")}
+              value={this.value.taskName}
+              onChange={value => this.value.taskName = value}
+            />
             <br />
             <PipelineParamsDetails value={this.pipelineParams} onChange={value => {
               this.pipelineParams = value

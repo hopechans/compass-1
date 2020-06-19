@@ -21,6 +21,7 @@ export interface TaskStep {
   workspaces: Workspace[];
   workingDir: string;
   results: Result[];
+  scripts: string;
 }
 
 export interface Workspace {
@@ -65,6 +66,7 @@ export const taskStep: TaskStep = {
   workspaces: [],
   workingDir: "",
   results: [],
+  scripts: "",
 }
 
 export const workspace: Workspace = {
