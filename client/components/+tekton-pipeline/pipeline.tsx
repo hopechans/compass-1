@@ -5,25 +5,24 @@ import { observer } from "mobx-react";
 import { observable } from "mobx";
 import { RouteComponentProps } from "react-router";
 import { Trans } from "@lingui/macro";
-import { Pipeline, pipelineApi, Task, PipelineTask } from "../../api/endpoints";
+import { Pipeline, pipelineApi, TaskRef, Task, PipelineTask } from "../../api/endpoints";
 import { podsStore } from "../+workloads-pods/pods.store";
 import { pipelineStore } from "./pipeline.store";
 import { nodesStore } from "../+nodes/nodes.store";
 import { eventStore } from "../+events/event.store";
-import {
-  KubeObjectMenu,
-  KubeObjectMenuProps,
-} from "../kube-object";
+import { KubeObjectMenu, KubeObjectMenuProps } from "../kube-object";
 import { KubeObjectListLayout } from "../kube-object";
 import { apiManager } from "../../api/api-manager";
 import { _i18n } from "../../i18n";
 import { StepUp, stepUp } from "./steps";
 import { PipelineGraph } from "../+graphs/pipeline-graph"
 import { Graph } from "../+graphs/graph"
-import { CopyTaskDialog } from "./copy-task-dialog";
+import { CopyTaskDialog, task, TaskResult } from "./copy-task-dialog";
 import { MenuItem } from "../menu";
 import { Icon } from "../icon";
 import { AddPipelineDialog } from "./add-pipeline-dialog";
+import { configStore } from "../../../client/config.store";
+import { Notifications } from "../notifications";
 
 enum sortBy {
   name = "name",
@@ -37,53 +36,111 @@ interface Props extends RouteComponentProps {
 
 }
 
-const showPipeline = () => {
-  if (Pipelines.isHiddenPipelineGraph === undefined) {
-    Pipelines.isHiddenPipelineGraph = true;
-  }
-  Pipelines.isHiddenPipelineGraph ? Pipelines.isHiddenPipelineGraph = false : Pipelines.isHiddenPipelineGraph = true
-  console.log(Pipelines.isHiddenPipelineGraph);
-}
+
 
 @observer
 export class Pipelines extends React.Component<Props> {
-  @observable taskName: string = "";
+
   @observable currentNode: any;
   @observable static isHiddenPipelineGraph: boolean = false;
-  @observable step: StepUp[] = [stepUp];
-  @observable task: any;
-  @observable taskRecord: string[] = [];
+  @observable pipeline: Pipeline;
+  @observable task: TaskResult = task;
+
   private graph: PipelineGraph = null;
   data: any;
 
+
   componentDidMount() {
     this.graph = new PipelineGraph(0, 0);
-    this.graph.bindClickOnNode(() => {
-      CopyTaskDialog.open()
+    this.graph.bindClickOnNode((currentNode: any) => {
+      CopyTaskDialog.open();
+      this.currentNode = currentNode;
     });
     this.graph.bindMouseenter();
     this.graph.bindMouseleave();
   }
 
-  savePipeline = () => {
-    this.data = this.graph.getGraph().save();
-    let tmpData = this.graph.getGraph().save();
-    let tasks: PipelineTask[] = [];
-    let item: any[] = [];
-    console.log("========================================>data:", this.data);
-    this.data.nodes.map((item: any, index: number) => {
-      //runAfter:run在谁的后面。
-      let id = item.id.split('-')
-      let itema: any[] = [];
-      this.data.nodes.map((itemA: any, indexA: number) => {
-        let ida = item.id.split('-');
-        if (id[0] = ida[0]) {
-          itema.push(itemA.id);
+  showPipeline = (pipeline: Pipeline) => {
+    if (Pipelines.isHiddenPipelineGraph === undefined) {
+      Pipelines.isHiddenPipelineGraph = true;
+    }
+    Pipelines.isHiddenPipelineGraph ? Pipelines.isHiddenPipelineGraph = false : Pipelines.isHiddenPipelineGraph = true;
+
+
+    let nodeData: any;
+    pipeline.getAnnotations()
+      .filter((item) => {
+        const tmp = item.split("=");
+        if (tmp[0] == "node_data") {
+          nodeData = tmp[1];
         }
       })
-      item.push(itema);
-    })
-    console.log("========================================>savePipeline:", item);
+
+    this.graph.getGraph().clear();
+    this.graph.getGraph().changeData(JSON.parse(nodeData));
+    this.pipeline = pipeline;
+  }
+
+  savePipeline = async () => {
+    this.data = this.graph.getGraph().save();
+
+    let items: Map<string, any> = new Map<string, any>();
+
+    //存取node{id,...} => <id,node>
+    this.data.nodes.map((item: any, index: number) => {
+      const ids = item.id.split("-");
+      if (items.get(ids[0]) === undefined) {
+        items.set(ids[0], new Array<any>());
+      }
+      items.get(ids[0]).push(item);
+    });
+
+    let keys = Array.from(items.keys());
+    let b = 1;
+    let tasks: PipelineTask[] = [];
+
+    //通过map的关系，形成要提交的任务，组装数据。
+    keys.map((item: any, index: number) => {
+      let task = new PipelineTask();
+      task.runAfter = [];
+      if (b === 1) {
+        let array = items.get(item);
+        for (let i = 0; i < array.length; i++) {
+          task.name = array[i].taskName;
+          task.taskRef = { name: array[i].taskName };
+        }
+      } else {
+        let array1 = items.get(item);
+        let tmp = b - 1;
+        let array2 = items.get(tmp.toString());
+        for (let i = 0; i < array1.length; i++) {
+          task.name = array1[i].taskName;
+          task.taskRef = { name: array1[i].taskName };
+          //set task runAfter
+          for (let j = 0; j < array2.length; j++) {
+            task.runAfter[j] = array2[j].taskName;
+            console.log(task.runAfter);
+          }
+
+        }
+      }
+      b++;
+      tasks.push(task);
+    });
+
+
+
+    //更新对应的pipeline
+    try {
+      this.pipeline.metadata.labels = { namespace: configStore.getDefaultNamespace() }
+      this.pipeline.metadata.annotations = { "node_data": JSON.stringify(this.data) }
+      this.pipeline.spec.tasks.push(...tasks);
+      await pipelineStore.update(this.pipeline, { ...this.pipeline });
+    } catch (err) {
+      Notifications.error(err);
+    }
+    //设置node的名字
+    this.graph.setTaskName(this.task.taskName, this.currentNode);
   }
 
   render() {
@@ -148,9 +205,9 @@ export class Pipelines extends React.Component<Props> {
               AddPipelineDialog.open()
             }
           }}
-          onDetails={showPipeline}
+          onDetails={(pipeline: Pipeline) => { this.showPipeline(pipeline) }}
         />
-        <CopyTaskDialog />
+        <CopyTaskDialog value={this.task} onChange={value => this.task = value} />
         <AddPipelineDialog />
       </>
     );

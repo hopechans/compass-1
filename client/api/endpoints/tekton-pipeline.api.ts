@@ -4,8 +4,8 @@ import { KubeApi } from "../kube-api";
 
 export class TaskRef {
     name: string;
-    kind: string;
-    apiVersion: string;
+    kind?: string;
+    apiVersion?: string;
 }
 
 export class ParamSpec {
@@ -18,7 +18,7 @@ export class ParamSpec {
 export class PipelineTask {
     name: string;
     taskRef: TaskRef;
-    runAfter: string;
+    runAfter: string[];
 }
 
 @autobind()
