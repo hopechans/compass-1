@@ -10,10 +10,7 @@ import { podsStore } from "../+workloads-pods/pods.store";
 import { pipelineStore } from "./pipeline.store";
 import { nodesStore } from "../+nodes/nodes.store";
 import { eventStore } from "../+events/event.store";
-import {
-  KubeObjectMenu,
-  KubeObjectMenuProps,
-} from "../kube-object";
+import { KubeObjectMenu, KubeObjectMenuProps } from "../kube-object";
 import { KubeObjectListLayout } from "../kube-object";
 import { apiManager } from "../../api/api-manager";
 import { _i18n } from "../../i18n";
@@ -26,7 +23,6 @@ import { Icon } from "../icon";
 import { AddPipelineDialog } from "./add-pipeline-dialog";
 import { configStore } from "../../../client/config.store";
 import { Notifications } from "../notifications";
-import console from "console";
 
 enum sortBy {
   name = "name",
@@ -71,17 +67,18 @@ export class Pipelines extends React.Component<Props> {
     }
     Pipelines.isHiddenPipelineGraph ? Pipelines.isHiddenPipelineGraph = false : Pipelines.isHiddenPipelineGraph = true
 
+    let nodeData: any;
+    pipeline.getAnnotations()
+      .filter((item) => {
+        const tmp = item.split("=");
+        if (tmp[0] == "node_data") {
+          nodeData = tmp[1];
+        }
+      })
 
-    let nodeData = pipeline.getAnnotations().filter((item) => {
-      const keyValue = item.split("=");
-      if (keyValue[0] == "node_data") {
-        return keyValue[1]
-      }
-    })
-
-    //
-    // this.graph.getGraph().clear();
-    // this.graph.getGraph().changeData(nodeData);
+    this.graph.getGraph().clear();
+    this.graph.getGraph().changeData(JSON.parse(nodeData));
+    this.pipeline = pipeline;
   }
 
   savePipeline = async () => {
