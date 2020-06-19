@@ -17,7 +17,7 @@ import { _i18n } from "../../i18n";
 import { StepUp, stepUp } from "./steps";
 import { PipelineGraph } from "../+graphs/pipeline-graph"
 import { Graph } from "../+graphs/graph"
-import { CopyTaskDialog } from "./copy-task-dialog";
+import { CopyTaskDialog, task, TaskResult } from "./copy-task-dialog";
 import { MenuItem } from "../menu";
 import { Icon } from "../icon";
 import { AddPipelineDialog } from "./add-pipeline-dialog";
@@ -40,13 +40,11 @@ interface Props extends RouteComponentProps {
 
 @observer
 export class Pipelines extends React.Component<Props> {
-  @observable taskName: string = "";
+
   @observable currentNode: any;
   @observable static isHiddenPipelineGraph: boolean = false;
-  @observable step: StepUp[] = [stepUp];
-  @observable task: any;
-  @observable taskRecord: string[] = [];
   @observable pipeline: Pipeline;
+  @observable task: TaskResult = task;
 
   private graph: PipelineGraph = null;
   data: any;
@@ -54,8 +52,9 @@ export class Pipelines extends React.Component<Props> {
 
   componentDidMount() {
     this.graph = new PipelineGraph(0, 0);
-    this.graph.bindClickOnNode(() => {
-      CopyTaskDialog.open()
+    this.graph.bindClickOnNode((currentNode: any) => {
+      CopyTaskDialog.open();
+      this.currentNode = currentNode;
     });
     this.graph.bindMouseenter();
     this.graph.bindMouseleave();
@@ -65,7 +64,8 @@ export class Pipelines extends React.Component<Props> {
     if (Pipelines.isHiddenPipelineGraph === undefined) {
       Pipelines.isHiddenPipelineGraph = true;
     }
-    Pipelines.isHiddenPipelineGraph ? Pipelines.isHiddenPipelineGraph = false : Pipelines.isHiddenPipelineGraph = true
+    Pipelines.isHiddenPipelineGraph ? Pipelines.isHiddenPipelineGraph = false : Pipelines.isHiddenPipelineGraph = true;
+
 
     let nodeData: any;
     pipeline.getAnnotations()
@@ -86,6 +86,7 @@ export class Pipelines extends React.Component<Props> {
 
     let items: Map<string, any> = new Map<string, any>();
 
+    //存取node{id,...} => <id,node>
     this.data.nodes.map((item: any, index: number) => {
       const ids = item.id.split("-");
       if (items.get(ids[0]) === undefined) {
@@ -97,6 +98,8 @@ export class Pipelines extends React.Component<Props> {
     let keys = Array.from(items.keys());
     let b = 1;
     let tasks: PipelineTask[] = [];
+
+    //通过map的关系，形成要提交的任务，组装数据。
     keys.map((item: any, index: number) => {
       let task = new PipelineTask();
       task.runAfter = [];
@@ -127,16 +130,17 @@ export class Pipelines extends React.Component<Props> {
 
 
 
+    //更新对应的pipeline
     try {
       this.pipeline.metadata.labels = { namespace: configStore.getDefaultNamespace() }
       this.pipeline.metadata.annotations = { "node_data": JSON.stringify(this.data) }
       this.pipeline.spec.tasks.push(...tasks);
       await pipelineStore.update(this.pipeline, { ...this.pipeline });
-      // this.reset();
-      // this.close();
     } catch (err) {
       Notifications.error(err);
     }
+    //设置node的名字
+    this.graph.setTaskName(this.task.taskName, this.currentNode);
   }
 
   render() {
@@ -203,7 +207,7 @@ export class Pipelines extends React.Component<Props> {
           }}
           onDetails={(pipeline: Pipeline) => { this.showPipeline(pipeline) }}
         />
-        <CopyTaskDialog />
+        <CopyTaskDialog value={this.task} onChange={value => this.task = value} />
         <AddPipelineDialog />
       </>
     );

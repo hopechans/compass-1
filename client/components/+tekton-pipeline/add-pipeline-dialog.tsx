@@ -1,15 +1,15 @@
-import {observer} from "mobx-react";
+import { observer } from "mobx-react";
 import React from "react";
-import {observable} from "mobx";
-import {SubTitle} from "../layout/sub-title";
-import {Input} from "../input";
-import {_i18n} from "../../i18n";
-import {ActionMeta} from "react-select/src/types";
-import {Trans} from "@lingui/macro";
-import {Dialog} from "../dialog";
-import {Wizard, WizardStep} from "../wizard";
-import {pipelineApi} from "../../api/endpoints";
-import {Notifications} from "../notifications";
+import { observable } from "mobx";
+import { SubTitle } from "../layout/sub-title";
+import { Input } from "../input";
+import { _i18n } from "../../i18n";
+import { ActionMeta } from "react-select/src/types";
+import { Trans } from "@lingui/macro";
+import { Dialog } from "../dialog";
+import { Wizard, WizardStep } from "../wizard";
+import { pipelineApi } from "../../api/endpoints";
+import { Notifications } from "../notifications";
 
 interface Props<T = any> extends Partial<Props> {
   value?: T;
@@ -42,7 +42,7 @@ export class AddPipelineDialog extends React.Component<Props> {
 
   submit = async () => {
     try {
-      await pipelineApi.create({name: this.value, namespace: ""});
+      await pipelineApi.create({ name: this.value, namespace: "" });
       this.reset();
       this.close();
     } catch (err) {
@@ -60,7 +60,7 @@ export class AddPipelineDialog extends React.Component<Props> {
       >
         <Wizard className="AddPipelineDialog" header={header} done={this.close}>
           <WizardStep contentClass="flex gaps column" next={this.submit}>
-            <SubTitle title={"Pipeline Name"}/>
+            <SubTitle title={"Pipeline Name"} />
             <Input
               required={true}
               placeholder={_i18n._("Pipeline Name")}
