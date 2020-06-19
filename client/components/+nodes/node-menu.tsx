@@ -55,11 +55,11 @@ export function NodeMenu(props: KubeObjectMenuProps<Node>) {
   return (
     <KubeObjectMenu {...props}>
       <MenuItem onClick={shell}>
-        {/*<Icon svg="ssh" interactive={toolbar} title={_i18n._(t`Node shell`)}/>*/}
+        {/* <Icon svg="ssh" interactive={toolbar} title={_i18n._(t`Node shell`)}/> */}
         <span className="title"><Trans>Shell</Trans></span>
       </MenuItem>
       <MenuItem onClick={() => NodeAnnotationDialog.open(node)}>
-        {/*<Icon svg="star_border" interactive={toolbar} title={_i18n._(t`Annotation`)}/>*/}
+        {/* <Icon svg="turned_in_not" interactive={toolbar} title={_i18n._(t`Annotation`)}/> */}
         <span className="title"><Trans>Annotation</Trans></span>
       </MenuItem>
       {/*{!node.isUnschedulable() && (*/}
