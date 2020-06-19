@@ -5,7 +5,7 @@ import { observer } from "mobx-react";
 import { observable } from "mobx";
 import { RouteComponentProps } from "react-router";
 import { Trans } from "@lingui/macro";
-import { Pipeline, pipelineApi, Task, PipelineTask } from "../../api/endpoints";
+import { Pipeline, pipelineApi, TaskRef, Task, PipelineTask } from "../../api/endpoints";
 import { podsStore } from "../+workloads-pods/pods.store";
 import { pipelineStore } from "./pipeline.store";
 import { nodesStore } from "../+nodes/nodes.store";
@@ -24,6 +24,9 @@ import { CopyTaskDialog } from "./copy-task-dialog";
 import { MenuItem } from "../menu";
 import { Icon } from "../icon";
 import { AddPipelineDialog } from "./add-pipeline-dialog";
+import { configStore } from "../../../client/config.store";
+import { Notifications } from "../notifications";
+import console from "console";
 
 enum sortBy {
   name = "name",
@@ -37,13 +40,7 @@ interface Props extends RouteComponentProps {
 
 }
 
-const showPipeline = () => {
-  if (Pipelines.isHiddenPipelineGraph === undefined) {
-    Pipelines.isHiddenPipelineGraph = true;
-  }
-  Pipelines.isHiddenPipelineGraph ? Pipelines.isHiddenPipelineGraph = false : Pipelines.isHiddenPipelineGraph = true
-  console.log(Pipelines.isHiddenPipelineGraph);
-}
+
 
 @observer
 export class Pipelines extends React.Component<Props> {
@@ -53,8 +50,11 @@ export class Pipelines extends React.Component<Props> {
   @observable step: StepUp[] = [stepUp];
   @observable task: any;
   @observable taskRecord: string[] = [];
+  @observable pipeline: Pipeline;
+
   private graph: PipelineGraph = null;
   data: any;
+
 
   componentDidMount() {
     this.graph = new PipelineGraph(0, 0);
@@ -65,25 +65,81 @@ export class Pipelines extends React.Component<Props> {
     this.graph.bindMouseleave();
   }
 
-  savePipeline = () => {
-    this.data = this.graph.getGraph().save();
-    let tmpData = this.graph.getGraph().save();
-    let tasks: PipelineTask[] = [];
-    let item: any[] = [];
-    console.log("========================================>data:", this.data);
-    this.data.nodes.map((item: any, index: number) => {
-      //runAfter:run在谁的后面。
-      let id = item.id.split('-')
-      let itema: any[] = [];
-      this.data.nodes.map((itemA: any, indexA: number) => {
-        let ida = item.id.split('-');
-        if (id[0] = ida[0]) {
-          itema.push(itemA.id);
-        }
-      })
-      item.push(itema);
+  showPipeline = (pipeline: Pipeline) => {
+    if (Pipelines.isHiddenPipelineGraph === undefined) {
+      Pipelines.isHiddenPipelineGraph = true;
+    }
+    Pipelines.isHiddenPipelineGraph ? Pipelines.isHiddenPipelineGraph = false : Pipelines.isHiddenPipelineGraph = true
+
+
+    let nodeData = pipeline.getAnnotations().filter((item) => {
+      const keyValue = item.split("=");
+      if (keyValue[0] == "node_data") {
+        return keyValue[1]
+      }
     })
-    console.log("========================================>savePipeline:", item);
+
+    //
+    // this.graph.getGraph().clear();
+    // this.graph.getGraph().changeData(nodeData);
+  }
+
+  savePipeline = async () => {
+    this.data = this.graph.getGraph().save();
+
+    let items: Map<string, any> = new Map<string, any>();
+
+    this.data.nodes.map((item: any, index: number) => {
+      const ids = item.id.split("-");
+      if (items.get(ids[0]) === undefined) {
+        items.set(ids[0], new Array<any>());
+      }
+      items.get(ids[0]).push(item);
+    });
+
+    let keys = Array.from(items.keys());
+    let b = 1;
+    let tasks: PipelineTask[] = [];
+    keys.map((item: any, index: number) => {
+      let task = new PipelineTask();
+      task.runAfter = [];
+      if (b === 1) {
+        let array = items.get(item);
+        for (let i = 0; i < array.length; i++) {
+          task.name = array[i].taskName;
+          task.taskRef = { name: array[i].taskName };
+        }
+      } else {
+        let array1 = items.get(item);
+        let tmp = b - 1;
+        let array2 = items.get(tmp.toString());
+        for (let i = 0; i < array1.length; i++) {
+          task.name = array1[i].taskName;
+          task.taskRef = { name: array1[i].taskName };
+          //set task runAfter
+          for (let j = 0; j < array2.length; j++) {
+            task.runAfter[j] = array2[j].taskName;
+            console.log(task.runAfter);
+          }
+
+        }
+      }
+      b++;
+      tasks.push(task);
+    });
+
+
+
+    try {
+      this.pipeline.metadata.labels = { namespace: configStore.getDefaultNamespace() }
+      this.pipeline.metadata.annotations = { "node_data": JSON.stringify(this.data) }
+      this.pipeline.spec.tasks.push(...tasks);
+      await pipelineStore.update(this.pipeline, { ...this.pipeline });
+      // this.reset();
+      // this.close();
+    } catch (err) {
+      Notifications.error(err);
+    }
   }
 
   render() {
@@ -148,7 +204,7 @@ export class Pipelines extends React.Component<Props> {
               AddPipelineDialog.open()
             }
           }}
-          onDetails={showPipeline}
+          onDetails={(pipeline: Pipeline) => { this.showPipeline(pipeline) }}
         />
         <CopyTaskDialog />
         <AddPipelineDialog />

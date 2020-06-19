@@ -115,14 +115,15 @@ export class PipelineGraph {
                 });
                 return;
             }
-            // callback();
+
+            callback();
             // console.log("===========================================>:", this.graph.save());
-            this.data = this.graph.save();
-            console.log("===========================================>:", this.data)
-            this.graph.clear();
-            setTimeout(() => {
-                this.graph.changeData(this.data);
-            }, 5000);
+            // this.data = this.graph.save();
+            // console.log("===========================================>:", this.data)
+            // this.graph.clear();
+            // setTimeout(() => {
+            //     this.graph.changeData(this.data);
+            // }, 5000);
 
         });
     }
