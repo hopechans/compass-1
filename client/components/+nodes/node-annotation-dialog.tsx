@@ -1,15 +1,15 @@
-import {observer} from "mobx-react";
+import { observer } from "mobx-react";
 import React from "react";
-import {observable} from "mobx";
-import {ActionMeta} from "react-select/src/types";
-import {t, Trans} from "@lingui/macro";
-import {Dialog} from "../dialog";
-import {Wizard, WizardStep} from "../wizard";
-import {Notifications} from "../notifications";
-import {SubTitle} from "../layout/sub-title";
-import {Input} from "../input";
-import {Node} from "../../api/endpoints";
-import {nodesStore} from "./nodes.store";
+import { observable } from "mobx";
+import { ActionMeta } from "react-select/src/types";
+import { t, Trans } from "@lingui/macro";
+import { Dialog } from "../dialog";
+import { Wizard, WizardStep } from "../wizard";
+import { Notifications } from "../notifications";
+import { SubTitle } from "../layout/sub-title";
+import { Input } from "../input";
+import { Node } from "../../api/endpoints";
+import { apiBase } from "../../../client/api";
 
 interface Props<T = any> extends Partial<Props> {
   value?: T;
@@ -64,13 +64,21 @@ export class NodeAnnotationDialog extends React.Component<Props> {
 
   submit = async () => {
     try {
-      this.node.metadata.labels["nuwa.kubernetes.io/host"] = this.host
-      this.node.metadata.labels["nuwa.kubernetes.io/rack"] = this.rack
-      this.node.metadata.labels["nuwa.kubernetes.io/zone"] = this.zone
+      const data = {
+        "node": NodeAnnotationDialog.data.getName(),
+        "host": this.host,
+        "rack": this.rack,
+        "zone": this.zone,
 
-      await nodesStore.update(this.node, {...this.node})
-
-      this.close();
+      };
+      await apiBase.post("/node/annotation/geo", { data }).
+        then((data) => {
+          this.close();
+        })
+      Notifications.ok(
+        <>
+          node annotation geo successed
+        </>);
     } catch (err) {
       Notifications.error(err);
     }
@@ -87,17 +95,17 @@ export class NodeAnnotationDialog extends React.Component<Props> {
       >
         <Wizard className="NodeAnnotationDialog" header={header} done={this.close}>
           <WizardStep contentClass="flex gaps column" next={this.submit}>
-            <SubTitle title={<Trans>nuwa.kubernetes.io/host</Trans>}/>
+            <SubTitle title={<Trans>nuwa.kubernetes.io/host</Trans>} />
             <Input
               autoFocus required
               value={this.host} onChange={v => this.host = v}
             />
-            <SubTitle title={<Trans>nuwa.kubernetes.io/rack</Trans>}/>
+            <SubTitle title={<Trans>nuwa.kubernetes.io/rack</Trans>} />
             <Input
               autoFocus required
               value={this.rack} onChange={v => this.rack = v}
             />
-            <SubTitle title={<Trans>nuwa.kubernetes.io/zone</Trans>}/>
+            <SubTitle title={<Trans>nuwa.kubernetes.io/zone</Trans>} />
             <Input
               autoFocus required
               value={this.zone} onChange={v => this.zone = v}
