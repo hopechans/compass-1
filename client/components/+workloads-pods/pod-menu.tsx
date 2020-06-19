@@ -40,7 +40,7 @@ export class PodMenu extends React.Component<Props> {
         if (!containers.length) return;
         return (
             <MenuItem onClick={prevDefault(() => this.execShell(containers[0].name))}>
-                <Icon material="keyboard" interactive={toolbar} title={_i18n._(t`Pod shell`)}/>
+                <Icon svg="ssh" interactive={toolbar} title={_i18n._(t`Pod shell`)}/>
                 <span className="title"><Trans>Shell</Trans></span>
                 {containers.length > 1 && (
                     <>

@@ -60,6 +60,9 @@ function onApiError(error: JsonApiErrorParsed, res: Response) {
             error.isUsedForNotification = true;
             Notifications.error(error);
             break;
+        case 500:
+            de_showMessage('500 Internal Server Error')
+            break;   
         case 502:
             de_showMessage('502 Bad Gateway')
             break;    
