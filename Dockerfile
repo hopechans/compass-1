@@ -1,6 +1,5 @@
 FROM node:14.3.0 AS builder
 WORKDIR /app 
-ADD . /app
 
 RUN npm install -g cnpm --registry=https://registry.npm.taobao.org
 RUN alias cnpm="npm --registry=https://registry.npm.taobao.org \
@@ -13,12 +12,18 @@ RUN cnpm install -g webpack
 RUN cnpm install yarn -g
 RUN  yarn config set registry https://registry.npm.taobao.org \
   && yarn config set sass-binary-site http://npm.taobao.org/mirrors/node-sass
+
+# Install package cache
+COPY package.json .
+COPY yarn.lock .
 RUN yarn install
+
+# Building
+COPY . .
 RUN yarn build
 
-FROM nginx
+FROM nginx:1.19.0
 COPY --from=builder app/dist /usr/share/nginx/html/
 COPY --from=builder app/nginx.conf /etc/nginx/nginx.conf
 
-#暴露容器80端口
 EXPOSE 80
