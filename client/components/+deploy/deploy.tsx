@@ -16,6 +16,7 @@ import { apiManager } from "../../api/api-manager";
 import { deployStore } from "./deploy.store";
 import { ConfigDeployDialog } from "./config-deploy-dialog";
 import { CopyAddDeployDialog } from "./copy-deploy-dialog";
+import {DeployDetails} from "./deploy-details";
 
 enum sortBy {
   templateName = "templateName",
@@ -110,4 +111,5 @@ export function DeployMenu(props: KubeObjectMenuProps<Deploy>) {
 
 apiManager.registerViews(deployApi, {
   Menu: DeployMenu,
+  Details: DeployDetails
 })
