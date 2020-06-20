@@ -1,12 +1,12 @@
 import React from "react";
-import {computed} from "mobx";
-import {observer} from "mobx-react";
-import {t, Trans} from "@lingui/macro";
-import {Select, SelectOption, SelectProps} from "../select";
-import {cssNames, noop} from "../../utils";
-import {Icon} from "../icon";
-import {_i18n} from "../../i18n";
-import {secretsStore} from "./secrets.store";
+import { computed } from "mobx";
+import { observer } from "mobx-react";
+import { t, Trans } from "@lingui/macro";
+import { Select, SelectOption, SelectProps } from "../select";
+import { cssNames, noop } from "../../utils";
+import { Icon } from "../icon";
+import { _i18n } from "../../i18n";
+import { secretsStore } from "./secrets.store";
 
 interface Props extends SelectProps {
   showIcons?: boolean;
@@ -42,34 +42,38 @@ export class SecretKeySelect extends React.Component<Props> {
   }
 
   @computed get options(): SelectOption[] {
-    const {customizeOptions, showClusterOption, clusterOptionLabel, name} = this.props;
+    const { customizeOptions, showClusterOption, clusterOptionLabel, name } = this.props;
     let options: SelectOption[];
     if (name != '') {
-      let item = secretsStore.items.find(item => item.getName() == name);
-      options = Object.keys(item.data).map(item => ({value: item}));
+      try {
+        let item = secretsStore.items.find(item => item.getName() == name);
+        options = Object.keys(item.data).map(item => ({ value: item }));
+      } catch (err) {
+        options = [];
+      }
     } else {
       options = [];
     }
     options = customizeOptions ? customizeOptions(options) : options;
     if (showClusterOption) {
-      options.unshift({value: null, label: clusterOptionLabel});
+      options.unshift({ value: null, label: clusterOptionLabel });
     }
     return options;
   }
 
   formatOptionLabel = (option: SelectOption) => {
-    const {showIcons} = this.props;
-    const {value, label} = option;
+    const { showIcons } = this.props;
+    const { value, label } = option;
     return label || (
       <>
-        {showIcons && <Icon small material="layers"/>}
+        {showIcons && <Icon small material="layers" />}
         {value}
       </>
     );
   }
 
   render() {
-    const {className, showIcons, showClusterOption, clusterOptionLabel, customizeOptions, ...selectProps} = this.props;
+    const { className, showIcons, showClusterOption, clusterOptionLabel, customizeOptions, ...selectProps } = this.props;
     return (
       <Select
         className={cssNames("ConfigMapsKeySelect", className)}

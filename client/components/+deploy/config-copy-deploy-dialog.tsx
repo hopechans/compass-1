@@ -1,21 +1,21 @@
 import "./config-copy-deploy-dialog.scss"
 
-import React, {ReactElement} from "react";
-import {observer} from "mobx-react";
-import {Dialog, DialogProps} from "../dialog";
-import {computed, observable} from "mobx";
-import {number, t, Trans} from "@lingui/macro";
-import {Wizard, WizardStep} from "../wizard";
-import {base, Container, container, MultiContainerDetails} from "../+deploy-container";
-import {Collapse} from "antd";
-import {deployService, DeployServiceDetails, Service} from "../+deploy-service";
-import {MultiVolumeClaimDetails, VolumeClaimTemplate} from "../+deploy-volumeclaim-dialog";
-import {app, App} from "../+deploy-app";
-import {AppDetails} from "../+deploy-app";
-import {Notifications} from "../notifications";
-import {Deploy, deployApi} from "../../api/endpoints"
+import React, { ReactElement } from "react";
+import { observer } from "mobx-react";
+import { Dialog, DialogProps } from "../dialog";
+import { computed, observable } from "mobx";
+import { number, t, Trans } from "@lingui/macro";
+import { Wizard, WizardStep } from "../wizard";
+import { base, Container, container, MultiContainerDetails } from "../+deploy-container";
+import { Collapse } from "antd";
+import { deployService, DeployServiceDetails, Service } from "../+deploy-service";
+import { MultiVolumeClaimDetails, VolumeClaimTemplate } from "../+deploy-volumeclaim-dialog";
+import { app, App } from "../+deploy-app";
+import { AppDetails } from "../+deploy-app";
+import { Notifications } from "../notifications";
+import { Deploy, deployApi } from "../../api/endpoints"
 
-const {Panel} = Collapse;
+const { Panel } = Collapse;
 
 interface Props extends DialogProps {
 
@@ -62,7 +62,7 @@ export class ConfigCopyAddDeployDialog extends React.Component<Props> {
   }
 
   updateDeploy = async () => {
-    const {app, containers, service, volumeClaims} = this;
+    const { app, containers, service, volumeClaims } = this;
     const deploy: Partial<Deploy> = {
       spec: {
         appName: app.name,
@@ -74,10 +74,10 @@ export class ConfigCopyAddDeployDialog extends React.Component<Props> {
     }
     try {
       await deployApi.create({
-          namespace: '',
-          name: ConfigCopyAddDeployDialog.data.metadata.name
-        },
-        {...deploy});
+        namespace: '',
+        name: ConfigCopyAddDeployDialog.data.metadata.name
+      },
+        { ...deploy });
       this.reset();
       this.close();
     } catch (err) {
@@ -86,8 +86,8 @@ export class ConfigCopyAddDeployDialog extends React.Component<Props> {
   }
 
   render() {
-    const {...dialogProps} = this.props;
-    const {app, containers, service, volumeClaims} = this;
+    const { ...dialogProps } = this.props;
+    const { app, containers, service, volumeClaims } = this;
     const header = <h5><Trans>Apply Deploy Workload</Trans></h5>;
     return (
       <Dialog
@@ -101,28 +101,28 @@ export class ConfigCopyAddDeployDialog extends React.Component<Props> {
             <div className="init-form">
               <Collapse defaultActiveKey={'App'}>
                 <Panel header={`App`} key="App">
-                  <AppDetails value={app} onChange={value => this.app = value}/>
+                  <AppDetails value={app} onChange={value => this.app = value} />
                 </Panel>
               </Collapse>
-              <br/>
-              <Collapse>
+              <br />
+              <Collapse activeKey={"MultiContainer"}>
                 <Panel key={"MultiContainer"} header={"Containers"}>
                   <MultiContainerDetails value={containers}
-                                         onChange={value => this.containers = value}/>
+                    onChange={value => this.containers = value} />
                 </Panel>
               </Collapse>
-              <br/>
-              <Collapse>
+              <br />
+              <Collapse activeKey={"MultiContainer"}>
                 <Panel key={"DeployService"} header={"Service"}>
                   <DeployServiceDetails value={service}
-                                        onChange={value => this.service = value}/>
+                    onChange={value => this.service = value} />
                 </Panel>
               </Collapse>
-              <br/>
-              <Collapse>
+              <br />
+              <Collapse activeKey={"MultiContainer"}>
                 <Panel key={"MultiVolumeClaim"} header={"VolumeClaims"}>
                   <MultiVolumeClaimDetails value={volumeClaims}
-                                           onChange={value => this.volumeClaims = value}/>
+                    onChange={value => this.volumeClaims = value} />
                 </Panel>
               </Collapse>
             </div>

@@ -181,7 +181,7 @@ export class BaseDetails extends React.Component<Props> {
           formatOptionLabel={this.formatOptionLabel}
           options={this.selectOptions}
           value={this.value.imagePullPolicy}
-          onChange={value => this.value.imagePullPolicy = value}
+          onChange={value => this.value.imagePullPolicy = value.value}
         />
         <br />
 

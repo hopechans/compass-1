@@ -42,16 +42,16 @@ export class EnvironmentDetails extends React.Component<Props> {
 
   get selectOptions() {
     return [
-      "Custom",
+      // "Custom",
       "ConfigMaps",
       "Secrets",
-      "Other"
+      // "Other"
     ]
   }
 
   add = () => {
     this.value.push({
-      type: "Custom",
+      type: "ConfigMaps",
       envConfig: {}
     });
   }
