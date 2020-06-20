@@ -1,14 +1,14 @@
-import {observer} from "mobx-react";
+import { observer } from "mobx-react";
 import React from "react";
-import {observable} from "mobx";
-import {ActionMeta} from "react-select/src/types";
-import {Select, SelectOption} from "../select";
-import {Icon} from "../icon";
-import {t, Trans} from "@lingui/macro";
-import {PipelineResources, pipelineResources} from "./common";
-import {Col, Row} from "antd";
-import {SubTitle} from "../layout/sub-title";
-import {_i18n} from "../../i18n";
+import { observable } from "mobx";
+import { ActionMeta } from "react-select/src/types";
+import { Select, SelectOption } from "../select";
+import { Icon } from "../icon";
+import { t, Trans } from "@lingui/macro";
+import { PipelineResources, pipelineResources } from "./common";
+import { Col, Row } from "antd";
+import { SubTitle } from "../layout/sub-title";
+import { _i18n } from "../../i18n";
 
 interface Props<T = any> extends Partial<Props> {
   value?: T;
@@ -33,21 +33,22 @@ export class PipelineResourceDetails extends React.Component<Props> {
 
   get nameOptions() {
     return [
-      ""
+      "",
     ]
   }
 
   get typeOptions() {
     return [
-      ""
+      "image",
+      "git"
     ]
   }
 
   formatOptionLabel = (option: SelectOption) => {
-    const {value, label} = option;
+    const { value, label } = option;
     return label || (
       <>
-        <Icon small material="layers"/>
+        <Icon small material="layers" />
         {value}
       </>
     );
@@ -77,7 +78,7 @@ export class PipelineResourceDetails extends React.Component<Props> {
                 <Trans>ResourceType</Trans>
               </Col>
             </Row>
-            <br/>
+            <br />
           </> : <></>}
 
         {this.value.map((item, index) => {
@@ -111,7 +112,7 @@ export class PipelineResourceDetails extends React.Component<Props> {
                   />
                 </Col>
               </Row>
-              <br/>
+              <br />
             </>
           );
         })}
