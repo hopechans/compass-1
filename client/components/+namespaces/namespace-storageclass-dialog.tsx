@@ -49,10 +49,6 @@ export class NamespaceStorageClasslimit extends React.Component<Props> {
         })
     }
 
-    reset = () => {
-        this.storageClasses = observable.array<any>([], { deep: false });
-    }
-
     updateAnnotate = async () => {
         const data = {
             namespace: NamespaceStorageClasslimit.namespace.getName(),
@@ -64,8 +60,7 @@ export class NamespaceStorageClasslimit extends React.Component<Props> {
 
         try {
             await apiBase.post("/namespaces/annotation/storageclass", { data }).
-                then((data) => {
-                    this.reset();
+                then(() => {
                     this.close();
                 })
             Notifications.ok(

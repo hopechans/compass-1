@@ -76,7 +76,6 @@ export class NamespaceNodeRangeLimitDialog extends React.Component<Props> {
         try {
             await apiBase.post("/namespaces/annotation/node", { data }).
                 then((data) => {
-                    this.reset();
                     this.close();
                 })
             Notifications.ok(
