@@ -95,8 +95,8 @@ export function StoneMenu(props: KubeObjectMenuProps<Stone>) {
   return (
     <KubeObjectMenu {...props} >
       <MenuItem onClick={() => ConfigStoneDialog.open(object)}>
-        <Icon material="power_settings_new" title={_i18n._(t`Strategy`)} interactive={toolbar}/>
-        <span className="title"><Trans>Strategy</Trans></span>
+        <Icon material="sync_alt" title={_i18n._(t`Config`)} interactive={toolbar}/>
+        <span className="title"><Trans>Config</Trans></span>
       </MenuItem>
     </KubeObjectMenu>
   )

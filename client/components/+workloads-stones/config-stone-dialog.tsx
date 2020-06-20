@@ -12,20 +12,32 @@ import {_i18n} from "../../i18n";
 import {Notifications} from "../notifications";
 import {Select} from "../select";
 import {stoneStore} from "./stones.store";
+import {Input} from "../input";
+import {isNumber} from "../input/input.validators";
 
 interface Props extends Partial<DialogProps> {
+}
+
+interface Coordinate {
+  group: string
+  replicas: number
+  zoneset: {
+    rack: string
+    host: string
+  }[]
 }
 
 @observer
 export class ConfigStoneDialog extends React.Component<Props> {
 
   @observable static isOpen = false;
-  @observable static Data: Stone = null
-  @observable strategy = "";
+  @observable static data: Stone = null
+  @observable strategy: string = "";
+  @observable coordinates: Coordinate[] = [];
 
   static open(object: Stone) {
     ConfigStoneDialog.isOpen = true;
-    ConfigStoneDialog.Data = object;
+    ConfigStoneDialog.data = object;
   }
 
   static close() {
@@ -39,6 +51,7 @@ export class ConfigStoneDialog extends React.Component<Props> {
   updateStone = async () => {
     try {
       this.stone.spec.strategy = this.strategy;
+      this.stone.spec.coordinates = this.coordinates;
       await stoneStore.update(this.stone, {...this.stone})
       this.close();
     } catch (err) {
@@ -55,15 +68,22 @@ export class ConfigStoneDialog extends React.Component<Props> {
     ]
   }
 
-  get stone() {
-    return ConfigStoneDialog.Data
+  get stone(): Stone {
+    return ConfigStoneDialog.data
   }
 
-  onOpen() {
+  onOpen = async () => {
+    console.log(this.stone)
     try {
       this.strategy = this.stone.spec.strategy;
     } catch (e) {
       this.strategy = "";
+    }
+
+    try {
+      this.coordinates = this.stone.spec.coordinates
+    } catch (e) {
+      this.coordinates = [];
     }
   }
 
@@ -79,16 +99,31 @@ export class ConfigStoneDialog extends React.Component<Props> {
         close={this.close}
       >
         <Wizard header={header} done={this.close}>
-          <WizardStep contentClass="flow column" nextLabel={<Trans>Config Strategy</Trans>} next={this.updateStone}>
-            <SubTitle title={<Trans>Stone</Trans>}/>
+          <WizardStep contentClass="flow column" nextLabel={<Trans>Config Stone</Trans>} next={this.updateStone}>
+            <SubTitle title={<Trans>Strategy</Trans>}/>
             <Select
               value={this.strategy}
-              placeholder={_i18n._(t`Strategy`)}
               options={this.options}
               themeName="light"
               className="box grow"
               onChange={value => this.strategy = value.value}
             />
+            {this.coordinates.map((item, index) => {
+              return (
+                <>
+                  <SubTitle title={<Trans>Replicas - </Trans>} children={this.coordinates[index].group}/>
+                  <Input
+                    required={true}
+                    placeholder={_i18n._(t`Request Replicas`)}
+                    type="number"
+                    validators={isNumber}
+                    min={0}
+                    value={String(this.coordinates[index].replicas)}
+                    onChange={value => this.coordinates[index].replicas = Number(value)}
+                  />
+                </>
+              )
+            })}
           </WizardStep>
         </Wizard>
       </Dialog>
