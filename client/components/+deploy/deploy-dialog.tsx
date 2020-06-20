@@ -1,4 +1,4 @@
-import "./copy-deploy-dialog.scss"
+import "./deploy-dialog.scss"
 
 import React, {ReactElement} from "react";
 import {observer} from "mobx-react";
@@ -23,7 +23,7 @@ interface Props extends DialogProps {
 }
 
 @observer
-export class CopyAddDeployDialog extends React.Component<Props> {
+export class AddDeployDialog extends React.Component<Props> {
 
   @observable static isOpen = false;
   @observable app: App = app;
@@ -32,15 +32,15 @@ export class CopyAddDeployDialog extends React.Component<Props> {
   @observable volumeClaims: VolumeClaimTemplate[] = [];
 
   static open() {
-    CopyAddDeployDialog.isOpen = true;
+    AddDeployDialog.isOpen = true;
   }
 
   static close() {
-    CopyAddDeployDialog.isOpen = false;
+    AddDeployDialog.isOpen = false;
   }
 
   close = () => {
-    CopyAddDeployDialog.close();
+    AddDeployDialog.close();
   }
 
   reset = () => {
@@ -77,7 +77,7 @@ export class CopyAddDeployDialog extends React.Component<Props> {
 
     return (
       <Dialog
-        isOpen={CopyAddDeployDialog.isOpen}
+        isOpen={AddDeployDialog.isOpen}
         close={this.close}
       >
         <Wizard className="CopyAddDeployDialog" header={header} done={this.close}>
