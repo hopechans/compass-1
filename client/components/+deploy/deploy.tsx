@@ -16,7 +16,6 @@ import { apiManager } from "../../api/api-manager";
 import { deployStore } from "./deploy.store";
 import { ConfigDeployDialog } from "./config-deploy-dialog";
 import { CopyAddDeployDialog } from "./copy-deploy-dialog";
-import { ConfigCopyAddDeployDialog } from "./config-copy-deploy-dialog";
 
 enum sortBy {
   templateName = "templateName",
@@ -37,8 +36,6 @@ export class Deploys extends React.Component<Props> {
     return (
       <MainLayout>
         <KubeObjectListLayout
-          onDetails={() => {
-          }}
           isClusterScoped
           className="Deploy" store={deployStore}
           sortingCallbacks={{
@@ -50,7 +47,6 @@ export class Deploys extends React.Component<Props> {
             [sortBy.age]: (deploy: Deploy) => deploy.getAge(false),
           }
           }
-
           searchFilters={
             [
               (deploy: Deploy) => deploy.getSearchFields(),
@@ -90,7 +86,6 @@ export class Deploys extends React.Component<Props> {
           }}
         />
         <CopyAddDeployDialog />
-        <ConfigCopyAddDeployDialog />
         <ConfigDeployDialog />
       </MainLayout>
     )
@@ -107,12 +102,6 @@ export function DeployMenu(props: KubeObjectMenuProps<Deploy>) {
         }}>
           <Icon material="play_circle_filled" title={_i18n._(t`Deploy`)} interactive={toolbar} />
           <span className="title"><Trans>Deploy</Trans></span>
-        </MenuItem>
-        <MenuItem onClick={() => {
-          ConfigCopyAddDeployDialog.open(object)
-        }}>
-          <Icon material="playlist_add" title={_i18n._(t`Config`)} interactive={toolbar} />
-          <span className="title"><Trans>Config</Trans></span>
         </MenuItem>
       </KubeObjectMenu>
     </>
