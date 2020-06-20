@@ -1,5 +1,3 @@
-import "./config-copy-deploy-dialog.scss"
-
 import React, { ReactElement } from "react";
 import { observer, disposeOnUnmount } from "mobx-react";
 import { Dialog, DialogProps } from "../dialog";
@@ -85,7 +83,6 @@ export class DeployDetails extends React.Component<Props> {
   render() {
     const { object: deploy } = this.props;
     const { app, containers, service, volumeClaims } = this;
-    console.log("render", deploy)
     return (
       <div className="DeployDetails">
         <KubeObjectMeta object={deploy} />
@@ -100,8 +97,3 @@ export class DeployDetails extends React.Component<Props> {
     )
   }
 }
-
-
-apiManager.registerViews(deployApi, {
-  Details: DeployDetails,
-})

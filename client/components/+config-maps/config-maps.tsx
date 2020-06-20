@@ -10,7 +10,6 @@ import {KubeObjectMenu, KubeObjectMenuProps} from "../kube-object";
 import {KubeObjectListLayout} from "../kube-object";
 import {IConfigMapsRouteParams} from "./config-maps.route";
 import {apiManager} from "../../api/api-manager";
-import {AddIngressDialog} from "../+network-ingresses/add-ingress-dialog";
 import {AddConfigMapDialog} from "./add-config-map-dialog";
 
 enum sortBy {
