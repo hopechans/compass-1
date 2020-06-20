@@ -227,6 +227,7 @@ G6.registerNode(
             }
 
             if (name === "click") {
+
                 let shape = group.get("children")[2];
                 shape.attr({ text: value });
             }

@@ -1,4 +1,4 @@
-import {observer} from "mobx-react";
+import { observer } from "mobx-react";
 import React from "react";
 import {
   PipelineParamsDetails,
@@ -6,15 +6,15 @@ import {
   TaskNameDetails,
   MultiTaskStepDetails, PipelineParams, PipelineResources, TaskStep, taskStep
 } from "../+tekton-task-detail";
-import {observable} from "mobx";
-import {Dialog} from "../dialog";
-import {Wizard, WizardStep} from "../wizard";
-import {Trans} from "@lingui/macro";
-import {ActionMeta} from "react-select/src/types";
-import {SubTitle} from "../layout/sub-title";
-import {Input} from "../input";
-import {_i18n} from "../../i18n";
-import {Task} from "../../api/endpoints";
+import { observable } from "mobx";
+import { Dialog } from "../dialog";
+import { Wizard, WizardStep } from "../wizard";
+import { Trans } from "@lingui/macro";
+import { ActionMeta } from "react-select/src/types";
+import { SubTitle } from "../layout/sub-title";
+import { Input } from "../input";
+import { _i18n } from "../../i18n";
+import { Task } from "../../api/endpoints";
 
 interface Props<T = any> extends Partial<Props> {
   value?: T;
@@ -42,9 +42,13 @@ export const task: TaskResult = {
 export class CopyTaskDialog extends React.Component<Props> {
   @observable value: TaskResult = this.props.value || task;
   @observable static isOpen = false;
+  @observable static graph: any;
+  @observable static node: any;
 
-  static open() {
+  static open(graph: any, node: any) {
     CopyTaskDialog.isOpen = true;
+    this.graph = graph;
+    this.node = node;
   }
 
   static close() {
@@ -55,8 +59,11 @@ export class CopyTaskDialog extends React.Component<Props> {
     CopyTaskDialog.close();
   }
 
-  handle = async () => {
-    console.log(this.value)
+  handle = () => {
+
+    CopyTaskDialog.graph.setTaskName(this.value.taskName, CopyTaskDialog.node);
+    CopyTaskDialog.close();
+
   }
 
   render() {
@@ -69,25 +76,25 @@ export class CopyTaskDialog extends React.Component<Props> {
       >
         <Wizard className="CopyAddDeployDialog" header={header} done={this.close}>
           <WizardStep contentClass="flex gaps column" next={this.handle}>
-            <SubTitle title={"Task Name"}/>
+            <SubTitle title={"Task Name"} />
             <Input
               required={true}
               placeholder={_i18n._("Task Name")}
               value={this.value.taskName}
               onChange={value => this.value.taskName = value}
             />
-            <br/>
+            <br />
             <PipelineParamsDetails value={this.value.pipelineParams} onChange={value => {
               this.value.pipelineParams = value
-            }}/>
-            <br/>
+            }} />
+            <br />
             <PipelineResourceDetails value={this.value.pipelineResources} onChange={value => {
               this.value.pipelineResources = value
-            }}/>
-            <br/>
+            }} />
+            <br />
             <MultiTaskStepDetails value={this.value.taskSteps} onChange={value => {
               this.value.taskSteps = value
-            }}/>
+            }} />
           </WizardStep>
         </Wizard>
       </Dialog>

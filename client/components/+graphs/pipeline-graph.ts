@@ -64,6 +64,7 @@ export class PipelineGraph {
                 const point = this.graph.getCanvasByPoint(x, y);
                 this.graph.addItem("node", {
                     id: tragetId,
+                    taskName: "",
                     x: Number(point.x) + 300,
                     y: Number(point.y),
                     anchorPoints: [
@@ -93,6 +94,7 @@ export class PipelineGraph {
                 const point = this.graph.getCanvasByPoint(x, y);
                 this.graph.addItem("node", {
                     id: tragetId,
+                    taskName: "",
                     x: Number(point.x),
                     y: Number(point.y) + 80,
                     anchorPoints: [
@@ -117,18 +119,20 @@ export class PipelineGraph {
             }
 
             callback(item);
-            // console.log("===========================================>:", this.graph.save());
-            // this.data = this.graph.save();
-            // console.log("===========================================>:", this.data)
-            // this.graph.clear();
-            // setTimeout(() => {
-            //     this.graph.changeData(this.data);
-            // }, 5000);
 
         });
     }
 
     public setTaskName(taskName: string, node: any): void {
+        let nodes = this.graph.save();
+        nodes.nodes.map((item: any, index: number) => {
+            if (node._cfg.id === item.id) {
+                item.taskName = taskName
+            }
+            nodes[index] = item;
+        })
+        console.log("=============================================>setTaskName: ", nodes)
+        this.graph.changeData(nodes);
         this.graph.setItemState(node, "click", taskName);
     }
 
@@ -176,7 +180,7 @@ export class PipelineGraph {
             renderer: "svg",
             modes: {
                 default: [
-                    "drag-node",
+                    // "drag-node",
                     {
                         type: "tooltip",
                         formatText: function formatText(model) {

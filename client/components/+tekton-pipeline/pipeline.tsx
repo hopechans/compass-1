@@ -53,11 +53,12 @@ export class Pipelines extends React.Component<Props> {
   componentDidMount() {
     this.graph = new PipelineGraph(0, 0);
     this.graph.bindClickOnNode((currentNode: any) => {
-      CopyTaskDialog.open();
       this.currentNode = currentNode;
+      CopyTaskDialog.open(this.graph, this.currentNode);
     });
     this.graph.bindMouseenter();
     this.graph.bindMouseleave();
+
   }
 
   showPipeline = (pipeline: Pipeline) => {
@@ -75,15 +76,35 @@ export class Pipelines extends React.Component<Props> {
           nodeData = tmp[1];
         }
       })
+    //
+    if (nodeData === undefined || nodeData === "") {
+      const data: any = {
+        nodes: [
+          {
+            id: "1-1",
+            x: 0,
+            y: 0,
+            taskName: "task1",
+            anchorPoints: [
+              [0, 0.5],
+              [1, 0.5],
+            ],
+          },
+        ],
+      };
+      this.graph.getGraph().changeData(data);
+    } else {
+      this.graph.getGraph().clear();
+      setTimeout(() => {
+        this.graph.getGraph().changeData(JSON.parse(nodeData));
+      }, 20);
+    }
 
-    this.graph.getGraph().clear();
-    this.graph.getGraph().changeData(JSON.parse(nodeData));
     this.pipeline = pipeline;
   }
 
   savePipeline = async () => {
     this.data = this.graph.getGraph().save();
-
     let items: Map<string, any> = new Map<string, any>();
 
     //存取node{id,...} => <id,node>
@@ -101,19 +122,23 @@ export class Pipelines extends React.Component<Props> {
 
     //通过map的关系，形成要提交的任务，组装数据。
     keys.map((item: any, index: number) => {
-      let task = new PipelineTask();
-      task.runAfter = [];
+
       if (b === 1) {
         let array = items.get(item);
+        let task = new PipelineTask();
+        task.runAfter = [];
         for (let i = 0; i < array.length; i++) {
           task.name = array[i].taskName;
           task.taskRef = { name: array[i].taskName };
         }
+        tasks.push(task);
       } else {
         let array1 = items.get(item);
         let tmp = b - 1;
         let array2 = items.get(tmp.toString());
         for (let i = 0; i < array1.length; i++) {
+          let task = new PipelineTask();
+          task.runAfter = [];
           task.name = array1[i].taskName;
           task.taskRef = { name: array1[i].taskName };
           //set task runAfter
@@ -121,26 +146,33 @@ export class Pipelines extends React.Component<Props> {
             task.runAfter[j] = array2[j].taskName;
             console.log(task.runAfter);
           }
+          tasks.push(task);
 
         }
       }
       b++;
-      tasks.push(task);
     });
 
 
 
+    console.log("====================================> tasks:", tasks);
+    const data = JSON.stringify(this.graph.getGraph().save());
     //更新对应的pipeline
     try {
       this.pipeline.metadata.labels = { namespace: configStore.getDefaultNamespace() }
-      this.pipeline.metadata.annotations = { "node_data": JSON.stringify(this.data) }
+      this.pipeline.metadata.annotations = { "node_data": data }
+      this.pipeline.spec.tasks = [];
       this.pipeline.spec.tasks.push(...tasks);
       await pipelineStore.update(this.pipeline, { ...this.pipeline });
     } catch (err) {
-      Notifications.error(err);
+      console.log(err);
+      // Notifications.error(err);
     }
-    //设置node的名字
-    this.graph.setTaskName(this.task.taskName, this.currentNode);
+
+    this.graph.getGraph().clear();
+    this.graph.getGraph().changeData(JSON.parse(data));
+
+
   }
 
   render() {
