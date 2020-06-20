@@ -15,6 +15,8 @@ import { SubTitle } from "../layout/sub-title";
 import { Input } from "../input";
 import { _i18n } from "../../i18n";
 import { Task } from "../../api/endpoints";
+import { taskStore } from "./task.store"
+import { configStore } from "../../../client/config.store";
 
 interface Props<T = any> extends Partial<Props> {
   value?: T;
@@ -62,7 +64,54 @@ export class CopyTaskDialog extends React.Component<Props> {
   handle = () => {
 
     CopyTaskDialog.graph.setTaskName(this.value.taskName, CopyTaskDialog.node);
+    this.saveTask();
     CopyTaskDialog.close();
+
+
+  }
+
+  saveTask = async () => {
+
+    let git: any;
+    let image: any;
+    let resources = this.value.pipelineResources;
+    for (let i = 0; i < resources.length; i++) {
+      if (resources[i].type === "git") {
+        git = image;
+      } else {
+        image = image;
+      }
+
+    }
+
+    try {
+      await taskStore.create({ name: this.value.taskName, namespace: 'ops' }, {
+        spec: {
+          inputs: {
+            resources: [{
+              name: git.name,
+              type: git.type,
+            }],
+          },
+          outputs: {
+            resources: [{
+              name: image.name,
+              type: image.type,
+            }],
+          },
+          steps: this.value.taskSteps,
+          volumes: [{
+            name: "build-path",
+            emptyDir: {},
+          }],
+        }
+
+      });
+
+    } catch (err) {
+      console.log(err);
+    }
+
 
   }
 
