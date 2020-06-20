@@ -15,7 +15,7 @@ import { IDeployWorkloadsParams } from "../+deploy";
 import { apiManager } from "../../api/api-manager";
 import { deployStore } from "./deploy.store";
 import { ConfigDeployDialog } from "./config-deploy-dialog";
-import { CopyAddDeployDialog } from "./copy-deploy-dialog";
+import { AddDeployDialog } from "./deploy-dialog";
 import {DeployDetails} from "./deploy-details";
 
 enum sortBy {
@@ -83,10 +83,10 @@ export class Deploys extends React.Component<Props> {
 
           addRemoveButtons={{
             addTooltip: <Trans>AddDeployDialog</Trans>,
-            onAdd: () => CopyAddDeployDialog.open()
+            onAdd: () => AddDeployDialog.open()
           }}
         />
-        <CopyAddDeployDialog />
+        <AddDeployDialog />
         <ConfigDeployDialog />
       </MainLayout>
     )

@@ -86,6 +86,24 @@ export class DeployDetails extends React.Component<Props> {
     return (
       <div className="DeployDetails">
         <KubeObjectMeta object={deploy} />
+
+        <AppDetails value={app} onChange={value => this.app = value} />
+
+        <br />
+
+        <MultiContainerDetails value={containers}
+          onChange={value => this.containers = value} />
+
+        <br />
+
+        <DeployServiceDetails value={service}
+          onChange={value => this.service = value} />
+
+        <br />
+
+        <MultiVolumeClaimDetails value={volumeClaims}
+          onChange={value => this.volumeClaims = value} />
+
         <Button
           primary
           label={<Trans>Save</Trans>} waiting={this.isSaving}
