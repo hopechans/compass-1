@@ -9,9 +9,8 @@ import {EnvironmentDetails} from "../+deploy-container/env-details";
 import {TaskStep, taskStep} from "./common";
 import {SubTitle} from "../layout/sub-title";
 import {WorkspacesDetails} from "./workspaces-details";
-import {WorkDirDetails} from "./workdir-details";
 import {ResultsDetails} from "./results-details";
-import {ScriptDetails} from "./script-details";
+import {_i18n} from "../../i18n";
 
 interface Props<T = any> extends Partial<Props> {
   value?: T;
@@ -47,9 +46,13 @@ export class TaskStepDetails extends React.Component<Props> {
           onChange={value => (this.value.image = value)}
         />
         <br/>
-        <WorkDirDetails
+        <SubTitle title={"Working Dir"}/>
+        <Input
+          required={true}
+          placeholder={_i18n._("Working Dir")}
           value={this.value.workingDir}
-          onChange={value => this.value.workingDir = value}/>
+          onChange={value => this.value.workingDir = value}
+        />
         <br/>
         <ArgsDetails
           value={this.value.args}
@@ -79,7 +82,15 @@ export class TaskStepDetails extends React.Component<Props> {
           onChange={value => this.value.results = value}/>
         <br/>
         <Divider/>
-        <ScriptDetails />
+        <SubTitle title={"Scripts"}/>
+        <Input
+          required={true}
+          multiLine={true}
+          maxRows={10}
+          placeholder={_i18n._("Scripts")}
+          value={this.value.scripts}
+          onChange={value => this.value.scripts = value}
+        />
       </>
     )
   }

@@ -207,7 +207,7 @@ export class Pipelines extends React.Component<Props> {
           }}
           onDetails={(pipeline: Pipeline) => { this.showPipeline(pipeline) }}
         />
-        <CopyTaskDialog value={this.task} onChange={value => this.task = value} />
+        <CopyTaskDialog />
         <AddPipelineDialog />
       </>
     );
