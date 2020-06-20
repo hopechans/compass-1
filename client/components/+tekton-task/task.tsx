@@ -55,7 +55,7 @@ export class Tasks extends React.Component<Props> {
           addRemoveButtons={{
             addTooltip: <Trans>Task</Trans>,
             onAdd: () => {
-              CopyTaskDialog.open()
+              // CopyTaskDialog.open()
             }
           }}
         />
