@@ -27,8 +27,8 @@ export class Pipeline extends KubeObject {
     spec: {
         resources: {
             name: string;
-            type: Map<string, boolean>;
-        };
+            type: string;
+        }[];
         tasks: PipelineTask[];
         params: ParamSpec[];
     }

@@ -42,7 +42,13 @@ export class AddPipelineDialog extends React.Component<Props> {
 
   submit = async () => {
     try {
-      await pipelineApi.create({ name: this.value, namespace: "" });
+      await pipelineApi.create({ name: this.value, namespace: "ops" }, {
+        spec: {
+          resources: [{ name: "", type: "" }],
+          tasks: [],
+          params: [],
+        }
+      });
       this.reset();
       this.close();
     } catch (err) {
