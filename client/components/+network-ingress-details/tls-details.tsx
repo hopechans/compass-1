@@ -8,10 +8,11 @@ import { Tls, tls } from "./common";
 import { Divider, Row, Col } from "antd";
 import { Icon } from "../icon";
 import { t, Trans } from "@lingui/macro";
-import { BackendDetails } from "./backend-details";
 import { Input } from "../input";
 import { SecretsSelect } from "../+config-secrets/secrets-select";
 import { NamespaceSelect } from "../+namespaces/namespace-select";
+import { Button } from "../button/button";
+import { TlsHostsDetails } from "./tls-hosts";
 
 interface Props<T = any> extends Partial<Props> {
   value?: T;
@@ -51,52 +52,32 @@ export class TlsDetails extends React.Component<Props> {
   render() {
     return (
       <>
-        <SubTitle className="fields-title" title="Transport Layer Security">{this.renderAdd()}</SubTitle>
+        <Button primary onClick={() => this.add()}><span>Add Tls</span></Button>
+        <br />
+        <br />
+
         <div className="Tls">
-          {this.value.map((item, index) => {
+          {this.value.map((item, tlsIndex) => {
             return (
               <>
-                <div key={index}>
+                <div key={tlsIndex}>
                   <Icon
                     small
-                    tooltip={<Trans>Remove Secret Name</Trans>}
+                    tooltip={<Trans>Remove Tls</Trans>}
                     className="remove-icon"
                     material="remove_circle_outline"
                     onClick={(e) => {
-                      this.remove(index);
+                      this.remove(tlsIndex);
                       e.stopPropagation();
                     }}
                   />
+                  <br /> <br />
 
-                  <SubTitle title={"Tls Hosts"} />
-                  {this.value[index].hosts.map((hostItem, hostIndex) => {
-                    <div key={index}>
-                      <Row>
-                        <Col span="23">
-                          <Input
-                            className="item"
-                            placeholder={_i18n._(t`host`)}
-                            value={this.value[index].hosts[hostIndex]}
-                            onChange={value => {
-                              this.value[index].hosts[hostIndex] = value
-                            }}
-                          />
-                        </Col>
-                        <Col span="1">
-                          <Icon
-                            small
-                            tooltip={<Trans>Remove Command</Trans>}
-                            className="remove-icon"
-                            material="remove_circle_outline"
-                            onClick={(e) => {
-                              this.remove(hostIndex);
-                              e.stopPropagation()
-                            }}
-                          />
-                        </Col>
-                      </Row>
-                    </div>
-                  })}
+                  <TlsHostsDetails
+                    divider={true}
+                    value={this.value[tlsIndex].hosts}
+                    onChange={value => this.value[tlsIndex].hosts = value}
+                  />
 
                   <SubTitle title={"Tls Secret Namespace"} />
                   <NamespaceSelect
@@ -107,12 +88,11 @@ export class TlsDetails extends React.Component<Props> {
                   <SubTitle title={"Tls Secret Name"} />
                   <SecretsSelect
                     required autoFocus
-                    value={this.value[index].secretName}
+                    value={this.value[tlsIndex].secretName}
                     namespace={this.namespace}
-                    onChange={value => this.value[index].secretName = value.value}
+                    onChange={value => this.value[tlsIndex].secretName = value.value}
                   />
                 </div>
-
               </>
             )
           })}
