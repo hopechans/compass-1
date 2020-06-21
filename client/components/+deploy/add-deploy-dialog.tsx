@@ -1,4 +1,4 @@
-import "./config-deploy-dialog.scss"
+import "./add-deploy-dialog.scss"
 
 import React, {ReactElement} from "react";
 import {observer} from "mobx-react";
@@ -15,7 +15,6 @@ import {AppDetails} from "../+deploy-app";
 import {deployStore} from "./deploy.store";
 import {Notifications} from "../notifications";
 import {configStore} from "../../config.store";
-import {Deploy} from "../../api/endpoints";
 
 const {Panel} = Collapse;
 
@@ -24,30 +23,24 @@ interface Props extends DialogProps {
 }
 
 @observer
-export class ConfigDeployDialog extends React.Component<Props> {
+export class AddDeployDialog extends React.Component<Props> {
 
   @observable static isOpen = false;
-  @observable static Data: Deploy = null;
   @observable app: App = app;
   @observable service: Service = deployService;
   @observable containers: Container[] = [container];
   @observable volumeClaims: VolumeClaimTemplate[] = [];
 
-  static open(object: Deploy) {
-    ConfigDeployDialog.isOpen = true;
-    ConfigDeployDialog.Data = object;
-  }
-
-  get deploy() {
-    return ConfigDeployDialog.Data
+  static open() {
+    AddDeployDialog.isOpen = true;
   }
 
   static close() {
-    ConfigDeployDialog.isOpen = false;
+    AddDeployDialog.isOpen = false;
   }
 
   close = () => {
-    ConfigDeployDialog.close();
+    AddDeployDialog.close();
   }
 
   reset = () => {
@@ -57,27 +50,18 @@ export class ConfigDeployDialog extends React.Component<Props> {
     this.volumeClaims = [];
   }
 
-  onOpen = () => {
-    this.app = {
-      name: this.deploy.spec.appName,
-      type: this.deploy.spec.resourceType
-    };
-    this.containers = JSON.parse(this.deploy.spec.metadata);
-    this.service = JSON.parse(this.deploy.spec.service);
-    this.volumeClaims = JSON.parse(this.deploy.spec.volumeClaims);
-  }
-
-  updateDeploy = async () => {
+  addDeployDialog = async () => {
     try {
-      const newDeploy = await deployStore.update(this.deploy, {
-        spec: {
-          appName: this.app.name,
-          resourceType: this.app.type,
-          metadata: JSON.stringify(this.containers),
-          service: JSON.stringify(this.service),
-          volumeClaims: JSON.stringify(this.volumeClaims),
-        },
-      });
+      const newDeploy = await deployStore.create(
+        {name: this.app.name + '-' + Math.floor(Date.now() / 1000), namespace: ''}, {
+          spec: {
+            appName: this.app.name,
+            resourceType: this.app.type,
+            metadata: JSON.stringify(this.containers),
+            service: JSON.stringify(this.service),
+            volumeClaims: JSON.stringify(this.volumeClaims),
+          },
+        });
       // label the resource labels
       newDeploy.metadata.labels = {namespace: configStore.getDefaultNamespace()}
       await deployStore.update(newDeploy, {...newDeploy});
@@ -89,16 +73,15 @@ export class ConfigDeployDialog extends React.Component<Props> {
   }
 
   render() {
-    const header = <h5><Trans>Config Deploy Workload</Trans></h5>;
+    const header = <h5><Trans>Apply Deploy Workload</Trans></h5>;
 
     return (
       <Dialog
-        isOpen={ConfigDeployDialog.isOpen}
-        onOpen={this.onOpen}
+        isOpen={AddDeployDialog.isOpen}
         close={this.close}
       >
-        <Wizard className="ConfigDeployDialog" header={header} done={this.close}>
-          <WizardStep contentClass="flex gaps column" next={this.updateDeploy}>
+        <Wizard className="AddDeployDialog" header={header} done={this.close}>
+          <WizardStep contentClass="flex gaps column" next={this.addDeployDialog}>
             <div className="init-form">
               <Collapse defaultActiveKey={'App'}>
                 <Panel header={`App`} key="App">
@@ -106,21 +89,21 @@ export class ConfigDeployDialog extends React.Component<Props> {
                 </Panel>
               </Collapse>
               <br/>
-              <Collapse defaultActiveKey={"MultiContainer"}>
+              <Collapse>
                 <Panel key={"MultiContainer"} header={"Containers"}>
                   <MultiContainerDetails value={this.containers}
                                          onChange={value => this.containers = value}/>
                 </Panel>
               </Collapse>
               <br/>
-              <Collapse defaultActiveKey={"DeployService"}>
+              <Collapse>
                 <Panel key={"DeployService"} header={"Service"}>
                   <DeployServiceDetails value={this.service}
                                         onChange={value => this.service = value}/>
                 </Panel>
               </Collapse>
               <br/>
-              <Collapse defaultActiveKey={"MultiVolumeClaim"}>
+              <Collapse>
                 <Panel key={"MultiVolumeClaim"} header={"VolumeClaims"}>
                   <MultiVolumeClaimDetails value={this.volumeClaims}
                                            onChange={value => this.volumeClaims = value}/>

@@ -1,114 +1,105 @@
-import "./deploy-dialog.scss"
-
-import React, {ReactElement} from "react";
+import React from "react";
 import {observer} from "mobx-react";
 import {Dialog, DialogProps} from "../dialog";
-import {computed, observable} from "mobx";
-import {number, t, Trans} from "@lingui/macro";
+import {observable} from "mobx";
+import {Namespace} from "../../api/endpoints";
+import {Input} from "../input"
 import {Wizard, WizardStep} from "../wizard";
-import {Container, container, MultiContainerDetails} from "../+deploy-container";
-import {Collapse} from "antd";
-import {deployService, DeployServiceDetails, Service} from "../+deploy-service";
-import {MultiVolumeClaimDetails, VolumeClaimTemplate} from "../+deploy-volumeclaim-dialog";
-import {app, App} from "../+deploy-app";
-import {AppDetails} from "../+deploy-app";
-import {deployStore} from "./deploy.store";
+import {t, Trans} from "@lingui/macro";
+import {SubTitle} from "../layout/sub-title";
+import {_i18n} from "../../i18n";
+import {NamespaceSelect} from "../+namespaces/namespace-select";
+import {apiBase} from "../../api";
 import {Notifications} from "../notifications";
-import {configStore} from "../../config.store";
 
-const {Panel} = Collapse;
-
-interface Props extends DialogProps {
-
+interface Props extends Partial<DialogProps> {
 }
 
 @observer
-export class AddDeployDialog extends React.Component<Props> {
+export class DeployDialog extends React.Component<Props> {
 
   @observable static isOpen = false;
-  @observable app: App = app;
-  @observable service: Service = deployService;
-  @observable containers: Container[] = [container];
-  @observable volumeClaims: VolumeClaimTemplate[] = [];
+  @observable static appName = "";
+  @observable static templateName = "";
+  @observable namespace = "";
+  @observable replicas = "1";
 
-  static open() {
-    AddDeployDialog.isOpen = true;
+  static open(appName: string, templateName: string) {
+    DeployDialog.isOpen = true;
+    DeployDialog.appName = appName;
+    DeployDialog.templateName = templateName;
   }
 
   static close() {
-    AddDeployDialog.isOpen = false;
+    DeployDialog.isOpen = false;
+  }
+
+  get appName() {
+    return DeployDialog.appName;
+  }
+
+  get templateName() {
+    return DeployDialog.templateName;
   }
 
   close = () => {
-    AddDeployDialog.close();
+    DeployDialog.close();
   }
 
   reset = () => {
-    this.app = app;
-    this.service = deployService;
-    this.containers = [container];
-    this.volumeClaims = [];
+    DeployDialog.appName = "";
+    DeployDialog.templateName = "";
+    this.namespace = "";
   }
 
-  addDeployDialog = async () => {
+  updateDeploy = async () => {
+    const data = {
+      appName: this.appName,
+      templateName: this.templateName,
+      namespace: this.namespace,
+      replicas: this.replicas,
+    }
     try {
-      const newDeploy = await deployStore.create(
-        {name: this.app.name + '-' + Math.floor(Date.now() / 1000), namespace: ''}, {
-          spec: {
-            appName: this.app.name,
-            resourceType: this.app.type,
-            metadata: JSON.stringify(this.containers),
-            service: JSON.stringify(this.service),
-            volumeClaims: JSON.stringify(this.volumeClaims),
-          },
-        });
-      // label the resource labels
-      newDeploy.metadata.labels = {namespace: configStore.getDefaultNamespace()}
-      await deployStore.update(newDeploy, {...newDeploy});
-      this.reset();
-      this.close();
+      await apiBase.post("/deploy", {data}).then((data) => {
+        this.reset();
+        this.close();
+      })
     } catch (err) {
       Notifications.error(err);
     }
   }
 
   render() {
-    const header = <h5><Trans>Apply Deploy Workload</Trans></h5>;
-
+    const {...dialogProps} = this.props;
+    const header = <h5><Trans>Deploy</Trans></h5>;
     return (
       <Dialog
-        isOpen={AddDeployDialog.isOpen}
+        {...dialogProps}
+        className="ConfigDeployDialog"
+        isOpen={DeployDialog.isOpen}
         close={this.close}
       >
-        <Wizard className="CopyAddDeployDialog" header={header} done={this.close}>
-          <WizardStep contentClass="flex gaps column" next={this.addDeployDialog}>
-            <div className="init-form">
-              <Collapse defaultActiveKey={'App'}>
-                <Panel header={`App`} key="App">
-                  <AppDetails value={this.app} onChange={value => this.app = value}/>
-                </Panel>
-              </Collapse>
-              <br/>
-              <Collapse>
-                <Panel key={"MultiContainer"} header={"Containers"}>
-                  <MultiContainerDetails value={this.containers}
-                                         onChange={value => this.containers = value}/>
-                </Panel>
-              </Collapse>
-              <br/>
-              <Collapse>
-                <Panel key={"DeployService"} header={"Service"}>
-                  <DeployServiceDetails value={this.service}
-                                        onChange={value => this.service = value}/>
-                </Panel>
-              </Collapse>
-              <br/>
-              <Collapse>
-                <Panel key={"MultiVolumeClaim"} header={"VolumeClaims"}>
-                  <MultiVolumeClaimDetails value={this.volumeClaims}
-                                           onChange={value => this.volumeClaims = value}/>
-                </Panel>
-              </Collapse>
+        <Wizard header={header} done={this.close}>
+          <WizardStep contentClass="flow column" nextLabel={<Trans>Create</Trans>}
+                      next={this.updateDeploy}>
+            <div className="namespace">
+              <SubTitle title={<Trans>Namespace</Trans>}/>
+              <NamespaceSelect
+                value={this.namespace}
+                placeholder={_i18n._(t`Namespace`)}
+                themeName="light"
+                className="box grow"
+                onChange={(v) => {
+                  this.namespace = v
+                }}
+              />
+              <SubTitle title={<Trans>Replicas</Trans>}/>
+              <Input
+                autoFocus
+                placeholder={_i18n._(t`Replicas`)}
+                value={this.replicas}
+                onChange={v => this.replicas = v}
+              />
             </div>
           </WizardStep>
         </Wizard>
