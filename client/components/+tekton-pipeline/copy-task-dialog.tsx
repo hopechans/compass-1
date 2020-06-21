@@ -72,7 +72,7 @@ export class CopyTaskDialog extends React.Component<Props> {
     const defaultNameSpace = 'ops';
     const task = taskStore.getByName(name, defaultNameSpace);
     if (task !== undefined) {
-      task.spec.inputs.resources?.map((item: any, index: number) => {
+      task.spec.inputs?.resources?.map((item: any, index: number) => {
         this.value.pipelineResources[index].name = item.name;
         this.value.pipelineResources[index].type = item.type;
       });
@@ -84,6 +84,7 @@ export class CopyTaskDialog extends React.Component<Props> {
       });
       this.value.taskSteps = task.spec.steps;
       this.value.volumes = task.spec.volumes;
+      this.value.taskName = task.metadata.name;
     }
 
   }
