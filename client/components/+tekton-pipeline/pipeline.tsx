@@ -23,6 +23,7 @@ import { Icon } from "../icon";
 import { AddPipelineDialog } from "./add-pipeline-dialog";
 import { configStore } from "../../../client/config.store";
 import { Notifications } from "../notifications";
+import { taskStore } from "./task.store"
 
 enum sortBy {
   name = "name",
@@ -183,7 +184,7 @@ export class Pipelines extends React.Component<Props> {
         <KubeObjectListLayout
           className="Pipelines"
           store={pipelineStore}
-          dependentStores={[podsStore, nodesStore, eventStore]} // other
+          dependentStores={[podsStore, nodesStore, eventStore, taskStore]} // other
           sortingCallbacks={{
             [sortBy.name]: (pipeline: Pipeline) => pipeline.getName(),
             [sortBy.namespace]: (pipeline: Pipeline) => pipeline.getNs(),
