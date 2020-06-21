@@ -137,11 +137,14 @@ export class Task extends KubeObject {
         volumes?: Volume[];
     }
 
+    getOwnerNamespace(): string {
+        return this.metadata.labels.namespace || "";
+    }
 }
 
 export const taskApi = new KubeApi({
     kind: Task.kind,
     apiBase: "/apis/tekton.dev/v1alpha1/tasks",
-    isNamespaced: false,
+    isNamespaced: true,
     objectConstructor: Task,
 });

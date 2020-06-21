@@ -38,8 +38,8 @@ export class ErrorBoundary extends React.Component<Props, State> {
   render() {
     const { error, errorInfo } = this.state;
     if (error) {
-      const slackLink = <a href="https://slack.kontena.io" target="_blank">Kontena Slack</a>
-      const githubLink = <a href="https://github.com/kontena/lens/issues" target="_blank">Kontena Github</a>
+      const slackLink = <a href="https://github.com/yametech" target="_blank">Yametech GitHub</a>
+      const githubLink = <a href="https://github.com/yametech/issues" target="_blank">Yametech GitHub</a>
       const pageUrl = location.href;
       return (
         <div className="ErrorBoundary flex column gaps">
@@ -58,7 +58,7 @@ export class ErrorBoundary extends React.Component<Props, State> {
               {errorInfo.componentStack}
             </code>
             <code className="box grow">
-              <p className="contrast"><Trans>Error stack</Trans>:</p> <br/>
+              <p className="contrast"><Trans>Error stack</Trans>:</p> <br />
               {error.stack}
             </code>
           </div>
