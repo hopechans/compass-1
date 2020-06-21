@@ -27,7 +27,7 @@ import { taskStore } from "./task.store"
 
 enum sortBy {
   name = "name",
-  namespace = "namespace",
+  ownernamespace = "ownernamespace",
   tasks = "tasks",
   tasknames = "tasknames",
   age = "age",
@@ -184,10 +184,10 @@ export class Pipelines extends React.Component<Props> {
         <KubeObjectListLayout
           className="Pipelines"
           store={pipelineStore}
-          dependentStores={[podsStore, nodesStore, eventStore, taskStore]} // other
+          dependentStores={[podsStore, eventStore, taskStore]} // other
           sortingCallbacks={{
             [sortBy.name]: (pipeline: Pipeline) => pipeline.getName(),
-            [sortBy.namespace]: (pipeline: Pipeline) => pipeline.getNs(),
+            [sortBy.ownernamespace]: (pipeline: Pipeline) => pipeline.getOwnerNamespace(),
             [sortBy.age]: (pipeline: Pipeline) => pipeline.getAge(false),
             [sortBy.tasks]: (pipeline: Pipeline) => pipeline.getTasks().length,
           }}
@@ -200,9 +200,9 @@ export class Pipelines extends React.Component<Props> {
               sortBy: sortBy.name,
             },
             {
-              title: <Trans>Namespace</Trans>,
-              className: "namespace",
-              sortBy: sortBy.namespace,
+              title: <Trans>OwnerNamespace</Trans>,
+              className: "ownernamespace",
+              sortBy: sortBy.ownernamespace,
             },
             {
               title: <Trans>Tasks</Trans>,
@@ -218,7 +218,7 @@ export class Pipelines extends React.Component<Props> {
           ]}
           renderTableContents={(pipeline: Pipeline) => [
             pipeline.getName(),
-            pipeline.getNs(),
+            pipeline.getOwnerNamespace(),
             pipeline.getTasks().length,
             pipeline.getTaskSet().map((task) => <p key={task}>{task}</p>),
             pipeline.getAge(),

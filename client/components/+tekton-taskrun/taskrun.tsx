@@ -12,7 +12,7 @@ import {apiManager} from "../../api/api-manager";
 
 enum sortBy {
   name = "name",
-  namespace = "namespace",
+  ownernamespace = "ownernamespace",
   pods = "pods",
   age = "age",
 }
@@ -28,7 +28,7 @@ export class TaskRuns extends React.Component<Props> {
         className="TaskRun" store={taskRunStore}
         sortingCallbacks={{
           [sortBy.name]: (taskRun: TaskRun) => taskRun.getName(),
-          [sortBy.namespace]: (taskRun: TaskRun) => taskRun.getNs(),
+          [sortBy.ownernamespace]: (taskRun: TaskRun) => taskRun.getOwnerNamespace(),
           [sortBy.age]: (taskRun: TaskRun) => taskRun.getAge(false),
         }}
         searchFilters={[
@@ -37,12 +37,12 @@ export class TaskRuns extends React.Component<Props> {
         renderHeaderTitle={<Trans>TaskRun</Trans>}
         renderTableHeader={[
           {title: <Trans>Name</Trans>, className: "name", sortBy: sortBy.name},
-          {title: <Trans>Namespace</Trans>, className: "namespace", sortBy: sortBy.namespace},
+          {title: <Trans>OwnerNamespace</Trans>, className: "ownernamespace", sortBy: sortBy.ownernamespace},
           {title: <Trans>Age</Trans>, className: "age", sortBy: sortBy.age},
         ]}
         renderTableContents={(taskRun: TaskRun) => [
           taskRun.getName(),
-          taskRun.getNs(),
+          taskRun.getOwnerNamespace(),
           taskRun.getAge(),
         ]}
         renderItemMenu={(item: TaskRun) => {
