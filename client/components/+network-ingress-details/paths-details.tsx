@@ -48,7 +48,7 @@ export class PathsDetails extends React.Component<Props> {
   render() {
     return (
       <>
-        <SubTitle className="fields-title" title="HTTP Paths">{this.renderAdd()}</SubTitle>
+        <SubTitle className="fields-title" title="HTTP.Paths">{this.renderAdd()}</SubTitle>
         <div className="Results">
           {this.value.map((item, index) => {
             return (

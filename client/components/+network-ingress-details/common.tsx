@@ -17,13 +17,23 @@ export interface Rule {
   http: Http;
 }
 
+export interface Tls {
+  hosts: string[];
+  secretName: string;
+}
+
+export const tls: Tls = {
+  hosts: [""],
+  secretName: "",
+}
+
 export const backend: Backend = {
   serviceName: "",
-  servicePort: "80"
+  servicePort: ""
 }
 
 export const path: Path = {
-  path: '',
+  path: "",
   backend: backend
 }
 
