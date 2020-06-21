@@ -1,15 +1,18 @@
-import {observer} from "mobx-react";
+import { observer } from "mobx-react";
 import React from "react";
-import {observable} from "mobx";
-import {SubTitle} from "../layout/sub-title";
-import {_i18n} from "../../i18n";
-import {ActionMeta} from "react-select/src/types";
-import {backend, Backend, path, Path} from "./common";
-import {Divider} from "antd";
-import {Icon} from "../icon";
-import {t, Trans} from "@lingui/macro";
-import {BackendDetails} from "./backend-details";
-import {Input} from "../input";
+import { observable } from "mobx";
+import { SubTitle } from "../layout/sub-title";
+import { _i18n } from "../../i18n";
+import { ActionMeta } from "react-select/src/types";
+import { Tls, tls } from "./common";
+import { Divider, Row, Col } from "antd";
+import { Icon } from "../icon";
+import { t, Trans } from "@lingui/macro";
+import { Input } from "../input";
+import { SecretsSelect } from "../+config-secrets/secrets-select";
+import { NamespaceSelect } from "../+namespaces/namespace-select";
+import { Button } from "../button/button";
+import { TlsHostsDetails } from "./tls-hosts";
 
 interface Props<T = any> extends Partial<Props> {
   value?: T;
@@ -21,10 +24,11 @@ interface Props<T = any> extends Partial<Props> {
 @observer
 export class TlsDetails extends React.Component<Props> {
 
-  @observable value: string[] = this.props.value || []
+  @observable value: Tls[] = this.props.value || [tls];
+  @observable namespace: string = "";
 
   add = () => {
-    this.value.push("");
+    this.value.push(tls);
   }
 
   remove = (index: number) => {
@@ -48,30 +52,47 @@ export class TlsDetails extends React.Component<Props> {
   render() {
     return (
       <>
-        <SubTitle className="fields-title" title="Transport Layer Security">{this.renderAdd()}</SubTitle>
+        <Button primary onClick={() => this.add()}><span>Add Tls</span></Button>
+        <br />
+        <br />
+
         <div className="Tls">
-          {this.value.map((item, index) => {
+          {this.value.map((item, tlsIndex) => {
             return (
               <>
-                <div key={index}>
+                <div key={tlsIndex}>
                   <Icon
                     small
-                    tooltip={<Trans>Remove Secret Name</Trans>}
+                    tooltip={<Trans>Remove Tls</Trans>}
                     className="remove-icon"
                     material="remove_circle_outline"
                     onClick={(e) => {
-                      this.remove(index);
+                      this.remove(tlsIndex);
                       e.stopPropagation();
                     }}
                   />
-                  <SubTitle title={"Secret Name"}/>
-                  <Input
-                    required={true}
-                    value={this.value[index]}
-                    onChange={value => this.value[index] = value}
+                  <br /> <br />
+
+                  <TlsHostsDetails
+                    divider={true}
+                    value={this.value[tlsIndex].hosts}
+                    onChange={value => this.value[tlsIndex].hosts = value}
+                  />
+
+                  <SubTitle title={"Tls Secret Namespace"} />
+                  <NamespaceSelect
+                    required autoFocus
+                    value={this.namespace}
+                    onChange={value => this.namespace = value.value}
+                  />
+                  <SubTitle title={"Tls Secret Name"} />
+                  <SecretsSelect
+                    required autoFocus
+                    value={this.value[tlsIndex].secretName}
+                    namespace={this.namespace}
+                    onChange={value => this.value[tlsIndex].secretName = value.value}
                   />
                 </div>
-                <br/>
               </>
             )
           })}

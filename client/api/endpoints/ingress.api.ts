@@ -36,6 +36,7 @@ export class Ingress extends KubeObject {
 
   spec: {
     tls: {
+      hosts: string[];
       secretName: string;
     }[];
     rules?: {
