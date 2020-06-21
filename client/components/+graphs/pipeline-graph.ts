@@ -131,7 +131,6 @@ export class PipelineGraph {
             }
             nodes[index] = item;
         })
-        console.log("=============================================>setTaskName: ", nodes)
         this.graph.changeData(nodes);
         this.graph.setItemState(node, "click", taskName);
     }

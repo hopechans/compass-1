@@ -26,11 +26,19 @@ interface Props<T = any> extends Partial<Props> {
   themeName?: "dark" | "light" | "outlined";
 }
 
+
+class Volume {
+  name: string;
+  emptyDir: any;
+}
+
+
 export interface TaskResult {
   taskName: string
   pipelineParams: PipelineParams[];
   pipelineResources: PipelineResources[],
   taskSteps: TaskStep[],
+  volumes?: Volume[],
 }
 
 export const task: TaskResult = {
@@ -38,6 +46,7 @@ export const task: TaskResult = {
   pipelineParams: [],
   pipelineResources: [],
   taskSteps: [taskStep],
+  volumes: [],
 }
 
 @observer
@@ -46,12 +55,39 @@ export class CopyTaskDialog extends React.Component<Props> {
   @observable static isOpen = false;
   @observable static graph: any;
   @observable static node: any;
+  @observable static data: any;
 
   static open(graph: any, node: any) {
     CopyTaskDialog.isOpen = true;
     this.graph = graph;
     this.node = node;
   }
+
+
+  onOpen = () => {
+
+    const group = CopyTaskDialog.node.getContainer();
+    let shape = group.get("children")[2];
+    const name = shape.attrs.text;
+    const defaultNameSpace = 'ops';
+    const task = taskStore.getByName(name, defaultNameSpace);
+    if (task !== undefined) {
+      task.spec.inputs.resources?.map((item: any, index: number) => {
+        this.value.pipelineResources[index].name = item.name;
+        this.value.pipelineResources[index].type = item.type;
+      });
+      task.params?.map((item: any, index: number) => {
+        this.value.pipelineParams[index].default = item.default;
+        this.value.pipelineParams[index].description = item.description;
+        this.value.pipelineParams[index].name = item.name;
+        this.value.pipelineParams[index].type = item.type;
+      });
+      this.value.taskSteps = task.spec.steps;
+      this.value.volumes = task.spec.volumes;
+    }
+
+  }
+
 
   static close() {
     CopyTaskDialog.isOpen = false;
@@ -88,15 +124,12 @@ export class CopyTaskDialog extends React.Component<Props> {
       await taskStore.create({ name: this.value.taskName, namespace: 'ops' }, {
         spec: {
           inputs: {
-            resources: [{
-              name: git.name,
-              type: git.type,
-            }],
+            resources: [],
           },
           outputs: {
             resources: [{
-              name: image.name,
-              type: image.type,
+              name: 'test',
+              type: 'image',
             }],
           },
           steps: this.value.taskSteps,
@@ -121,6 +154,7 @@ export class CopyTaskDialog extends React.Component<Props> {
     return (
       <Dialog
         isOpen={CopyTaskDialog.isOpen}
+        onOpen={this.onOpen}
         close={this.close}
       >
         <Wizard className="CopyAddDeployDialog" header={header} done={this.close}>
