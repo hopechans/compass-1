@@ -7,7 +7,7 @@ import { RouteComponentProps } from "react-router";
 import { Trans } from "@lingui/macro";
 import { Pipeline, pipelineApi, TaskRef, Task, PipelineTask } from "../../api/endpoints";
 import { podsStore } from "../+workloads-pods/pods.store";
-import { pipelineStore } from "./pipeline.store";
+import { pipelineStore } from "../+tekton/pipeline.store";
 import { nodesStore } from "../+nodes/nodes.store";
 import { eventStore } from "../+events/event.store";
 import { KubeObjectMenu, KubeObjectMenuProps } from "../kube-object";
@@ -23,7 +23,7 @@ import { Icon } from "../icon";
 import { AddPipelineDialog } from "./add-pipeline-dialog";
 import { configStore } from "../../../client/config.store";
 import { Notifications } from "../notifications";
-import { taskStore } from "./task.store"
+import { taskStore } from "../+tekton/task.store"
 
 enum sortBy {
   name = "name",
@@ -77,7 +77,7 @@ export class Pipelines extends React.Component<Props> {
           nodeData = tmp[1];
         }
       })
-    //
+    this.graph.getGraph().clear();
     if (nodeData === undefined || nodeData === "") {
       const data: any = {
         nodes: [
@@ -93,9 +93,9 @@ export class Pipelines extends React.Component<Props> {
           },
         ],
       };
+
       this.graph.getGraph().changeData(data);
     } else {
-      this.graph.getGraph().clear();
       setTimeout(() => {
         this.graph.getGraph().changeData(JSON.parse(nodeData));
       }, 20);
@@ -155,8 +155,6 @@ export class Pipelines extends React.Component<Props> {
     });
 
 
-
-    console.log("====================================> tasks:", tasks);
     const data = JSON.stringify(this.graph.getGraph().save());
     //更新对应的pipeline
     try {
@@ -184,7 +182,7 @@ export class Pipelines extends React.Component<Props> {
         <KubeObjectListLayout
           className="Pipelines"
           store={pipelineStore}
-          dependentStores={[podsStore, eventStore, taskStore]} // other
+          dependentStores={[pipelineStore, podsStore, eventStore, taskStore]} // other
           sortingCallbacks={{
             [sortBy.name]: (pipeline: Pipeline) => pipeline.getName(),
             [sortBy.ownernamespace]: (pipeline: Pipeline) => pipeline.getOwnerNamespace(),

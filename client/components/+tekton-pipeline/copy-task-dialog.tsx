@@ -15,7 +15,7 @@ import { SubTitle } from "../layout/sub-title";
 import { Input } from "../input";
 import { _i18n } from "../../i18n";
 import { Task } from "../../api/endpoints";
-import { taskStore } from "./task.store"
+import { taskStore } from "../+tekton/task.store"
 import { configStore } from "../../../client/config.store";
 
 interface Props<T = any> extends Partial<Props> {
@@ -76,7 +76,7 @@ export class CopyTaskDialog extends React.Component<Props> {
         this.value.pipelineResources[index].name = item.name;
         this.value.pipelineResources[index].type = item.type;
       });
-      task.params?.map((item: any, index: number) => {
+      task.spec?.params?.map((item: any, index: number) => {
         this.value.pipelineParams[index].default = item.default;
         this.value.pipelineParams[index].description = item.description;
         this.value.pipelineParams[index].name = item.name;
@@ -121,9 +121,11 @@ export class CopyTaskDialog extends React.Component<Props> {
 
     }
 
+    const params = this.value.pipelineParams;
     try {
       await taskStore.create({ name: this.value.taskName, namespace: 'ops' }, {
         spec: {
+          params: params,
           inputs: {
             resources: [],
           },
