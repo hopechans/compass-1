@@ -5,7 +5,7 @@ import { Wizard, WizardStep } from "../wizard";
 import { computed, observable } from "mobx";
 import { observer } from "mobx-react";
 import { Notifications } from "../notifications";
-import { subNetStore } from "./subnet.route";
+import { subNetStore } from "./subnet.store";
 import { SubTitle } from "../layout/sub-title";
 import { Input } from "../input";
 import { _i18n } from "../../i18n";

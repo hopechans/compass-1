@@ -124,11 +124,16 @@ export class PipelineRun extends KubeObject {
         completionTime: number | string;
         taskRuns: Map<string, any>;
     };
+
+
+    getOwnerNamespace(): string {
+        return this.metadata.labels.namespace || "";
+    }
 }
 
 export const pipelineRunApi = new KubeApi({
     kind: PipelineRun.kind,
     apiBase: "/apis/tekton.dev/v1alpha1/pipelineruns",
-    isNamespaced: false,
+    isNamespaced: true,
     objectConstructor: PipelineRun,
 });

@@ -10,6 +10,7 @@ import { Dialog } from "../dialog";
 import { Wizard, WizardStep } from "../wizard";
 import { pipelineApi } from "../../api/endpoints";
 import { Notifications } from "../notifications";
+import { configStore } from "../../../client/config.store";
 
 interface Props<T = any> extends Partial<Props> {
   value?: T;
@@ -42,13 +43,16 @@ export class AddPipelineDialog extends React.Component<Props> {
 
   submit = async () => {
     try {
-      await pipelineApi.create({ name: this.value, namespace: "ops" }, {
+      let newPipeline = await pipelineApi.create({ name: this.value, namespace: "" }, {
         spec: {
           resources: [{ name: "", type: "" }],
           tasks: [],
           params: [],
         }
       });
+      // label the resource labels if the admin the namespace label default
+      newPipeline.metadata.labels = { namespace: configStore.getDefaultNamespace() || "default" }
+      await newPipeline.update(newPipeline);
       this.reset();
       this.close();
     } catch (err) {
