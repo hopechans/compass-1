@@ -106,7 +106,7 @@ export class AddIngressDialog extends React.Component<Props> {
             </Collapse>
             <br />
             <Collapse>
-              <Panel key={"Tls"} header={"Tls"}>
+              <Panel key={"Transport Layer Security"} header={"Transport Layer Security"}>
                 <TlsDetails
                   value={this.tls}
                   onChange={value => this.tls = value}
