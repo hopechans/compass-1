@@ -82,16 +82,14 @@ export class StorageClasses extends React.Component<Props> {
 export function StorageClassMenu(props: KubeObjectMenuProps<StorageClass>) {
     const { object, toolbar } = props;
     return (
-        <>
-            <KubeObjectMenu {...props} >
-                <MenuItem onClick={() => {
-                    ConfigStorageClassDialog.open(object)
-                }}>
-                    <Icon material="settings" title={_i18n._(t`Config`)} interactive={toolbar} />
-                    <span className="title"><Trans>Config</Trans></span>
-                </MenuItem>
-            </KubeObjectMenu>
-        </>
+        <KubeObjectMenu {...props} >
+            <MenuItem onClick={() => {
+                ConfigStorageClassDialog.open(object)
+            }}>
+                <Icon material="settings" title={_i18n._(t`Config`)} interactive={toolbar} />
+                <span className="title"><Trans>Config</Trans></span>
+            </MenuItem>
+        </KubeObjectMenu>
     )
 }
 

@@ -1,4 +1,4 @@
-import "./add-quota-dialog.scss";
+import "./add-resource-quota-dialog.scss";
 
 import React from "react";
 import { computed, observable } from "mobx";
@@ -21,7 +21,7 @@ interface Props extends DialogProps {
 }
 
 @observer
-export class AddQuotaDialog extends React.Component<Props> {
+export class AddResourceQuotaDialog extends React.Component<Props> {
   @observable static isOpen = false;
 
   static defaultQuotas: IResourceQuotaValues = {
@@ -51,14 +51,14 @@ export class AddQuotaDialog extends React.Component<Props> {
   @observable quotaSelectValue = "";
   @observable quotaInputValue = "";
   @observable namespace = this.defaultNamespace;
-  @observable quotas = AddQuotaDialog.defaultQuotas;
+  @observable quotas = AddResourceQuotaDialog.defaultQuotas;
 
   static open() {
-    AddQuotaDialog.isOpen = true;
+    AddResourceQuotaDialog.isOpen = true;
   }
 
   static close() {
-    AddQuotaDialog.isOpen = false;
+    AddResourceQuotaDialog.isOpen = false;
   }
 
   @computed get quotaEntries() {
@@ -86,7 +86,7 @@ export class AddQuotaDialog extends React.Component<Props> {
   }
 
   close = () => {
-    AddQuotaDialog.close();
+    AddResourceQuotaDialog.close();
   }
 
   reset = () => {
@@ -94,7 +94,7 @@ export class AddQuotaDialog extends React.Component<Props> {
     this.quotaSelectValue = "";
     this.quotaInputValue = "";
     this.namespace = this.defaultNamespace;
-    this.quotas = AddQuotaDialog.defaultQuotas;
+    this.quotas = AddResourceQuotaDialog.defaultQuotas;
   }
 
   addQuota = async () => {
@@ -130,8 +130,8 @@ export class AddQuotaDialog extends React.Component<Props> {
     return (
       <Dialog
         {...dialogProps}
-        className="AddQuotaDialog"
-        isOpen={AddQuotaDialog.isOpen}
+        className="AddResourceQuotaDialog"
+        isOpen={AddResourceQuotaDialog.isOpen}
         close={this.close}
       >
         <Wizard header={header} done={this.close}>
