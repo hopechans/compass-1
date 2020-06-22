@@ -7,6 +7,8 @@ import {ContainerDetails} from "./container-details";
 import {observable} from "mobx";
 import {DeleteOutlined} from '@ant-design/icons';
 import {container, Container} from "./common";
+import {_i18n} from "../../i18n";
+import {t} from "@lingui/macro";
 
 const {Panel} = Collapse;
 
@@ -57,7 +59,7 @@ export class MultiContainerDetails extends React.Component<Props> {
       if (this.value.length > 1) {
         return (
           <Popconfirm
-            title="Confirm Delete?"
+            title={_i18n._(`Confirm Delete?`)}
             onConfirm={(event: any) => {
               event.preventDefault();
               event.stopPropagation();
@@ -67,8 +69,8 @@ export class MultiContainerDetails extends React.Component<Props> {
               event.preventDefault();
               event.stopPropagation();
             }}
-            okText="Yes"
-            cancelText="No">
+            okText={_i18n._(`Yes`)}
+            cancelText={_i18n._(`No`)}>
             <DeleteOutlined
               translate style={{color: '#ff4d4f'}}
               onClick={(event) => {
@@ -84,12 +86,12 @@ export class MultiContainerDetails extends React.Component<Props> {
 
     return (
       <>
-        <Button primary onClick={() => this.add()}><span>Addition Container</span></Button>
+        <Button primary onClick={() => this.add()}><span>{_i18n._(t`Addition Container`)}</span></Button>
         <br/><br/>
         <Collapse>
           {this.value.map((item, index) => {
             return (
-              <Panel header={`Container`} key={index} extra={genExtra(index)}>
+              <Panel header={_i18n._(t`Container`)} key={index} extra={genExtra(index)}>
                 <ContainerDetails
                   base={true}
                   commands={true}

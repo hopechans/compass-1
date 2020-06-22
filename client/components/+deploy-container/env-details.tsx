@@ -1,20 +1,20 @@
-import { ActionMeta } from "react-select/src/types";
-import { observer } from "mobx-react";
+import {ActionMeta} from "react-select/src/types";
+import {observer} from "mobx-react";
 import React from "react";
-import { SubTitle } from "../layout/sub-title";
-import { Icon } from "../icon";
-import { _i18n } from "../../i18n";
-import { t, Trans } from "@lingui/macro";
-import { Select, SelectOption } from "../select";
-import { Input } from "../input";
-import { observable } from "mobx";
-import { environment, Environment } from "./common";
-import { Divider, Row, Col } from "antd";
-import { SecretsSelect } from "../+config-secrets/secrets-select";
-import { NamespaceSelect } from "../+namespaces/namespace-select";
-import { ConfigMapsSelect } from "../+config-maps/config-maps-select";
-import { ConfigMapsKeySelect } from "../+config-maps/config-maps-key-select";
-import { SecretKeySelect } from "../+config-secrets/secret-key-select";
+import {SubTitle} from "../layout/sub-title";
+import {Icon} from "../icon";
+import {_i18n} from "../../i18n";
+import {t, Trans} from "@lingui/macro";
+import {Select, SelectOption} from "../select";
+import {Input} from "../input";
+import {observable} from "mobx";
+import {environment, Environment} from "./common";
+import {Divider, Row, Col} from "antd";
+import {SecretsSelect} from "../+config-secrets/secrets-select";
+import {NamespaceSelect} from "../+namespaces/namespace-select";
+import {ConfigMapsSelect} from "../+config-maps/config-maps-select";
+import {ConfigMapsKeySelect} from "../+config-maps/config-maps-key-select";
+import {SecretKeySelect} from "../+config-secrets/secret-key-select";
 
 interface Props<T = any> extends Partial<Props> {
   value?: T;
@@ -31,10 +31,10 @@ export class EnvironmentDetails extends React.Component<Props> {
   @observable namespace: string = "";
 
   formatOptionLabel = (option: SelectOption) => {
-    const { value } = option;
+    const {value} = option;
     return (
       <>
-        <Icon small material="layers" />
+        <Icon small material="layers"/>
         {value}
       </>
     );
@@ -78,8 +78,8 @@ export class EnvironmentDetails extends React.Component<Props> {
 
     return (
       <>
-        {this.props.divider ? <Divider /> : <></>}
-        <SubTitle className="fields-title" title="Environment">{this.renderAdd()}</SubTitle>
+        {this.props.divider ? <Divider/> : <></>}
+        <SubTitle className="fields-title" title={<Trans>Environment</Trans>}>{this.renderAdd()}</SubTitle>
         <div className="Environment">
           {this.value.map((item, index) => {
             return (
@@ -87,7 +87,7 @@ export class EnvironmentDetails extends React.Component<Props> {
                 <div key={index}>
                   <Icon
                     small
-                    tooltip={<Trans>Remove Environment</Trans>}
+                    tooltip={_i18n._(t`Remove Environment`)}
                     className="remove-icon"
                     material="remove_circle_outline"
                     onClick={(e) => {
@@ -95,7 +95,7 @@ export class EnvironmentDetails extends React.Component<Props> {
                       e.stopPropagation();
                     }}
                   />
-                  <br /><br />
+                  <SubTitle title={<Trans>Environment Type</Trans>}/>
                   <Select
                     formatOptionLabel={this.formatOptionLabel}
                     options={this.selectOptions}
@@ -107,14 +107,14 @@ export class EnvironmentDetails extends React.Component<Props> {
                   {
                     this.value[index].type == "Custom" ?
                       <>
-                        <SubTitle title={<Trans>Environment</Trans>} />
+                        <SubTitle title={<Trans>Environment</Trans>}/>
                         <Input
                           required={true}
                           placeholder={_i18n._(t`Environment`)}
                           value={this.value[index].envConfig.name}
                           onChange={value => this.value[index].envConfig.name = value}
                         />
-                        <SubTitle title={<Trans>Value</Trans>} />
+                        <SubTitle title={<Trans>Value</Trans>}/>
                         <Input
                           required={true}
                           placeholder={_i18n._(t`Value`)}
@@ -126,18 +126,18 @@ export class EnvironmentDetails extends React.Component<Props> {
                   {
                     this.value[index].type == "ConfigMaps" ?
                       <>
-                        <SubTitle title={<Trans>Environment</Trans>} />
+                        <SubTitle title={<Trans>Environment</Trans>}/>
                         <Input
                           required={true}
                           placeholder={_i18n._(t`Environment`)}
                           value={this.value[index].envConfig.name}
                           onChange={value => this.value[index].envConfig.name = value}
                         />
-                        <br />
+                        <br/>
 
                         <Row justify="space-between">
                           <Col span="10">
-                            <SubTitle title={<Trans>ConfigMap Namespace</Trans>} />
+                            <SubTitle title={<Trans>ConfigMap Namespace</Trans>}/>
                             <NamespaceSelect
                               required autoFocus
                               value={this.namespace}
@@ -145,7 +145,7 @@ export class EnvironmentDetails extends React.Component<Props> {
                             />
                           </Col>
                           <Col span="10">
-                            <SubTitle title={<Trans>ConfigMap Name</Trans>} />
+                            <SubTitle title={<Trans>ConfigMap Name</Trans>}/>
                             <ConfigMapsSelect
                               required autoFocus
                               value={this.value[index].envConfig.configName}
@@ -154,7 +154,7 @@ export class EnvironmentDetails extends React.Component<Props> {
                             />
                           </Col>
                         </Row>
-                        <SubTitle title={<Trans>ConfigMap Key</Trans>} />
+                        <SubTitle title={<Trans>ConfigMap Key</Trans>}/>
                         <ConfigMapsKeySelect
                           required autoFocus
                           value={this.value[index].envConfig.configKey}
@@ -166,17 +166,17 @@ export class EnvironmentDetails extends React.Component<Props> {
                   {
                     this.value[index].type == "Secrets" ?
                       <>
-                        <SubTitle title={<Trans>Environment</Trans>} />
+                        <SubTitle title={<Trans>Environment</Trans>}/>
                         <Input
                           required={true}
                           placeholder={_i18n._(t`Environment`)}
                           value={this.value[index].envConfig.name}
                           onChange={value => this.value[index].envConfig.name = value}
                         />
-                        <br />
+                        <br/>
                         <Row justify="space-between">
                           <Col span="10">
-                            <SubTitle title={<Trans>Secret Namespace</Trans>} />
+                            <SubTitle title={<Trans>Secret Namespace</Trans>}/>
                             <NamespaceSelect
                               required autoFocus
                               value={this.namespace}
@@ -184,7 +184,7 @@ export class EnvironmentDetails extends React.Component<Props> {
                             />
                           </Col>
                           <Col span="10">
-                            <SubTitle title={<Trans>Secret Name</Trans>} />
+                            <SubTitle title={<Trans>Secret Name</Trans>}/>
                             <SecretsSelect
                               required autoFocus
                               value={this.value[index].envConfig.secretName}
@@ -193,7 +193,7 @@ export class EnvironmentDetails extends React.Component<Props> {
                             />
                           </Col>
                         </Row>
-                        <SubTitle title={<Trans>Secret Key</Trans>} />
+                        <SubTitle title={<Trans>Secret Key</Trans>}/>
                         <SecretKeySelect
                           required autoFocus
                           value={this.value[index].envConfig.secretKey}
@@ -205,7 +205,7 @@ export class EnvironmentDetails extends React.Component<Props> {
                   {
                     this.value[index].type == "Other" ?
                       <>
-                        <SubTitle title={<Trans>Command</Trans>} />
+                        <SubTitle title={<Trans>Command</Trans>}/>
                         <Input
                           required={true}
                           placeholder={_i18n._(t`Command`)}
@@ -217,7 +217,7 @@ export class EnvironmentDetails extends React.Component<Props> {
                       </> : <></>
                   }
                 </div>
-                <br />
+                <br/>
               </>
             )
           })}

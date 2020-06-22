@@ -50,7 +50,6 @@ export class Deploys extends React.Component<Props> {
             [
               (deploy: Deploy) => deploy.getSearchFields(),
             ]}
-
           renderHeaderTitle={< Trans> Deploys </Trans>}
           renderTableHeader={
             [
@@ -65,7 +64,6 @@ export class Deploys extends React.Component<Props> {
               },
               {title: <Trans>Age</Trans>, className: "age", sortBy: sortBy.age},
             ]}
-
           renderTableContents={(deploy: Deploy) => [
             deploy.getAppName(),
             deploy.getName(),
@@ -74,19 +72,17 @@ export class Deploys extends React.Component<Props> {
             deploy.getGenerateTimestamp(),
             deploy.getAge(),
           ]}
-
           renderItemMenu={(item: Deploy) => {
             return <DeployMenu object={item}/>
           }}
-
           addRemoveButtons={{
             addTooltip: <Trans>AddDeployDialog</Trans>,
             onAdd: () => AddDeployDialog.open()
           }}
         />
+        <DeployDialog/>
         <AddDeployDialog/>
         <ConfigDeployDialog/>
-        <DeployDialog/>
       </MainLayout>
     )
   }
@@ -95,20 +91,22 @@ export class Deploys extends React.Component<Props> {
 export function DeployMenu(props: KubeObjectMenuProps<Deploy>) {
   const {object, toolbar} = props;
   return (
-    <KubeObjectMenu {...props} >
-      <MenuItem onClick={() => {
-        DeployDialog.open(object.getAppName(), object.getName())
-      }}>
-        <Icon material="play_circle_filled" title={_i18n._(t`Deploy`)} interactive={toolbar}/>
-        <span className="title"><Trans>Deploy</Trans></span>
-      </MenuItem>
-      <MenuItem onClick={() => {
-        ConfigDeployDialog.open(object)
-      }}>
-        <Icon material="sync_alt" title={_i18n._(t`Config`)} interactive={toolbar}/>
-        <span className="title"><Trans>Config</Trans></span>
-      </MenuItem>
-    </KubeObjectMenu>
+    <>
+      <KubeObjectMenu {...props} >
+        <MenuItem onClick={() => {
+          DeployDialog.open(object.getAppName(), object.getName())
+        }}>
+          <Icon material="play_circle_filled" title={_i18n._(t`Deploy`)} interactive={toolbar}/>
+          <span className="title"><Trans>Deploy</Trans></span>
+        </MenuItem>
+        <MenuItem onClick={() => {
+          ConfigDeployDialog.open(object)
+        }}>
+          <Icon material="sync_alt" title={_i18n._(t`Config`)} interactive={toolbar}/>
+          <span className="title"><Trans>Config</Trans></span>
+        </MenuItem>
+      </KubeObjectMenu>
+    </>
   )
 }
 

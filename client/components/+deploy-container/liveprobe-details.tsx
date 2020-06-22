@@ -90,7 +90,7 @@ export class LiveprobeDetails extends React.Component<Props> {
                   />
                   <SubTitle title={<Trans>InitialDelay</Trans>}/>
                   <Input
-                    placeholder={_i18n._(t`InitialDelay`)}
+                    placeholder={_i18n._(t`Initial Delay`)}
                     type="number"
                     validators={isNumber}
                     value={this.value.delay}
@@ -98,7 +98,7 @@ export class LiveprobeDetails extends React.Component<Props> {
                   />
                 </Col>
               </Row>
-              <br/>
+              <SubTitle title={<Trans>Pattern Type</Trans>}/>
               <Select
                 formatOptionLabel={this.formatOptionLabel}
                 options={this.selectOptions}
