@@ -129,8 +129,8 @@ class Volume {
 @autobind()
 export class Task extends KubeObject {
     static kind = "Task"
-    params?: Params[];
     spec: {
+        params?: PipelineParams[];
         inputs?: Inputs;
         outputs?: Outputs;
         steps?: Step[];
