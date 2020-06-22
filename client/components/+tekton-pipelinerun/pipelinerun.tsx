@@ -1,20 +1,21 @@
 import "./pipelinerun.scss";
 
 import React from "react";
-import {observer} from "mobx-react";
-import {RouteComponentProps} from "react-router";
-import {Trans} from "@lingui/macro";
-import {PipelineRun, pipelineRunApi} from "../../api/endpoints";
-import {podsStore} from "../+workloads-pods/pods.store";
-import {pipelineRunStore} from "./pipelinerun.store";
-import {nodesStore} from "../+nodes/nodes.store";
-import {eventStore} from "../+events/event.store";
-import {KubeObjectMenu, KubeObjectMenuProps} from "../kube-object/kube-object-menu";
-import {KubeObjectListLayout} from "../kube-object";
-import {apiManager} from "../../api/api-manager";
-import {observable} from "mobx";
-import {PipelineGraph} from "../+graphs/pipeline-graph"
-import {Graph} from "../+graphs/graph"
+import { observer } from "mobx-react";
+import { RouteComponentProps } from "react-router";
+import { Trans } from "@lingui/macro";
+import { PipelineRun, pipelineRunApi } from "../../api/endpoints";
+import { podsStore } from "../+workloads-pods/pods.store";
+import { pipelineRunStore } from "../+tekton/pipelinerun.store";
+import { pipelineStore } from "../+tekton/pipeline.store";
+import { nodesStore } from "../+nodes/nodes.store";
+import { eventStore } from "../+events/event.store";
+import { KubeObjectMenu, KubeObjectMenuProps } from "../kube-object/kube-object-menu";
+import { KubeObjectListLayout } from "../kube-object";
+import { apiManager } from "../../api/api-manager";
+import { observable } from "mobx";
+import { PipelineGraph } from "../+graphs/pipeline-graph"
+import { Graph } from "../+graphs/graph"
 
 enum sortBy {
   name = "name",
@@ -40,6 +41,35 @@ export class PipelineRuns extends React.Component<Props> {
     this.graph.bindMouseleave();
   }
 
+
+  //show  pipeline 
+  showCurrentPipelineStatus(pipelinerun: PipelineRun) {
+    if (PipelineRuns.isHiddenPipelineGraph === undefined) {
+      PipelineRuns.isHiddenPipelineGraph = true;
+    }
+    PipelineRuns.isHiddenPipelineGraph ? PipelineRuns.isHiddenPipelineGraph = false : PipelineRuns.isHiddenPipelineGraph = true
+
+    const pipeline = pipelineStore.getByName(pipelinerun.spec.pipelineRef.name);
+    let nodeData: any;
+    pipeline.getAnnotations()
+      .filter((item) => {
+        const tmp = item.split("=");
+        if (tmp[0] == "node_data") {
+          nodeData = tmp[1];
+        }
+      });
+    if (nodeData === undefined || nodeData === "") {
+      this.graph.getGraph().clear();
+    } else {
+      this.graph.getGraph().clear();
+      setTimeout(() => {
+        this.graph.getGraph().changeData(JSON.parse(nodeData));
+      }, 20);
+
+    }
+
+  }
+
   render() {
 
     return (
@@ -47,27 +77,22 @@ export class PipelineRuns extends React.Component<Props> {
         <Graph open={PipelineRuns.isHiddenPipelineGraph} showSave={true}></Graph>
 
         <KubeObjectListLayout
-          className="PipelineRuns" store={pipelineRunStore}
+
+          className="PipelineRuns" store={pipelineRunStore} dependentStores={[pipelineStore]}
           sortingCallbacks={{
             [sortBy.name]: (pipelineRun: PipelineRun) => pipelineRun.getName(),
             [sortBy.ownernamespace]: (pipelineRun: PipelineRun) => pipelineRun.getOwnerNamespace(),
             [sortBy.age]: (pipelineRun: PipelineRun) => pipelineRun.getAge(false),
           }}
-          onDetails={() => {
-            if (PipelineRuns.isHiddenPipelineGraph === undefined) {
-              PipelineRuns.isHiddenPipelineGraph = true;
-            }
-            PipelineRuns.isHiddenPipelineGraph ? PipelineRuns.isHiddenPipelineGraph = false : PipelineRuns.isHiddenPipelineGraph = true
-            console.log(PipelineRuns.isHiddenPipelineGraph);
-          }}
+          onDetails={(pipeline: PipelineRun) => { this.showCurrentPipelineStatus(pipeline) }}
           searchFilters={[
             (pipelineRun: PipelineRun) => pipelineRun.getSearchFields(),
           ]}
           renderHeaderTitle={<Trans>PipelineRuns</Trans>}
           renderTableHeader={[
-            {title: <Trans>Name</Trans>, className: "name", sortBy: sortBy.name},
-            {title: <Trans>OwnerNamespace</Trans>, className: "ownernamespace", sortBy: sortBy.ownernamespace},
-            {title: <Trans>Age</Trans>, className: "age", sortBy: sortBy.age},
+            { title: <Trans>Name</Trans>, className: "name", sortBy: sortBy.name },
+            { title: <Trans>OwnerNamespace</Trans>, className: "ownernamespace", sortBy: sortBy.ownernamespace },
+            { title: <Trans>Age</Trans>, className: "age", sortBy: sortBy.age },
           ]}
           renderTableContents={(pipelineRun: PipelineRun) => [
             pipelineRun.getName(),
@@ -75,7 +100,7 @@ export class PipelineRuns extends React.Component<Props> {
             pipelineRun.getAge(),
           ]}
           renderItemMenu={(item: PipelineRun) => {
-            return <PipelineRunMenu object={item}/>
+            return <PipelineRunMenu object={item} />
           }}
         />
       </div>
@@ -89,4 +114,4 @@ export function PipelineRunMenu(props: KubeObjectMenuProps<PipelineRun>) {
   )
 }
 
-apiManager.registerViews(pipelineRunApi, {Menu: PipelineRunMenu,})
+apiManager.registerViews(pipelineRunApi, { Menu: PipelineRunMenu, })
