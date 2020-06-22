@@ -75,7 +75,7 @@ export class DeployDialog extends React.Component<Props> {
     return (
       <Dialog
         {...dialogProps}
-        className="ConfigDeployDialog"
+        className="DeployDialog"
         isOpen={DeployDialog.isOpen}
         close={this.close}
       >
