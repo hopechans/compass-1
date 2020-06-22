@@ -98,7 +98,7 @@ export class AddPipelineResourceDialog extends React.Component<Props> {
             <SubTitle title={"Pipeline Resource Name"}/>
             <Input
               required={true}
-              placeholder={_i18n._("Pipeline Name")}
+              placeholder={_i18n._("Pipeline Resource Name")}
               value={this.name}
               onChange={value => this.name = value}
             />

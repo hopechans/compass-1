@@ -56,6 +56,7 @@ export class AllowSubnets extends React.Component<Props> {
                                     <Col span="23">
                                         <Input
                                             className="item"
+                                            required={true}
                                             placeholder={_i18n._(t`CIDR`)}
                                             title={this.value[index]}
                                             value={this.value[index]}

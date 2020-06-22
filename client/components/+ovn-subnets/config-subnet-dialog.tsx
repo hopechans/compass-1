@@ -5,7 +5,7 @@ import { Wizard, WizardStep } from "../wizard";
 import { computed, observable } from "mobx";
 import { observer } from "mobx-react";
 import { Notifications } from "../notifications";
-import { subNetStore } from "./subnet.route";
+import { subNetStore } from "./subnet.store";
 import { SubTitle } from "../layout/sub-title";
 import { Input } from "../input";
 import { _i18n } from "../../i18n";
@@ -67,7 +67,11 @@ export class ConfigSubNetDialog extends React.Component<Props> {
         this.namespaces.replace(ConfigSubNetDialog.data.spec.namespaces);
         this.excludeIps = ConfigSubNetDialog.data.spec.excludeIps;
         this._private = ConfigSubNetDialog.data.spec.private;
-        this.allowSubnets = ConfigSubNetDialog.data.spec.allowSubnets;
+        if (!this._private) {
+            this.allowSubnets = [];
+        } else {
+            this.allowSubnets = ConfigSubNetDialog.data.spec.allowSubnets;
+        }
     }
 
 
@@ -167,7 +171,7 @@ export class ConfigSubNetDialog extends React.Component<Props> {
                         />
                         <ExcludeIPsDetails
                             value={this.excludeIps} onChange={value => { this.excludeIps = value }} />
-                        <br/>
+                        <br />
                         <Checkbox
                             theme="light"
                             label={<Trans> AllowSubnets </Trans>}

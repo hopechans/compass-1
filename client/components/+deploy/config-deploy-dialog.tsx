@@ -1,45 +1,49 @@
-import React from "react";
+import "./config-deploy-dialog.scss"
+
+import React, {ReactElement} from "react";
 import {observer} from "mobx-react";
 import {Dialog, DialogProps} from "../dialog";
-import {observable} from "mobx";
-import {Namespace} from "../../api/endpoints";
-import {Input} from "../input"
+import {computed, observable} from "mobx";
+import {number, t, Trans} from "@lingui/macro";
 import {Wizard, WizardStep} from "../wizard";
-import {t, Trans} from "@lingui/macro";
-import {SubTitle} from "../layout/sub-title";
-import {_i18n} from "../../i18n";
-import {NamespaceSelect} from "../+namespaces/namespace-select";
-import {apiBase} from "../../api";
+import {Container, container, MultiContainerDetails} from "../+deploy-container";
+import {Collapse} from "antd";
+import {deployService, DeployServiceDetails, Service} from "../+deploy-service";
+import {MultiVolumeClaimDetails, VolumeClaimTemplate} from "../+deploy-volumeclaim-dialog";
+import {app, App} from "../+deploy-app";
+import {AppDetails} from "../+deploy-app";
+import {deployStore} from "./deploy.store";
 import {Notifications} from "../notifications";
+import {configStore} from "../../config.store";
+import {Deploy} from "../../api/endpoints";
 
-interface Props extends Partial<DialogProps> {
+const {Panel} = Collapse;
+
+interface Props extends DialogProps {
+
 }
 
 @observer
 export class ConfigDeployDialog extends React.Component<Props> {
 
   @observable static isOpen = false;
-  @observable static appName = "";
-  @observable static templateName = "";
-  @observable namespace = "";
-  @observable replicas = "1";
+  @observable static Data: Deploy = null;
+  @observable app: App = app;
+  @observable service: Service = deployService;
+  @observable containers: Container[] = [container];
+  @observable volumeClaims: VolumeClaimTemplate[] = [];
 
-  static open(appName: string, templateName: string) {
+  static open(object: Deploy) {
     ConfigDeployDialog.isOpen = true;
-    ConfigDeployDialog.appName = appName;
-    ConfigDeployDialog.templateName = templateName;
+    ConfigDeployDialog.Data = object;
+  }
+
+  get deploy() {
+    return ConfigDeployDialog.Data
   }
 
   static close() {
     ConfigDeployDialog.isOpen = false;
-  }
-
-  get appName() {
-    return ConfigDeployDialog.appName;
-  }
-
-  get templateName() {
-    return ConfigDeployDialog.templateName;
   }
 
   close = () => {
@@ -47,59 +51,81 @@ export class ConfigDeployDialog extends React.Component<Props> {
   }
 
   reset = () => {
-    ConfigDeployDialog.appName = "";
-    ConfigDeployDialog.templateName = "";
-    this.namespace = "";
+    this.app = app;
+    this.service = deployService;
+    this.containers = [container];
+    this.volumeClaims = [];
+  }
+
+  onOpen = () => {
+    this.app = {
+      name: this.deploy.spec.appName,
+      type: this.deploy.spec.resourceType
+    };
+    this.containers = JSON.parse(this.deploy.spec.metadata);
+    this.service = JSON.parse(this.deploy.spec.service);
+    this.volumeClaims = JSON.parse(this.deploy.spec.volumeClaims);
   }
 
   updateDeploy = async () => {
-    const data = {
-      appName: this.appName,
-      templateName: this.templateName,
-      namespace: this.namespace,
-      replicas: this.replicas,
-    }
     try {
-      await apiBase.post("/deploy", {data}).then((data) => {
-        this.reset();
-        this.close();
-      })
+      const newDeploy = await deployStore.update(this.deploy, {
+        spec: {
+          appName: this.app.name,
+          resourceType: this.app.type,
+          metadata: JSON.stringify(this.containers),
+          service: JSON.stringify(this.service),
+          volumeClaims: JSON.stringify(this.volumeClaims),
+        },
+      });
+      // label the resource labels
+      newDeploy.metadata.labels = {namespace: configStore.getDefaultNamespace()}
+      await deployStore.update(newDeploy, {...newDeploy});
+      this.reset();
+      this.close();
     } catch (err) {
       Notifications.error(err);
     }
   }
 
   render() {
-    const {...dialogProps} = this.props;
-    const header = <h5><Trans>Deploy</Trans></h5>;
+    const header = <h5><Trans>Config Deploy Workload</Trans></h5>;
+
     return (
       <Dialog
-        {...dialogProps}
-        className="ConfigDeployDialog"
         isOpen={ConfigDeployDialog.isOpen}
+        onOpen={this.onOpen}
         close={this.close}
       >
-        <Wizard header={header} done={this.close}>
-          <WizardStep contentClass="flow column" nextLabel={<Trans>Create</Trans>}
-                      next={this.updateDeploy}>
-            <div className="namespace">
-              <SubTitle title={<Trans>Namespace</Trans>}/>
-              <NamespaceSelect
-                value={this.namespace}
-                placeholder={_i18n._(t`Namespace`)}
-                themeName="light"
-                className="box grow"
-                onChange={(v) => {
-                  this.namespace = v
-                }}
-              />
-              <SubTitle title={<Trans>Replicas</Trans>}/>
-              <Input
-                autoFocus
-                placeholder={_i18n._(t`Replicas`)}
-                value={this.replicas}
-                onChange={v => this.replicas = v}
-              />
+        <Wizard className="ConfigDeployDialog" header={header} done={this.close}>
+          <WizardStep contentClass="flex gaps column" next={this.updateDeploy}>
+            <div className="init-form">
+              <Collapse defaultActiveKey={'App'}>
+                <Panel header={`App`} key="App">
+                  <AppDetails value={this.app} onChange={value => this.app = value}/>
+                </Panel>
+              </Collapse>
+              <br/>
+              <Collapse defaultActiveKey={"MultiContainer"}>
+                <Panel key={"MultiContainer"} header={"Containers"}>
+                  <MultiContainerDetails value={this.containers}
+                                         onChange={value => this.containers = value}/>
+                </Panel>
+              </Collapse>
+              <br/>
+              <Collapse defaultActiveKey={"DeployService"}>
+                <Panel key={"DeployService"} header={"Service"}>
+                  <DeployServiceDetails value={this.service}
+                                        onChange={value => this.service = value}/>
+                </Panel>
+              </Collapse>
+              <br/>
+              <Collapse defaultActiveKey={"MultiVolumeClaim"}>
+                <Panel key={"MultiVolumeClaim"} header={"VolumeClaims"}>
+                  <MultiVolumeClaimDetails value={this.volumeClaims}
+                                           onChange={value => this.volumeClaims = value}/>
+                </Panel>
+              </Collapse>
             </div>
           </WizardStep>
         </Wizard>

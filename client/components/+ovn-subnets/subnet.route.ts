@@ -1,12 +1,12 @@
-import {autobind} from "../../utils";
-import {KubeObjectStore} from "../../kube-object.store";
-import {apiManager} from "../../api/api-manager";
-import {SubNet, subNetApi} from "../../api/endpoints/subnet.api";
+import {RouteProps} from "react-router";
+import {buildURL} from "../../navigation";
 
-@autobind()
-export class SubNetStore extends KubeObjectStore<SubNet> {
-    api = subNetApi
+export const subNetRoute: RouteProps = {
+    path: "/subnet"
 }
 
-export const subNetStore = new SubNetStore();
-apiManager.registerStore(subNetApi, subNetStore);
+export interface ISubNetRouteParams {
+}
+
+export const subNetURL = buildURL<ISubNetRouteParams>(subNetRoute.path)
+

@@ -18,7 +18,7 @@ import {Graph} from "../+graphs/graph"
 
 enum sortBy {
   name = "name",
-  namespace = "namespace",
+  ownernamespace = "ownernamespace",
   pods = "pods",
   age = "age",
 }
@@ -50,7 +50,7 @@ export class PipelineRuns extends React.Component<Props> {
           className="PipelineRuns" store={pipelineRunStore}
           sortingCallbacks={{
             [sortBy.name]: (pipelineRun: PipelineRun) => pipelineRun.getName(),
-            [sortBy.namespace]: (pipelineRun: PipelineRun) => pipelineRun.getNs(),
+            [sortBy.ownernamespace]: (pipelineRun: PipelineRun) => pipelineRun.getOwnerNamespace(),
             [sortBy.age]: (pipelineRun: PipelineRun) => pipelineRun.getAge(false),
           }}
           onDetails={() => {
@@ -66,12 +66,12 @@ export class PipelineRuns extends React.Component<Props> {
           renderHeaderTitle={<Trans>PipelineRuns</Trans>}
           renderTableHeader={[
             {title: <Trans>Name</Trans>, className: "name", sortBy: sortBy.name},
-            {title: <Trans>Namespace</Trans>, className: "namespace", sortBy: sortBy.namespace},
+            {title: <Trans>OwnerNamespace</Trans>, className: "ownernamespace", sortBy: sortBy.ownernamespace},
             {title: <Trans>Age</Trans>, className: "age", sortBy: sortBy.age},
           ]}
           renderTableContents={(pipelineRun: PipelineRun) => [
             pipelineRun.getName(),
-            pipelineRun.getNs(),
+            pipelineRun.getOwnerNamespace(),
             pipelineRun.getAge(),
           ]}
           renderItemMenu={(item: PipelineRun) => {

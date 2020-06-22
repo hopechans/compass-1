@@ -27,8 +27,8 @@ export class Pipeline extends KubeObject {
     spec: {
         resources: {
             name: string;
-            type: Map<string, boolean>;
-        };
+            type: string;
+        }[];
         tasks: PipelineTask[];
         params: ParamSpec[];
     }
@@ -38,6 +38,10 @@ export class Pipeline extends KubeObject {
         return this.spec.tasks || [];
     }
 
+    getOwnerNamespace(): string {
+        return this.metadata.labels.namespace || "";
+    }
+    
     getTaskSet() {
         const taskList: PipelineTask[] = this.spec.tasks;
         if (!taskList) return [];
@@ -52,6 +56,6 @@ export class Pipeline extends KubeObject {
 export const pipelineApi = new KubeApi({
     kind: Pipeline.kind,
     apiBase: "/apis/tekton.dev/v1alpha1/pipelines",
-    isNamespaced: false,
+    isNamespaced: true,
     objectConstructor: Pipeline,
 });
