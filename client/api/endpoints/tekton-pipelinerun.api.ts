@@ -99,7 +99,7 @@ class PodTemplate {
 @autobind()
 export class PipelineRun extends KubeObject {
     static kind = "PipelineRun"
-    
+
     spec: {
         pipelineRef: PipelineRef,
         pipelineSpec: PipelineSpec,
