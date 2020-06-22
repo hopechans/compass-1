@@ -1,19 +1,19 @@
 import "./ingress-details.scss";
 
 import * as React from "react";
-import { disposeOnUnmount, observer } from "mobx-react";
-import { reaction } from "mobx";
-import { Trans } from "@lingui/macro";
-import { DrawerItem, DrawerTitle } from "../drawer";
-import { Ingress, ingressApi } from "../../api/endpoints";
-import { Table, TableCell, TableHead, TableRow } from "../table";
-import { KubeEventDetails } from "../+events/kube-event-details";
-import { ingressStore } from "./ingress.store";
-import { ResourceMetrics } from "../resource-metrics";
-import { KubeObjectDetailsProps } from "../kube-object";
-import { IngressCharts } from "./ingress-charts";
-import { apiManager } from "../../api/api-manager";
-import { KubeObjectMeta } from "../kube-object/kube-object-meta";
+import {disposeOnUnmount, observer} from "mobx-react";
+import {reaction} from "mobx";
+import {Trans} from "@lingui/macro";
+import {DrawerItem, DrawerTitle} from "../drawer";
+import {Ingress, ingressApi} from "../../api/endpoints";
+import {Table, TableCell, TableHead, TableRow} from "../table";
+import {KubeEventDetails} from "../+events/kube-event-details";
+import {ingressStore} from "./ingress.store";
+import {ResourceMetrics} from "../resource-metrics";
+import {KubeObjectDetailsProps} from "../kube-object";
+import {IngressCharts} from "./ingress-charts";
+import {apiManager} from "../../api/api-manager";
+import {KubeObjectMeta} from "../kube-object/kube-object-meta";
 
 interface Props extends KubeObjectDetailsProps<Ingress> {
 }
@@ -30,7 +30,7 @@ export class IngressDetails extends React.Component<Props> {
   }
 
   renderPaths(ingress: Ingress) {
-    const { spec: { rules } } = ingress
+    const {spec: {rules}} = ingress
     if (!rules || !rules.length) return null
     return rules.map((rule, index) => {
       return (
@@ -67,12 +67,12 @@ export class IngressDetails extends React.Component<Props> {
   }
 
   render() {
-    const { object: ingress } = this.props;
+    const {object: ingress} = this.props;
     if (!ingress) {
       return null;
     }
-    const { spec } = ingress;
-    const { metrics } = ingressStore;
+    const {spec} = ingress;
+    const {metrics} = ingressStore;
     const metricTabs = [
       <Trans>Network</Trans>,
       <Trans>Duration</Trans>,
@@ -81,7 +81,7 @@ export class IngressDetails extends React.Component<Props> {
       <div className="IngressDetails">
         <ResourceMetrics
           loader={() => ingressStore.loadMetrics(ingress)}
-          tabs={metricTabs} object={ingress} params={{ metrics }}
+          tabs={metricTabs} object={ingress} params={{metrics}}
         >
           <IngressCharts/>
         </ResourceMetrics>

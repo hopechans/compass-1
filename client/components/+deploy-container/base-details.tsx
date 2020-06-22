@@ -1,18 +1,18 @@
-import { observer } from "mobx-react";
+import {observer} from "mobx-react";
 import React from "react";
-import { observable } from "mobx";
-import { Select, SelectOption } from "../select";
-import { Icon } from "../icon";
-import { SubTitle } from "../layout/sub-title";
-import { Input } from "../input";
-import { _i18n } from "../../i18n";
-import { isNumber } from "../input/input.validators";
-import { Col, Row } from "antd";
-import { ActionMeta } from "react-select/src/types";
-import { base, Base } from "./common";
-import { SecretsSelect } from "../+config-secrets/secrets-select";
-import { NamespaceSelect } from "../+namespaces/namespace-select";
-import { t } from "@lingui/macro";
+import {observable} from "mobx";
+import {Select, SelectOption} from "../select";
+import {Icon} from "../icon";
+import {SubTitle} from "../layout/sub-title";
+import {Input} from "../input";
+import {_i18n} from "../../i18n";
+import {isNumber} from "../input/input.validators";
+import {Col, Row} from "antd";
+import {ActionMeta} from "react-select/src/types";
+import {base, Base} from "./common";
+import {SecretsSelect} from "../+config-secrets/secrets-select";
+import {NamespaceSelect} from "../+namespaces/namespace-select";
+import {t, Trans} from "@lingui/macro";
 
 interface Props<T = any> extends Partial<Props> {
   value?: T;
@@ -54,10 +54,10 @@ export class BaseDetails extends React.Component<Props> {
   @observable namespace: string = '';
 
   formatOptionLabel = (option: SelectOption) => {
-    const { value, label } = option;
+    const {value, label} = option;
     return label || (
       <>
-        <Icon small material="layers" />
+        <Icon small material="layers"/>
         {value}
       </>
     );
@@ -72,10 +72,10 @@ export class BaseDetails extends React.Component<Props> {
   }
 
   formatOptionSelectImageAddressLabel = (option: SelectOption) => {
-    const { value } = option;
+    const {value} = option;
     return (
       <>
-        <Icon small material="layers" />
+        <Icon small material="layers"/>
         {value}
       </>
     );
@@ -97,32 +97,29 @@ export class BaseDetails extends React.Component<Props> {
     } = this.props
     return (
       <>
-
-
-        <SubTitle title={containerNameTitle} />
+        <SubTitle title={<Trans>Container Name</Trans>}/>
         <Input
           required={true}
-          placeholder={_i18n._(containerNameTitle)}
+          placeholder={_i18n._(t`Container Name`)}
           value={this.value.name}
           onChange={v => this.value.name = v}
         />
-
-
-        <SubTitle title={"Image From"} />
+        <SubTitle title={<Trans>Image From</Trans>}/>
         <Select
           formatOptionLabel={this.formatOptionSelectImageAddressLabel}
           options={this.selectImageAddressOptions}
           value={this.value.imageFrom}
-          onChange={v => { this.value.imageFrom = v.value; }}
+          onChange={v => {
+            this.value.imageFrom = v.value;
+          }}
         />
-
-        <SubTitle title={"Image Address"} />
+        <SubTitle title={<Trans>Image Address</Trans>}/>
         {
           this.value.imageFrom == "public" ?
             <>
               <Input
                 required={true}
-                placeholder={_i18n._(imageAddressTitle)}
+                placeholder={_i18n._(t`Image Address`)}
                 value={this.value.image}
                 onChange={v => this.value.image = v}
               />
@@ -133,7 +130,7 @@ export class BaseDetails extends React.Component<Props> {
             <>
               <Input
                 required={true}
-                placeholder={_i18n._(imageAddressTitle)}
+                placeholder={_i18n._(t`Image Address`)}
                 value={this.value.image}
                 onChange={v => this.value.image = v}
               />
@@ -144,24 +141,27 @@ export class BaseDetails extends React.Component<Props> {
             <>
               <Input
                 required autoFocus
-                placeholder={_i18n._(imageAddressTitle)}
+                placeholder={_i18n._(t`Image Address`)}
                 value={this.value.image}
                 onChange={v => this.value.image = v}
               />
+              <br/>
               <Row justify="space-between">
                 <Col span="10">
-                  <SubTitle title={"SecretNamespace"} />
+                  <SubTitle title={<Trans>Secret Namespace</Trans>}/>
                   <NamespaceSelect
                     value={this.namespace}
-                    placeholder={_i18n._(t`Namespace`)}
+                    placeholder={_i18n._(t`Secret Namespace`)}
                     themeName="light"
                     className="box grow"
-                    onChange={(value) => { this.namespace = value.value }}
+                    onChange={(value) => {
+                      this.namespace = value.value
+                    }}
                   />
                 </Col>
                 {this.namespace ?
                   <Col span="10">
-                    <SubTitle title={"ImagePullSecret"} />
+                    <SubTitle title={<Trans>Image Pull Secret</Trans>}/>
                     <SecretsSelect
                       required autoFocus
                       value={this.value.imagePullSecret}
@@ -173,9 +173,8 @@ export class BaseDetails extends React.Component<Props> {
               </Row>
             </> : <></>
         }
-        <br />
-
-        <SubTitle title={imagePullPolicyTitle} />
+        <br/>
+        <SubTitle title={<Trans>Image Pull Policy</Trans>}/>
         <Select
           required={true}
           formatOptionLabel={this.formatOptionLabel}
@@ -183,14 +182,13 @@ export class BaseDetails extends React.Component<Props> {
           value={this.value.imagePullPolicy}
           onChange={value => this.value.imagePullPolicy = value.value}
         />
-        <br />
-
+        <br/>
         <Row justify="space-between">
           <Col span="10">
-            <SubTitle title={limitCPUTitle} />
+            <SubTitle title={<Trans>Limit CPU</Trans>}/>
             <Input
               required={true}
-              placeholder={_i18n._(limitCPUTitle)}
+              placeholder={_i18n._(t`Limit CPU`)}
               type="number"
               validators={isNumber}
               value={this.value.resource.limits.cpu}
@@ -198,10 +196,10 @@ export class BaseDetails extends React.Component<Props> {
             />
           </Col>
           <Col span="10">
-            <SubTitle title={limitMemoryTitle} />
+            <SubTitle title={<Trans>Limit Memory</Trans>}/>
             <Input
               required={true}
-              placeholder={_i18n._(limitMemoryTitle)}
+              placeholder={_i18n._(t`Limit Memory`)}
               type="number"
               validators={isNumber}
               value={this.value.resource.limits.memory}
@@ -211,10 +209,10 @@ export class BaseDetails extends React.Component<Props> {
         </Row>
         <Row justify="space-between">
           <Col span="10">
-            <SubTitle title={requiredCPUTitle} />
+            <SubTitle title={<Trans>Required CPU</Trans>}/>
             <Input
               required={true}
-              placeholder={_i18n._(requiredCPUTitle)}
+              placeholder={_i18n._(t`Required CPU`)}
               type="number"
               validators={isNumber}
               value={this.value.resource.requests.cpu}
@@ -222,10 +220,10 @@ export class BaseDetails extends React.Component<Props> {
             />
           </Col>
           <Col span="10">
-            <SubTitle title={requireMemoryTitle} />
+            <SubTitle title={<Trans>Required Memory</Trans>}/>
             <Input
               required={true}
-              placeholder={_i18n._(requireMemoryTitle)}
+              placeholder={_i18n._(t`Require Memory`)}
               type="number"
               validators={isNumber}
               value={this.value.resource.requests.memory}

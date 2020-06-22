@@ -1,15 +1,17 @@
-import { observer } from "mobx-react";
+import {observer} from "mobx-react";
 import React from "react";
-import { observable } from "mobx";
-import { ActionMeta } from "react-select/src/types";
-import { Button } from "../button";
-import { VolumeClaimDetails } from "./volumeclaim-details";
-import { DeleteOutlined } from '@ant-design/icons';
-import { Collapse, Popconfirm } from "antd";
+import {observable} from "mobx";
+import {ActionMeta} from "react-select/src/types";
+import {Button} from "../button";
+import {VolumeClaimDetails} from "./volumeclaim-details";
+import {DeleteOutlined} from '@ant-design/icons';
+import {Collapse, Popconfirm} from "antd";
 
-const { Panel } = Collapse;
+const {Panel} = Collapse;
 
-import { volumeClaim, VolumeClaimTemplate } from "./common";
+import {volumeClaim, VolumeClaimTemplate} from "./common";
+import {_i18n} from "../../i18n";
+import {t} from "@lingui/macro";
 
 export interface VolumeClaimTemplateProps<T = any> extends Partial<VolumeClaimTemplateProps> {
   value?: T;
@@ -50,7 +52,7 @@ export class MultiVolumeClaimDetails extends React.Component<VolumeClaimTemplate
           okText="Yes"
           cancelText="No">
           <DeleteOutlined
-            translate style={{ color: '#ff4d4f' }}
+            translate style={{color: '#ff4d4f'}}
             onClick={(event) => {
               event.preventDefault();
               event.stopPropagation();
@@ -63,15 +65,15 @@ export class MultiVolumeClaimDetails extends React.Component<VolumeClaimTemplate
 
     return (
       <>
-        <br />
-        <Button primary onClick={() => this.add()}><span>Addition VolumeClaim</span></Button>
-        <br /><br />
+        <br/>
+        <Button primary onClick={() => this.add()}><span>{_i18n._(t`Addition VolumeClaim`)}</span></Button>
+        <br/><br/>
         <Collapse>
           {this.value.map((item, index) => {
             return (
               <Panel header={`VolumeClaim`} key={index} extra={genExtra(index)}>
                 <VolumeClaimDetails
-                  value={this.value[index]} onChange={value => this.value[index] = value} />
+                  value={this.value[index]} onChange={value => this.value[index] = value}/>
               </Panel>
             )
           })}

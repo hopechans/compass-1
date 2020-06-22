@@ -73,7 +73,7 @@ export class DeployServiceDetails extends React.Component<Props> {
             this.value.type = v.value
           }}
         />
-        <SubTitle compact className="fields-title" title="Ports">
+        <SubTitle compact className="fields-title" title={_i18n._(t`Ports`)}>
           <Icon
             small
             tooltip={_i18n._(t`Ports`)}

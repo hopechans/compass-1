@@ -36,7 +36,7 @@ export class ArgsDetails extends React.Component<ArgsProps> {
     return (
       <Icon
         small
-        tooltip={_i18n._(t`Args`)}
+        tooltip={_i18n._(t`Add Arguments`)}
         material="add_circle_outline"
         onClick={(e) => {
           this.add();
@@ -51,7 +51,7 @@ export class ArgsDetails extends React.Component<ArgsProps> {
     return (
       <>
         {this.props.divider ? <Divider/> : <></>}
-        <SubTitle className="fields-title" title="Args">{this.renderAdd()}</SubTitle>
+        <SubTitle className="fields-title" title={<Trans>Arguments</Trans>}>{this.renderAdd()}</SubTitle>
         <div className="args">
           {this.value.map((item, index) => {
             return (
@@ -60,7 +60,7 @@ export class ArgsDetails extends React.Component<ArgsProps> {
                   <Col span="23">
                     <Input
                       className="item"
-                      placeholder={_i18n._(t`Args`)}
+                      placeholder={_i18n._(t`Arguments`)}
                       title={this.value[index]}
                       value={this.value[index]}
                       onChange={value => {
@@ -71,7 +71,7 @@ export class ArgsDetails extends React.Component<ArgsProps> {
                   <Col span="1">
                     <Icon
                       small
-                      tooltip={<Trans>Remove Args</Trans>}
+                      tooltip={_i18n._(t`Remove Arguments`)}
                       className="remove-icon"
                       material="remove_circle_outline"
                       onClick={(e) => {

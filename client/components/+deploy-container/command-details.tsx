@@ -51,7 +51,7 @@ export class CommandDetails extends React.Component<Props> {
     return (
       <>
         {this.props.divider ? <Divider/> : <></>}
-        <SubTitle className="fields-title" title="Command">{this.renderAdd()}</SubTitle>
+        <SubTitle className="fields-title" title={<Trans>Command</Trans>}>{this.renderAdd()}</SubTitle>
         <div className="command">
           {this.value.map((item, index) => {
             return (
@@ -71,7 +71,7 @@ export class CommandDetails extends React.Component<Props> {
                   <Col span="1">
                     <Icon
                       small
-                      tooltip={<Trans>Remove Command</Trans>}
+                      tooltip={_i18n._(t`Remove Command`)}
                       className="remove-icon"
                       material="remove_circle_outline"
                       onClick={(e) => {
