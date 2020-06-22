@@ -1,18 +1,18 @@
-import { observer } from "mobx-react";
+import {observer} from "mobx-react";
 import React from "react";
-import { observable } from "mobx";
-import { SubTitle } from "../layout/sub-title";
-import { _i18n } from "../../i18n";
-import { ActionMeta } from "react-select/src/types";
-import { Tls, tls } from "./common";
-import { Divider, Row, Col } from "antd";
-import { Icon } from "../icon";
-import { t, Trans } from "@lingui/macro";
-import { Input } from "../input";
-import { SecretsSelect } from "../+config-secrets/secrets-select";
-import { NamespaceSelect } from "../+namespaces/namespace-select";
-import { Button } from "../button/button";
-import { TlsHostsDetails } from "./tls-hosts";
+import {observable} from "mobx";
+import {SubTitle} from "../layout/sub-title";
+import {_i18n} from "../../i18n";
+import {ActionMeta} from "react-select/src/types";
+import {Tls, tls} from "./common";
+import {Divider, Row, Col} from "antd";
+import {Icon} from "../icon";
+import {t, Trans} from "@lingui/macro";
+import {Input} from "../input";
+import {SecretsSelect} from "../+config-secrets/secrets-select";
+import {NamespaceSelect} from "../+namespaces/namespace-select";
+import {Button} from "../button/button";
+import {TlsHostsDetails} from "./tls-hosts";
 
 interface Props<T = any> extends Partial<Props> {
   value?: T;
@@ -52,48 +52,41 @@ export class TlsDetails extends React.Component<Props> {
   render() {
     return (
       <>
-        <Button primary onClick={() => this.add()}><span>Add Tls</span></Button>
-        <br />
-        <br />
-
+        <Button primary onClick={() => this.add()}><span>Add Transport Layer Security</span></Button>
         <div className="Tls">
-          {this.value.map((item, tlsIndex) => {
+          {this.value.map((item, index) => {
             return (
-              <>
-                <div key={tlsIndex}>
-                  <Icon
-                    small
-                    tooltip={<Trans>Remove Tls</Trans>}
-                    className="remove-icon"
-                    material="remove_circle_outline"
-                    onClick={(e) => {
-                      this.remove(tlsIndex);
-                      e.stopPropagation();
-                    }}
-                  />
-                  <br /> <br />
-
-                  <TlsHostsDetails
-                    divider={true}
-                    value={this.value[tlsIndex].hosts}
-                    onChange={value => this.value[tlsIndex].hosts = value}
-                  />
-
-                  <SubTitle title={"Tls Secret Namespace"} />
-                  <NamespaceSelect
-                    required autoFocus
-                    value={this.namespace}
-                    onChange={value => this.namespace = value.value}
-                  />
-                  <SubTitle title={"Tls Secret Name"} />
-                  <SecretsSelect
-                    required autoFocus
-                    value={this.value[tlsIndex].secretName}
-                    namespace={this.namespace}
-                    onChange={value => this.value[tlsIndex].secretName = value.value}
-                  />
-                </div>
-              </>
+              <div key={index}>
+                <br/>
+                <Icon
+                  small
+                  tooltip={<Trans>Remove Tls</Trans>}
+                  className="remove-icon"
+                  material="remove_circle_outline"
+                  onClick={(e) => {
+                    this.remove(index);
+                    e.stopPropagation();
+                  }}
+                />
+                <TlsHostsDetails
+                  divider={true}
+                  value={this.value[index].hosts}
+                  onChange={value => this.value[index].hosts = value}
+                />
+                <SubTitle title={"Transport Layer Security Namespace"}/>
+                <NamespaceSelect
+                  required autoFocus
+                  value={this.namespace}
+                  onChange={value => this.namespace = value.value}
+                />
+                <SubTitle title={"Transport Layer Security Secret Name"}/>
+                <SecretsSelect
+                  required autoFocus
+                  value={this.value[index].secretName}
+                  namespace={this.namespace}
+                  onChange={value => this.value[index].secretName = value.value}
+                />
+              </div>
             )
           })}
         </div>

@@ -509,7 +509,7 @@ msgstr "Cordon"
 msgid "Count"
 msgstr "Count"
 
-#: client/components/+config-resource-quotas/add-quota-dialog.tsx:124
+#: client/components/+config-resource-quotas/add-resource-quota-dialog.tsx:124
 #: client/components/+config-secrets/add-secret-dialog.tsx:145
 #: client/components/+namespaces/add-namespace-dialog.tsx:72
 #: client/components/+user-management-roles/add-role-dialog.tsx:73
@@ -523,7 +523,7 @@ msgstr "Create"
 msgid "Create Namespace"
 msgstr "Create Namespace"
 
-#: client/components/+config-resource-quotas/add-quota-dialog.tsx:121
+#: client/components/+config-resource-quotas/add-resource-quota-dialog.tsx:121
 msgid "Create ResourceQuota"
 msgstr "Create ResourceQuota"
 
@@ -1248,8 +1248,8 @@ msgstr "Names"
 #: client/components/+apps-releases/releases.tsx:106
 #: client/components/+config-autoscalers/hpa.tsx:46
 #: client/components/+config-maps/config-maps.tsx:35
-#: client/components/+config-resource-quotas/add-quota-dialog.tsx:129
-#: client/components/+config-resource-quotas/add-quota-dialog.tsx:130
+#: client/components/+config-resource-quotas/add-resource-quota-dialog.tsx:129
+#: client/components/+config-resource-quotas/add-resource-quota-dialog.tsx:130
 #: client/components/+config-resource-quotas/resource-quotas.tsx:35
 #: client/components/+config-secrets/add-secret-dialog.tsx:152
 #: client/components/+config-secrets/secrets.tsx:42
@@ -1743,7 +1743,7 @@ msgstr "Resource loading has failed: <0>{0}</0>"
 msgid "Resource {0} on Pods {addition}"
 msgstr "Resource {0} on Pods {addition}"
 
-#: client/components/+config-resource-quotas/add-quota-dialog.tsx:126
+#: client/components/+config-resource-quotas/add-resource-quota-dialog.tsx:126
 msgid "ResourceQuota name"
 msgstr "ResourceQuota name"
 
@@ -1910,7 +1910,7 @@ msgstr "Secret type"
 msgid "Secrets"
 msgstr "Secrets"
 
-#: client/components/+config-resource-quotas/add-quota-dialog.tsx:134
+#: client/components/+config-resource-quotas/add-resource-quota-dialog.tsx:134
 msgid "Select a quota.."
 msgstr "Select a quota.."
 
@@ -1961,7 +1961,7 @@ msgstr "Session Affinity"
 msgid "Set"
 msgstr "Set"
 
-#: client/components/+config-resource-quotas/add-quota-dialog.tsx:137
+#: client/components/+config-resource-quotas/add-resource-quota-dialog.tsx:137
 msgid "Set quota"
 msgstr "Set quota"
 
@@ -2240,14 +2240,14 @@ msgstr "TenantUser"
 msgid "Validation"
 msgstr "Validation"
 
-#: client/components/+config-resource-quotas/add-quota-dialog.tsx:135
+#: client/components/+config-resource-quotas/add-resource-quota-dialog.tsx:135
 #: client/components/+config-secrets/add-secret-dialog.tsx:132
 #: client/components/+user-management-service-accounts/service-accounts-secret.tsx:33
 msgid "Value"
 msgstr "Value"
 
 #: client/components/+apps-releases/release-details.tsx:112
-#: client/components/+config-resource-quotas/add-quota-dialog.tsx:132
+#: client/components/+config-resource-quotas/add-resource-quota-dialog.tsx:132
 #: client/components/+config-resource-quotas/resource-quota-details.tsx:65
 #: client/components/+storage-volume-claims/volume-claim-details.tsx:79
 msgid "Values"
