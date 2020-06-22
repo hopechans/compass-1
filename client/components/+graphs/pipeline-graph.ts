@@ -178,42 +178,18 @@ export class PipelineGraph {
             height: 305,
             renderer: "svg",
             modes: {
+
                 default: [
-                    'drag-node',
+                    // "drag-node",
                     {
-                        type: 'tooltip',
+                        type: "tooltip",
                         formatText: function formatText(model) {
-                            const text = 'description: ' + model.description;
+                            const text = "container: test,duration: 5min";
                             return text;
                         },
-                        // offset: '20',
-                        shouldBegin: (e) => {
-                            if (e.item.getModel().id === '1') return false;
-                            const div = document.getElementsByClassName('g6-tooltip')[0];
-                            // if (div) div.style.display = 'none';
-                            return true;
-                        },
-                        shouldUpdate: (e) => {
-                            if (e.target.get('name') === 'text-shape') {
-                                const div = document.getElementsByClassName('g6-tooltip')[0];
-                                // if (div) div.style.display = 'block';
-                                return true
-                            }
-                            return false;
-                        }
+                        // offset: 30
                     },
                 ],
-                // default: [
-                //     // "drag-node",
-                //     {
-                //         type: "tooltip",
-                //         formatText: function formatText(model) {
-                //             const text = "container: test,duration: 5min";
-                //             return text;
-                //         },
-                //         // offset: 30
-                //     },
-                // ],
 
                 //   edit: ['click-select'],
                 // addEdge: ['click-add-edge', 'click-select'],
