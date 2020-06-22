@@ -9,7 +9,7 @@ import {Wizard, WizardStep} from "../wizard";
 import {Container, container, MultiContainerDetails} from "../+deploy-container";
 import {Collapse} from "antd";
 import {deployService, DeployServiceDetails, Service} from "../+deploy-service";
-import {MultiVolumeClaimDetails, VolumeClaimTemplate} from "../+deploy-volumeclaim-dialog";
+import {MultiVolumeClaimDetails, VolumeClaimTemplate} from "../+deploy-volumeclaim";
 import {app, App} from "../+deploy-app";
 import {AppDetails} from "../+deploy-app";
 import {deployStore} from "./deploy.store";
