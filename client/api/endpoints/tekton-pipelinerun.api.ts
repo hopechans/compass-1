@@ -126,7 +126,7 @@ export class PipelineRun extends KubeObject {
     conditions?: any;
     startTime: number | string;
     completionTime: number | string;
-    taskRuns: Map<string, any>;
+    taskRuns: any;
   };
 
   getOwnerNamespace(): string {
