@@ -150,7 +150,7 @@ G6.registerNode(
 
 
 
-            if (cfg.status === "succeed") {
+            if (cfg.status === "Succeeded") {
 
                 // status for image
                 group.addShape("image", {
@@ -184,7 +184,7 @@ G6.registerNode(
             }
 
 
-            if (cfg.status === "failed") {
+            if (cfg.status === "Failed") {
 
                 // status for image
                 group.addShape("image", {
@@ -218,7 +218,7 @@ G6.registerNode(
             }
 
 
-            if (cfg.status === "pending") {
+            if (cfg.status === "Pending") {
 
                 // status for image
                 group.addShape("image", {
