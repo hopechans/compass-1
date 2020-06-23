@@ -7,7 +7,7 @@ import {SubTitle} from "../layout/sub-title";
 import {Icon} from "../icon";
 import {_i18n} from "../../i18n";
 import {number, t, Trans} from "@lingui/macro";
-import {Col, Row} from "antd";
+import {Col, Row} from "../grid";
 import {Input} from "../input";
 import {Checkbox} from "../checkbox";
 import {isNumber} from "../input/input.validators";

@@ -7,7 +7,7 @@ import {_i18n} from "../../i18n";
 import {t, Trans} from "@lingui/macro";
 import {Input} from "../input";
 import {observable} from "mobx";
-import {Col, Row} from "antd";
+import {Col, Row} from "../grid";
 import {Divider} from 'antd';
 import {Params} from "./common";
 

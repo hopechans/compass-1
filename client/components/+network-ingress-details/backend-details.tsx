@@ -41,9 +41,8 @@ export class BackendDetails extends React.Component<Props> {
         />
         <SubTitle title={<Trans>Backend Service Port</Trans>}/>
         <Input
-          required={true}
-          value={this.value.servicePort}
-          onChange={value => this.value.servicePort = value}
+          value={String(this.value.servicePort)}          
+          onChange={value => this.value.servicePort = Number(value)}
         />
       </>
     )

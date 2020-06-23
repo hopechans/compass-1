@@ -1,8 +1,8 @@
-import { KubeObject } from "../kube-object";
-import { autobind } from "../../utils";
-import { IMetrics, metricsApi } from "./metrics.api";
-import { Pod } from "./pods.api";
-import { KubeApi } from "../kube-api";
+import {KubeObject} from "../kube-object";
+import {autobind} from "../../utils";
+import {IMetrics, metricsApi} from "./metrics.api";
+import {Pod} from "./pods.api";
+import {KubeApi} from "../kube-api";
 
 export class PersistentVolumeClaimsApi extends KubeApi<PersistentVolumeClaim> {
   getMetrics(pvcName: string, namespace: string): Promise<IPvcMetrics> {
@@ -20,33 +20,41 @@ export class PersistentVolumeClaimsApi extends KubeApi<PersistentVolumeClaim> {
 
 export interface IPvcMetrics<T = IMetrics> {
   [key: string]: T;
+
   diskUsage: T;
   diskCapacity: T;
+}
+
+export interface PersistentVolumeClaimVolumeSource {
+  claimName: string
+  readOnly?: boolean
+}
+
+export interface PersistentVolumeClaimSpec {
+  accessModes: string[];
+  storageClassName: string;
+  selector: {
+    matchLabels: {
+      release: string;
+    };
+    matchExpressions: {
+      key: string; // environment,
+      operator: string; // In,
+      values: string[]; // [dev]
+    }[];
+  };
+  resources: {
+    requests: {
+      storage: string; // 8Gi
+    };
+  };
 }
 
 @autobind()
 export class PersistentVolumeClaim extends KubeObject {
   static kind = "PersistentVolumeClaim"
 
-  spec: {
-    accessModes: string[];
-    storageClassName: string;
-    selector: {
-      matchLabels: {
-        release: string;
-      };
-      matchExpressions: {
-        key: string; // environment,
-        operator: string; // In,
-        values: string[]; // [dev]
-      }[];
-    };
-    resources: {
-      requests: {
-        storage: string; // 8Gi
-      };
-    };
-  }
+  spec: PersistentVolumeClaimSpec
   status: {
     phase: string; // Pending
   }
@@ -69,7 +77,7 @@ export class PersistentVolumeClaim extends KubeObject {
   getMatchLabels(): string[] {
     if (!this.spec.selector || !this.spec.selector.matchLabels) return [];
     return Object.entries(this.spec.selector.matchLabels)
-      .map(([name, val]) => `${name}:${val}`);
+    .map(([name, val]) => `${name}:${val}`);
   }
 
   getMatchExpressions() {

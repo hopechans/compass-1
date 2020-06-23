@@ -16,6 +16,7 @@ import { ConfigStorageClassDialog } from "./config-storageclass-dialog";
 import { MenuItem } from "../menu/menu";
 import { Icon } from "../icon/icon";
 import { _i18n } from "../../../client/i18n";
+import { secretsStore } from "../+config-secrets/secrets.store";
 
 enum sortBy {
     name = "name",
@@ -35,6 +36,7 @@ export class StorageClasses extends React.Component<Props> {
                 <KubeObjectListLayout
                     className="StorageClasses"
                     store={storageClassStore} isClusterScoped
+                    dependentStores={[secretsStore]}
                     sortingCallbacks={{
                         [sortBy.name]: (item: StorageClass) => item.getName(),
                         [sortBy.age]: (item: StorageClass) => item.getAge(false),
