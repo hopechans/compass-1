@@ -16,6 +16,7 @@ import { apiManager } from "../../api/api-manager";
 import { observable } from "mobx";
 import { PipelineGraph } from "../+graphs/pipeline-graph"
 import { Graph } from "../+graphs/graph"
+import { string } from "yargs";
 
 enum sortBy {
   name = "name",
@@ -52,6 +53,35 @@ export class PipelineRuns extends React.Component<Props> {
     const pipeline = pipelineStore.getByName(pipelinerun.spec.pipelineRef.name);
 
 
+
+    // const taskruns: Map<string, any> = JSON.parse(JSON.stringify(p));
+    // Object.keys(taskruns).map(function (key: string, index: number) {
+
+    //   console.log(key);
+    // });
+
+
+
+    // let taskArray: string[] = [];
+    // const taskruns = new Map<string, any>();
+    // for (let key in pipelinerun.status.taskRuns) {
+    //   taskruns.set(key, pipelinerun.status.taskRuns[key])
+    // }
+    // taskruns.set("a", "a");
+    // console.log(taskruns)
+
+    // for (const key in taskruns) {
+    //   console.log('The value for ' + key + ' is = ' + taskruns[key] as string);
+    // }
+    // Object.keys(taskruns).map(function (key: string, index: number) {
+    //   taskArray[index] = key;
+    //   console.log(taskruns.get(key));
+    // });
+
+
+
+    // console.log("taskrun.----------------------------------------", taskruns);
+    let taskruns = pipelinerun.status.taskRuns;
     let nodeData: any;
     pipeline.getAnnotations()
       .filter((item) => {
@@ -63,13 +93,28 @@ export class PipelineRuns extends React.Component<Props> {
     if (nodeData === undefined || nodeData === "") {
       this.graph.getGraph().clear();
     } else {
+
       this.graph.getGraph().clear();
+      let node = JSON.parse(nodeData);
+
+      const nodeMap = new Map<string, any>();
+      node.nodes.map((item: any, index: number) => {
+        nodeMap.set(item.taskName, item)
+      })
+
       setTimeout(() => {
-        let node = JSON.parse(nodeData);
-        node.nodes[0].showtime = true;
-        node.nodes[0].time = '3m6s';
-        node.nodes[0].status = 'succeed';
+
+        Object.keys(taskruns).map(function (key: string, index: number) {
+          let currentTask = pipelinerun.status.taskRuns[key];
+          console.log(pipelinerun.status.taskRuns[key]);
+          let taskNode = nodeMap.get(pipelinerun.status.taskRuns[key].pipelineTaskName);
+          taskNode.status = currentTask.status.conditions[0].reason;
+          node.nodes[index] = taskNode
+          console.log(node);
+        });
+
         this.graph.getGraph().changeData(node);
+
       }, 20);
 
     }
