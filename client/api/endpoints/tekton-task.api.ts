@@ -70,11 +70,6 @@ export interface PipelineParams {
   default: string;
 }
 
-export interface PipelineResources {
-  name: string;
-  type: string;
-}
-
 export interface Environment {
   type: string
   envConfig: any
