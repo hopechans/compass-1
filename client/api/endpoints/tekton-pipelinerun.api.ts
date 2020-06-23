@@ -1,68 +1,69 @@
 import {autobind} from "../../utils";
 import {KubeObject} from "../kube-object";
 import {KubeApi} from "../kube-api";
+import {PipelineSpec} from "./tekton-pipeline.api";
 
 export interface PipelineRef {
   name: string;
   apiVersion: string;
 }
 
-export interface PipelineSpec {
-  resources: { name: string, type: string }[];
-  // TaskRef is a reference to a task definition.
-  tasks: {
-    name: string,
-    taskRef: {
-      name: string;
-      kind: string;
-      apiVersion: string;
-    },
-    // Conditions is a list of conditions that need to be true for the task to run
-    conditions: {
-      conditionRef: string;
-      params: {
-        name: string;
-        value: string | Array<any>;
-      }[];
-      resources: {
-        name: string;
-        resource: string;
-      }[];
-    }[];
-    // Retries represents how many times this task should be retried in case of task failure: ConditionSucceeded set to False
-    retries: number;
-
-    // RunAfter is the list of PipelineTask names that should be executed before
-    // this Task executes. (Used to force a specific ordering in graph execution.)
-    runAfter: string[];
-
-    // Resources declares the resources given to this task as inputs and
-    resources: {
-      inputs: {
-        // Name is the name of the PipelineResource as declared by the Task.
-        name: string;
-        // Resource is the name of the DeclaredPipelineResource to use.
-        resource: string;
-        // From is the list of PipelineTask names that the resource has to come from.
-        from: string[];
-      }[];
-      outputs: [];
-    };
-    // Parameters declares parameters passed to this task.
-    params: {
-      name: string;
-      value: string | Array<any>;
-    }[];
-  }[];
-
-  // Parameters declares parameters passed to this task.
-  params: {
-    name: string;
-    type: string;
-    description: string;
-    default: string | Array<any>;
-  }[];
-}
+// export interface PipelineSpec {
+//   resources: { name: string, type: string }[];
+//   // TaskRef is a reference to a task definition.
+//   tasks: {
+//     name: string,
+//     taskRef: {
+//       name: string;
+//       kind: string;
+//       apiVersion: string;
+//     },
+//     // Conditions is a list of conditions that need to be true for the task to run
+//     conditions: {
+//       conditionRef: string;
+//       params: {
+//         name: string;
+//         value: string | Array<any>;
+//       }[];
+//       resources: {
+//         name: string;
+//         resource: string;
+//       }[];
+//     }[];
+//     // Retries represents how many times this task should be retried in case of task failure: ConditionSucceeded set to False
+//     retries: number;
+//
+//     // RunAfter is the list of PipelineTask names that should be executed before
+//     // this Task executes. (Used to force a specific ordering in graph execution.)
+//     runAfter: string[];
+//
+//     // Resources declares the resources given to this task as inputs and
+//     resources: {
+//       inputs: {
+//         // Name is the name of the PipelineResource as declared by the Task.
+//         name: string;
+//         // Resource is the name of the DeclaredPipelineResource to use.
+//         resource: string;
+//         // From is the list of PipelineTask names that the resource has to come from.
+//         from: string[];
+//       }[];
+//       outputs: [];
+//     };
+//     // Parameters declares parameters passed to this task.
+//     params: {
+//       name: string;
+//       value: string | Array<any>;
+//     }[];
+//   }[];
+//
+//   // Parameters declares parameters passed to this task.
+//   params: {
+//     name: string;
+//     type: string;
+//     description: string;
+//     default: string | Array<any>;
+//   }[];
+// }
 
 export interface PipelineResourceBinding {
   name: string;
@@ -98,6 +99,7 @@ export interface PodTemplate {
 
 export interface PipelineRunSpec {
   pipelineRef: PipelineRef,
+  // pipelineSpec: PipelineSpec,
   pipelineSpec: PipelineSpec,
   resources: PipelineResourceBinding[],
   params: {

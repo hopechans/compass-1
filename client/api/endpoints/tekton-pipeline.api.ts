@@ -21,6 +21,8 @@ export interface PipelineTask {
   runAfter: string[];
 }
 
+export class PipelineTask implements PipelineTask {}
+
 export interface PipelineSpec {
   resources: {
     name: string;
