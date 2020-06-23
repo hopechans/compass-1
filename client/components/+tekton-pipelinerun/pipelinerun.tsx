@@ -50,6 +50,8 @@ export class PipelineRuns extends React.Component<Props> {
     PipelineRuns.isHiddenPipelineGraph ? PipelineRuns.isHiddenPipelineGraph = false : PipelineRuns.isHiddenPipelineGraph = true
 
     const pipeline = pipelineStore.getByName(pipelinerun.spec.pipelineRef.name);
+
+
     let nodeData: any;
     pipeline.getAnnotations()
       .filter((item) => {
@@ -63,7 +65,11 @@ export class PipelineRuns extends React.Component<Props> {
     } else {
       this.graph.getGraph().clear();
       setTimeout(() => {
-        this.graph.getGraph().changeData(JSON.parse(nodeData));
+        let node = JSON.parse(nodeData);
+        node.nodes[0].showtime = true;
+        node.nodes[0].time = '3m6s';
+        node.nodes[0].status = 'succeed';
+        this.graph.getGraph().changeData(node);
       }, 20);
 
     }

@@ -84,7 +84,7 @@ G6.registerNode(
                 name: "image-shape",
             });
 
-            if (cfg.status) {
+            if (cfg.status === "progress") {
 
                 // status for image
                 group.addShape("image", {
@@ -113,6 +113,180 @@ G6.registerNode(
                     name: "title",
                 });
 
+
+            }
+
+            if (cfg.status === "progress") {
+
+                // status for image
+                group.addShape("image", {
+                    attrs: {
+                        x: 10,
+                        y: 28,
+                        width: 15,
+                        height: 15,
+                        img: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAWCAYAAADNX8xBAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAB9SURBVDhPY/hPJTBqEGGA16CvL/b8f3e9C4xBbHwAq0F/f338/+xI4P/bqzlRMEgMJIcNYDUImyEwDJLDBjAMAnkBmwHIGJs3MQwChQc2zcgYpAYd0M4gqnkNBKgS2CBAteiHAZAXQOEBwti8gwzwGkQKGDWIMBhsBv3/DwDcG87QKj2jmwAAAABJRU5ErkJggg=="
+                    },
+                    name: "image-shape",
+                });
+
+                //status for text
+                group.addShape("text", {
+                    attrs: {
+                        y: 40,
+                        x: 25,
+                        height: 16,
+                        width: 16,
+                        text: "In progress.",
+                        fontStyle: "oblique",
+                        fill: "gray",
+                        fontSize: 10,
+                    },
+                    name: "title",
+                });
+
+
+            }
+
+
+
+            if (cfg.status === "succeed") {
+
+                // status for image
+                group.addShape("image", {
+                    attrs: {
+                        x: 10,
+                        y: 28,
+                        width: 15,
+                        height: 15,
+                        img: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAXCAYAAAAP6L+eAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAGSSURBVEhL7ZFLSwJRGIb7PwVREfQDKrRQutIiohIKKlu0iIgW7YOiP9DeMgLRvCUVWmAJkUFQVBQaXTXLyzg6zrydM3OwaLRUaOczu/N985z3O18N/omqOE9VnKdisUS+pJDCyes5PjIJiJLEKgoViamUynbCBxhwT8Ny6wEnpFlVoWwxlcazSbjCXrRbh1G3rkG/awovXJR1KJQtpsnsoX20EWmtSYNW6xDOopfIigLrUChLzIsZeWytbZQk1aJj24Bg5AKClGMdX6jEoiQiwscw71+SF5PO8fI5n8vAfOOA3jGO+o1O9JHx/U+nJGlWrv9EJY5l4lgJrqFlq5e8nRHehwDe+HeYrmzocU6iwazDoGeGnB/nLy2ESkybfY8BaMi4NBmVLBwtk4RGNJr1GNmdhef+ECmBY38URiWmW0+RBVnuPNDZx+SEzZtdaCJSw94cXCEfktkU6y5O0eXRRdE37XZOyEkVqReJEqSUomIKXZjp2obFwCrcYV/JUsqvYgqVP3ORksb/zp/iSqmKGcAncmSXV+WwdxEAAAAASUVORK5CYII=",
+
+                    },
+                    name: "image-shape",
+                });
+
+                //status for text
+                group.addShape("text", {
+                    attrs: {
+                        y: 40,
+                        x: 25,
+                        height: 16,
+                        width: 16,
+                        text: "succeed.",
+                        fontStyle: "oblique",
+                        fill: "gray",
+                        fontSize: 10,
+                    },
+                    name: "title",
+                });
+
+
+            }
+
+
+            if (cfg.status === "failed") {
+
+                // status for image
+                group.addShape("image", {
+                    attrs: {
+                        x: 10,
+                        y: 28,
+                        width: 15,
+                        height: 15,
+                        img: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAVCAYAAABLy77vAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAADESURBVDhP7ZI9CgIxEEY9jBdYe93en1ovaWFr4QWEBYUV72AhCnbCmBd2Fk0yKwFtxAeB2czw8jFsTz7EX/Se74luh6PcL9fmK4YeMyGRaNsvpJ4tkjLu6DETEolOy5Uf3JeTl5epuaPHTEhyRyqrBiMv4FBbEjCXfV5vpCqGXuCPq7mzMEWgybqSKN2JmiSaLDtRuyMnaHfk6qwdqWRXjr1AoebOkkUiBuvp3P6PXI+ZkEjEyymJQu85qWIuO5efFYk8AGssmC7B7olJAAAAAElFTkSuQmCC"
+
+                    },
+                    name: "image-shape",
+                });
+
+                //status for text
+                group.addShape("text", {
+                    attrs: {
+                        y: 40,
+                        x: 25,
+                        height: 16,
+                        width: 16,
+                        text: "failed.",
+                        fontStyle: "oblique",
+                        fill: "gray",
+                        fontSize: 10,
+                    },
+                    name: "title",
+                });
+
+
+            }
+
+
+            if (cfg.status === "pending") {
+
+                // status for image
+                group.addShape("image", {
+                    attrs: {
+                        x: 10,
+                        y: 28,
+                        width: 15,
+                        height: 15,
+                        img: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAWCAYAAADNX8xBAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAB9SURBVDhPY/hPJTBqEGGA16CvL/b8f3e9C4xBbHwAq0F/f338/+xI4P/bqzlRMEgMJIcNYDUImyEwDJLDBjAMAnkBmwHIGJs3MQwChQc2zcgYpAYd0M4gqnkNBKgS2CBAteiHAZAXQOEBwti8gwzwGkQKGDWIMBhsBv3/DwDcG87QKj2jmwAAAABJRU5ErkJggg=="
+
+                    },
+                    name: "image-shape",
+                });
+
+                //status for text
+                group.addShape("text", {
+                    attrs: {
+                        y: 40,
+                        x: 25,
+                        height: 16,
+                        width: 16,
+                        text: "pending.",
+                        fontStyle: "oblique",
+                        fill: "gray",
+                        fontSize: 10,
+                    },
+                    name: "title",
+                });
+
+
+            }
+
+
+            if (cfg.status === "cancel") {
+
+                // status for image
+                group.addShape("image", {
+                    attrs: {
+                        x: 10,
+                        y: 28,
+                        width: 15,
+                        height: 15,
+                        img: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAWCAYAAADNX8xBAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAB9SURBVDhPY/hPJTBqEGGA16CvL/b8f3e9C4xBbHwAq0F/f338/+xI4P/bqzlRMEgMJIcNYDUImyEwDJLDBjAMAnkBmwHIGJs3MQwChQc2zcgYpAYd0M4gqnkNBKgS2CBAteiHAZAXQOEBwti8gwzwGkQKGDWIMBhsBv3/DwDcG87QKj2jmwAAAABJRU5ErkJggg=="
+
+                    },
+                    name: "image-shape",
+                });
+
+                //status for text
+                group.addShape("text", {
+                    attrs: {
+                        y: 40,
+                        x: 25,
+                        height: 16,
+                        width: 16,
+                        text: "cancel.",
+                        fontStyle: "oblique",
+                        fill: "gray",
+                        fontSize: 10,
+                    },
+                    name: "title",
+                });
+
+
+            }
+
+
+            if (cfg.showtime) {
                 //time for image
                 group.addShape("image", {
                     attrs: {
@@ -130,7 +304,7 @@ G6.registerNode(
                     attrs: {
                         y: 42,
                         x: 103,
-                        text: "3m 55s",
+                        text: cfg.time,
                         fill: "gray",
                         fontSize: 10,
                     },
