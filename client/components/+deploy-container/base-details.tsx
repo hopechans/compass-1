@@ -7,7 +7,7 @@ import {SubTitle} from "../layout/sub-title";
 import {Input} from "../input";
 import {_i18n} from "../../i18n";
 import {isNumber} from "../input/input.validators";
-import {Col, Row} from "antd";
+import {Col, Row} from "../grid";
 import {ActionMeta} from "react-select/src/types";
 import {base, Base} from "./common";
 import {SecretsSelect} from "../+config-secrets/secrets-select";

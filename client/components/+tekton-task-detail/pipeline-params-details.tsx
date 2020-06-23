@@ -8,7 +8,7 @@ import {Input} from "../input";
 import {PipelineParams, pipelineParams} from "./common";
 import {SubTitle} from "../layout/sub-title";
 import {_i18n} from "../../i18n";
-import {Col, Row} from "antd";
+import {Col, Row} from "../grid";
 
 interface Props<T = any> extends Partial<Props> {
   value?: T;
