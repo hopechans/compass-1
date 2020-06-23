@@ -76,6 +76,28 @@ export class AddStorageClassDialog extends React.Component<Props> {
     ]
   }
 
+  get fsTypeOptions() {
+    return [
+      "ext4"
+    ]
+  }
+
+  get imageFormatOptions() {
+    return [
+      "1",
+      "2",
+      "3",
+      "4",
+      "5"
+    ]
+  }
+
+  get imageFeaturesOptions() {
+    return [
+      "layering",
+    ]
+  }
+
   addStorageClass = async () => {
 
     try {
@@ -86,11 +108,13 @@ export class AddStorageClassDialog extends React.Component<Props> {
         parameters: {
           adminSecretNamespace: this.params.adminSecretNamespace,
           adminSecretName: this.params.adminSecretName,
+          userSecretNamespace: this.params.userSecretNamespace,
           userSecretName: this.params.userSecretName,
           monitors: this.params.monitors,
           adminId: this.params.adminId,
           pool: this.params.pool,
           userId: this.params.userId,
+          fsType: this.params.fsType,
           imageFormat: this.params.imageFormat,
           imageFeatures: this.params.imageFeatures
         }
@@ -160,6 +184,11 @@ export class AddStorageClassDialog extends React.Component<Props> {
                   namespace={this.params.adminSecretName}
                   onChange={value => this.params.adminSecretName = value.value}
                 />
+                <SubTitle title={<Trans>User Secret Namespace:</Trans>}/>
+                <NamespaceSelect
+                  required autoFocus
+                  value={this.params.userSecretNamespace}
+                  onChange={value => this.params.userSecretNamespace = value.value}/>
                 <SubTitle title={<Trans>User Secret Name</Trans>}/>
                 <SecretsSelect
                   required autoFocus
@@ -193,20 +222,21 @@ export class AddStorageClassDialog extends React.Component<Props> {
                   value={this.params.userId}
                   onChange={(value: string) => this.params.userId = value}
                 />
+                <SubTitle title={<Trans>FileSystem Type</Trans>}/>
+                <Select
+                  options={this.fsTypeOptions}
+                  value={this.params.fsType}
+                  onChange={value => this.params.fsType = value.value}/>
                 <SubTitle title={<Trans>Image Format</Trans>}/>
-                <Input
-                  required autoFocus
-                  placeholder={_i18n._(t`ImageFormat`)}
+                <Select
+                  options={this.imageFormatOptions}
                   value={this.params.imageFormat}
-                  onChange={(value: string) => this.params.imageFormat = value}
-                />
+                  onChange={value => this.params.imageFormat = value.value}/>
                 <SubTitle title={<Trans>Image Features</Trans>}/>
-                <Input
-                  required autoFocus
-                  placeholder={_i18n._(t`ImageFeatures`)}
+                <Select
+                  options={this.imageFeaturesOptions}
                   value={this.params.imageFeatures}
-                  onChange={(value: string) => this.params.imageFeatures = value}
-                />
+                  onChange={value => this.params.imageFeatures = value.value}/>
               </> : <></>
             }
           </WizardStep>
