@@ -124,9 +124,10 @@ export class PipelineRuns extends React.Component<Props> {
   render() {
 
     return (
-      <div>
-        <Graph open={PipelineRuns.isHiddenPipelineGraph} showSave={true}></Graph>
-
+      <>
+        <div style={{width:'99%'}}>
+          <Graph open={PipelineRuns.isHiddenPipelineGraph} showSave={true}></Graph>
+        </div>
         <KubeObjectListLayout
 
           className="PipelineRuns" store={pipelineRunStore} dependentStores={[pipelineStore]}
@@ -154,7 +155,7 @@ export class PipelineRuns extends React.Component<Props> {
             return <PipelineRunMenu object={item} />
           }}
         />
-      </div>
+      </>
     )
   }
 }
