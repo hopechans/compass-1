@@ -196,7 +196,7 @@ export class ConfigStorageClassDialog extends React.Component<Props> {
                 <SecretsSelect
                   required autoFocus
                   value={this.params.adminSecretName}
-                  namespace={this.params.adminSecretName}
+                  namespace={this.params.adminSecretNamespace}
                   onChange={value => this.params.adminSecretName = value.value}
                 />
                 <SubTitle title={<Trans>User Secret Namespace:</Trans>}/>
@@ -208,7 +208,7 @@ export class ConfigStorageClassDialog extends React.Component<Props> {
                 <SecretsSelect
                   required autoFocus
                   value={this.params.userSecretName}
-                  namespace={this.params.userSecretName}
+                  namespace={this.params.userSecretNamespace}
                   onChange={value => this.params.userSecretName = value.value}
                 />
                 <SubTitle title={<Trans>Monitors</Trans>}/>

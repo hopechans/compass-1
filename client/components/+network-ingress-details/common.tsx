@@ -1,6 +1,6 @@
 export interface Backend {
   serviceName: string
-  servicePort: string
+  servicePort: number
 }
 
 export interface Path {
@@ -29,7 +29,7 @@ export const tls: Tls = {
 
 export const backend: Backend = {
   serviceName: "",
-  servicePort: ""
+  servicePort: 0,
 }
 
 export const path: Path = {
