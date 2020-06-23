@@ -118,8 +118,8 @@ export interface PipelineRunSpec {
 
 @autobind()
 export class PipelineRun extends KubeObject {
-  static kind = "PipelineRun"
 
+  static kind = "PipelineRun"
   spec: PipelineRunSpec
   status: {
     observedGeneration: number;
