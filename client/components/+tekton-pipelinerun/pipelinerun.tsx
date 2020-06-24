@@ -65,8 +65,8 @@ export class PipelineRuns extends React.Component<Props> {
   }
 
 
-  //show  pipeline 
-  showCurrentPipelineStatus(pipelinerun: PipelineRun) {
+  //showCurrentPipelineRunStatus show pipeline run status
+  showCurrentPipelineRunStatus(pipelinerun: PipelineRun) {
     if (PipelineRuns.isHiddenPipelineGraph === undefined) {
       PipelineRuns.isHiddenPipelineGraph = true;
     }
