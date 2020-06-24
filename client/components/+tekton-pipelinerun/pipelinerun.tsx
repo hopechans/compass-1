@@ -185,7 +185,7 @@ export class PipelineRuns extends React.Component<Props> {
             [sortBy.ownernamespace]: (pipelineRun: PipelineRun) => pipelineRun.getOwnerNamespace(),
             [sortBy.age]: (pipelineRun: PipelineRun) => pipelineRun.getAge(false),
           }}
-          onDetails={(pipeline: PipelineRun) => { this.showCurrentPipelineStatus(pipeline) }}
+          onDetails={(pipeline: PipelineRun) => { this.showCurrentPipelineRunStatus(pipeline) }}
           searchFilters={[
             (pipelineRun: PipelineRun) => pipelineRun.getSearchFields(),
           ]}
