@@ -94,6 +94,7 @@ export class PipelineRuns extends React.Component<Props> {
       setInterval(() => {
         nodeData.nodes.map((item: any, index: number) => {
 
+          //set current node status,just like:Failed Succeed... and so on.
           const currentTaskRun = taskRunStore.getByName(item.taskName);
           nodeData.nodes[index].status = currentTaskRun.status.conditions[0].reason;
           nodeData.nodes[index].showtime = true;
