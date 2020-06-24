@@ -4,7 +4,7 @@ import React from "react";
 import { observer } from "mobx-react";
 import { RouteComponentProps } from "react-router";
 import { Trans } from "@lingui/macro";
-import { PipelineRun, pipelineRunApi } from "../../api/endpoints";
+import { PipelineRun, pipelineRunApi, TaskRun } from "../../api/endpoints";
 import { podsStore } from "../+workloads-pods/pods.store";
 import { pipelineRunStore } from "./pipelinerun.store";
 import { pipelineStore } from "../+tekton-pipeline/pipeline.store";
@@ -16,6 +16,7 @@ import { apiManager } from "../../api/api-manager";
 import { observable } from "mobx";
 import { PipelineGraph } from "../+graphs/pipeline-graph"
 import { Graph } from "../+graphs/graph"
+import { taskRunStore } from "../+tekton-taskrun/taskrun.store"
 
 enum sortBy {
   name = "name",
@@ -33,6 +34,32 @@ export class PipelineRuns extends React.Component<Props> {
   @observable static isHiddenPipelineGraph: boolean = false;
   @observable graph: any = null;
 
+  getNodeData(pipelineName: string): any {
+    const pipeline = pipelineStore.getByName(pipelineName);
+    let nodeData: any;
+    pipeline.getAnnotations()
+      .filter((item) => {
+        const tmp = item.split("=");
+        if (tmp[0] == "node_data") {
+          nodeData = tmp[1];
+        }
+      });
+    return JSON.parse(nodeData);
+  }
+
+  secondsToHms(seconds: number) {
+
+    const h = Math.floor(seconds / 3600);
+    const m = Math.floor(seconds % 3600 / 60);
+    const s = Math.floor(seconds % 3600 % 60);
+
+    let hDisplay = h > 0 ? h + (h == 1 ? "h " : "h") : "";
+    let mDisplay = m > 0 ? m + (m == 1 ? "m " : "m") : "";
+    let sDisplay = s > 0 ? s + (s == 1 ? "s " : "s") : "";
+    return hDisplay + mDisplay + sDisplay;
+  }
+
+
   componentDidMount() {
     this.graph = new PipelineGraph(0, 0);
   }
@@ -45,72 +72,101 @@ export class PipelineRuns extends React.Component<Props> {
     }
     PipelineRuns.isHiddenPipelineGraph ? PipelineRuns.isHiddenPipelineGraph = false : PipelineRuns.isHiddenPipelineGraph = true
 
-    const pipeline = pipelineStore.getByName(pipelinerun.spec.pipelineRef.name);
+    //by pipeline ref name get node data
+    let nodeData = this.getNodeData(pipelinerun.spec.pipelineRef.name);
 
-    let taskruns = pipelinerun.status.taskRuns;
-    let nodeData: any;
-    pipeline.getAnnotations()
-      .filter((item) => {
-        const tmp = item.split("=");
-        if (tmp[0] == "node_data") {
-          nodeData = tmp[1];
-        }
-      });
+
+    // find taskrun by  task name;
+    let taskrun: TaskRun[] = [];
+
     if (nodeData === undefined || nodeData === "") {
-      //show nothing
-      this.graph.getGraph().clear();
+
     } else {
 
-      let node = JSON.parse(nodeData);
-      const nodeMap = new Map<string, any>();
-      node.nodes.map((item: any, index: number) => {
-        nodeMap.set(item.taskName, item)
-      });
 
-
-      let status = ["Failed", "Succeeded", "Progress"]
-      let a = 0;
-      node.nodes.map((item: any, index: number) => {
-        node.nodes[index].showtime = true;
-        node.nodes[index].status = 'Cancel';
-      });
       this.graph.getGraph().clear();
+
       setTimeout(() => {
-        this.graph.getGraph().changeData(node);
+        this.graph.getGraph().changeData(nodeData);
       }, 200);
 
-      // setInterval(() => {
-
-      //   node.nodes.map((item: any, index: number) => {
-      //     node.nodes[index].showtime = true;
-      //     node.nodes[index].time = a;
-      //     // node.nodes[index].showtimeimg = 3;
-      //     // if (node.nodes[index].status === 'Failed') {
-      //     //   node.nodes[index].status = 'Succeeded';
-      //     // } else {
-      //     //   node.nodes[index].status = 'Failed'
-      //     // }
-
-      //   })
-
-      //   this.graph.getGraph().changeData(node);
-      //   a++;
-      //   console.log(a);
-      // }, 1500);
-
-
+      //Interval 1s update status and time in graph
       setInterval(() => {
-        node.nodes.map((item: any, index: number) => {
-          let currentitem = this.graph.getGraph().findById(node.nodes[index].id);
-          var today = new Date();
-          let hour = today.getHours() + 'h';
-          let seconds = today.getSeconds() + 's'
-          this.graph.getGraph().setItemState(currentitem, "time", '1h3m' + '' + seconds);
-          console.log("----------------------------->", '1h 3m' + ' ' + seconds);
+        nodeData.nodes.map((item: any, index: number) => {
+
+          const currentTaskRun = taskRunStore.getByName(item.taskName);
+          nodeData.nodes[index].status = currentTaskRun.status.conditions[0].reason;
+          nodeData.nodes[index].showtime = true;
+
+          //when show pipeline will use current date time  less start time and then self-increment。
+          let completionTime = currentTaskRun.status.completionTime;
+          let totalTime;
+          const currentStartTime = currentTaskRun.status.startTime;
+          const st = new Date(currentStartTime).getTime();
+          if (completionTime !== '' || completionTime !== undefined) {
+
+            const ct = new Date(completionTime).getTime();
+            let result = Math.floor((ct - st) / 1000);
+            totalTime = this.secondsToHms(result);
+
+          } else {
+
+            const ct = new Date().getTime();
+            let result = Math.floor((ct - st) / 1000);
+            totalTime = this.secondsToHms(result);
+
+          }
+          //should get current node itme and update the time.
+          let currentitem = this.graph.getGraph().findById(nodeData.nodes[index].id);
+          this.graph.getGraph().setItemState(currentitem, "time", totalTime);
+
+
         });
-      }, 1)
+      }, 1000);
+
 
     }
+
+
+
+
+
+    // if (nodeData === undefined || nodeData === "") {
+    //   //show nothing
+    //   this.graph.getGraph().clear();
+    // } else {
+
+    //   let node = JSON.parse(nodeData);
+    //   const nodeMap = new Map<string, any>();
+    //   node.nodes.map((item: any, index: number) => {
+    //     nodeMap.set(item.taskName, item)
+    //   });
+
+
+    //   let status = ["Failed", "Succeeded", "Progress"]
+    //   let a = 0;
+    //   node.nodes.map((item: any, index: number) => {
+    //     node.nodes[index].showtime = true;
+    //     node.nodes[index].status = 'Cancel';
+    //   });
+    //   this.graph.getGraph().clear();
+    //   setTimeout(() => {
+    //     this.graph.getGraph().changeData(node);
+    //   }, 200);
+
+
+    //   setInterval(() => {
+    //     node.nodes.map((item: any, index: number) => {
+    //       let currentitem = this.graph.getGraph().findById(node.nodes[index].id);
+    //       var today = new Date();
+    //       let hour = today.getHours() + 'h';
+    //       let seconds = today.getSeconds() + 's'
+    //       this.graph.getGraph().setItemState(currentitem, "time", '1h3m' + '' + seconds);
+    //       console.log("----------------------------->", '1h 3m' + ' ' + seconds);
+    //     });
+    //   }, 1)
+
+    // }
 
   }
 
