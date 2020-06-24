@@ -1,9 +1,10 @@
+import "./copy-task-dialog.scss"
+
 import { observer } from "mobx-react";
 import React from "react";
 import {
   PipelineParamsDetails,
   PipelineResourceDetails,
-  TaskNameDetails,
   MultiTaskStepDetails, PipelineParams, PipelineResources, TaskStep, taskStep
 } from "../+tekton-task-detail";
 import { observable } from "mobx";
@@ -14,9 +15,7 @@ import { ActionMeta } from "react-select/src/types";
 import { SubTitle } from "../layout/sub-title";
 import { Input } from "../input";
 import { _i18n } from "../../i18n";
-import { Task } from "../../api/endpoints";
-import { taskStore } from "../+tekton-task/task.store"
-import { configStore } from "../../../client/config.store";
+import { taskStore } from "../+tekton-task/task.store";
 
 interface Props<T = any> extends Partial<Props> {
   value?: T;

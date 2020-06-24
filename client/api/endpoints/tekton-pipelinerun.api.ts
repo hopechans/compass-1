@@ -130,7 +130,7 @@ export class PipelineRun extends KubeObject {
   };
 
   getOwnerNamespace(): string {
-    return this.metadata.labels.namespace || "";
+    return this.metadata.namespace || "";
   }
 }
 
