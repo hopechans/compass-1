@@ -1,19 +1,19 @@
 import React from "react";
-import {observer} from "mobx-react";
-import {Dialog, DialogProps} from "../dialog";
-import {computed, observable} from "mobx";
-import {
-  Stone,
-} from "../../api/endpoints";
-import {Wizard, WizardStep} from "../wizard";
-import {t, Trans} from "@lingui/macro";
-import {SubTitle} from "../layout/sub-title";
-import {_i18n} from "../../i18n";
-import {Notifications} from "../notifications";
-import {Select} from "../select";
-import {stoneStore} from "./stones.store";
-import {Input} from "../input";
-import {isNumber} from "../input/input.validators";
+import { observer } from "mobx-react";
+import { Dialog, DialogProps } from "../dialog";
+import { computed, observable } from "mobx";
+import { Stone } from "../../api/endpoints";
+import { Wizard, WizardStep } from "../wizard";
+import { t, Trans } from "@lingui/macro";
+import { SubTitle } from "../layout/sub-title";
+import { _i18n } from "../../i18n";
+import { Notifications } from "../notifications";
+import { Select } from "../select";
+import { stoneStore } from "./stones.store";
+import { Input } from "../input";
+import { isNumber } from "../input/input.validators";
+import Row from "../grid/row";
+import Col from "../grid/col";
 
 interface Props extends Partial<DialogProps> {
 }
@@ -31,8 +31,9 @@ interface Coordinate {
 export class ConfigStoneDialog extends React.Component<Props> {
 
   @observable static isOpen = false;
-  @observable static data: Stone = null
+  @observable static data: Stone = null;
   @observable strategy: string = "";
+  @observable containers: any[] = [];
   @observable coordinates: Coordinate[] = [];
 
   static open(object: Stone) {
@@ -52,7 +53,8 @@ export class ConfigStoneDialog extends React.Component<Props> {
     try {
       this.stone.spec.strategy = this.strategy;
       this.stone.spec.coordinates = this.coordinates;
-      await stoneStore.update(this.stone, {...this.stone})
+      this.stone.spec.template.spec.containers = this.containers;
+      await stoneStore.update(this.stone, { ...this.stone })
       this.close();
     } catch (err) {
       Notifications.error(err);
@@ -73,7 +75,6 @@ export class ConfigStoneDialog extends React.Component<Props> {
   }
 
   onOpen = async () => {
-    console.log(this.stone)
     try {
       this.strategy = this.stone.spec.strategy;
     } catch (e) {
@@ -85,10 +86,16 @@ export class ConfigStoneDialog extends React.Component<Props> {
     } catch (e) {
       this.coordinates = [];
     }
+
+    try {
+      this.containers = this.stone.spec.template.spec.containers
+    } catch (e) {
+      this.containers = [];
+    }
   }
 
   render() {
-    const {...dialogProps} = this.props;
+    const { ...dialogProps } = this.props;
     const header = <h5><Trans>Update Stone</Trans></h5>;
     return (
       <Dialog
@@ -100,7 +107,7 @@ export class ConfigStoneDialog extends React.Component<Props> {
       >
         <Wizard header={header} done={this.close}>
           <WizardStep contentClass="flow column" nextLabel={<Trans>Config Stone</Trans>} next={this.updateStone}>
-            <SubTitle title={<Trans>Strategy</Trans>}/>
+            <SubTitle title={<Trans>Strategy</Trans>} />
             <Select
               value={this.strategy}
               options={this.options}
@@ -108,10 +115,31 @@ export class ConfigStoneDialog extends React.Component<Props> {
               className="box grow"
               onChange={value => this.strategy = value.value}
             />
+            <br/>
+            {this.containers.map((item, index) => {
+              return (
+                <>
+                  <Row>
+                    <Col span={6}>
+                      <SubTitle title={<Trans>ImageIndex - </Trans>} children={index} />
+                    </Col>
+                    <Col span={16}>
+                      <Input
+                        required={true}
+                        placeholder={_i18n._(t`Request Images`)}
+                        value={this.containers[index].image}
+                        onChange={value => this.containers[index].image = value}
+                      />
+                    </Col>
+                  </Row>
+                </>
+              )
+            })}
+            <br/>
             {this.coordinates.map((item, index) => {
               return (
                 <>
-                  <SubTitle title={<Trans>Replicas - </Trans>} children={this.coordinates[index].group}/>
+                  <SubTitle title={<Trans>Replicas - </Trans>} children={this.coordinates[index].group} />
                   <Input
                     required={true}
                     placeholder={_i18n._(t`Request Replicas`)}
@@ -126,7 +154,7 @@ export class ConfigStoneDialog extends React.Component<Props> {
             })}
           </WizardStep>
         </Wizard>
-      </Dialog>
+      </Dialog >
     )
   }
 }
