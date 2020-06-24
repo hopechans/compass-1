@@ -6,8 +6,8 @@ import { RouteComponentProps } from "react-router";
 import { Trans } from "@lingui/macro";
 import { PipelineRun, pipelineRunApi } from "../../api/endpoints";
 import { podsStore } from "../+workloads-pods/pods.store";
-import { pipelineRunStore } from "../+tekton/pipelinerun.store";
-import { pipelineStore } from "../+tekton/pipeline.store";
+import { pipelineRunStore } from "./pipelinerun.store";
+import { pipelineStore } from "../+tekton-pipeline/pipeline.store";
 import { nodesStore } from "../+nodes/nodes.store";
 import { eventStore } from "../+events/event.store";
 import { KubeObjectMenu, KubeObjectMenuProps } from "../kube-object/kube-object-menu";
@@ -16,7 +16,6 @@ import { apiManager } from "../../api/api-manager";
 import { observable } from "mobx";
 import { PipelineGraph } from "../+graphs/pipeline-graph"
 import { Graph } from "../+graphs/graph"
-import { string } from "yargs";
 
 enum sortBy {
   name = "name",
@@ -36,10 +35,6 @@ export class PipelineRuns extends React.Component<Props> {
 
   componentDidMount() {
     this.graph = new PipelineGraph(0, 0);
-    this.graph.bindClickOnNode(() => {
-    });
-    this.graph.bindMouseenter();
-    this.graph.bindMouseleave();
   }
 
 
@@ -52,35 +47,6 @@ export class PipelineRuns extends React.Component<Props> {
 
     const pipeline = pipelineStore.getByName(pipelinerun.spec.pipelineRef.name);
 
-
-
-    // const taskruns: Map<string, any> = JSON.parse(JSON.stringify(p));
-    // Object.keys(taskruns).map(function (key: string, index: number) {
-
-    //   console.log(key);
-    // });
-
-
-
-    // let taskArray: string[] = [];
-    // const taskruns = new Map<string, any>();
-    // for (let key in pipelinerun.status.taskRuns) {
-    //   taskruns.set(key, pipelinerun.status.taskRuns[key])
-    // }
-    // taskruns.set("a", "a");
-    // console.log(taskruns)
-
-    // for (const key in taskruns) {
-    //   console.log('The value for ' + key + ' is = ' + taskruns[key] as string);
-    // }
-    // Object.keys(taskruns).map(function (key: string, index: number) {
-    //   taskArray[index] = key;
-    //   console.log(taskruns.get(key));
-    // });
-
-
-
-    // console.log("taskrun.----------------------------------------", taskruns);
     let taskruns = pipelinerun.status.taskRuns;
     let nodeData: any;
     pipeline.getAnnotations()
@@ -91,31 +57,58 @@ export class PipelineRuns extends React.Component<Props> {
         }
       });
     if (nodeData === undefined || nodeData === "") {
+      //show nothing
       this.graph.getGraph().clear();
     } else {
 
-      this.graph.getGraph().clear();
       let node = JSON.parse(nodeData);
-
       const nodeMap = new Map<string, any>();
       node.nodes.map((item: any, index: number) => {
         nodeMap.set(item.taskName, item)
-      })
+      });
 
+
+      let status = ["Failed", "Succeeded", "Progress"]
+      let a = 0;
+      node.nodes.map((item: any, index: number) => {
+        node.nodes[index].showtime = true;
+        node.nodes[index].status = 'Progress';
+      });
+      this.graph.getGraph().clear();
       setTimeout(() => {
-
-        Object.keys(taskruns).map(function (key: string, index: number) {
-          let currentTask = pipelinerun.status.taskRuns[key];
-          console.log(pipelinerun.status.taskRuns[key]);
-          let taskNode = nodeMap.get(pipelinerun.status.taskRuns[key].pipelineTaskName);
-          taskNode.status = currentTask.status.conditions[0].reason;
-          node.nodes[index] = taskNode
-          console.log(node);
-        });
-
         this.graph.getGraph().changeData(node);
+      }, 200);
 
-      }, 20);
+      // setInterval(() => {
+
+      //   node.nodes.map((item: any, index: number) => {
+      //     node.nodes[index].showtime = true;
+      //     node.nodes[index].time = a;
+      //     // node.nodes[index].showtimeimg = 3;
+      //     // if (node.nodes[index].status === 'Failed') {
+      //     //   node.nodes[index].status = 'Succeeded';
+      //     // } else {
+      //     //   node.nodes[index].status = 'Failed'
+      //     // }
+
+      //   })
+
+      //   this.graph.getGraph().changeData(node);
+      //   a++;
+      //   console.log(a);
+      // }, 1500);
+
+
+      setInterval(() => {
+        node.nodes.map((item: any, index: number) => {
+          let currentitem = this.graph.getGraph().findById(node.nodes[index].id);
+          var today = new Date();
+          let hour = today.getHours() + 'h';
+          let seconds = today.getSeconds() + 's'
+          this.graph.getGraph().setItemState(currentitem, "time", '1h3m' + '' + seconds);
+          console.log("----------------------------->", '1h 3m' + ' ' + seconds);
+        });
+      }, 1)
 
     }
 
@@ -124,10 +117,9 @@ export class PipelineRuns extends React.Component<Props> {
   render() {
 
     return (
-      <>
-        <div style={{width:'99%'}}>
-          <Graph open={PipelineRuns.isHiddenPipelineGraph} showSave={true}></Graph>
-        </div>
+      <div>
+        <Graph open={PipelineRuns.isHiddenPipelineGraph} showSave={true}></Graph>
+
         <KubeObjectListLayout
 
           className="PipelineRuns" store={pipelineRunStore} dependentStores={[pipelineStore]}
@@ -155,7 +147,7 @@ export class PipelineRuns extends React.Component<Props> {
             return <PipelineRunMenu object={item} />
           }}
         />
-      </>
+      </div>
     )
   }
 }

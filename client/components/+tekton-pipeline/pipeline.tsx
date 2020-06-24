@@ -7,7 +7,7 @@ import { RouteComponentProps } from "react-router";
 import { Trans } from "@lingui/macro";
 import { Pipeline, pipelineApi, TaskRef, Task, PipelineTask } from "../../api/endpoints";
 import { podsStore } from "../+workloads-pods/pods.store";
-import { pipelineStore } from "../+tekton/pipeline.store";
+import { pipelineStore } from "./pipeline.store";
 import { nodesStore } from "../+nodes/nodes.store";
 import { eventStore } from "../+events/event.store";
 import { KubeObjectMenu, KubeObjectMenuProps } from "../kube-object";
@@ -23,7 +23,7 @@ import { Icon } from "../icon";
 import { AddPipelineDialog } from "./add-pipeline-dialog";
 import { configStore } from "../../../client/config.store";
 import { Notifications } from "../notifications";
-import { taskStore } from "../+tekton/task.store"
+import { taskStore } from "../+tekton-task/task.store"
 
 enum sortBy {
   name = "name",
@@ -177,7 +177,7 @@ export class Pipelines extends React.Component<Props> {
   render() {
     return (
       <>
-        <div style={{width:'99%'}}>
+        <div style={{ width: '99%' }}>
           <Graph open={Pipelines.isHiddenPipelineGraph} showSave={false} saveCallback={() => { this.savePipeline() }} />
         </div>
 

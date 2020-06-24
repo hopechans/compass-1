@@ -5,7 +5,7 @@ import { apiManager } from "../../api/api-manager";
 
 @autobind()
 export class TaskStore extends KubeObjectStore<Task> {
-  api = taskApi
+    api = taskApi
 }
 
 export const taskStore = new TaskStore();
