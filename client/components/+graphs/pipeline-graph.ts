@@ -28,7 +28,7 @@ export class PipelineGraph {
     }
 
     public setNodeStatusToSucceed(node: any): void {
-        this.setItemState("succeed", "", node);
+        this.setItemState("succeed", false, node);
     }
 
 
@@ -179,17 +179,17 @@ export class PipelineGraph {
             renderer: "svg",
             modes: {
 
-                default: [
-                    // "drag-node",
-                    {
-                        type: "tooltip",
-                        formatText: function formatText(model) {
-                            const text = "container: test,duration: 5min";
-                            return text;
-                        },
-                        // offset: 30
-                    },
-                ],
+                // default: [
+                //     // "drag-node",
+                //     {
+                //         type: "tooltip",
+                //         formatText: function formatText(model) {
+                //             const text = "container: test,duration: 5min";
+                //             return text;
+                //         },
+                //         // offset: 30
+                //     },
+                // ],
 
                 //   edit: ['click-select'],
                 // addEdge: ['click-add-edge', 'click-select'],

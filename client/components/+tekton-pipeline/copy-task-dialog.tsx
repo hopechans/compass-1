@@ -15,7 +15,7 @@ import { SubTitle } from "../layout/sub-title";
 import { Input } from "../input";
 import { _i18n } from "../../i18n";
 import { Task } from "../../api/endpoints";
-import { taskStore } from "../+tekton/task.store"
+import { taskStore } from "../+tekton-task/task.store"
 import { configStore } from "../../../client/config.store";
 
 interface Props<T = any> extends Partial<Props> {
