@@ -117,10 +117,6 @@ export class TaskRun extends KubeObject {
   spec: TaskRunSpec;
   status: TaskRunStatusFields;
 
-  getOwnerNamespace(): string {
-    return this.metadata.labels.namespace || "";
-  }
-
   getServiceAccountName(): string {
     return this.spec.serviceAccountName || "";
   }
@@ -131,6 +127,10 @@ export class TaskRun extends KubeObject {
 
   getOutputsResource() {
     return this.spec.outputs.resources || [];
+  }
+
+  getSteps() {
+    return this.status.steps || [];
   }
 }
 
