@@ -1,9 +1,9 @@
-import {autobind} from "../../utils";
-import {KubeObject} from "../kube-object";
-import {KubeApi} from "../kube-api";
-import {Inputs, Outputs, Param, TaskSpec} from "./tekton-task.api";
-import {TaskRef} from "./tekton-pipeline.api";
-import {PipelineRef, PipelineResourceBinding, PodTemplate,} from "./tekton-pipelinerun.api";
+import { autobind } from "../../utils";
+import { KubeObject } from "../kube-object";
+import { KubeApi } from "../kube-api";
+import { Inputs, Outputs, Param, TaskSpec } from "./tekton-task.api";
+import { TaskRef } from "./tekton-pipeline.api";
+import { PipelineRef, PipelineResourceBinding, PodTemplate, } from "./tekton-pipelinerun.api";
 
 export interface Conditions {
   type: string
@@ -12,6 +12,11 @@ export interface Conditions {
   lastTransitionTime?: string
   reason?: string
   message?: string
+}
+
+export interface Status {
+  observedGeneration?: number
+  conditions?: Conditions[]
 }
 
 export interface ContainerState {
@@ -51,9 +56,9 @@ export interface CloudEventDelivery {
   status: CloudEventDeliveryState
 }
 
-export interface TaskRunStatus extends TaskRunStatusFields {
-  observedGeneration?: number
-  conditions?: Conditions
+export interface TaskRunStatus extends TaskRunStatusFields, Status {
+  // observedGeneration?: number
+  // conditions?: Conditions
 }
 
 export interface TaskRunResult {
@@ -76,8 +81,8 @@ export interface SidecarState extends ContainerState {
 
 export interface TaskRunStatusFields {
   podName: string
-  startTime?: number
-  completionTime?: number
+  startTime?: string
+  completionTime?: string
   steps?: StepState[]
   cloudEvents?: CloudEventDelivery[]
   retriesStatus?: TaskRunStatus[]
@@ -85,6 +90,7 @@ export interface TaskRunStatusFields {
   taskResults?: TaskRunResult[]
   sidecars?: SidecarState
 }
+
 
 export interface TaskResourceBinding {
   PipelineResourceBinding: PipelineResourceBinding
@@ -115,7 +121,7 @@ export class TaskRun extends KubeObject {
   static kind = "TaskRun"
 
   spec: TaskRunSpec;
-  status: TaskRunStatusFields;
+  status: TaskRunStatus;
 
   getServiceAccountName(): string {
     return this.spec.serviceAccountName || "";
