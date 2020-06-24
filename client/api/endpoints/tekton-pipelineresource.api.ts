@@ -17,7 +17,7 @@ export class PipelineResource extends KubeObject {
   spec: PipelineResourceSpec
 
   getOwnerNamespace(): string {
-    return this.metadata.labels.namespace || "";
+    return this.metadata.namespace || "";
   }
 }
 

@@ -43,7 +43,7 @@ export class Pipeline extends KubeObject {
   }
 
   getOwnerNamespace(): string {
-    return this.metadata.labels.namespace || "";
+    return this.metadata.namespace || "";
   }
 
   getTaskSet() {

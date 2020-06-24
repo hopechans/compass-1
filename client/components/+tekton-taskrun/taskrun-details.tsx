@@ -15,14 +15,6 @@ interface Props extends KubeObjectDetailsProps<TaskRun> {
 @observer
 export class TaskRunDetails extends React.Component<Props> {
 
-  // componentDidMount() {
-  //   disposeOnUnmount(this, [
-  //     reaction(() => this.props.object, () => {
-  //       taskRunStore.reset();
-  //     })
-  //   ]);
-  // }
-
   render() {
     const {object: taskRun} = this.props;
     if (!taskRun) return null;
