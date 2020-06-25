@@ -62,7 +62,6 @@ export class CopyTaskDialog extends React.Component<Props> {
   @observable static node: any;
   @observable static data: any;
   @observable ifSwitch: boolean = false;
-  @observable switchName: string = '';
 
 
   static open(graph: any, node: any) {
