@@ -16,13 +16,13 @@ import './graph.scss'
 interface IProps {
     open?: boolean;
     showSave?: boolean;
-    saveCallback?: (pipeResult: PipelineResult) => void;
+    saveCallback?: (pipeResult: any) => void;
 }
 
 interface IState {
     open?: boolean;
     showSave?: boolean;
-    saveCallback?: (pipeResult: PipelineResult) => void;
+    saveCallback?: (pipeResult: any) => void;
 }
 
 export interface PipelineResult {
@@ -56,7 +56,10 @@ export class Graph extends React.Component<IProps, IState> {
         });
     }
 
-    handleClick = () => { this.props.saveCallback(this.value); };
+    handleClick = async () => {
+        console.log(this.value);
+        await this.props.saveCallback(this.value);
+    };
 
 
     render() {
