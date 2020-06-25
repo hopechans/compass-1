@@ -60,13 +60,13 @@ export class PipelineRuns extends React.Component<Props> {
     return hDisplay + mDisplay + sDisplay;
   }
 
-  getTaskRunName(pipelinerun: PipelineRun) {
+  getTaskRunName(pipelinerun: PipelineRun): string[] {
     let taskruns = pipelinerun.status.taskRuns;
-    let taskRunName: string[] = [];
+    let taskRunNames: string[] = [];
     Object.keys(taskruns).map(function (key: string, index: number) {
-      taskRunName.push(key);
+      taskRunNames.push(key);
     });
-    return taskRunName;
+    return taskRunNames;
   }
 
   getTaskRun(names: string[]): any {
