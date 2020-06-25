@@ -181,13 +181,6 @@ export class Pipelines extends React.Component<Props> {
   }
 
 
-  readerPipelineParams() {
-
-  }
-
-
-
-
   render() {
 
     return (
