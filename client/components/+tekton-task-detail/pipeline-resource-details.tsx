@@ -9,6 +9,7 @@ import { PipelineResources, pipelineResources } from "./common";
 import { Col, Row } from "antd";
 import { SubTitle } from "../layout/sub-title";
 import { _i18n } from "../../i18n";
+import { pipelineResourceStore } from '../+tekton-pipelineresource/pipelineresource.store';
 
 interface Props<T = any> extends Partial<Props> {
   value?: T;
@@ -32,8 +33,9 @@ export class PipelineResourceDetails extends React.Component<Props> {
   }
 
   get nameOptions() {
+
     return [
-      "",
+      ...pipelineResourceStore.items
     ]
   }
 
