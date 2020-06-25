@@ -48,7 +48,7 @@ export class Pipelines extends React.Component<Props> {
   @observable pipeline: Pipeline;
   @observable task: TaskResult = task;
   @observable pipelineResources: [];
-  // @observable pipeResult: PipelineResult = pipelineResult;
+  @observable pipeResult: PipelineResult = pipelineResult;
 
   private graph: PipelineGraph = null;
   data: any;
@@ -107,7 +107,7 @@ export class Pipelines extends React.Component<Props> {
     this.pipeline = pipeline;
   }
 
-  savePipeline = async (pipeResult: PipelineResult) => {
+  savePipeline = async (pipeResult: any) => {
     this.data = this.graph.getGraph().save();
     let items: Map<string, any> = new Map<string, any>();
 
@@ -159,14 +159,14 @@ export class Pipelines extends React.Component<Props> {
 
 
     const data = JSON.stringify(this.graph.getGraph().save());
-
     //更新对应的pipeline
     try {
       this.pipeline.metadata.labels = { namespace: configStore.getDefaultNamespace() }
       this.pipeline.metadata.annotations = { "node_data": data }
       this.pipeline.spec.tasks = [];
-      this.pipeline.spec.params = pipeResult.pipelineParams;
-      this.pipeline.spec.resources = pipeResult.pipelineResources;
+      //todo:this un-direct read pipeResult.pipelineParams data
+      // this.pipeline.spec.params = pipeResult.pipelineParams
+      // this.pipeline.spec.resources = pipeResult.pipelineResources;
       this.pipeline.spec.tasks.push(...tasks);
       await pipelineStore.update(this.pipeline, { ...this.pipeline });
     } catch (err) {
@@ -181,19 +181,12 @@ export class Pipelines extends React.Component<Props> {
   }
 
 
-  readerPipelineParams() {
-
-  }
-
-
-
-
   render() {
 
     return (
       <>
         <div style={{ width: '100%' }}>
-          <Graph open={Pipelines.isHiddenPipelineGraph} showSave={false} saveCallback={() => { this.savePipeline }} />
+          <Graph open={Pipelines.isHiddenPipelineGraph} showSave={false} saveCallback={(pipelineResult: PipelineResult) => { this.savePipeline(pipelineResult) }} />
         </div>
 
 

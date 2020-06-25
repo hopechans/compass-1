@@ -56,7 +56,9 @@ export class Graph extends React.Component<IProps, IState> {
         });
     }
 
-    handleClick = () => { this.props.saveCallback(this.value); };
+    handleClick = async () => {
+        await this.props.saveCallback(this.value);
+    };
 
 
     render() {
