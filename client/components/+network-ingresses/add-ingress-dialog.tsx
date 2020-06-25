@@ -14,8 +14,6 @@ import { Backend, backend, BackendDetails, MultiRuleDetails, Rule, TlsDetails, T
 import { Ingress } from "../../../client/api/endpoints";
 import { NamespaceSelect } from "../+namespaces/namespace-select";
 import { ingressStore } from "./ingress.store";
-import Grid from "@material-ui/core/Grid/Grid";
-import Paper from "@material-ui/core/Paper";
 
 const { Panel } = Collapse;
 
@@ -44,7 +42,7 @@ export class AddIngressDialog extends React.Component<Props> {
     AddIngressDialog.close();
   }
 
-  createIngress = async () => {
+  createIngress = () => {
     let data: Partial<Ingress> = {
       spec: {
         tls: this.tls.map(item => { return { hosts: item.hosts, secretName: item.secretName }; }).slice(),
@@ -55,8 +53,7 @@ export class AddIngressDialog extends React.Component<Props> {
       data.spec.backend = JSON.parse(JSON.stringify(this.backend))
     }
     try {
-      await ingressStore.create({ name: this.name, namespace: this.namespace }, { ...data })
-      console.log("data", data);
+      ingressStore.create({ name: this.name, namespace: this.namespace }, { ...data })
       this.close();
     } catch (err) {
       Notifications.error(err);
