@@ -96,11 +96,23 @@ export interface WorkspacePipelineDeclaration {
   description?: string;
 }
 
+// PipelineSpec defines the desired state of Pipeline.
 export interface PipelineSpec {
+  // Description is a user-facing description of the pipeline that may be
+  // used to populate a UI.
+  // +optional
   description?: string;
+  // Resources declares the names and types of the resources given to the
+  // Pipeline's tasks as inputs and outputs.
   resources: PipelineDeclaredResource[];
+  // Tasks declares the graph of Tasks that execute when this Pipeline is run.
   tasks: PipelineTask[];
+  // Params declares a list of input parameters that must be supplied when
+  // this Pipeline is run.
   params: ParamSpec[];
+  // Workspaces declares a set of named workspaces that are expected to be
+  // provided by a PipelineRun.
+  // +optional
   workspaces?: WorkspacePipelineDeclaration[];
 }
 
