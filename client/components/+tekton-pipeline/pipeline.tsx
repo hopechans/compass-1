@@ -8,13 +8,11 @@ import { Trans } from "@lingui/macro";
 import { Pipeline, pipelineApi, TaskRef, Task, PipelineTask } from "../../api/endpoints";
 import { podsStore } from "../+workloads-pods/pods.store";
 import { pipelineStore } from "./pipeline.store";
-import { nodesStore } from "../+nodes/nodes.store";
 import { eventStore } from "../+events/event.store";
 import { KubeObjectMenu, KubeObjectMenuProps } from "../kube-object";
 import { KubeObjectListLayout } from "../kube-object";
 import { apiManager } from "../../api/api-manager";
 import { _i18n } from "../../i18n";
-import { StepUp, stepUp } from "./steps";
 import { PipelineGraph } from "../+graphs/pipeline-graph"
 import { Graph, PipelineResult, pipelineResult } from "../+graphs/graph"
 import { CopyTaskDialog, task, TaskResult } from "./copy-task-dialog";
@@ -107,11 +105,11 @@ export class Pipelines extends React.Component<Props> {
     this.pipeline = pipeline;
   }
 
-  savePipeline = async (pipeResult: any) => {
-    this.data = this.graph.getGraph().save();
-    let items: Map<string, any> = new Map<string, any>();
 
-    //存取node{id,...} => <id,node>
+  //存取node{id,...} => <id,node>
+  nodeToMap(): Map<string, any> {
+
+    let items: Map<string, any> = new Map<string, any>();
     this.data.nodes.map((item: any, index: number) => {
       const ids = item.id.split("-");
       if (items.get(ids[0]) === undefined) {
@@ -120,43 +118,60 @@ export class Pipelines extends React.Component<Props> {
       items.get(ids[0]).push(item);
     });
 
-    let keys = Array.from(items.keys());
-    let b = 1;
+    return items;
+
+  }
+
+  //通过map的关系，形成要提交的任务，组装数据。
+  getPipelineTasks(): PipelineTask[] {
+    const dataMap = this.nodeToMap();
+    let keys = Array.from(dataMap.keys());
+
     let tasks: PipelineTask[] = [];
 
-    //通过map的关系，形成要提交的任务，组装数据。
+    let tmp = 1;
+
     keys.map((item: any, index: number) => {
 
-      if (b === 1) {
-        let array = items.get(item);
+      let array = dataMap.get(item);
+
+      if (tmp === 1) {
+
         let task = new PipelineTask();
         task.runAfter = [];
-        for (let i = 0; i < array.length; i++) {
-          task.name = array[i].taskName;
-          task.taskRef = { name: array[i].taskName };
-        }
+        array.map((item: any) => {
+          task.name = item.taskName;
+          task.taskRef = { name: item.taskName };
+        });
         tasks.push(task);
+
       } else {
-        let array1 = items.get(item);
-        let tmp = b - 1;
-        let array2 = items.get(tmp.toString());
-        for (let i = 0; i < array1.length; i++) {
+
+
+        let result = tmp - 1;
+        array.map((item: any) => {
           let task = new PipelineTask();
           task.runAfter = [];
-          task.name = array1[i].taskName;
-          task.taskRef = { name: array1[i].taskName };
+          task.name = item.taskName;
+          task.taskRef = { name: item.taskName };
           //set task runAfter
-          for (let j = 0; j < array2.length; j++) {
-            task.runAfter[j] = array2[j].taskName;
-            console.log(task.runAfter);
-          }
+          dataMap.get(result.toString()).map((item: any) => {
+            task.runAfter.push(item.taskName);
+          });
           tasks.push(task);
+        });
 
-        }
       }
-      b++;
+
+      tmp++;
+
     });
 
+    return tasks;
+  }
+
+  savePipeline = async (pipeResult: PipelineResult) => {
+    this.data = this.graph.getGraph().save();
 
     const data = JSON.stringify(this.graph.getGraph().save());
     //更新对应的pipeline
@@ -167,7 +182,7 @@ export class Pipelines extends React.Component<Props> {
       //todo:this un-direct read pipeResult.pipelineParams data
       // this.pipeline.spec.params = pipeResult.pipelineParams
       // this.pipeline.spec.resources = pipeResult.pipelineResources;
-      this.pipeline.spec.tasks.push(...tasks);
+      this.pipeline.spec.tasks.push(...this.getPipelineTasks());
       await pipelineStore.update(this.pipeline, { ...this.pipeline });
     } catch (err) {
       console.log(err);

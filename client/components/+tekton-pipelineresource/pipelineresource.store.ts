@@ -1,8 +1,7 @@
-import {observable} from "mobx";
-import {autobind} from "../../utils";
-import {KubeObjectStore} from "../../kube-object.store";
-import {IPodMetrics, podsApi, PodStatus, pipelineResourceApi, PipelineResource} from "../../api/endpoints";
-import {apiManager} from "../../api/api-manager";
+import { autobind } from "../../utils";
+import { KubeObjectStore } from "../../kube-object.store";
+import { pipelineResourceApi, PipelineResource } from "../../api/endpoints";
+import { apiManager } from "../../api/api-manager";
 
 @autobind()
 export class PipelineResourceStore extends KubeObjectStore<PipelineResource> {

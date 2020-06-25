@@ -5,11 +5,8 @@ import { observer } from "mobx-react";
 import { RouteComponentProps } from "react-router";
 import { Trans } from "@lingui/macro";
 import { PipelineRun, pipelineRunApi, TaskRun } from "../../api/endpoints";
-import { podsStore } from "../+workloads-pods/pods.store";
 import { pipelineRunStore } from "./pipelinerun.store";
 import { pipelineStore } from "../+tekton-pipeline/pipeline.store";
-import { nodesStore } from "../+nodes/nodes.store";
-import { eventStore } from "../+events/event.store";
 import { KubeObjectMenu, KubeObjectMenuProps } from "../kube-object/kube-object-menu";
 import { KubeObjectListLayout } from "../kube-object";
 import { apiManager } from "../../api/api-manager";
@@ -17,7 +14,6 @@ import { observable } from "mobx";
 import { PipelineGraph } from "../+graphs/pipeline-graph"
 import { Graph } from "../+graphs/graph"
 import { taskRunStore } from "../+tekton-taskrun/taskrun.store"
-import { task } from "../+tekton-pipeline/copy-task-dialog";
 
 enum sortBy {
   name = "name",
