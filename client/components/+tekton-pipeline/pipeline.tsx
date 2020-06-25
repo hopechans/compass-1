@@ -16,14 +16,15 @@ import { apiManager } from "../../api/api-manager";
 import { _i18n } from "../../i18n";
 import { StepUp, stepUp } from "./steps";
 import { PipelineGraph } from "../+graphs/pipeline-graph"
-import { Graph } from "../+graphs/graph"
+import { Graph, PipelineResult, pipelineResult } from "../+graphs/graph"
 import { CopyTaskDialog, task, TaskResult } from "./copy-task-dialog";
 import { MenuItem } from "../menu";
 import { Icon } from "../icon";
 import { AddPipelineDialog } from "./add-pipeline-dialog";
 import { configStore } from "../../../client/config.store";
 import { Notifications } from "../notifications";
-import { taskStore } from "../+tekton-task/task.store"
+import { taskStore } from "../+tekton-task/task.store";
+
 
 enum sortBy {
   name = "name",
@@ -46,6 +47,8 @@ export class Pipelines extends React.Component<Props> {
   @observable static isHiddenPipelineGraph: boolean = false;
   @observable pipeline: Pipeline;
   @observable task: TaskResult = task;
+  @observable pipelineResources: [];
+  // @observable pipeResult: PipelineResult = pipelineResult;
 
   private graph: PipelineGraph = null;
   data: any;
@@ -104,7 +107,7 @@ export class Pipelines extends React.Component<Props> {
     this.pipeline = pipeline;
   }
 
-  savePipeline = async () => {
+  savePipeline = async (pipeResult: PipelineResult) => {
     this.data = this.graph.getGraph().save();
     let items: Map<string, any> = new Map<string, any>();
 
@@ -156,11 +159,14 @@ export class Pipelines extends React.Component<Props> {
 
 
     const data = JSON.stringify(this.graph.getGraph().save());
+
     //更新对应的pipeline
     try {
       this.pipeline.metadata.labels = { namespace: configStore.getDefaultNamespace() }
       this.pipeline.metadata.annotations = { "node_data": data }
       this.pipeline.spec.tasks = [];
+      this.pipeline.spec.params = pipeResult.pipelineParams;
+      this.pipeline.spec.resources = pipeResult.pipelineResources;
       this.pipeline.spec.tasks.push(...tasks);
       await pipelineStore.update(this.pipeline, { ...this.pipeline });
     } catch (err) {
@@ -174,12 +180,24 @@ export class Pipelines extends React.Component<Props> {
 
   }
 
+
+  readerPipelineParams() {
+
+  }
+
+
+
+
   render() {
+
     return (
       <>
-        <div style={{ width: '99%' }}>
-          <Graph open={Pipelines.isHiddenPipelineGraph} showSave={false} saveCallback={() => { this.savePipeline() }} />
+        <div style={{ width: '100%' }}>
+          <Graph open={Pipelines.isHiddenPipelineGraph} showSave={false} saveCallback={() => { this.savePipeline }} />
         </div>
+
+
+
 
         <KubeObjectListLayout
           className="Pipelines"
