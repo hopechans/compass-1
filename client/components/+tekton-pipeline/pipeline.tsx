@@ -186,7 +186,7 @@ export class Pipelines extends React.Component<Props> {
     return (
       <>
         <div style={{ width: '100%' }}>
-          <Graph open={Pipelines.isHiddenPipelineGraph} showSave={false} saveCallback={(pipeline: Pipeline) => { this.savePipeline(pipeline) }} />
+          <Graph open={Pipelines.isHiddenPipelineGraph} showSave={false} saveCallback={(pipelineResult: PipelineResult) => { this.savePipeline(pipelineResult) }} />
         </div>
 
 
