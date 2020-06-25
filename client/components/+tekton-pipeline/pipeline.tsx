@@ -8,13 +8,11 @@ import { Trans } from "@lingui/macro";
 import { Pipeline, pipelineApi, TaskRef, Task, PipelineTask } from "../../api/endpoints";
 import { podsStore } from "../+workloads-pods/pods.store";
 import { pipelineStore } from "./pipeline.store";
-import { nodesStore } from "../+nodes/nodes.store";
 import { eventStore } from "../+events/event.store";
 import { KubeObjectMenu, KubeObjectMenuProps } from "../kube-object";
 import { KubeObjectListLayout } from "../kube-object";
 import { apiManager } from "../../api/api-manager";
 import { _i18n } from "../../i18n";
-import { StepUp, stepUp } from "./steps";
 import { PipelineGraph } from "../+graphs/pipeline-graph"
 import { Graph, PipelineResult, pipelineResult } from "../+graphs/graph"
 import { CopyTaskDialog, task, TaskResult } from "./copy-task-dialog";
