@@ -63,7 +63,6 @@ export class Graph extends React.Component<IProps, IState> {
 
     render() {
         const { open, showSave } = this.state;
-
         return (
             <div>
 

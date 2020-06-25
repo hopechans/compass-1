@@ -22,6 +22,7 @@ import { AddPipelineDialog } from "./add-pipeline-dialog";
 import { configStore } from "../../../client/config.store";
 import { Notifications } from "../notifications";
 import { taskStore } from "../+tekton-task/task.store";
+import { pipelineResourceStore } from '../+tekton-pipelineresource/pipelineresource.store';
 
 
 enum sortBy {
@@ -210,7 +211,7 @@ export class Pipelines extends React.Component<Props> {
         <KubeObjectListLayout
           className="Pipelines"
           store={pipelineStore}
-          dependentStores={[pipelineStore, podsStore, eventStore, taskStore]} // other
+          dependentStores={[pipelineStore, podsStore, eventStore, taskStore, pipelineResourceStore]} // other
           sortingCallbacks={{
             [sortBy.name]: (pipeline: Pipeline) => pipeline.getName(),
             [sortBy.ownernamespace]: (pipeline: Pipeline) => pipeline.getOwnerNamespace(),
