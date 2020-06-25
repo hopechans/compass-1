@@ -17,6 +17,7 @@ import { observable } from "mobx";
 import { PipelineGraph } from "../+graphs/pipeline-graph"
 import { Graph } from "../+graphs/graph"
 import { taskRunStore } from "../+tekton-taskrun/taskrun.store"
+import { task } from "../+tekton-pipeline/copy-task-dialog";
 
 enum sortBy {
   name = "name",
@@ -59,6 +60,25 @@ export class PipelineRuns extends React.Component<Props> {
     return hDisplay + mDisplay + sDisplay;
   }
 
+  getTaskRunName(pipelinerun: PipelineRun): string[] {
+    let taskruns = pipelinerun.status.taskRuns;
+    let taskRunNames: string[] = [];
+    Object.keys(taskruns).map(function (key: string, index: number) {
+      taskRunNames.push(key);
+    });
+    return taskRunNames;
+  }
+
+  getTaskRun(names: string[]): any {
+    let taskMap: any = new Map<string, any>();
+    names.map((name: string, index: number) => {
+      const currentTask = taskRunStore.getByName(name);
+      taskMap[currentTask.spec.taskRef.name] = currentTask;
+    })
+
+    return taskMap;
+  }
+
 
   componentDidMount() {
     this.graph = new PipelineGraph(0, 0);
@@ -67,6 +87,7 @@ export class PipelineRuns extends React.Component<Props> {
 
   //showCurrentPipelineRunStatus show pipeline run status
   showCurrentPipelineRunStatus(pipelinerun: PipelineRun) {
+
     if (PipelineRuns.isHiddenPipelineGraph === undefined) {
       PipelineRuns.isHiddenPipelineGraph = true;
     }
@@ -90,12 +111,13 @@ export class PipelineRuns extends React.Component<Props> {
         this.graph.getGraph().changeData(nodeData);
       }, 200);
 
+      const currentTaskRunMap = this.getTaskRun(this.getTaskRunName(pipelinerun));
       //Interval 1s update status and time in graph
       setInterval(() => {
         nodeData.nodes.map((item: any, index: number) => {
 
           //set current node status,just like:Failed Succeed... and so on.
-          const currentTaskRun = taskRunStore.getByName(item.taskName);
+          const currentTaskRun = currentTaskRunMap[item.taskName];
           nodeData.nodes[index].status = currentTaskRun.status.conditions[0].reason;
           nodeData.nodes[index].showtime = true;
 
@@ -180,7 +202,7 @@ export class PipelineRuns extends React.Component<Props> {
         </div>
         <KubeObjectListLayout
 
-          className="PipelineRuns" store={pipelineRunStore} dependentStores={[pipelineStore]}
+          className="PipelineRuns" store={pipelineRunStore} dependentStores={[pipelineStore, taskRunStore]}
           sortingCallbacks={{
             [sortBy.name]: (pipelineRun: PipelineRun) => pipelineRun.getName(),
             [sortBy.ownernamespace]: (pipelineRun: PipelineRun) => pipelineRun.getOwnerNamespace(),
