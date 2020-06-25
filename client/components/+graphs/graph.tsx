@@ -1,25 +1,44 @@
 
 import React from "react";
-import { Grid, Divider } from "@material-ui/core";
+import { Grid, Divider, Card } from "@material-ui/core";
 import { Trans } from "@lingui/macro";
 import { Button } from "../button";
+import { observer } from "mobx-react";
+import { observable } from "mobx";
+import {
+    PipelineParamsDetails,
+    PipelineResourceDetails,
+    PipelineParams, PipelineResources,
+} from "../+tekton-task-detail";
 import './graph.scss'
 
 
 interface IProps {
     open?: boolean;
     showSave?: boolean;
-    saveCallback?: () => void;
+    saveCallback?: (pipeResult: PipelineResult) => void;
 }
 
 interface IState {
     open?: boolean;
     showSave?: boolean;
-    saveCallback?: () => void;
+    saveCallback?: (pipeResult: PipelineResult) => void;
+}
+
+export interface PipelineResult {
+    pipelineResources: PipelineResources[];
+    pipelineParams: PipelineParams[];
 }
 
 
+export const pipelineResult: PipelineResult = {
+    pipelineResources: [],
+    pipelineParams: [],
+}
+
+@observer
 export class Graph extends React.Component<IProps, IState> {
+    @observable value: PipelineResult = pipelineResult;
     constructor(props: IProps) {
         super(props);
         this.state = {
@@ -37,7 +56,9 @@ export class Graph extends React.Component<IProps, IState> {
         });
     }
 
-    handleClick = () => { this.props.saveCallback(); };
+    handleClick = async () => {
+        await this.props.saveCallback(this.value);
+    };
 
 
     render() {
@@ -45,6 +66,7 @@ export class Graph extends React.Component<IProps, IState> {
 
         return (
             <div>
+
 
                 <div hidden={
                     open
@@ -66,6 +88,8 @@ export class Graph extends React.Component<IProps, IState> {
                     </Grid>
                 </div>
 
+
+
                 <div
                     className="pipeline-graph"
                     id="pipeline-graph"
@@ -76,6 +100,25 @@ export class Graph extends React.Component<IProps, IState> {
 
 
                 </div>
+
+                <div hidden={
+                    open
+                }>
+                    <Card >
+                        <br />
+                        <PipelineResourceDetails value={this.value.pipelineResources} onChange={(value) => {
+                            this.value.pipelineResources = value
+                        }} />
+                        <br />
+                        <Divider />
+                        <PipelineParamsDetails value={this.value.pipelineParams} onChange={value => {
+                            this.value.pipelineParams = value
+                        }} />
+                        <br />
+                        <Divider />
+                    </Card>
+                </div>
+
             </div>
         )
     }

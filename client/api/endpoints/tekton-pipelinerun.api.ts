@@ -1,7 +1,7 @@
-import {autobind} from "../../utils";
-import {KubeObject} from "../kube-object";
-import {KubeApi} from "../kube-api";
-import {PipelineSpec} from "./tekton-pipeline.api";
+import { autobind } from "../../utils";
+import { KubeObject } from "../kube-object";
+import { KubeApi } from "../kube-api";
+import { PipelineSpec } from "./tekton-pipeline.api";
 
 export interface PipelineRef {
   name: string;

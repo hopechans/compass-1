@@ -1,8 +1,7 @@
 import { observable } from "mobx";
 import { autobind } from "../../utils";
 import { KubeObjectStore } from "../../kube-object.store";
-import { IPodMetrics, podsApi, PodStatus, pipelineRunApi, PipelineRun } from "../../api/endpoints";
-import { podsStore } from "../+workloads-pods/pods.store";
+import { pipelineRunApi, PipelineRun } from "../../api/endpoints";
 import { apiManager } from "../../api/api-manager";
 
 @autobind()
