@@ -33,9 +33,9 @@ export class PipelineResourceDetails extends React.Component<Props> {
   }
 
   get nameOptions() {
-
+    const options = pipelineResourceStore.items.map(item => ({ value: item.getName() })).slice();
     return [
-      ...pipelineResourceStore.items
+      ...options,
     ]
   }
 
