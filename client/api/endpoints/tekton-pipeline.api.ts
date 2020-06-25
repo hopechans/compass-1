@@ -1,6 +1,7 @@
-import {autobind} from "../../utils";
-import {KubeObject} from "../kube-object";
-import {KubeApi} from "../kube-api";
+import { autobind } from "../../utils";
+import { KubeObject } from "../kube-object";
+import { KubeApi } from "../kube-api";
+import { TaskSpec, Params } from "./tekton-task.api"
 
 export interface TaskRef {
   name: string;
@@ -15,21 +16,92 @@ export interface ParamSpec {
   default: string | Array<any>;
 }
 
-export interface PipelineTask {
+// PipelineTaskInputResource maps the name of a declared PipelineResource input
+// dependency in a Task to the resource in the Pipeline's DeclaredPipelineResources
+// that should be used. This input may come from a previous task.
+export interface PipelineTaskInputResource {
+  // Name is the name of the PipelineResource as declared by the Task.
   name: string;
-  taskRef: TaskRef;
-  runAfter: string[];
+  // Resource is the name of the DeclaredPipelineResource to use.
+  resource: string;
+  // From is the list of PipelineTask names that the resource has to come from.
+  // (Implies an ordering in the execution graph.)
+  // +optional
+  from?: string[];
 }
 
-export class PipelineTask implements PipelineTask {}
+// PipelineTaskOutputResource maps the name of a declared PipelineResource output
+// dependency in a Task to the resource in the Pipeline's DeclaredPipelineResources
+// that should be used.
+export interface PipelineTaskOutputResource {
+  // Name is the name of the PipelineResource as declared by the Task.
+  name: string;
+  // Resource is the name of the DeclaredPipelineResource to use.
+  resource: string;
+}
+
+// PipelineTaskResources allows a Pipeline to declare how its DeclaredPipelineResources
+// should be provided to a Task as its inputs and outputs.
+export interface PipelineTaskResources {
+  inputs: PipelineTaskInputResource[];
+  outputs: PipelineTaskOutputResource[];
+}
+
+// WorkspacePipelineTaskBinding describes how a workspace passed into the pipeline should be
+// mapped to a task's declared workspace.
+export interface WorkspacePipelineTaskBinding {
+  // Name is the name of the workspace as declared by the task
+  name: string;
+  // Workspace is the name of the workspace declared by the pipeline
+  workspace: string;
+}
+
+// PipelineTaskCondition allows a PipelineTask to declare a Condition to be evaluated before
+// the Task is run.
+export interface PipelineTaskCondition {
+  conditionRef: string;
+  params?: Params[];
+  resources: PipelineTaskInputResource[];
+}
+
+export interface PipelineTask {
+  name: string;
+  taskRef?: TaskRef;
+  runAfter?: string[];
+  taskSpec?: TaskSpec;
+  retries?: number;
+  resources?: PipelineTaskResources;
+  params?: Params;
+  timeout?: string;
+  conditions?: PipelineTaskCondition;
+}
+
+// PipelineTask defines a task in a Pipeline, passing inputs from both
+// Params and from the output of previous tasks.
+export class PipelineTask implements PipelineTask { }
+
+// PipelineDeclaredResource is used by a Pipeline to declare the types of the
+// PipelineResources that it will required to run and names which can be used to
+// refer to these PipelineResources in PipelineTaskResourceBindings.
+export interface PipelineDeclaredResource {
+  name: string;
+  type: string;
+  optional?: boolean;
+}
+
+// WorkspacePipelineDeclaration creates a named slot in a Pipeline that a PipelineRun
+// is expected to populate with a workspace binding.
+export interface WorkspacePipelineDeclaration {
+  name: string;
+  description?: string;
+}
 
 export interface PipelineSpec {
-  resources: {
-    name: string;
-    type: string;
-  }[];
+  description?: string;
+  resources: PipelineDeclaredResource[];
   tasks: PipelineTask[];
   params: ParamSpec[];
+  workspaces?: WorkspacePipelineDeclaration[];
 }
 
 @autobind()
