@@ -17,18 +17,6 @@ import {t, Trans} from "@lingui/macro";
 interface Props<T = any> extends Partial<Props> {
   value?: T;
 
-  containerNameTitle?: string
-  imageAddressTitle?: string
-  imagePullPolicyTitle?: string
-  limitCPUTitle?: string
-  limitMemoryTitle?: string
-  requiredCPUTitle?: string
-  requireMemoryTitle?: string
-  setImagePullPolicy?: boolean
-  setImageAddress?: boolean
-  setResource?: boolean
-  imagePullSecrets?: string
-
   themeName?: "dark" | "light" | "outlined";
   divider?: true;
 
@@ -37,18 +25,6 @@ interface Props<T = any> extends Partial<Props> {
 
 @observer
 export class BaseDetails extends React.Component<Props> {
-
-  static defaultProps = {
-    lowerCase: true,
-    containerNameTitle: 'Container Name',
-    imageAddressTitle: 'Image Address',
-    imagePullPolicyTitle: 'Image PullPolicy',
-    limitCPUTitle: 'Limit CPU',
-    limitMemoryTitle: 'Limit Memory',
-    requiredCPUTitle: 'Required CPU',
-    requireMemoryTitle: 'Required Memory',
-    imagePullSecrets: 'Image PullSecrets',
-  }
 
   @observable value: Base = this.props.value || base
   @observable namespace: string = '';
@@ -91,10 +67,6 @@ export class BaseDetails extends React.Component<Props> {
 
   render() {
 
-    const {
-      containerNameTitle, imageAddressTitle, imagePullPolicyTitle,
-      limitCPUTitle, limitMemoryTitle, requiredCPUTitle, requireMemoryTitle, imagePullSecrets
-    } = this.props
     return (
       <>
         <SubTitle title={<Trans>Container Name</Trans>}/>

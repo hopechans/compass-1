@@ -1,13 +1,13 @@
 import "./add-deploy-dialog.scss"
 
-import React, {ReactElement} from "react";
+import React from "react";
 import {observer} from "mobx-react";
 import {Dialog, DialogProps} from "../dialog";
-import {computed, observable} from "mobx";
-import {number, t, Trans} from "@lingui/macro";
+import {observable} from "mobx";
+import {Trans} from "@lingui/macro";
 import {Wizard, WizardStep} from "../wizard";
 import {Container, container, MultiContainerDetails} from "../+deploy-container";
-import {Collapse} from "antd";
+import {Collapse} from "../collapse";
 import {deployService, DeployServiceDetails, Service} from "../+deploy-service";
 import {MultiVolumeClaimDetails, VolumeClaimTemplate} from "../+deploy-volumeclaim";
 import {app, App} from "../+deploy-app";
@@ -15,8 +15,6 @@ import {AppDetails} from "../+deploy-app";
 import {deployStore} from "./deploy.store";
 import {Notifications} from "../notifications";
 import {configStore} from "../../config.store";
-
-const {Panel} = Collapse;
 
 interface Props extends DialogProps {
 
@@ -83,31 +81,23 @@ export class AddDeployDialog extends React.Component<Props> {
         <Wizard className="AddDeployDialog" header={header} done={this.close}>
           <WizardStep contentClass="flex gaps column" next={this.addDeployDialog}>
             <div className="init-form">
-              <Collapse defaultActiveKey={'App'}>
-                <Panel header={`App`} key="App">
-                  <AppDetails value={this.app} onChange={value => this.app = value}/>
-                </Panel>
+              <Collapse panelName={<Trans>Base</Trans>}>
+                <AppDetails value={this.app} onChange={value => this.app = value}/>
               </Collapse>
               <br/>
-              <Collapse>
-                <Panel key={"MultiContainer"} header={"Containers"}>
-                  <MultiContainerDetails value={this.containers}
-                                         onChange={value => this.containers = value}/>
-                </Panel>
+              <Collapse panelName={<Trans>Containers</Trans>}>
+                <MultiContainerDetails value={this.containers}
+                                       onChange={value => this.containers = value}/>
               </Collapse>
               <br/>
-              <Collapse>
-                <Panel key={"DeployService"} header={"Service"}>
-                  <DeployServiceDetails value={this.service}
-                                        onChange={value => this.service = value}/>
-                </Panel>
+              <Collapse panelName={<Trans>Service</Trans>}>
+                <DeployServiceDetails value={this.service}
+                                      onChange={value => this.service = value}/>
               </Collapse>
               <br/>
-              <Collapse>
-                <Panel key={"MultiVolumeClaim"} header={"VolumeClaims"}>
-                  <MultiVolumeClaimDetails value={this.volumeClaims}
-                                           onChange={value => this.volumeClaims = value}/>
-                </Panel>
+              <Collapse panelName={<Trans>Volume</Trans>}>
+                <MultiVolumeClaimDetails value={this.volumeClaims}
+                                         onChange={value => this.volumeClaims = value}/>
               </Collapse>
             </div>
           </WizardStep>

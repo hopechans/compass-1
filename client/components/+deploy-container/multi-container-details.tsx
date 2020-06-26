@@ -2,15 +2,17 @@ import {ActionMeta} from "react-select/src/types";
 import {observer} from "mobx-react";
 import React from "react";
 import {Button} from "../button";
-import {Collapse, Popconfirm} from "antd";
+// import {Collapse, Popconfirm} from "antd";
+import {Collapse} from "../collapse";
+import {Popconfirm} from "antd";
 import {ContainerDetails} from "./container-details";
 import {observable} from "mobx";
 import {DeleteOutlined} from '@ant-design/icons';
 import {container, Container} from "./common";
 import {_i18n} from "../../i18n";
-import {t} from "@lingui/macro";
+import {t, Trans} from "@lingui/macro";
 
-const {Panel} = Collapse;
+// const {Panel} = Collapse;
 
 interface Props<T = any> extends Partial<Props> {
   value?: T;
@@ -88,29 +90,27 @@ export class MultiContainerDetails extends React.Component<Props> {
       <>
         <Button primary onClick={() => this.add()}><span>{_i18n._(t`Addition Container`)}</span></Button>
         <br/><br/>
-        <Collapse>
-          {this.value.map((item, index) => {
-            return (
-              <Panel header={_i18n._(t`Container`)} key={index} extra={genExtra(index)}>
-                <ContainerDetails
-                  base={true}
-                  commands={true}
-                  args={true}
-                  environment={true}
-                  readyProbe={true}
-                  liveProbe={true}
-                  lifeCycle={true}
-                  divider={true}
-                  volumeMounts={true}
-                  value={this.value[index]}
-                  onChange={(value: any) => {
-                    this.value[index] = value
-                  }}
-                />
-              </Panel>
-            )
-          })}
-        </Collapse>
+        {this.value.map((item, index) => {
+          return (
+            <Collapse panelName={<Trans>Container</Trans>} extraExpand={genExtra(index)}>
+              <ContainerDetails
+                base={true}
+                commands={true}
+                args={true}
+                environment={true}
+                readyProbe={true}
+                liveProbe={true}
+                lifeCycle={true}
+                divider={true}
+                volumeMounts={true}
+                value={this.value[index]}
+                onChange={(value: any) => {
+                  this.value[index] = value
+                }}
+              />
+            </Collapse>
+          )
+        })}
       </>
     )
   }
