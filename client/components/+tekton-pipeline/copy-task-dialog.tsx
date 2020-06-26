@@ -7,7 +7,7 @@ import {
   PipelineResourceDetails,
   MultiTaskStepDetails, PipelineParams, PipelineResources, TaskStep, taskStep
 } from "../+tekton-task-detail";
-import { observable } from "mobx";
+import { observable, toJS } from "mobx";
 import { Dialog } from "../dialog";
 import { Wizard, WizardStep } from "../wizard";
 import { Trans } from "@lingui/macro";
@@ -159,8 +159,9 @@ export class CopyTaskDialog extends React.Component<Props> {
   }
 
   handleChange = (event: any) => {
-    // setState({ ...state, [event.target.name]:  });
+
     this.ifSwitch = event.target.checked;
+
   };
 
   formatOptionLabel = (option: SelectOption) => {
@@ -195,8 +196,8 @@ export class CopyTaskDialog extends React.Component<Props> {
           <WizardStep contentClass="flex gaps column" next={this.handle}>
             <FormGroup row>
               <FormControlLabel
-                control={<Switch name="checkedA" checked={this.ifSwitch} onChange={this.handleChange} />}
-                label="select or input"
+                control={<Switch name="checkedA" color="primary" checked={this.ifSwitch} onChange={this.handleChange} />}
+                label={this.ifSwitch ? "select" : "input"}
               />
             </FormGroup>
             <div hidden={this.ifSwitch}>
@@ -225,7 +226,11 @@ export class CopyTaskDialog extends React.Component<Props> {
                 value={this.value.taskName}
                 options={this.taskOptions}
                 formatOptionLabel={this.formatOptionLabel}
-                onChange={value => this.value.taskName = value}
+                onChange={(value: string) => {
+                  this.value.taskName = value;
+                  const taskName: any = toJS(this.value.taskName);
+                  this.value.taskName = taskName.value;
+                }}
               />
             </div>
           </WizardStep>
