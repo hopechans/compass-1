@@ -17,6 +17,12 @@ import { Input } from "../input";
 import { _i18n } from "../../i18n";
 import { taskStore } from "../+tekton-task/task.store";
 
+import FormGroup from '@material-ui/core/FormGroup';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Switch from '@material-ui/core/Switch';
+import { Select, SelectOption } from "../select";
+import { Icon } from "../icon";
+
 interface Props<T = any> extends Partial<Props> {
   value?: T;
 
@@ -55,6 +61,8 @@ export class CopyTaskDialog extends React.Component<Props> {
   @observable static graph: any;
   @observable static node: any;
   @observable static data: any;
+  @observable ifSwitch: boolean = false;
+
 
   static open(graph: any, node: any) {
     CopyTaskDialog.isOpen = true;
@@ -150,6 +158,28 @@ export class CopyTaskDialog extends React.Component<Props> {
 
   }
 
+  handleChange = (event: any) => {
+    // setState({ ...state, [event.target.name]:  });
+    this.ifSwitch = event.target.checked;
+  };
+
+  formatOptionLabel = (option: SelectOption) => {
+    const { value, label } = option;
+    return label || (
+      <>
+        <Icon small material="layers" />
+        {value}
+      </>
+    );
+  }
+
+  get taskOptions() {
+    const options = taskStore.items.map(item => ({ value: item.getName() })).slice();
+    return [
+      ...options,
+    ]
+  }
+
   render() {
     const header = <h5><Trans>Apply Task</Trans></h5>;
 
@@ -160,26 +190,44 @@ export class CopyTaskDialog extends React.Component<Props> {
         close={this.close}
       >
         <Wizard className="CopyAddDeployDialog" header={header} done={this.close}>
+
+
           <WizardStep contentClass="flex gaps column" next={this.handle}>
-            <SubTitle title={"Task Name"} />
-            <Input
-              required={true}
-              placeholder={_i18n._("Task Name")}
-              value={this.value.taskName}
-              onChange={value => this.value.taskName = value}
-            />
-            <br />
-            <PipelineParamsDetails value={this.value.pipelineParams} onChange={value => {
-              this.value.pipelineParams = value
-            }} />
-            <br />
-            <PipelineResourceDetails value={this.value.pipelineResources} onChange={value => {
-              this.value.pipelineResources = value
-            }} />
-            <br />
-            <MultiTaskStepDetails value={this.value.taskSteps} onChange={value => {
-              this.value.taskSteps = value
-            }} />
+            <FormGroup row>
+              <FormControlLabel
+                control={<Switch name="checkedA" checked={this.ifSwitch} onChange={this.handleChange} />}
+                label="select or input"
+              />
+            </FormGroup>
+            <div hidden={this.ifSwitch}>
+              <SubTitle title={"Task Name"} />
+              <Input
+                required={true}
+                placeholder={_i18n._("Task Name")}
+                value={this.value.taskName}
+                onChange={value => this.value.taskName = value}
+              />
+              <br />
+              <PipelineParamsDetails value={this.value.pipelineParams} onChange={value => {
+                this.value.pipelineParams = value
+              }} />
+              <br />
+              <PipelineResourceDetails value={this.value.pipelineResources} onChange={value => {
+                this.value.pipelineResources = value
+              }} />
+              <br />
+              <MultiTaskStepDetails value={this.value.taskSteps} onChange={value => {
+                this.value.taskSteps = value
+              }} />
+            </div>
+            <div hidden={!this.ifSwitch}>
+              <Select
+                value={this.value.taskName}
+                options={this.taskOptions}
+                formatOptionLabel={this.formatOptionLabel}
+                onChange={value => this.value.taskName = value}
+              />
+            </div>
           </WizardStep>
         </Wizard>
       </Dialog>
