@@ -9,7 +9,6 @@ import {taskStore} from "./task.store";
 import {KubeObjectMenu, KubeObjectMenuProps} from "../kube-object";
 import {KubeObjectListLayout} from "../kube-object";
 import {apiManager} from "../../api/api-manager";
-import {CopyTaskDialog} from "../+tekton-pipeline/copy-task-dialog";
 
 enum sortBy {
   name = "name",
@@ -52,14 +51,7 @@ export class Tasks extends React.Component<Props> {
           renderItemMenu={(item: Task) => {
             return <TaskMenu object={item}/>
           }}
-          addRemoveButtons={{
-            addTooltip: <Trans>Task</Trans>,
-            onAdd: () => {
-              // CopyTaskDialog.open()
-            }
-          }}
         />
-        <CopyTaskDialog/>
       </>
     )
   }

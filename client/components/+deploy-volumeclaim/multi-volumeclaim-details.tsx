@@ -5,9 +5,8 @@ import {ActionMeta} from "react-select/src/types";
 import {Button} from "../button";
 import {VolumeClaimDetails} from "./volumeclaim-details";
 import {DeleteOutlined} from '@ant-design/icons';
-import {Collapse, Popconfirm} from "antd";
-
-const {Panel} = Collapse;
+import {Popconfirm} from "antd";
+import {Collapse} from "../collapse"
 
 import {volumeClaim, VolumeClaimTemplate} from "./common";
 import {_i18n} from "../../i18n";
@@ -68,16 +67,14 @@ export class MultiVolumeClaimDetails extends React.Component<VolumeClaimTemplate
         <br/>
         <Button primary onClick={() => this.add()}><span>{_i18n._(t`Addition VolumeClaim`)}</span></Button>
         <br/><br/>
-        <Collapse>
-          {this.value.map((item, index) => {
-            return (
-              <Panel header={`VolumeClaim`} key={index} extra={genExtra(index)}>
-                <VolumeClaimDetails
-                  value={this.value[index]} onChange={value => this.value[index] = value}/>
-              </Panel>
-            )
-          })}
-        </Collapse>
+        {this.value.map((item, index) => {
+          return (
+            <Collapse panelName={`VolumeClaim`} extraExpand={genExtra(index)}>
+              <VolumeClaimDetails
+                value={this.value[index]} onChange={value => this.value[index] = value}/>
+            </Collapse>
+          )
+        })}
       </>
     )
   }
