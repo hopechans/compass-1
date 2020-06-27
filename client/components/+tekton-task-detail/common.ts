@@ -1,4 +1,5 @@
 import { EnvVar, envVars } from "../+deploy-container";
+import { Inputs, Outputs } from "../../api/endpoints/tekton-task.api";
 
 export interface PipelineParams {
   name: string;
@@ -66,6 +67,16 @@ export interface ResourceDeclaration {
   // optional: false - the resource is considered required (equivalent of not specifying it)
   optional?: boolean;
 }
+
+export const inputs: Inputs = {
+  resources: [],
+  params: [],
+};
+
+export const outputs: Outputs = {
+  results: [],
+  resources: [],
+};
 
 export const taskResources: ResourceDeclaration = {
   name: "",

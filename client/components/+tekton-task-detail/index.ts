@@ -6,3 +6,5 @@ export * from "./task-name-details";
 export * from "./params-details";
 export * from "./common";
 export * from "./task-resource-details";
+export * from "./inputs-detail";
+export * from "./outputs-detail";
