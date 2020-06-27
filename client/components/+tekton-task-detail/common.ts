@@ -1,4 +1,4 @@
-import { Environment } from "../+deploy-container";
+import { EnvVar, envVars } from "../+deploy-container";
 
 export interface PipelineParams {
   name: string;
@@ -17,7 +17,7 @@ export interface TaskStep {
   image: string;
   args: string[];
   commands: string[];
-  environment: Environment[];
+  environment: EnvVar[];
   workspaces: Workspace[];
   workingDir: string;
   results: Result[];
@@ -91,7 +91,7 @@ export const taskStep: TaskStep = {
   image: "",
   args: [],
   commands: [],
-  environment: [],
+  environment: envVars,
   workspaces: [],
   workingDir: "",
   results: [],

@@ -68,9 +68,11 @@ export interface PipelineParams {
   default: string;
 }
 
-export interface Environment {
-  type: string;
-  envConfig: any;
+export interface EnvVar {
+  name: string;
+  value?: string;
+  //todo:so complex and optional,and then will support it.
+  valaueFrom?: any;
 }
 
 export interface TaskStep {
@@ -78,7 +80,7 @@ export interface TaskStep {
   image: string;
   args: string[];
   commands: string[];
-  environment: Environment[];
+  environment: EnvVar[];
   workspaces: Workspace[];
   workingDir: string;
   results: Result[];
