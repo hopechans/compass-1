@@ -1,16 +1,19 @@
-import {observer} from "mobx-react";
+import { observer } from "mobx-react";
 import React from "react";
-import {observable} from "mobx";
-import {Input} from "../input";
-import {ActionMeta} from "react-select/src/types";
-import {ArgsDetails, CommandDetails} from "../+deploy-container";
-import {Divider} from "@material-ui/core";
-import {EnvironmentDetails} from "../+deploy-container/env-details";
-import {TaskStep, taskStep} from "./common";
-import {SubTitle} from "../layout/sub-title";
-import {WorkspacesDetails} from "./workspaces-details";
-import {ResultsDetails} from "./results-details";
-import {_i18n} from "../../i18n";
+import { observable } from "mobx";
+import { Input } from "../input";
+import { ActionMeta } from "react-select/src/types";
+import {
+  ArgsDetails,
+  CommandDetails,
+  EvnVarDetails,
+} from "../+deploy-container";
+import { Divider } from "@material-ui/core";
+import { TaskStep, taskStep } from "./common";
+import { SubTitle } from "../layout/sub-title";
+import { WorkspacesDetails } from "./workspaces-details";
+import { ResultsDetails } from "./results-details";
+import { _i18n } from "../../i18n";
 
 interface Props<T = any> extends Partial<Props> {
   value?: T;
@@ -22,76 +25,77 @@ interface Props<T = any> extends Partial<Props> {
 
 @observer
 export class TaskStepDetails extends React.Component<Props> {
-
   static defaultProps = {
-    value: taskStep
-  }
+    value: taskStep,
+  };
 
-  @observable value: TaskStep = this.props.value || taskStep
+  @observable value: TaskStep = this.props.value || taskStep;
 
   render() {
     return (
       <>
-        <SubTitle title={"StepName"}/>
+        <SubTitle title={"StepName"} />
         <Input
           placeholder={"StepName"}
           value={this.value.name}
-          onChange={value => (this.value.name = value)}
+          onChange={(value) => (this.value.name = value)}
         />
-        <br/>
-        <SubTitle title={"Image"}/>
+        <br />
+        <SubTitle title={"Image"} />
         <Input
           placeholder={"Image"}
           value={this.value.image}
-          onChange={value => (this.value.image = value)}
+          onChange={(value) => (this.value.image = value)}
         />
-        <br/>
-        <SubTitle title={"Working Dir"}/>
+        <br />
+        <SubTitle title={"Working Dir"} />
         <Input
           required={true}
           placeholder={_i18n._("Working Dir")}
           value={this.value.workingDir}
-          onChange={value => this.value.workingDir = value}
+          onChange={(value) => (this.value.workingDir = value)}
         />
-        <br/>
+        <br />
         <ArgsDetails
           value={this.value.args}
-          onChange={value => this.value.args = value}
+          onChange={(value) => (this.value.args = value)}
         />
-        <Divider/>
-        <br/>
+        <Divider />
+        <br />
         <CommandDetails
           value={this.value.commands}
-          onChange={value => this.value.commands = value}
+          onChange={(value) => (this.value.commands = value)}
         />
-        <Divider/>
-        <br/>
-        <EnvironmentDetails
+        <Divider />
+        <br />
+        <EvnVarDetails
           value={this.value.environment}
-          onChange={value => this.value.environment = value}
+          onChange={(value) => (this.value.environment = value)}
         />
-        <Divider/>
-        <br/>
+        <Divider />
+        <br />
         <WorkspacesDetails
           value={this.value.workspaces}
-          onChange={value => this.value.workspaces = value}/>
-        <Divider/>
-        <br/>
+          onChange={(value) => (this.value.workspaces = value)}
+        />
+        <Divider />
+        <br />
         <ResultsDetails
           value={this.value.results}
-          onChange={value => this.value.results = value}/>
-        <br/>
-        <Divider/>
-        <SubTitle title={"Scripts"}/>
+          onChange={(value) => (this.value.results = value)}
+        />
+        <br />
+        <Divider />
+        <SubTitle title={"Scripts"} />
         <Input
           required={true}
           multiLine={true}
           maxRows={10}
           placeholder={_i18n._("Scripts")}
           value={this.value.scripts}
-          onChange={value => this.value.scripts = value}
+          onChange={(value) => (this.value.scripts = value)}
         />
       </>
-    )
+    );
   }
 }
