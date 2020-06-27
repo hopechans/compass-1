@@ -26,6 +26,7 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Switch from "@material-ui/core/Switch";
 import { Select, SelectOption } from "../select";
 import { Icon } from "../icon";
+import { result } from "lodash";
 
 interface Props<T = any> extends Partial<Props> {
   value?: T;
@@ -108,42 +109,90 @@ export class CopyTaskDialog extends React.Component<Props> {
     CopyTaskDialog.close();
   };
 
+  toTask() {}
+
   saveTask = async () => {
     const resources = toJS(this.value.taskResources);
-    const gitResources = resources.map((item) => {
+    let gitResources: any = resources.map((item) => {
       if (item.type === "git") {
         return item;
       }
     });
-    const imageResources = resources.map((item) => {
+
+    let imageResources: any = resources.map((item) => {
       if (item.type === "image") {
         return item;
       }
     });
 
     const params = this.value.pipelineParams;
+
+    // console.log(gitResources[0]);
+
     try {
-      await taskStore.create(
-        { name: this.value.taskName, namespace: "" },
-        {
-          spec: {
-            params: params,
-            inputs: {
-              resources: gitResources,
-            },
-            outputs: {
-              // resources: imageResources,
-            },
-            steps: toJS(this.value.taskSteps),
-            volumes: [
-              {
-                name: "build-path",
-                emptyDir: {},
+      if (imageResources[0] === undefined && gitResources[0] !== undefined) {
+        await taskStore.create(
+          { name: this.value.taskName, namespace: "" },
+          {
+            spec: {
+              params: params,
+              inputs: {
+                resources: gitResources,
               },
-            ],
-          },
-        }
-      );
+              steps: toJS(this.value.taskSteps),
+              volumes: [
+                {
+                  name: "build-path",
+                  emptyDir: {},
+                },
+              ],
+            },
+          }
+        );
+      }
+      if (gitResources[0] === undefined && imageResources[0] !== undefined) {
+        await taskStore.create(
+          { name: this.value.taskName, namespace: "" },
+          {
+            spec: {
+              params: params,
+              outputs: {
+                resources: imageResources,
+              },
+              steps: toJS(this.value.taskSteps),
+              volumes: [
+                {
+                  name: "build-path",
+                  emptyDir: {},
+                },
+              ],
+            },
+          }
+        );
+      }
+      if (gitResources[0] !== undefined && imageResources[0] !== undefined) {
+        await taskStore.create(
+          { name: this.value.taskName, namespace: "" },
+          {
+            spec: {
+              params: params,
+              inputs: {
+                resources: gitResources,
+              },
+              outputs: {
+                resources: imageResources,
+              },
+              steps: toJS(this.value.taskSteps),
+              volumes: [
+                {
+                  name: "build-path",
+                  emptyDir: {},
+                },
+              ],
+            },
+          }
+        );
+      }
     } catch (err) {
       console.log(err);
     }
