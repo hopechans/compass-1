@@ -16,8 +16,8 @@ export interface TaskStep {
   name: string;
   image: string;
   args: string[];
-  commands: string[];
-  environment: EnvVar[];
+  command: string[];
+  env: EnvVar[];
   workspaces: Workspace[];
   workingDir: string;
   results: Result[];
@@ -90,8 +90,8 @@ export const taskStep: TaskStep = {
   name: "",
   image: "",
   args: [],
-  commands: [],
-  environment: envVars,
+  command: [],
+  env: [],
   workspaces: [],
   workingDir: "",
   results: [],

@@ -63,14 +63,14 @@ export class TaskStepDetails extends React.Component<Props> {
         <Divider />
         <br />
         <CommandDetails
-          value={this.value.commands}
-          onChange={(value) => (this.value.commands = value)}
+          value={this.value.command}
+          onChange={(value) => (this.value.command = value)}
         />
         <Divider />
         <br />
         <EvnVarDetails
-          value={this.value.environment}
-          onChange={(value) => (this.value.environment = value)}
+          value={this.value.env}
+          onChange={(value) => (this.value.env = value)}
         />
         <Divider />
         <br />

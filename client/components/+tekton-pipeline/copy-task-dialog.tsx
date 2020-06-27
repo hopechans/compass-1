@@ -49,7 +49,7 @@ export interface TaskResult {
 }
 
 export const task: TaskResult = {
-  taskName: "defaultName",
+  taskName: "task-name",
   pipelineParams: [],
   taskResources: [],
   taskSteps: [taskStep],
@@ -134,7 +134,7 @@ export class CopyTaskDialog extends React.Component<Props> {
             outputs: {
               // resources: imageResources,
             },
-            steps: this.value.taskSteps,
+            steps: toJS(this.value.taskSteps),
             volumes: [
               {
                 name: "build-path",
