@@ -1,59 +1,64 @@
 import { autobind } from "../../utils";
 import { KubeObject } from "../kube-object";
 import { KubeApi } from "../kube-api";
-import { Inputs, Outputs, Param, TaskSpec } from "./tekton-task.api";
+import { ParamSpec } from "./tekton-pipeline.api";
+import { Inputs, Outputs, TaskSpec } from "./tekton-task.api";
 import { TaskRef } from "./tekton-pipeline.api";
-import { PipelineRef, PipelineResourceBinding, PodTemplate, } from "./tekton-pipelinerun.api";
+import {
+  PipelineRef,
+  PipelineResourceBinding,
+  PodTemplate,
+} from "./tekton-pipelinerun.api";
 
 export interface Conditions {
-  type: string
-  status: string
-  severity?: string
-  lastTransitionTime?: string
-  reason?: string
-  message?: string
+  type: string;
+  status: string;
+  severity?: string;
+  lastTransitionTime?: string;
+  reason?: string;
+  message?: string;
 }
 
 export interface Status {
-  observedGeneration?: number
-  conditions?: Conditions[]
+  observedGeneration?: number;
+  conditions?: Conditions[];
 }
 
 export interface ContainerState {
   waiting?: {
-    reason?: string
-    message?: string
-  }
+    reason?: string;
+    message?: string;
+  };
   running?: {
-    startedAt?: number
-  }
+    startedAt?: number;
+  };
   terminated?: {
-    exitCode?: number
-    signal?: number
-    reason?: number
-    message?: number
-    startedAt?: number
-    finishedAt?: number
-    containerID?: string
-  }
+    exitCode?: number;
+    signal?: number;
+    reason?: number;
+    message?: number;
+    startedAt?: number;
+    finishedAt?: number;
+    containerID?: string;
+  };
 }
 
 export interface StepState extends ContainerState {
-  name: string
-  container: string
-  imageID: string
+  name: string;
+  container: string;
+  imageID: string;
 }
 
 export interface CloudEventDeliveryState {
-  condition: string
-  sentAt?: number
-  message: string
-  retryCount: number
+  condition: string;
+  sentAt?: number;
+  message: string;
+  retryCount: number;
 }
 
 export interface CloudEventDelivery {
-  target: string
-  status: CloudEventDeliveryState
+  target: string;
+  status: CloudEventDeliveryState;
 }
 
 export interface TaskRunStatus extends TaskRunStatusFields, Status {
@@ -62,63 +67,62 @@ export interface TaskRunStatus extends TaskRunStatusFields, Status {
 }
 
 export interface TaskRunResult {
-  name: string
-  value: string
+  name: string;
+  value: string;
 }
 
 export interface PipelineResourceResult {
-  key: string
-  value: string
-  resourceRef: PipelineRef
-  type: string
+  key: string;
+  value: string;
+  resourceRef: PipelineRef;
+  type: string;
 }
 
 export interface SidecarState extends ContainerState {
-  name: string
-  container: string
-  imageID: string
+  name: string;
+  container: string;
+  imageID: string;
 }
 
 export interface TaskRunStatusFields {
-  podName: string
-  startTime?: string
-  completionTime?: string
-  steps?: StepState[]
-  cloudEvents?: CloudEventDelivery[]
-  retriesStatus?: TaskRunStatus[]
-  resourcesResult?: PipelineResourceResult[]
-  taskResults?: TaskRunResult[]
-  sidecars?: SidecarState
+  podName: string;
+  startTime?: string;
+  completionTime?: string;
+  steps?: StepState[];
+  cloudEvents?: CloudEventDelivery[];
+  retriesStatus?: TaskRunStatus[];
+  resourcesResult?: PipelineResourceResult[];
+  taskResults?: TaskRunResult[];
+  sidecars?: SidecarState;
 }
 
-
 export interface TaskResourceBinding {
-  PipelineResourceBinding: PipelineResourceBinding
-  paths: string[]
+  PipelineResourceBinding: PipelineResourceBinding;
+  paths: string[];
 }
 
 export interface TaskRunResources {
-  inputs?: TaskResourceBinding[]
-  outputs?: TaskResourceBinding[]
+  inputs?: TaskResourceBinding[];
+  outputs?: TaskResourceBinding[];
 }
 
 export interface TaskRunSpec {
-  params?: Param[]
-  resources?: TaskRunResources
-  serviceAccountName: string
-  taskRef?: TaskRef
-  taskSpec?: TaskSpec
-  status: string
-  podTemplate: PodTemplate
-  workspaces?: any[]
-  timeout?: number
-  inputs?: Inputs
-  outputs?: Outputs
+  params?: ParamSpec[];
+  resources?: TaskRunResources;
+  serviceAccountName: string;
+  taskRef?: TaskRef;
+  taskSpec?: TaskSpec;
+  status: string;
+  podTemplate: PodTemplate;
+  workspaces?: any[];
+  timeout?: number;
+  inputs?: Inputs;
+  outputs?: Outputs;
 }
 
 @autobind()
 export class TaskRun extends KubeObject {
-  static kind = "TaskRun"
+  static kind = "TaskRun";
 
   spec: TaskRunSpec;
   status: TaskRunStatus;
