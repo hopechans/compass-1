@@ -4,10 +4,10 @@ import { observer } from "mobx-react";
 import React from "react";
 import {
   PipelineParamsDetails,
-  PipelineResourceDetails,
+  TaskResourceDetails,
   MultiTaskStepDetails,
   PipelineParams,
-  PipelineResources,
+  ResourceDeclaration,
   TaskStep,
   taskStep,
 } from "../+tekton-task-detail";
@@ -43,7 +43,7 @@ class Volume {
 export interface TaskResult {
   taskName: string;
   pipelineParams: PipelineParams[];
-  pipelineResources: PipelineResources[];
+  taskResources: ResourceDeclaration[];
   taskSteps: TaskStep[];
   volumes?: Volume[];
 }
@@ -51,7 +51,7 @@ export interface TaskResult {
 export const task: TaskResult = {
   taskName: "defaultName",
   pipelineParams: [],
-  pipelineResources: [],
+  taskResources: [],
   taskSteps: [taskStep],
   volumes: [],
 };
@@ -79,8 +79,8 @@ export class CopyTaskDialog extends React.Component<Props> {
     const task = taskStore.getByName(name, defaultNameSpace);
     if (task !== undefined) {
       task.spec.inputs?.resources?.map((item: any, index: number) => {
-        this.value.pipelineResources[index].name = item.name;
-        this.value.pipelineResources[index].type = item.type;
+        this.value.taskResources[index].name = item.name;
+        this.value.taskResources[index].type = item.type;
       });
       task.spec?.params?.map((item: any, index: number) => {
         this.value.pipelineParams[index].default = item.default;
@@ -109,7 +109,7 @@ export class CopyTaskDialog extends React.Component<Props> {
   };
 
   saveTask = async () => {
-    const resources = toJS(this.value.pipelineResources);
+    const resources = toJS(this.value.taskResources);
     const gitResources = resources.map((item) => {
       if (item.type === "git") {
         return item;
@@ -132,7 +132,7 @@ export class CopyTaskDialog extends React.Component<Props> {
               resources: gitResources,
             },
             outputs: {
-              resources: imageResources,
+              // resources: imageResources,
             },
             steps: this.value.taskSteps,
             volumes: [
@@ -221,10 +221,10 @@ export class CopyTaskDialog extends React.Component<Props> {
                 }}
               />
               <br />
-              <PipelineResourceDetails
-                value={this.value.pipelineResources}
+              <TaskResourceDetails
+                value={this.value.taskResources}
                 onChange={(value) => {
-                  this.value.pipelineResources = value;
+                  this.value.taskResources = value;
                 }}
               />
               <br />
