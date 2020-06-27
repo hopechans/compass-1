@@ -113,13 +113,13 @@ export class CopyTaskDialog extends React.Component<Props> {
 
   saveTask = async () => {
     const resources = toJS(this.value.taskResources);
-    let gitResources = resources.map((item) => {
+    let gitResources: any = resources.map((item) => {
       if (item.type === "git") {
         return item;
       }
     });
 
-    let imageResources = resources.map((item) => {
+    let imageResources: any = resources.map((item) => {
       if (item.type === "image") {
         return item;
       }
@@ -127,39 +127,72 @@ export class CopyTaskDialog extends React.Component<Props> {
 
     const params = this.value.pipelineParams;
 
-    let spec: any;
-    if (gitResources === undefined) {
-      spec = {
-        spec: {
-          params: params,
-          outputs: {
-            resources: imageResources,
-          },
-        },
-      };
-    }
-    if (imageResources === undefined) {
-      spec = {
-        spec: {
-          params: params,
-          inputs: {
-            resources: gitResources,
-          },
-          steps: toJS(this.value.taskSteps),
-          volumes: [
-            {
-              name: "build-path",
-              emptyDir: {},
-            },
-          ],
-        },
-      };
-    }
+    // console.log(gitResources[0]);
+
     try {
-      await taskStore.create(
-        { name: this.value.taskName, namespace: "" },
-        spec
-      );
+      if (imageResources[0] === undefined && gitResources[0] !== undefined) {
+        await taskStore.create(
+          { name: this.value.taskName, namespace: "" },
+          {
+            spec: {
+              params: params,
+              inputs: {
+                resources: gitResources,
+              },
+              steps: toJS(this.value.taskSteps),
+              volumes: [
+                {
+                  name: "build-path",
+                  emptyDir: {},
+                },
+              ],
+            },
+          }
+        );
+      }
+      if (gitResources[0] === undefined && imageResources[0] !== undefined) {
+        await taskStore.create(
+          { name: this.value.taskName, namespace: "" },
+          {
+            spec: {
+              params: params,
+              outputs: {
+                resources: imageResources,
+              },
+              steps: toJS(this.value.taskSteps),
+              volumes: [
+                {
+                  name: "build-path",
+                  emptyDir: {},
+                },
+              ],
+            },
+          }
+        );
+      }
+      if (gitResources[0] !== undefined && imageResources[0] !== undefined) {
+        await taskStore.create(
+          { name: this.value.taskName, namespace: "" },
+          {
+            spec: {
+              params: params,
+              inputs: {
+                resources: gitResources,
+              },
+              outputs: {
+                resources: imageResources,
+              },
+              steps: toJS(this.value.taskSteps),
+              volumes: [
+                {
+                  name: "build-path",
+                  emptyDir: {},
+                },
+              ],
+            },
+          }
+        );
+      }
     } catch (err) {
       console.log(err);
     }
