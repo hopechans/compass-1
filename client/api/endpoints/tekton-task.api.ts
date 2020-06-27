@@ -1,26 +1,51 @@
-import {autobind} from "../../utils";
-import {KubeObject} from "../kube-object";
-import {KubeApi} from "../kube-api";
+import { autobind } from "../../utils";
+import { KubeObject } from "../kube-object";
+import { KubeApi } from "../kube-api";
+import { ParamSpec } from "./tekton-pipeline.api";
 
-export interface Param {
+// ResourceDeclaration defines an input or output PipelineResource declared as a requirement
+// by another type such as a Task or Condition. The Name field will be used to refer to these
+// PipelineResources within the type's definition, and when provided as an Input, the Name will be the
+// path to the volume mounted containing this PipelineResource as an input (e.g.
+// an input Resource named `workspace` will be mounted at `/workspace`).
+export interface ResourceDeclaration {
+  // Name declares the name by which a resource is referenced in the
+  // definition. Resources may be referenced by name in the definition of a
+  // Task's steps.
   name: string;
+  // Type is the type of this resource;
   type: string;
-  description: string;
-  default: string | Array<any>;
+  // Description is a user-facing description of the declared resource that may be
+  // used to populate a UI.
+  // +optional
+  description?: string;
+  // TargetPath is the path in workspace directory where the resource
+  // will be copied.
+  // +optional
+  targetPath?: string;
+  // Optional declares the resource as optional.
+  // By default optional is set to false which makes a resource required.
+  // optional: true - the resource is considered optional
+  // optional: false - the resource is considered required (equivalent of not specifying it)
+  optional?: boolean;
 }
+
+// TaskResource defines an input or output Resource declared as a requirement
+// by a Task. The Name field will be used to refer to these Resources within
+// the Task definition, and when provided as an Input, the Name will be the
+// path to the volume mounted containing this Resource as an input (e.g.
+// an input Resource named `workspace` will be mounted at `/workspace`).
+export interface TaskResource extends ResourceDeclaration {}
 
 export interface Inputs {
   // Resources is a list of the input resources required to run the task.
   // Resources are represented in TaskRuns as bindings to instances of
   // PipelineResources.
-  resources?: {
-    name: string;
-    type: string;
-  }[];
+  resources?: TaskResource[];
   // Params is a list of input parameters required to run the task. Params
   // must be supplied as inputs in TaskRuns unless they declare a default
   // value.
-  params?: Param[];
+  params?: ParamSpec[];
 }
 
 export interface Outputs {
@@ -33,36 +58,9 @@ export interface Outputs {
     format: string;
     path: string;
   }[];
-  resources?: {
-    // Name declares the name by which a resource is referenced in the
-    // definition. Resources may be referenced by name in the definition of a
-    // Task's steps.
-    name?: string;
-    // Type is the type of this resource;
-
-    type?: string;
-    // TargetPath is the path in workspace directory where the resource
-    // will be copied.
-    targetPath?: string;
-  }[];
+  resources?: TaskResource[];
 }
 
-// class Container implements IPodContainer {
-//     name: string;
-//     image: string;
-//     command?: string[];
-//     args?: string[];
-//     ports: { name?: string; containerPort: number; protocol: string; }[];
-//     resources?: { limits: { cpu: string; memory: string; }; requests: { cpu: string; memory: string; }; };
-//     env?: { name: string; value?: string; valueFrom?: { fieldRef?: { apiVersion: string; fieldPath: string; }; secretKeyRef?: { key: string; name: string; }; configMapKeyRef?: { key: string; name: string; }; }; }[];
-//     envFrom?: { configMapRef?: { name: string; }; }[];
-//     volumeMounts?: { name: string; readOnly: boolean; mountPath: string; }[];
-//     livenessProbe?: IContainerProbe;
-//     readinessProbe?: IContainerProbe;
-//     imagePullPolicy?: string;
-//     // self add
-//     securityContext: any;
-// }
 export interface PipelineParams {
   name: string;
   type: string;
@@ -70,9 +68,11 @@ export interface PipelineParams {
   default: string;
 }
 
-export interface Environment {
-  type: string
-  envConfig: any
+export interface EnvVar {
+  name: string;
+  value?: string;
+  //todo:so complex and optional,and then will support it.
+  valaueFrom?: any;
 }
 
 export interface TaskStep {
@@ -80,7 +80,7 @@ export interface TaskStep {
   image: string;
   args: string[];
   commands: string[];
-  environment: Environment[];
+  environment: EnvVar[];
   workspaces: Workspace[];
   workingDir: string;
   results: Result[];
@@ -105,7 +105,7 @@ export interface Result {
 
 export interface Params {
   name: string;
-  value: string
+  value: string;
 }
 
 export interface Volume {
@@ -123,8 +123,8 @@ export interface TaskSpec {
 
 @autobind()
 export class Task extends KubeObject {
-  static kind = "Task"
-  spec: TaskSpec
+  static kind = "Task";
+  spec: TaskSpec;
 
   getOwnerNamespace(): string {
     return this.metadata.labels.namespace || "";

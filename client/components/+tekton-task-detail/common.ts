@@ -1,4 +1,4 @@
-import {Environment} from "../+deploy-container";
+import { EnvVar, envVars } from "../+deploy-container";
 
 export interface PipelineParams {
   name: string;
@@ -17,7 +17,7 @@ export interface TaskStep {
   image: string;
   args: string[];
   commands: string[];
-  environment: Environment[];
+  environment: EnvVar[];
   workspaces: Workspace[];
   workingDir: string;
   results: Result[];
@@ -41,51 +41,80 @@ export interface Result {
 }
 
 export interface Params {
-  name: string,
-  value: string
+  name: string;
+  value: string;
 }
+
+export interface ResourceDeclaration {
+  // Name declares the name by which a resource is referenced in the
+  // definition. Resources may be referenced by name in the definition of a
+  // Task's steps.
+  name: string;
+  // Type is the type of this resource;
+  type: string;
+  // Description is a user-facing description of the declared resource that may be
+  // used to populate a UI.
+  // +optional
+  description?: string;
+  // TargetPath is the path in workspace directory where the resource
+  // will be copied.
+  // +optional
+  targetPath?: string;
+  // Optional declares the resource as optional.
+  // By default optional is set to false which makes a resource required.
+  // optional: true - the resource is considered optional
+  // optional: false - the resource is considered required (equivalent of not specifying it)
+  optional?: boolean;
+}
+
+export const taskResources: ResourceDeclaration = {
+  name: "",
+  type: "",
+  description: "",
+  targetPath: "",
+};
 
 export const pipelineParams: PipelineParams = {
   name: "",
   type: "",
   description: "",
-  default: ""
-}
+  default: "",
+};
 
 export const pipelineResources: PipelineResources = {
   name: "",
   type: "",
-}
+};
 
 export const taskStep: TaskStep = {
   name: "",
   image: "",
   args: [],
   commands: [],
-  environment: [],
+  environment: envVars,
   workspaces: [],
   workingDir: "",
   results: [],
   scripts: "",
-}
+};
 
 export const workspace: Workspace = {
   name: "",
   description: "",
-  mountPath: ""
-}
+  mountPath: "",
+};
 
 export const volumeMount: VolumeMount = {
   name: "",
-  mountPath: ""
-}
+  mountPath: "",
+};
 
 export const result: Result = {
   name: "",
   description: "",
-}
+};
 
 export const params: Params = {
   name: "",
-  value: ""
-}
+  value: "",
+};
