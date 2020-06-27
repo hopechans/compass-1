@@ -26,6 +26,7 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Switch from "@material-ui/core/Switch";
 import { Select, SelectOption } from "../select";
 import { Icon } from "../icon";
+import { result } from "lodash";
 
 interface Props<T = any> extends Partial<Props> {
   value?: T;
@@ -108,41 +109,56 @@ export class CopyTaskDialog extends React.Component<Props> {
     CopyTaskDialog.close();
   };
 
+  toTask() {}
+
   saveTask = async () => {
     const resources = toJS(this.value.taskResources);
-    const gitResources = resources.map((item) => {
+    let gitResources = resources.map((item) => {
       if (item.type === "git") {
         return item;
       }
     });
-    const imageResources = resources.map((item) => {
+
+    let imageResources = resources.map((item) => {
       if (item.type === "image") {
         return item;
       }
     });
 
     const params = this.value.pipelineParams;
+
+    let spec: any;
+    if (gitResources === undefined) {
+      spec = {
+        spec: {
+          params: params,
+          outputs: {
+            resources: imageResources,
+          },
+        },
+      };
+    }
+    if (imageResources === undefined) {
+      spec = {
+        spec: {
+          params: params,
+          inputs: {
+            resources: gitResources,
+          },
+          steps: toJS(this.value.taskSteps),
+          volumes: [
+            {
+              name: "build-path",
+              emptyDir: {},
+            },
+          ],
+        },
+      };
+    }
     try {
       await taskStore.create(
         { name: this.value.taskName, namespace: "" },
-        {
-          spec: {
-            params: params,
-            inputs: {
-              resources: gitResources,
-            },
-            outputs: {
-              // resources: imageResources,
-            },
-            steps: toJS(this.value.taskSteps),
-            volumes: [
-              {
-                name: "build-path",
-                emptyDir: {},
-              },
-            ],
-          },
-        }
+        spec
       );
     } catch (err) {
       console.log(err);
