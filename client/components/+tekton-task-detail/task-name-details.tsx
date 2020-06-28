@@ -15,10 +15,9 @@ interface Props<T = any> extends Partial<Props> {
 
 @observer
 export class TaskNameDetails extends React.Component<Props> {
+  static defaultProps = { value: "default" };
 
-  static defaultProps = { value: "default" }
-
-  @observable value: string = this.props.value || "default"
+  @observable value: string = this.props.value || "default";
 
   render() {
     return (
@@ -28,9 +27,9 @@ export class TaskNameDetails extends React.Component<Props> {
           required={true}
           placeholder={_i18n._("Task Name")}
           value={this.value}
-          onChange={value => this.value = value}
+          onChange={(value) => (this.value = value)}
         />
       </>
-    )
+    );
   }
 }

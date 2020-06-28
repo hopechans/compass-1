@@ -50,7 +50,6 @@ export class TaskStepDetails extends React.Component<Props> {
         <br />
         <SubTitle title={"Working Dir"} />
         <Input
-          required={true}
           placeholder={_i18n._("Working Dir")}
           value={this.value.workingDir}
           onChange={(value) => (this.value.workingDir = value)}
@@ -88,7 +87,6 @@ export class TaskStepDetails extends React.Component<Props> {
         <Divider />
         <SubTitle title={"Scripts"} />
         <Input
-          required={true}
           multiLine={true}
           maxRows={10}
           placeholder={_i18n._("Scripts")}

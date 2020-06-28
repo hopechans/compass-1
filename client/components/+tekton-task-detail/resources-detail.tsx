@@ -5,11 +5,11 @@ import { ActionMeta } from "react-select/src/types";
 import { Select, SelectOption } from "../select";
 import { Icon } from "../icon";
 import { t, Trans } from "@lingui/macro";
-import { taskResources, ResourceDeclaration, inputs } from "./common";
+import { taskResources, ResourceDeclaration, resources } from "./common";
 import { SubTitle } from "../layout/sub-title";
 import { _i18n } from "../../i18n";
 import { Input } from "../input";
-import { Inputs } from "client/api/endpoints/tekton-task.api";
+import { TaskResources } from "client/api/endpoints/tekton-task.api";
 import { TaskResourceDetails } from "./task-resource-details";
 import { PipelineParamsDetails } from "./pipeline-params-details";
 import { Grid, Divider, Card } from "@material-ui/core";
@@ -23,8 +23,8 @@ interface Props<T = any> extends Partial<Props> {
 }
 
 @observer
-export class InputsDetail extends React.Component<Props> {
-  @observable value: Inputs = this.props.value || inputs;
+export class ResourcesDetail extends React.Component<Props> {
+  @observable value: TaskResources = this.props.value || resources;
 
   formatOptionLabel = (option: SelectOption) => {
     const { value, label } = option;
@@ -42,29 +42,41 @@ export class InputsDetail extends React.Component<Props> {
     return (
       <div>
         <Grid container spacing={1}>
+          <Grid item xs={12}>
+            <b>Resources</b>
+          </Grid>
+          <Grid item xs={1}></Grid>
           <Grid item xs={3}>
             <b>Inputs</b>
           </Grid>
-          <Grid item xs={9}></Grid>
+          <Grid item xs={6}></Grid>
+          <Grid item xs={2}></Grid>
           <Grid item xs={1}></Grid>
           <Grid item xs={11}>
             <Card>
               <TaskResourceDetails
-                value={this.value.resources}
+                value={this.value.inputs}
                 onChange={(value) => {
-                  this.value.resources = value;
+                  this.value.inputs = value;
                 }}
               />
             </Card>
             <Divider />
           </Grid>
+
+          <Grid item xs={1}></Grid>
+          <Grid item xs={3}>
+            <b>Outputs</b>
+          </Grid>
+          <Grid item xs={6}></Grid>
+          <Grid item xs={2}></Grid>
           <Grid item xs={1}></Grid>
           <Grid item xs={11}>
             <Card>
-              <PipelineParamsDetails
-                value={this.value.params}
+              <TaskResourceDetails
+                value={this.value.outputs}
                 onChange={(value) => {
-                  this.value.params = value;
+                  this.value.outputs = value;
                 }}
               />
             </Card>
