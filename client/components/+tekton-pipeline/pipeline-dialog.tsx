@@ -11,6 +11,7 @@ import { Wizard, WizardStep } from "../wizard";
 import { pipelineApi } from "../../api/endpoints";
 import { Notifications } from "../notifications";
 import { configStore } from "../../../client/config.store";
+import { PipelineDetails, PipelineResult, pipeline } from "./pipeline-details";
 
 interface Props<T = any> extends Partial<Props> {
   value?: T;
@@ -20,30 +21,30 @@ interface Props<T = any> extends Partial<Props> {
 }
 
 @observer
-export class AddPipelineDialog extends React.Component<Props> {
+export class PilelineDialog extends React.Component<Props> {
   @observable static isOpen = false;
-  @observable value: string = this.props.value || "";
+  @observable value: PipelineResult = this.props.value || pipeline;
 
   static open() {
-    AddPipelineDialog.isOpen = true;
+    PilelineDialog.isOpen = true;
   }
 
   static close() {
-    AddPipelineDialog.isOpen = false;
+    PilelineDialog.isOpen = false;
   }
 
   close = () => {
-    AddPipelineDialog.close();
+    PilelineDialog.close();
   };
 
   reset = () => {
-    this.value = "";
+    this.value.pipelineName = "";
   };
 
   submit = async () => {
     try {
       let newPipeline = await pipelineApi.create(
-        { name: this.value, namespace: "" },
+        { name: this.value.pipelineName, namespace: "" },
         {
           spec: {
             resources: [{ name: "", type: "" }],
@@ -72,13 +73,10 @@ export class AddPipelineDialog extends React.Component<Props> {
     );
 
     return (
-      <Dialog isOpen={AddPipelineDialog.isOpen} close={this.close}>
-        <Wizard className="AddPipelineDialog" header={header} done={this.close}>
+      <Dialog isOpen={PilelineDialog.isOpen} close={this.close}>
+        <Wizard className="PipelineDialog" header={header} done={this.close}>
           <WizardStep contentClass="flex gaps column" next={this.submit}>
-            <SubTitle title={"Pipeline Name"} />
-            <Input
-              required={true}
-              placeholder={_i18n._("Pipeline Name")}
+            <PipelineDetails
               value={this.value}
               onChange={(value) => (this.value = value)}
             />
