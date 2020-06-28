@@ -13,6 +13,7 @@ import { Input } from "../input";
 import { Inputs } from "client/api/endpoints/tekton-task.api";
 import { TaskResourceDetails } from "./task-resource-details";
 import { PipelineParamsDetails } from "./pipeline-params-details";
+import { Grid, Divider, Card } from "@material-ui/core";
 
 interface Props<T = any> extends Partial<Props> {
   value?: T;
@@ -40,15 +41,26 @@ export class OutPutsDetail extends React.Component<Props> {
 
   render() {
     return (
-      <div className="OutPuts">
-        <SubTitle className="fields-title" title="OutPuts"></SubTitle>
-        <TaskResourceDetails
-          value={this.value.resources}
-          onChange={(value) => {
-            this.value.resources = value;
-          }}
-        />
-        ßßßß
+      <div>
+        <Grid container spacing={1}>
+          <Grid item xs={3}>
+            <b>Outputs</b>
+          </Grid>
+          <Grid item xs={9}></Grid>
+          <Grid item xs={1}></Grid>
+          <Grid item xs={11}>
+            <Card>
+              <TaskResourceDetails
+                value={this.value.resources}
+                onChange={(value) => {
+                  this.value.resources = value;
+                }}
+              />
+            </Card>
+            <Divider />
+          </Grid>
+        </Grid>
+        <Divider />
       </div>
     );
   }

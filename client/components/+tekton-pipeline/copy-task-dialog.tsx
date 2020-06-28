@@ -11,6 +11,7 @@ import {
   TaskStep,
   taskStep,
   InputsDetail,
+  OutPutsDetail,
   inputs,
   outputs,
 } from "../+tekton-task-detail";
@@ -116,6 +117,34 @@ export class CopyTaskDialog extends React.Component<Props> {
   toTask() {}
 
   saveTask = async () => {
+    const parms = toJS(this.value.pipelineParams);
+    const inputs = toJS(this.value.inputs);
+    const outputs = toJS(this.value.outPuts);
+    const steps = toJS(this.value.taskSteps);
+
+    const volumes = [
+      {
+        name: "build-path",
+        emptyDir: {},
+      },
+    ];
+
+    try {
+      await taskStore.create(
+        { name: this.value.taskName, namespace: "" },
+        {
+          spec: {
+            params: parms,
+            inputs: inputs,
+            outputs: outputs,
+            steps: steps,
+            volumes: volumes,
+          },
+        }
+      );
+    } catch (err) {
+      console.log(err);
+    }
     // const resources = toJS(this.value.taskResources);
     // let gitResources: any = resources.map((item) => {
     //   if (item.type === "git") {
@@ -274,6 +303,13 @@ export class CopyTaskDialog extends React.Component<Props> {
                 value={this.value.inputs}
                 onChange={(value) => {
                   this.value.inputs = value;
+                }}
+              />
+              <br />
+              <OutPutsDetail
+                value={this.value.outPuts}
+                onChange={(value) => {
+                  this.value.outPuts = value;
                 }}
               />
 

@@ -6,13 +6,13 @@ import { Select, SelectOption } from "../select";
 import { Icon } from "../icon";
 import { t, Trans } from "@lingui/macro";
 import { taskResources, ResourceDeclaration, inputs } from "./common";
-import { Col, Row } from "antd";
 import { SubTitle } from "../layout/sub-title";
 import { _i18n } from "../../i18n";
 import { Input } from "../input";
 import { Inputs } from "client/api/endpoints/tekton-task.api";
 import { TaskResourceDetails } from "./task-resource-details";
 import { PipelineParamsDetails } from "./pipeline-params-details";
+import { Grid, Divider, Card } from "@material-ui/core";
 
 interface Props<T = any> extends Partial<Props> {
   value?: T;
@@ -40,23 +40,38 @@ export class InputsDetail extends React.Component<Props> {
 
   render() {
     return (
-      <div className="Inputs">
-        <SubTitle className="fields-title" title="Inputs"></SubTitle>
-
-        <br />
-        <TaskResourceDetails
-          value={this.value.resources}
-          onChange={(value) => {
-            this.value.resources = value;
-          }}
-        />
-        <br />
-        <PipelineParamsDetails
-          value={this.value.params}
-          onChange={(value) => {
-            this.value.params = value;
-          }}
-        />
+      <div>
+        <Grid container spacing={1}>
+          <Grid item xs={3}>
+            <b>Inputs</b>
+          </Grid>
+          <Grid item xs={9}></Grid>
+          <Grid item xs={1}></Grid>
+          <Grid item xs={11}>
+            <Card>
+              <TaskResourceDetails
+                value={this.value.resources}
+                onChange={(value) => {
+                  this.value.resources = value;
+                }}
+              />
+            </Card>
+            <Divider />
+          </Grid>
+          <Grid item xs={1}></Grid>
+          <Grid item xs={11}>
+            <Card>
+              <PipelineParamsDetails
+                value={this.value.params}
+                onChange={(value) => {
+                  this.value.params = value;
+                }}
+              />
+            </Card>
+            <Divider />
+          </Grid>
+        </Grid>
+        <Divider />
       </div>
     );
   }
