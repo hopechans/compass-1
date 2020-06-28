@@ -3,9 +3,6 @@ import React from "react";
 import { observable } from "mobx";
 import { ActionMeta } from "react-select/src/types";
 import { _i18n } from "../../i18n";
-import { TaskResources } from "client/api/endpoints/tekton-task.api";
-import { Grid, Divider, Card } from "@material-ui/core";
-import { TaskSpec, Params } from "../../api/endpoints/tekton-task.api";
 import {
   PipelineTask,
   TaskRef,
@@ -31,10 +28,6 @@ interface Props<T = any> extends Partial<Props> {
 const taskRef: TaskRef = {
   name: "",
   kind: "", //Select  => Task/ClusterTask
-};
-
-const taskSpec: TaskSpec = {
-  //Not fill data
 };
 
 const params: ParamSpec = {
@@ -90,23 +83,21 @@ export class PipelineTaskDetail extends React.Component<Props> {
           value={this.value.name}
           onChange={(value) => (this.value.name = value)}
         />
-        <Select
+        {/* <Select
           value={this.value.taskRef.name}
           options={this.taskOptions}
           formatOptionLabel={this.formatOptionLabel}
           onChange={(value: string) => {
             this.value.taskRef.name = value;
-            // this.value.taskName = value;
-            // const taskName: any = toJS(this.value.taskName);
-            // this.value.taskName = taskName.value;
           }}
-        />
+        /> */}
+        <br />
         <Input
           required={true}
-          //   placeholder={_i18n._(t`retries`)}
+          placeholder={`retries`}
           type="number"
           validators={isNumber}
-          value={this.value.retries.toString()}
+          // value={Number(this.value.retries)}
           onChange={(value) => (this.value.retries = Number(value))}
         />
         <ResourcesDetail

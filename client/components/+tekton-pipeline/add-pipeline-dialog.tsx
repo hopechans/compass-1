@@ -11,7 +11,6 @@ import { Wizard, WizardStep } from "../wizard";
 import { pipelineApi } from "../../api/endpoints";
 import { Notifications } from "../notifications";
 import { configStore } from "../../../client/config.store";
-import { PipelineDetails, PipelineResult, pipeline } from "./pipeline-details";
 
 interface Props<T = any> extends Partial<Props> {
   value?: T;
@@ -23,7 +22,7 @@ interface Props<T = any> extends Partial<Props> {
 @observer
 export class AddPipelineDialog extends React.Component<Props> {
   @observable static isOpen = false;
-  @observable value: PipelineResult = this.props.value || pipeline;
+  @observable value: string = this.props.value || "";
 
   static open() {
     AddPipelineDialog.isOpen = true;
@@ -38,13 +37,13 @@ export class AddPipelineDialog extends React.Component<Props> {
   };
 
   reset = () => {
-    this.value.pipelineName = "";
+    this.value = "";
   };
 
   submit = async () => {
     try {
       let newPipeline = await pipelineApi.create(
-        { name: this.value.pipelineName, namespace: "" },
+        { name: this.value, namespace: "" },
         {
           spec: {
             resources: [{ name: "", type: "" }],
@@ -80,10 +79,6 @@ export class AddPipelineDialog extends React.Component<Props> {
             <Input
               required={true}
               placeholder={_i18n._("Pipeline Name")}
-              value={this.value.pipelineName}
-              onChange={(value) => (this.value.pipelineName = value)}
-            />
-            <PipelineDetails
               value={this.value}
               onChange={(value) => (this.value = value)}
             />

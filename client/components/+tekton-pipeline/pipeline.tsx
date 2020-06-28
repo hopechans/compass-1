@@ -161,6 +161,7 @@ export class Pipelines extends React.Component<Props> {
   }
 
   savePipeline = async (pipeResult: PipelineResult) => {
+    PilelineDialog.open();
     this.data = this.graph.getGraph().save();
 
     const data = JSON.stringify(this.graph.getGraph().save());
@@ -259,8 +260,6 @@ export class Pipelines extends React.Component<Props> {
           addRemoveButtons={{
             addTooltip: <Trans>Pipeline</Trans>,
             onAdd: () => {
-              // PilelineDialog.open();
-              console.log("------------->adasdasdsa");
               AddPipelineDialog.open();
             },
           }}
@@ -270,6 +269,7 @@ export class Pipelines extends React.Component<Props> {
         />
         <CopyTaskDialog />
         <AddPipelineDialog />
+        <PilelineDialog />
       </>
     );
   }

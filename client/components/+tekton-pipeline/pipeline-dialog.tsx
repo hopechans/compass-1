@@ -1,32 +1,33 @@
-import "./copy-task-dialog.scss";
-
 import { observer } from "mobx-react";
 import React from "react";
 import { observable } from "mobx";
+import { SubTitle } from "../layout/sub-title";
+import { Input } from "../input";
+import { _i18n } from "../../i18n";
+import { ActionMeta } from "react-select/src/types";
+import { Trans } from "@lingui/macro";
 import { Dialog } from "../dialog";
 import { Wizard, WizardStep } from "../wizard";
-import { Trans } from "@lingui/macro";
-import { ActionMeta } from "react-select/src/types";
-import { _i18n } from "../../i18n";
+import { pipelineApi } from "../../api/endpoints";
+import { Notifications } from "../notifications";
+import { configStore } from "../../../client/config.store";
 import { PipelineDetails, PipelineResult, pipeline } from "./pipeline-details";
+
 interface Props<T = any> extends Partial<Props> {
   value?: T;
+  themeName?: "dark" | "light" | "outlined";
 
   onChange?(option: T, meta?: ActionMeta): void;
-
-  themeName?: "dark" | "light" | "outlined";
 }
 
 @observer
 export class PilelineDialog extends React.Component<Props> {
-  @observable value: PipelineResult = this.props.value || pipeline;
   @observable static isOpen = false;
+  @observable value: PipelineResult = this.props.value || pipeline;
 
   static open() {
     PilelineDialog.isOpen = true;
   }
-
-  onOpen = () => {};
 
   static close() {
     PilelineDialog.isOpen = false;
@@ -36,27 +37,45 @@ export class PilelineDialog extends React.Component<Props> {
     PilelineDialog.close();
   };
 
-  handle = () => {
-    PilelineDialog.close();
+  reset = () => {
+    this.value.pipelineName = "";
   };
 
-  toTask() {}
+  submit = async () => {
+    try {
+      let newPipeline = await pipelineApi.create(
+        { name: this.value.pipelineName, namespace: "" },
+        {
+          spec: {
+            resources: [{ name: "", type: "" }],
+            tasks: [],
+            params: [],
+          },
+        }
+      );
+      // label the resource labels if the admin the namespace label default
+      newPipeline.metadata.labels = {
+        namespace: configStore.getDefaultNamespace() || "default",
+      };
+      await newPipeline.update(newPipeline);
+      this.reset();
+      this.close();
+    } catch (err) {
+      Notifications.error(err);
+    }
+  };
 
   render() {
     const header = (
       <h5>
-        <Trans>Apply Pipeline</Trans>
+        <Trans>Create Pipeline</Trans>
       </h5>
     );
 
     return (
-      <Dialog
-        isOpen={PilelineDialog.isOpen}
-        // onOpen={this.onOpen}
-        close={this.close}
-      >
-        <Wizard className="Pipeline-Dialog" header={header} done={this.close}>
-          <WizardStep contentClass="flex gaps column" next={this.handle}>
+      <Dialog isOpen={PilelineDialog.isOpen} close={this.close}>
+        <Wizard className="PipelineDialog" header={header} done={this.close}>
+          <WizardStep contentClass="flex gaps column" next={this.submit}>
             <PipelineDetails
               value={this.value}
               onChange={(value) => (this.value = value)}
