@@ -50,7 +50,7 @@ export class TaskResourceDetails extends React.Component<Props> {
   render() {
     return (
       <div className="Resource">
-        <SubTitle className="fields-title" title="Add Pipeline Resources">
+        <SubTitle className="fields-title" title="   Add Pipeline Resources">
           <Icon
             small
             tooltip={_i18n._(t`Command`)}

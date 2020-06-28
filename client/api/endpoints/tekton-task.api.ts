@@ -75,6 +75,17 @@ export interface EnvVar {
   valaueFrom?: any;
 }
 
+// TaskResources allows a Pipeline to declare how its DeclaredPipelineResources
+// should be provided to a Task as its inputs and outputs.
+export interface TaskResources {
+  // Inputs holds the mapping from the PipelineResources declared in
+  // DeclaredPipelineResources to the input PipelineResources required by the Task.
+  inputs: TaskResource[];
+  // Outputs holds the mapping from the PipelineResources declared in
+  // DeclaredPipelineResources to the input PipelineResources required by the Task.
+  outputs: TaskResource[];
+}
+
 export interface TaskStep {
   name: string;
   image: string;
@@ -115,10 +126,18 @@ export interface Volume {
 
 export interface TaskSpec {
   params?: PipelineParams[];
+  resources?: TaskResources;
+  description?: string;
   inputs?: Inputs;
   outputs?: Outputs;
   steps?: TaskStep[];
   volumes?: Volume[];
+  //----The following types are not supported now
+  stepTemplate?: any;
+  sidecars?: any;
+  workspaces?: any;
+  results?: any;
+  //----The following types are not supported now
 }
 
 @autobind()
