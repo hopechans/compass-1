@@ -11,6 +11,7 @@ import { Wizard, WizardStep } from "../wizard";
 import { pipelineApi } from "../../api/endpoints";
 import { Notifications } from "../notifications";
 import { configStore } from "../../../client/config.store";
+import { PipelineDetails, PipelineResult, pipeline } from "./pipeline-details";
 
 interface Props<T = any> extends Partial<Props> {
   value?: T;
@@ -21,9 +22,8 @@ interface Props<T = any> extends Partial<Props> {
 
 @observer
 export class AddPipelineDialog extends React.Component<Props> {
-
   @observable static isOpen = false;
-  @observable value: string = this.props.value || ""
+  @observable value: PipelineResult = this.props.value || pipeline;
 
   static open() {
     AddPipelineDialog.isOpen = true;
@@ -35,51 +35,61 @@ export class AddPipelineDialog extends React.Component<Props> {
 
   close = () => {
     AddPipelineDialog.close();
-  }
+  };
 
   reset = () => {
-    this.value = "";
-  }
+    this.value.pipelineName = "";
+  };
 
   submit = async () => {
     try {
-      let newPipeline = await pipelineApi.create({ name: this.value, namespace: "" }, {
-        spec: {
-          resources: [{ name: "", type: "" }],
-          tasks: [],
-          params: [],
+      let newPipeline = await pipelineApi.create(
+        { name: this.value.pipelineName, namespace: "" },
+        {
+          spec: {
+            resources: [{ name: "", type: "" }],
+            tasks: [],
+            params: [],
+          },
         }
-      });
+      );
       // label the resource labels if the admin the namespace label default
-      newPipeline.metadata.labels = { namespace: configStore.getDefaultNamespace() || "default" }
+      newPipeline.metadata.labels = {
+        namespace: configStore.getDefaultNamespace() || "default",
+      };
       await newPipeline.update(newPipeline);
       this.reset();
       this.close();
     } catch (err) {
       Notifications.error(err);
     }
-  }
+  };
 
   render() {
-    const header = <h5><Trans>Create Pipeline</Trans></h5>;
+    const header = (
+      <h5>
+        <Trans>Create Pipeline</Trans>
+      </h5>
+    );
 
     return (
-      <Dialog
-        isOpen={AddPipelineDialog.isOpen}
-        close={this.close}
-      >
+      <Dialog isOpen={AddPipelineDialog.isOpen} close={this.close}>
         <Wizard className="AddPipelineDialog" header={header} done={this.close}>
           <WizardStep contentClass="flex gaps column" next={this.submit}>
             <SubTitle title={"Pipeline Name"} />
             <Input
               required={true}
               placeholder={_i18n._("Pipeline Name")}
+              value={this.value.pipelineName}
+              onChange={(value) => (this.value.pipelineName = value)}
+            />
+            <PipelineDetails
               value={this.value}
-              onChange={value => this.value = value}
+              onChange={(value) => (this.value = value)}
             />
           </WizardStep>
         </Wizard>
       </Dialog>
-    )
+    );
   }
 }
