@@ -1,7 +1,7 @@
 import { autobind } from "../../utils";
 import { KubeObject } from "../kube-object";
 import { KubeApi } from "../kube-api";
-import { TaskSpec, Params } from "./tekton-task.api"
+import { TaskSpec, Params } from "./tekton-task.api";
 
 export interface TaskRef {
   name: string;
@@ -11,9 +11,9 @@ export interface TaskRef {
 
 export interface ParamSpec {
   name: string;
-  type: string;
-  description: string;
-  default: string | Array<any>;
+  type?: string;
+  description?: string;
+  default?: string | Array<any>;
 }
 
 // PipelineTaskInputResource maps the name of a declared PipelineResource input
@@ -60,7 +60,7 @@ export interface WorkspacePipelineTaskBinding {
 // the Task is run.
 export interface PipelineTaskCondition {
   conditionRef: string;
-  params?: Params[];
+  params?: ParamSpec[];
   resources: PipelineTaskInputResource[];
 }
 
@@ -71,14 +71,14 @@ export interface PipelineTask {
   taskSpec?: TaskSpec;
   retries?: number;
   resources?: PipelineTaskResources;
-  params?: Params;
+  params?: ParamSpec;
   timeout?: string;
   conditions?: PipelineTaskCondition;
 }
 
 // PipelineTask defines a task in a Pipeline, passing inputs from both
 // Params and from the output of previous tasks.
-export class PipelineTask implements PipelineTask { }
+export class PipelineTask implements PipelineTask {}
 
 // PipelineDeclaredResource is used by a Pipeline to declare the types of the
 // PipelineResources that it will required to run and names which can be used to
@@ -118,9 +118,9 @@ export interface PipelineSpec {
 
 @autobind()
 export class Pipeline extends KubeObject {
-  static kind = "Pipeline"
-  spec: PipelineSpec
-  status: {}
+  static kind = "Pipeline";
+  spec: PipelineSpec;
+  status: {};
 
   getTasks(): PipelineTask[] {
     return this.spec.tasks || [];
@@ -134,9 +134,9 @@ export class Pipeline extends KubeObject {
     const taskList: PipelineTask[] = this.spec.tasks;
     if (!taskList) return [];
     const taskSet: string[] = [];
-    taskList.map(task => {
+    taskList.map((task) => {
       taskSet.push(task.taskRef.name);
-    })
+    });
     return taskSet;
   }
 }
