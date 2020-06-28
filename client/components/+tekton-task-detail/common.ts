@@ -1,4 +1,4 @@
-import { EnvVar, envVars } from "../+deploy-container";
+import { EnvVar } from "../+deploy-container";
 import { TaskResources } from "../../api/endpoints/tekton-task.api";
 
 export interface PipelineParams {

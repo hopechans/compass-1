@@ -4,10 +4,8 @@ import { observer } from "mobx-react";
 import React from "react";
 import {
   PipelineParamsDetails,
-  TaskResourceDetails,
   MultiTaskStepDetails,
   PipelineParams,
-  ResourceDeclaration,
   TaskStep,
   taskStep,
   ResourcesDetail,
@@ -28,12 +26,7 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Switch from "@material-ui/core/Switch";
 import { Select, SelectOption } from "../select";
 import { Icon } from "../icon";
-import {
-  Inputs,
-  Outputs,
-  TaskResources,
-  Task,
-} from "../../api/endpoints/tekton-task.api";
+import { TaskResources, Task } from "../../api/endpoints/tekton-task.api";
 interface Props<T = any> extends Partial<Props> {
   value?: T;
 

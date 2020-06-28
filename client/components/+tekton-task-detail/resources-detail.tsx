@@ -2,16 +2,10 @@ import { observer } from "mobx-react";
 import React from "react";
 import { observable } from "mobx";
 import { ActionMeta } from "react-select/src/types";
-import { Select, SelectOption } from "../select";
-import { Icon } from "../icon";
-import { t, Trans } from "@lingui/macro";
-import { taskResources, ResourceDeclaration, resources } from "./common";
-import { SubTitle } from "../layout/sub-title";
+import { resources } from "./common";
 import { _i18n } from "../../i18n";
-import { Input } from "../input";
 import { TaskResources } from "client/api/endpoints/tekton-task.api";
 import { TaskResourceDetails } from "./task-resource-details";
-import { PipelineParamsDetails } from "./pipeline-params-details";
 import { Grid, Divider, Card } from "@material-ui/core";
 
 interface Props<T = any> extends Partial<Props> {
@@ -25,18 +19,6 @@ interface Props<T = any> extends Partial<Props> {
 @observer
 export class ResourcesDetail extends React.Component<Props> {
   @observable value: TaskResources = this.props.value || resources;
-
-  formatOptionLabel = (option: SelectOption) => {
-    const { value, label } = option;
-    return (
-      label || (
-        <>
-          <Icon small material="layers" />
-          {value}
-        </>
-      )
-    );
-  };
 
   render() {
     return (
