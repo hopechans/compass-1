@@ -60,7 +60,7 @@ export class TerminalApi extends WebSocketApi {
         const {hostname, protocol} = location;
         const wss = `http${protocol === "https:" ? "s" : ""}://`;
         console.log(`${wss}${hostname}${configStore.serverPort}/workload/shell/pod`)
-        return `${wss}${hostname}:8080/workload/shell/pod`
+        return `${wss}${hostname}${configStore.serverPort}/workload/shell/pod`
     }
 
     async connect() {
