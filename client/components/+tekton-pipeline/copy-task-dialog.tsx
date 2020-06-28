@@ -10,6 +10,9 @@ import {
   ResourceDeclaration,
   TaskStep,
   taskStep,
+  InputsDetail,
+  inputs,
+  outputs,
 } from "../+tekton-task-detail";
 import { observable, toJS } from "mobx";
 import { Dialog } from "../dialog";
@@ -26,8 +29,7 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Switch from "@material-ui/core/Switch";
 import { Select, SelectOption } from "../select";
 import { Icon } from "../icon";
-import { result } from "lodash";
-
+import { Inputs, Outputs } from "../../api/endpoints/tekton-task.api";
 interface Props<T = any> extends Partial<Props> {
   value?: T;
 
@@ -44,7 +46,8 @@ class Volume {
 export interface TaskResult {
   taskName: string;
   pipelineParams: PipelineParams[];
-  taskResources: ResourceDeclaration[];
+  inputs: Inputs;
+  outPuts: Outputs;
   taskSteps: TaskStep[];
   volumes?: Volume[];
 }
@@ -52,7 +55,8 @@ export interface TaskResult {
 export const task: TaskResult = {
   taskName: "task-name",
   pipelineParams: [],
-  taskResources: [],
+  inputs: inputs,
+  outPuts: outputs,
   taskSteps: [taskStep],
   volumes: [],
 };
@@ -80,8 +84,8 @@ export class CopyTaskDialog extends React.Component<Props> {
     const task = taskStore.getByName(name, defaultNameSpace);
     if (task !== undefined) {
       task.spec.inputs?.resources?.map((item: any, index: number) => {
-        this.value.taskResources[index].name = item.name;
-        this.value.taskResources[index].type = item.type;
+        // this.value.taskResources[index].name = item.name;
+        // this.value.taskResources[index].type = item.type;
       });
       task.spec?.params?.map((item: any, index: number) => {
         this.value.pipelineParams[index].default = item.default;
@@ -112,90 +116,86 @@ export class CopyTaskDialog extends React.Component<Props> {
   toTask() {}
 
   saveTask = async () => {
-    const resources = toJS(this.value.taskResources);
-    let gitResources: any = resources.map((item) => {
-      if (item.type === "git") {
-        return item;
-      }
-    });
-
-    let imageResources: any = resources.map((item) => {
-      if (item.type === "image") {
-        return item;
-      }
-    });
-
-    const params = this.value.pipelineParams;
-
-    // console.log(gitResources[0]);
-
-    try {
-      if (imageResources[0] === undefined && gitResources[0] !== undefined) {
-        await taskStore.create(
-          { name: this.value.taskName, namespace: "" },
-          {
-            spec: {
-              params: params,
-              inputs: {
-                resources: gitResources,
-              },
-              steps: toJS(this.value.taskSteps),
-              volumes: [
-                {
-                  name: "build-path",
-                  emptyDir: {},
-                },
-              ],
-            },
-          }
-        );
-      }
-      if (gitResources[0] === undefined && imageResources[0] !== undefined) {
-        await taskStore.create(
-          { name: this.value.taskName, namespace: "" },
-          {
-            spec: {
-              params: params,
-              outputs: {
-                resources: imageResources,
-              },
-              steps: toJS(this.value.taskSteps),
-              volumes: [
-                {
-                  name: "build-path",
-                  emptyDir: {},
-                },
-              ],
-            },
-          }
-        );
-      }
-      if (gitResources[0] !== undefined && imageResources[0] !== undefined) {
-        await taskStore.create(
-          { name: this.value.taskName, namespace: "" },
-          {
-            spec: {
-              params: params,
-              inputs: {
-                resources: gitResources,
-              },
-              outputs: {
-                resources: imageResources,
-              },
-              steps: toJS(this.value.taskSteps),
-              volumes: [
-                {
-                  name: "build-path",
-                  emptyDir: {},
-                },
-              ],
-            },
-          }
-        );
-      }
-    } catch (err) {
-      console.log(err);
-    }
+    // const resources = toJS(this.value.taskResources);
+    // let gitResources: any = resources.map((item) => {
+    //   if (item.type === "git") {
+    //     return item;
+    //   }
+    // });
+    // let imageResources: any = resources.map((item) => {
+    //   if (item.type === "image") {
+    //     return item;
+    //   }
+    // });
+    // const params = this.value.pipelineParams;
+    // // console.log(gitResources[0]);
+    // try {
+    //   if (imageResources[0] === undefined && gitResources[0] !== undefined) {
+    //     await taskStore.create(
+    //       { name: this.value.taskName, namespace: "" },
+    //       {
+    //         spec: {
+    //           params: params,
+    //           inputs: {
+    //             resources: gitResources,
+    //           },
+    //           steps: toJS(this.value.taskSteps),
+    //           volumes: [
+    //             {
+    //               name: "build-path",
+    //               emptyDir: {},
+    //             },
+    //           ],
+    //         },
+    //       }
+    //     );
+    //   }
+    //   if (gitResources[0] === undefined && imageResources[0] !== undefined) {
+    //     await taskStore.create(
+    //       { name: this.value.taskName, namespace: "" },
+    //       {
+    //         spec: {
+    //           params: params,
+    //           outputs: {
+    //             resources: imageResources,
+    //           },
+    //           steps: toJS(this.value.taskSteps),
+    //           volumes: [
+    //             {
+    //               name: "build-path",
+    //               emptyDir: {},
+    //             },
+    //           ],
+    //         },
+    //       }
+    //     );
+    //   }
+    //   if (gitResources[0] !== undefined && imageResources[0] !== undefined) {
+    //     await taskStore.create(
+    //       { name: this.value.taskName, namespace: "" },
+    //       {
+    //         spec: {
+    //           params: params,
+    //           inputs: {
+    //             resources: gitResources,
+    //           },
+    //           outputs: {
+    //             resources: imageResources,
+    //           },
+    //           steps: toJS(this.value.taskSteps),
+    //           volumes: [
+    //             {
+    //               name: "build-path",
+    //               emptyDir: {},
+    //             },
+    //           ],
+    //         },
+    //       }
+    //     );
+    //   }
+    // } catch (err) {
+    //   console.log(err);
+    // }
   };
 
   handleChange = (event: any) => {
@@ -270,12 +270,13 @@ export class CopyTaskDialog extends React.Component<Props> {
                 }}
               />
               <br />
-              <TaskResourceDetails
-                value={this.value.taskResources}
+              <InputsDetail
+                value={this.value.inputs}
                 onChange={(value) => {
-                  this.value.taskResources = value;
+                  this.value.inputs = value;
                 }}
               />
+
               <br />
               <MultiTaskStepDetails
                 value={this.value.taskSteps}
