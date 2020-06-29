@@ -189,7 +189,9 @@ export class Pipelines extends React.Component<Props> {
   render() {
     return (
       <>
-        <div style={{ width: "100%" }}>
+        {/* 99.5% prevent horizontal scroll bar */}
+        {/*↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓ */}
+        <div style={{ width: "99.5%" }}>
           <Graph
             open={Pipelines.isHiddenPipelineGraph}
             showSave={false}

@@ -3,7 +3,9 @@ import React from "react";
 import { Grid, Divider, Card } from "@material-ui/core";
 import { Trans } from "@lingui/macro";
 import { Button } from "../button";
+import { cssNames } from "../../utils";
 import { observer } from "mobx-react";
+import { themeStore } from "../../theme.store";
 import { observable } from "mobx";
 import {
     PipelineParamsDetails,
@@ -64,12 +66,8 @@ export class Graph extends React.Component<IProps, IState> {
     render() {
         const { open, showSave } = this.state;
         return (
-            <div>
-
-
-                <div hidden={
-                    open
-                }>
+            <div >
+                <div hidden={open} >
                     <Grid container spacing={1}>
 
                         <Grid item xs={3}>
@@ -86,9 +84,6 @@ export class Graph extends React.Component<IProps, IState> {
                         </Grid>
                     </Grid>
                 </div>
-
-
-
                 <div
                     className="pipeline-graph"
                     id="pipeline-graph"
@@ -99,11 +94,7 @@ export class Graph extends React.Component<IProps, IState> {
 
 
                 </div>
-
-                <div hidden={
-                    open
-                }>
-                    <Card >
+                <div hidden={open} className={cssNames('pipeline-resource-panel',themeStore.activeTheme.type)}>
                         <br />
                         <PipelineResourceDetails value={this.value.pipelineResources} onChange={(value) => {
                             this.value.pipelineResources = value
@@ -114,8 +105,6 @@ export class Graph extends React.Component<IProps, IState> {
                             this.value.pipelineParams = value
                         }} />
                         <br />
-                        <Divider />
-                    </Card>
                 </div>
 
             </div>
