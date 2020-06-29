@@ -135,12 +135,13 @@ export class CopyTaskDialog extends React.Component<Props> {
           }
         );
       } else {
-        let taskuUdate: Task;
-        task.metadata.name = toJS(this.value.taskName);
-        task.spec.params = toJS(this.value.pipelineParams);
-        task.spec.resources = toJS(this.value.resources);
-        task.spec.steps = toJS(this.value.taskSteps);
-        await taskStore.update(task, { ...taskuUdate });
+        //not thing todo
+        // let taskuUdate: Task;
+        // task.metadata.name = toJS(this.value.taskName);
+        // task.spec.params = toJS(this.value.pipelineParams);
+        // task.spec.resources = toJS(this.value.resources);
+        // task.spec.steps = toJS(this.value.taskSteps);
+        // await taskStore.update(task, { ...taskuUdate });
       }
     } catch (err) {
       console.log(err);

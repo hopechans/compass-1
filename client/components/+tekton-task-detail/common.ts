@@ -3,9 +3,9 @@ import { TaskResources } from "../../api/endpoints/tekton-task.api";
 
 export interface PipelineParams {
   name: string;
-  type: string;
-  description: string;
-  default: string;
+  type?: string;
+  description?: string;
+  default?: string;
 }
 
 export interface PipelineResources {

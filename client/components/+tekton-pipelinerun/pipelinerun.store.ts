@@ -6,13 +6,12 @@ import { apiManager } from "../../api/api-manager";
 
 @autobind()
 export class PipelineRunStore extends KubeObjectStore<PipelineRun> {
-    api = pipelineRunApi
-    // @observable metrics: IPodMetrics = null;
+  api = pipelineRunApi;
+  // @observable metrics: IPodMetrics = null;
 
-
-    // reset() {
-    //   this.metrics = null;
-    // }
+  // reset() {
+  //   this.metrics = null;
+  // }
 }
 
 export const pipelineRunStore = new PipelineRunStore();
