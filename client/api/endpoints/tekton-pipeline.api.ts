@@ -2,6 +2,7 @@ import { autobind } from "../../utils";
 import { KubeObject } from "../kube-object";
 import { KubeApi } from "../kube-api";
 import { TaskSpec, Params } from "./tekton-task.api";
+import { type } from "os";
 
 export interface TaskRef {
   name: string;
@@ -64,6 +65,11 @@ export interface PipelineTaskCondition {
   resources: PipelineTaskInputResource[];
 }
 
+export interface Param {
+  name: string;
+  value: string | Array<any>;
+}
+
 export interface PipelineTask {
   name: string;
   taskRef?: TaskRef;
@@ -71,7 +77,7 @@ export interface PipelineTask {
   taskSpec?: TaskSpec;
   retries?: number;
   resources?: PipelineTaskResources;
-  params?: ParamSpec[];
+  params?: Param[];
   timeout?: string;
   conditions?: PipelineTaskCondition;
 }
