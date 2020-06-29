@@ -62,7 +62,7 @@ export class PilelineDialog extends React.Component<Props> {
     try {
       // //will update pipeline
       await pipelineApi.update(
-        { name: this.value.pipelineName, namespace: "default" },
+        { name: this.value.pipelineName, namespace: "ops" },
         {
           spec: {
             resources: this.value.resources,
