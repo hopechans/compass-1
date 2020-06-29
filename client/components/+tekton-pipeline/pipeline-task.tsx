@@ -25,24 +25,23 @@ interface Props<T = any> extends Partial<Props> {
   onChange?(option: T, meta?: ActionMeta): void;
 }
 
-const taskRef: TaskRef = {
+export const taskRef: TaskRef = {
   name: "",
   kind: "", //Select  => Task/ClusterTask
 };
 
-const params: ParamSpec = {
+export const params: ParamSpec = {
   name: "",
 };
 
-const pipelineTaskResource: PipelineTaskResources = {
+export const pipelineTaskResource: PipelineTaskResources = {
   inputs: [],
   outputs: [],
 };
 
-const pipelineTask: PipelineTask = {
+export const pipelineTask: PipelineTask = {
   name: "",
   taskRef: taskRef,
-  retries: 0,
   resources: pipelineTaskResource,
   params: params,
   timeout: "",
@@ -83,30 +82,36 @@ export class PipelineTaskDetail extends React.Component<Props> {
           value={this.value.name}
           onChange={(value) => (this.value.name = value)}
         />
-        {/* <Select
-          value={this.value.taskRef.name}
+        <br />
+        <Select
+          value={this.value.taskRef?.name}
           options={this.taskOptions}
           formatOptionLabel={this.formatOptionLabel}
           onChange={(value: string) => {
             this.value.taskRef.name = value;
           }}
-        /> */}
+        />
         <br />
-        <Input
-          required={true}
+        {/* <Input
           placeholder={`retries`}
-          type="number"
-          validators={isNumber}
-          // value={Number(this.value.retries)}
+          // type="number"
+          // validators={isNumber}
+          value={this.value.retries}
+          onChange={(value) => (this.value.retries = Number(value))}
+        /> */}
+        <Input
+          placeholder={_i18n._("retries")}
+          value={this.value.retries?.toString()}
           onChange={(value) => (this.value.retries = Number(value))}
         />
+        <br />
         <ResourcesDetail
           value={this.value.resources}
           onChange={(value) => {
             this.value.resources = value;
           }}
         />
-
+        <br />
         <PipelineParamsDetails
           value={this.value.params}
           onChange={(value) => {
