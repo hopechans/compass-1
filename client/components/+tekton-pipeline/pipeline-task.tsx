@@ -30,9 +30,7 @@ export const taskRef: TaskRef = {
   kind: "", //Select  => Task/ClusterTask
 };
 
-export const params: ParamSpec = {
-  name: "",
-};
+export const params: ParamSpec[] = [];
 
 export const pipelineTaskResource: PipelineTaskResources = {
   inputs: [],

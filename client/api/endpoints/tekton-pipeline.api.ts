@@ -71,7 +71,7 @@ export interface PipelineTask {
   taskSpec?: TaskSpec;
   retries?: number;
   resources?: PipelineTaskResources;
-  params?: ParamSpec;
+  params?: ParamSpec[];
   timeout?: string;
   conditions?: PipelineTaskCondition;
 }

@@ -68,7 +68,7 @@ export class PilelineDialog extends React.Component<Props> {
   render() {
     const header = (
       <h5>
-        <Trans>Create Pipeline</Trans>
+        <Trans>Save Pipeline</Trans>
       </h5>
     );
 
