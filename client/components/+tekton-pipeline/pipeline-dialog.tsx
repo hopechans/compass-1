@@ -1,6 +1,6 @@
 import { observer } from "mobx-react";
 import React from "react";
-import { observable } from "mobx";
+import { observable, toJS } from "mobx";
 import { SubTitle } from "../layout/sub-title";
 import { Input } from "../input";
 import { _i18n } from "../../i18n";
@@ -47,37 +47,31 @@ export class PilelineDialog extends React.Component<Props> {
     let pipeline = PilelineDialog.currentPipeline;
     this.value.tasks = pipeline.spec.tasks;
     this.value.pipelineName = pipeline.metadata.name;
-    this.value.params = pipeline.spec.params;
-    this.value.resources = pipeline.spec.resources;
-    this.value.workspaces = pipeline.spec.workspaces;
+    if (pipeline.spec.params !== undefined) {
+      this.value.params = pipeline.spec.params;
+    }
+    if (pipeline.spec.params !== undefined) {
+      this.value.resources = pipeline.spec.resources;
+    }
+    if (pipeline.spec.workspaces !== undefined) {
+      this.value.workspaces = pipeline.spec.workspaces;
+    }
   };
 
   submit = async () => {
     try {
-      //will update pipeline
-      let newPipeline = await pipelineApi.create(
-        { name: this.value.pipelineName, namespace: "ops" },
+      // //will update pipeline
+      await pipelineApi.update(
+        { name: this.value.pipelineName, namespace: "default" },
         {
           spec: {
-            resources: [{ name: "", type: "" }],
-            tasks: [],
-            params: [],
+            resources: this.value.resources,
+            tasks: this.value.tasks,
+            params: this.value.params,
+            workspaces: this.value.workspaces,
           },
         }
       );
-      //label the resource labels if the admin the namespace label default
-      newPipeline.metadata.labels = {
-        namespace: configStore.getDefaultNamespace() || "default",
-      };
-      newPipeline.metadata.name = this.value.pipelineName;
-      newPipeline.spec.params = this.value.params;
-      newPipeline.spec.resources = this.value.resources;
-      newPipeline.spec.tasks = this.value.tasks;
-      newPipeline.spec.workspaces = this.value.workspaces;
-      newPipeline.metadata.namespace = "ops";
-      await newPipeline.update(newPipeline);
-      this.reset();
-      this.close();
     } catch (err) {
       Notifications.error(err);
     }
