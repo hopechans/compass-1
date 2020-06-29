@@ -50,7 +50,7 @@ export class PilelineDialog extends React.Component<Props> {
     if (pipeline.spec.params !== undefined) {
       this.value.params = pipeline.spec.params;
     }
-    if (pipeline.spec.params !== undefined) {
+    if (pipeline.spec.resources !== undefined) {
       this.value.resources = pipeline.spec.resources;
     }
     if (pipeline.spec.workspaces !== undefined) {
