@@ -35,7 +35,7 @@ export class TaskSelect extends React.Component<Props> {
   async componentDidMount() {
     // if (true) await namespaceStore.loadAll();
     // this.unsubscribe = namespaceStore.subscribe();
-    if (true) await taskStore.loadAll();
+    if (true) await taskStore.getAllByNs("ops");
     this.unsubscribe = taskStore.subscribe();
   }
 
@@ -50,9 +50,10 @@ export class TaskSelect extends React.Component<Props> {
       clusterOptionLabel,
     } = this.props;
     //maybe fliter  ops ns
-    let options: SelectOption[] = taskStore.items.map((task) => ({
+    let options: SelectOption[] = taskStore.getAllByNs("ops").map((task) => ({
       value: task.getName(),
     }));
+
     options = customizeOptions ? customizeOptions(options) : options;
     if (showClusterOption) {
       options.unshift({ value: null, label: clusterOptionLabel });

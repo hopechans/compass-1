@@ -81,8 +81,8 @@ export interface PipelineResourceBinding {
       fieldName: string;
       secretKey: string;
       secretName: string;
-    }[]
-  }
+    }[];
+  };
 }
 
 export interface PodTemplate {
@@ -98,29 +98,28 @@ export interface PodTemplate {
 }
 
 export interface PipelineRunSpec {
-  pipelineRef: PipelineRef,
+  pipelineRef: PipelineRef;
   // pipelineSpec: PipelineSpec,
-  pipelineSpec: PipelineSpec,
-  resources: PipelineResourceBinding[],
+  pipelineSpec: PipelineSpec;
+  resources: PipelineResourceBinding[];
   params: {
     name: string;
     value: string | Array<any>;
-  }[],
-  serviceAccountName: string,
+  }[];
+  serviceAccountName: string;
   serviceAccountNames: {
     taskName: string;
     serviceAccountName: string;
-  }[],
-  status: string,
-  timeout: string | number,
-  podTemplate: PodTemplate,
+  }[];
+  status: string;
+  timeout: string | number;
+  podTemplate: PodTemplate;
 }
 
 @autobind()
 export class PipelineRun extends KubeObject {
-
-  static kind = "PipelineRun"
-  spec: PipelineRunSpec
+  static kind = "PipelineRun";
+  spec: PipelineRunSpec;
   status: {
     observedGeneration: number;
     conditions?: any;

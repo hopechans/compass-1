@@ -161,21 +161,24 @@ export class Pipelines extends React.Component<Props> {
   }
 
   savePipeline = async (pipeResult: PipelineResult) => {
-    PilelineDialog.open();
     this.data = this.graph.getGraph().save();
 
     const data = JSON.stringify(this.graph.getGraph().save());
+
+    this.pipeline.metadata.labels = {
+      namespace: configStore.getDefaultNamespace(),
+    };
+    this.pipeline.metadata.annotations = { node_data: data };
+    this.pipeline.spec.tasks = [];
+    //todo:this un-direct read pipeResult.pipelineParams data
+    // this.pipeline.spec.params = pipeResult.pipelineParams
+    // this.pipeline.spec.resources = pipeResult.pipelineResources;
+    this.pipeline.spec.tasks.push(...this.getPipelineTasks());
+    //will show pipeline dialog
+    PilelineDialog.open(this.pipeline);
+
     //更新对应的pipeline
     try {
-      this.pipeline.metadata.labels = {
-        namespace: configStore.getDefaultNamespace(),
-      };
-      this.pipeline.metadata.annotations = { node_data: data };
-      this.pipeline.spec.tasks = [];
-      //todo:this un-direct read pipeResult.pipelineParams data
-      // this.pipeline.spec.params = pipeResult.pipelineParams
-      // this.pipeline.spec.resources = pipeResult.pipelineResources;
-      this.pipeline.spec.tasks.push(...this.getPipelineTasks());
       await pipelineStore.update(this.pipeline, { ...this.pipeline });
     } catch (err) {
       console.log(err);

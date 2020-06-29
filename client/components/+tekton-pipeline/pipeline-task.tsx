@@ -1,6 +1,6 @@
 import { observer } from "mobx-react";
 import React from "react";
-import { observable } from "mobx";
+import { observable, toJS } from "mobx";
 import { ActionMeta } from "react-select/src/types";
 import { _i18n } from "../../i18n";
 import {
@@ -25,6 +25,7 @@ import { TaskSelect } from "./task-select";
 import { Task } from "client/api/endpoints";
 import { Grid, Divider } from "@material-ui/core";
 import { GridList } from "material-ui";
+import { styleFn } from "react-select/src/styles";
 
 interface Props<T = any> extends Partial<Props> {
   value?: T;
@@ -60,7 +61,7 @@ export const pipelineTask: PipelineTask = {
 @observer
 export class PipelineTaskDetail extends React.Component<Props> {
   @observable value: PipelineTask = this.props.value || pipelineTask;
-  @observable tasks = observable.array<Task>([], { deep: false });
+  @observable tasks = observable.array<String>([], { deep: false });
 
   get taskOptions() {
     const options = taskStore
@@ -120,14 +121,14 @@ export class PipelineTaskDetail extends React.Component<Props> {
           <Grid xs={10}>
             <TaskSelect
               isMulti
-              value={this.tasks}
+              value={this.value.runAfter}
               themeName="light"
               className="box grow"
               onChange={(opts: SelectOption[]) => {
                 if (!opts) opts = [];
                 this.tasks.replace(unwrapTasks(opts));
-
-                // this.namespaces.replace(unwrapNamespaces(opts));
+                let data: any = toJS(this.tasks);
+                this.value.runAfter = data;
               }}
             />
             <br />

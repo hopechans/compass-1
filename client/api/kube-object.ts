@@ -7,7 +7,9 @@ import { ItemObject } from "../item.store";
 import { apiKube } from "./index";
 import { resourceApplierApi } from "./endpoints/resource-applier.api";
 
-export type IKubeObjectConstructor<T extends KubeObject = any> = (new (data: KubeJsonApiData | any) => T) & {
+export type IKubeObjectConstructor<T extends KubeObject = any> = (new (
+  data: KubeJsonApiData | any
+) => T) & {
   kind?: string;
 };
 
@@ -53,19 +55,19 @@ export class KubeObject implements ItemObject {
 
   static stringifyLabels(labels: { [name: string]: string }): string[] {
     if (!labels) return [];
-    return Object.entries(labels).map(([name, value]) => `${name}=${value}`)
+    return Object.entries(labels).map(([name, value]) => `${name}=${value}`);
   }
 
   constructor(data: KubeJsonApiData) {
     Object.assign(this, data);
   }
 
-  apiVersion: string
-  kind: string
+  apiVersion: string;
+  kind: string;
   metadata: IKubeObjectMetadata;
 
   get selfLink() {
-    return this.metadata.selfLink
+    return this.metadata.selfLink;
   }
 
   getId() {
@@ -90,7 +92,9 @@ export class KubeObject implements ItemObject {
     if (fromNow) {
       return moment(this.metadata.creationTimestamp).fromNow();
     }
-    const diff = new Date().getTime() - new Date(this.metadata.creationTimestamp).getTime();
+    const diff =
+      new Date().getTime() -
+      new Date(this.metadata.creationTimestamp).getTime();
     if (humanize) {
       return formatDuration(diff, compact);
     }
@@ -107,21 +111,17 @@ export class KubeObject implements ItemObject {
 
   getAnnotations(): string[] {
     const labels = KubeObject.stringifyLabels(this.metadata.annotations);
-    return labels.filter(label => {
-      const skip = resourceApplierApi.annotations.some(key => label.startsWith(key));
+    return labels.filter((label) => {
+      const skip = resourceApplierApi.annotations.some((key) =>
+        label.startsWith(key)
+      );
       return !skip;
-    })
+    });
   }
 
   getSearchFields() {
-    const { getName, getId, getNs, getAnnotations, getLabels } = this
-    return [
-      getName(),
-      getNs(),
-      getId(),
-      ...getLabels(),
-      ...getAnnotations(),
-    ]
+    const { getName, getId, getNs, getAnnotations, getLabels } = this;
+    return [getName(), getNs(), getId(), ...getLabels(), ...getAnnotations()];
   }
 
   toPlainObject(): object {
