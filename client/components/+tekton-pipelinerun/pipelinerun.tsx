@@ -104,72 +104,67 @@ export class PipelineRuns extends React.Component<Props> {
       const currentTaskRunMap = this.getTaskRun(
         this.getTaskRunName(pipelinerun)
       );
+
+      nodeData.nodes.map((item: any, index: number) => {
+        const currentTaskRun = currentTaskRunMap[item.taskName];
+        if (currentTaskRun !== undefined) {
+          nodeData.nodes[index].status =
+            currentTaskRun.status.conditions[0].reason;
+        } else {
+          nodeData.nodes[index].status = "Pendding";
+        }
+        nodeData.nodes[index].showtime = true;
+      });
+      setTimeout(() => {
+        this.graph.getGraph().clear();
+        this.graph.getGraph().changeData(nodeData);
+      });
       //Interval 1s update status and time in graph
       setInterval(() => {
         nodeData.nodes.map((item: any, index: number) => {
-          //set current node status,just like:Failed Succeed... and so on.
-          const currentTaskRun = currentTaskRunMap[item.taskName];
-          nodeData.nodes[index].status =
-            currentTaskRun.status.conditions[0].reason;
-          nodeData.nodes[index].showtime = true;
+          // //set current node status,just like:Failed Succeed... and so on.
+          const currentTaskRunMap = this.getTaskRun(
+            this.getTaskRunName(pipelinerun)
+          );
 
-          //when show pipeline will use current date time  less start time and then self-increment。
-          let completionTime = currentTaskRun.status.completionTime;
-          let totalTime;
-          const currentStartTime = currentTaskRun.status.startTime;
-          const st = new Date(currentStartTime).getTime();
-          if (completionTime !== "" || completionTime !== undefined) {
-            const ct = new Date(completionTime).getTime();
-            let result = Math.floor((ct - st) / 1000);
-            totalTime = this.secondsToHms(result);
-          } else {
-            const ct = new Date().getTime();
-            let result = Math.floor((ct - st) / 1000);
-            totalTime = this.secondsToHms(result);
+          const currentTaskRun = currentTaskRunMap[item.taskName];
+          console.log(
+            "----------------------->Status:",
+            currentTaskRun?.status?.conditions[0]?.reason
+          );
+          if (currentTaskRun !== undefined) {
+            //should get current node itme and update the time.
+            let currentitem = this.graph
+              .getGraph()
+              .findById(nodeData.nodes[index].id);
+            //dynimic set the state: missing notreay
+            this.graph
+              .getGraph()
+              .setItemState(
+                currentitem,
+                currentTaskRun.status.conditions[0].reason,
+                ""
+              );
+            //when show pipeline will use current date time  less start time and then self-increment。
+            let completionTime = currentTaskRun.status.completionTime;
+            let totalTime: string;
+            const currentStartTime = currentTaskRun.status.startTime;
+            const st = new Date(currentStartTime).getTime();
+            if (completionTime !== undefined) {
+              const ct = new Date(completionTime).getTime();
+              let result = Math.floor((ct - st) / 1000);
+              totalTime = this.secondsToHms(result);
+            } else {
+              const ct = new Date().getTime();
+              let result = Math.floor((ct - st) / 1000);
+              totalTime = this.secondsToHms(result);
+            }
+            //set the time
+            this.graph.getGraph().setItemState(currentitem, "time", totalTime);
           }
-          //should get current node itme and update the time.
-          let currentitem = this.graph
-            .getGraph()
-            .findById(nodeData.nodes[index].id);
-          this.graph.getGraph().setItemState(currentitem, "time", totalTime);
         });
       }, 1000);
     }
-
-    // if (nodeData === undefined || nodeData === "") {
-    //   //show nothing
-    //   this.graph.getGraph().clear();
-    // } else {
-
-    //   let node = JSON.parse(nodeData);
-    //   const nodeMap = new Map<string, any>();
-    //   node.nodes.map((item: any, index: number) => {
-    //     nodeMap.set(item.taskName, item)
-    //   });
-
-    //   let status = ["Failed", "Succeeded", "Progress"]
-    //   let a = 0;
-    //   node.nodes.map((item: any, index: number) => {
-    //     node.nodes[index].showtime = true;
-    //     node.nodes[index].status = 'Cancel';
-    //   });
-    //   this.graph.getGraph().clear();
-    //   setTimeout(() => {
-    //     this.graph.getGraph().changeData(node);
-    //   }, 200);
-
-    //   setInterval(() => {
-    //     node.nodes.map((item: any, index: number) => {
-    //       let currentitem = this.graph.getGraph().findById(node.nodes[index].id);
-    //       var today = new Date();
-    //       let hour = today.getHours() + 'h';
-    //       let seconds = today.getSeconds() + 's'
-    //       this.graph.getGraph().setItemState(currentitem, "time", '1h3m' + '' + seconds);
-    //       console.log("----------------------------->", '1h 3m' + ' ' + seconds);
-    //     });
-    //   }, 1)
-
-    // }
   }
 
   render() {
