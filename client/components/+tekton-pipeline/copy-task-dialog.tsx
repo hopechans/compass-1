@@ -28,7 +28,7 @@ import { Select, SelectOption } from "../select";
 import { Icon } from "../icon";
 import { TaskResources, Task } from "../../api/endpoints";
 import { Notifications } from "../notifications";
-import {systemName} from "../input/input.validators";
+import { systemName } from "../input/input.validators";
 interface Props<T = any> extends Partial<Props> {
   value?: T;
 
@@ -102,7 +102,7 @@ export class CopyTaskDialog extends React.Component<Props> {
     // CopyTaskDialog.close();
   };
 
-  toTask() { }
+  toTask() {}
 
   saveTask = async () => {
     const parms = toJS(this.value.pipelineParams);
@@ -117,22 +117,22 @@ export class CopyTaskDialog extends React.Component<Props> {
     ];
 
     try {
-      // const task = taskStore.getByName(this.value.taskName);
-      await taskStore.create(
-        { name: this.value.taskName, namespace: '' },
-        {
-          spec: {
-            params: parms,
-            resources: resources,
-            steps: steps,
-            volumes: volumes,
-          },
-        }
-      );
-      Notifications.ok(
-        <>
-          task {this.value.taskName} save successed
-        </>);
+      const task = taskStore.getByName(this.value.taskName);
+      if (task === undefined) {
+        await taskStore.create(
+          { name: this.value.taskName, namespace: "" },
+          {
+            spec: {
+              params: parms,
+              resources: resources,
+              steps: steps,
+              volumes: volumes,
+            },
+          }
+        );
+      }
+
+      Notifications.ok(<>task {this.value.taskName} save successed</>);
       this.close();
     } catch (err) {
       Notifications.error(err);
@@ -179,6 +179,7 @@ export class CopyTaskDialog extends React.Component<Props> {
         <Wizard
           className="CopyAddDeployDialog"
           header={header}
+          done={this.close}
         >
           <WizardStep contentClass="flex gaps column" next={this.handle}>
             <FormGroup row>
