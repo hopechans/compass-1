@@ -11,12 +11,11 @@ import { observable } from "mobx";
 import { ActionMeta } from "react-select/src/types";
 import { SubTitle } from "../layout/sub-title";
 import { Input } from "../input";
-import { _i18n } from "../../i18n";
-import { PipelineSpec } from "../../api/endpoints/tekton-pipeline.api";
-import { ParamsDetails } from "../+tekton-task-detail";
+import { PipelineSpec } from "../../api/endpoints";
 import { MultiPipelineTaskStepDetails } from "./multi-pipeline-task-ref-details";
 import { Grid, Divider, Card } from "@material-ui/core";
 import { pipelineTask } from "./pipeline-task";
+import {systemName} from "../input/input.validators";
 
 interface Props<T = any> extends Partial<Props> {
   value?: T;
@@ -48,6 +47,7 @@ export class PipelineDetails extends React.Component<Props> {
         <SubTitle title={"Pipeline Name"} />
         <Input
           value={this.value.pipelineName}
+          validators={systemName}
           onChange={(value) => (this.value.pipelineName = value)}
         />
         <br />

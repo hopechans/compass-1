@@ -1,15 +1,16 @@
-import { ActionMeta } from "react-select/src/types";
-import { observer } from "mobx-react";
+import {ActionMeta} from "react-select/src/types";
+import {observer} from "mobx-react";
 import React from "react";
-import { SubTitle } from "../layout/sub-title";
-import { Icon } from "../icon";
-import { _i18n } from "../../i18n";
-import { t, Trans } from "@lingui/macro";
-import { Input } from "../input";
-import { observable } from "mobx";
-import { Col, Row } from "../grid";
-import { Divider } from "antd";
-import { envVar, EnvVar } from "./common";
+import {SubTitle} from "../layout/sub-title";
+import {Icon} from "../icon";
+import {_i18n} from "../../i18n";
+import {t, Trans} from "@lingui/macro";
+import {Input} from "../input";
+import {observable} from "mobx";
+import {Col, Row} from "../grid";
+import {Divider} from "antd";
+import {envVar, EnvVar} from "./common";
+import {systemName} from "../input/input.validators";
 
 interface EvnVarProps<T = any> extends Partial<EvnVarProps> {
   value?: T;
@@ -48,7 +49,7 @@ export class EvnVarDetails extends React.Component<EvnVarProps> {
   render() {
     return (
       <>
-        {this.props.divider ? <Divider /> : <></>}
+        {this.props.divider ? <Divider/> : <></>}
         <SubTitle className="fields-title" title={<Trans>Env</Trans>}>
           {this.renderAdd()}
         </SubTitle>
@@ -60,7 +61,8 @@ export class EvnVarDetails extends React.Component<EvnVarProps> {
                   <Col span="10">
                     <Input
                       className="item"
-                      placeholder={_i18n._(t`name`)}
+                      validators={systemName}
+                      placeholder={_i18n._(t`Name`)}
                       title={this.value[index].name}
                       value={this.value[index].name}
                       onChange={(value) => {
@@ -71,7 +73,7 @@ export class EvnVarDetails extends React.Component<EvnVarProps> {
                   <Col span="10" offset={2}>
                     <Input
                       className="item"
-                      placeholder={_i18n._(t`value`)}
+                      placeholder={_i18n._(t`Value`)}
                       title={this.value[index].value}
                       value={this.value[index].value}
                       onChange={(value) => {

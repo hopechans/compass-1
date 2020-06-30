@@ -2,13 +2,13 @@ import {observer} from "mobx-react";
 import React from "react";
 import {observable} from "mobx";
 import {ActionMeta} from "react-select/src/types";
-import {Collapse, Popconfirm} from "antd";
+import {Collapse} from "../collapse";
+import {Popconfirm} from "antd";
 import {Button} from "../button";
 import {DeleteOutlined} from '@ant-design/icons';
 import {taskStep, TaskStep} from "./common";
 import {TaskStepDetails} from "./task-step-details";
-
-const {Panel} = Collapse;
+import {t, Trans} from "@lingui/macro";
 
 interface Props<T = any> extends Partial<Props> {
   value?: T;
@@ -62,23 +62,21 @@ export class MultiTaskStepDetails extends React.Component<Props> {
     }
 
     return (
-      <div>
+      <>
         <Button primary onClick={() => this.add()}>
           <span>Add Step</span>
         </Button>
         <br/>
         <br/>
         {this.value.length > 0 ?
-          <Collapse>
-            {this.value.map((item, index) => {
-              return (
-                <Panel header={`Step`} key={index} extra={genExtra(index)}>
-                  <TaskStepDetails value={this.value[index]} onChange={value => this.value[index] = value}/>
-                </Panel>
-              );
-            })}
-          </Collapse> : <></>}
-      </div>
+          this.value.map((item, index) => {
+            return (
+              <Collapse panelName={<Trans>Step</Trans>} extraExpand={genExtra(index)}>
+                <TaskStepDetails value={this.value[index]} onChange={value => this.value[index] = value}/>
+              </Collapse>
+            );
+          }) : <></>}
+      </>
     )
   }
 }

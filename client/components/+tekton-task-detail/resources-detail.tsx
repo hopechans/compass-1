@@ -3,7 +3,6 @@ import React from "react";
 import { observable } from "mobx";
 import { ActionMeta } from "react-select/src/types";
 import { resources } from "./common";
-import { _i18n } from "../../i18n";
 import { TaskResources } from "client/api/endpoints/tekton-task.api";
 import { TaskResourceDetails } from "./task-resource-details";
 import { Grid, Divider, Card } from "@material-ui/core";

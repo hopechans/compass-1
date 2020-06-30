@@ -1,3 +1,5 @@
+@import "../+workloads/workloads-mixins";
+
 .TaskRuns {
   .TableCell {
     &.name {
@@ -12,6 +14,13 @@
     &.age {
       flex-grow: 0.3;
     }
+
+    &.steps {
+      .StatusBrick {
+        @include step-status-bgs;
+      }
+    }
+
     &.warning {
       @include table-cell-warning;
     }

@@ -1,20 +1,21 @@
 import "./service-accounts-details.scss";
 
 import * as React from "react";
-import { autorun, observable } from "mobx";
-import { Trans } from "@lingui/macro";
-import { Spinner } from "../spinner";
-import { ServiceAccountsSecret } from "./service-accounts-secret";
-import { DrawerItem, DrawerTitle } from "../drawer";
-import { disposeOnUnmount, observer } from "mobx-react";
-import { secretsStore } from "../+config-secrets/secrets.store";
-import { Link } from "react-router-dom";
-import { Secret, ServiceAccount, serviceAccountsApi } from "../../api/endpoints";
-import { KubeEventDetails } from "../+events/kube-event-details";
-import { getDetailsUrl } from "../../navigation";
-import { KubeObjectDetailsProps } from "../kube-object";
-import { apiManager } from "../../api/api-manager";
-import { KubeObjectMeta } from "../kube-object/kube-object-meta";
+import {autorun, observable} from "mobx";
+import {Trans} from "@lingui/macro";
+import {Spinner} from "../spinner";
+import {ServiceAccountsSecret} from "./service-accounts-secret";
+import {DrawerItem, DrawerTitle} from "../drawer";
+import {disposeOnUnmount, observer} from "mobx-react";
+import {secretsStore} from "../+config-secrets/secrets.store";
+import {Link} from "react-router-dom";
+import {Secret, ServiceAccount, serviceAccountsApi} from "../../api/endpoints";
+import {KubeEventDetails} from "../+events/kube-event-details";
+import {getDetailsUrl} from "../../navigation";
+import {KubeObjectDetailsProps} from "../kube-object";
+import {apiManager} from "../../api/api-manager";
+import {KubeObjectMeta} from "../kube-object/kube-object-meta";
+import {Row} from "../grid";
 
 interface Props extends KubeObjectDetailsProps<ServiceAccount> {
 }
@@ -26,21 +27,21 @@ export class ServiceAccountsDetails extends React.Component<Props> {
   @disposeOnUnmount
   loadSecrets = autorun(async () => {
     this.secrets = null;
-    const { object: serviceAccount } = this.props;
+    const {object: serviceAccount} = this.props;
     if (!serviceAccount) {
       return;
     }
     const namespace = serviceAccount.getNs();
-    const secrets = serviceAccount.getSecrets().map(({ name }) => {
+    const secrets = serviceAccount.getSecrets().map(({name}) => {
       const secret = secretsStore.getByName(name, namespace);
-      if (!secret) return secretsStore.load({ name, namespace });
+      if (!secret) return secretsStore.load({name, namespace});
       return secret;
     });
     this.secrets = await Promise.all(secrets);
   })
 
   renderSecrets() {
-    const { secrets } = this;
+    const {secrets} = this;
     if (!secrets) {
       return <Spinner center/>
     }
@@ -51,17 +52,21 @@ export class ServiceAccountsDetails extends React.Component<Props> {
 
   renderSecretLinks(secrets: Secret[]) {
     return secrets.map(secret => {
-      return (
-        <Link key={secret.getId()} to={getDetailsUrl(secret.selfLink)}>
-          {secret.getName()}
-        </Link>
-      )
-    }
+        if (secret) {
+          return (
+            <Row>
+              <Link key={secret.getId()} to={getDetailsUrl(secret.selfLink)}>
+                {secret.getName()}
+              </Link>
+            </Row>
+          )
+        }
+      }
     )
   }
 
   render() {
-    const { object: serviceAccount } = this.props;
+    const {object: serviceAccount} = this.props;
     if (!serviceAccount) {
       return null;
     }
@@ -69,9 +74,12 @@ export class ServiceAccountsDetails extends React.Component<Props> {
       secret.getNs() == serviceAccount.getNs() &&
       secret.getAnnotations().some(annot => annot == `kubernetes.io/service-account.name: ${serviceAccount.getName()}`)
     )
-    const imagePullSecrets = serviceAccount.getImagePullSecrets().map(({ name }) =>
-      secretsStore.getByName(name, serviceAccount.getNs())
+    const imagePullSecrets = serviceAccount.getImagePullSecrets().map(({name}) => {
+        console.log(secretsStore)
+        return secretsStore.getByName(name, serviceAccount.getNs())
+      }
     )
+
     return (
       <div className="ServiceAccountsDetails">
         <KubeObjectMeta object={serviceAccount}/>
