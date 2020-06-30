@@ -62,6 +62,12 @@ export class NodeAnnotationDialog extends React.Component<Props> {
     return NodeAnnotationDialog.data
   }
 
+  reset = () => {
+    this.host = ""
+    this.rack = ""
+    this.zone = ""
+  }
+
   submit = async () => {
     try {
       const data = {
@@ -71,10 +77,12 @@ export class NodeAnnotationDialog extends React.Component<Props> {
         "zone": this.zone,
 
       };
-      await apiBase.post("/node/annotation/geo", { data }).
+      let newObj = await apiBase.post("/node/annotation/geo", { data }).
         then((data) => {
+          this.reset();
           this.close();
         })
+      
       Notifications.ok(
         <>
           node annotation geo successed

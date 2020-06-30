@@ -99,7 +99,7 @@ export class CopyTaskDialog extends React.Component<Props> {
   handle = () => {
     CopyTaskDialog.graph.setTaskName(this.value.taskName, CopyTaskDialog.node);
     this.saveTask();
-    CopyTaskDialog.close();
+    // CopyTaskDialog.close();
   };
 
   toTask() { }
@@ -179,7 +179,6 @@ export class CopyTaskDialog extends React.Component<Props> {
         <Wizard
           className="CopyAddDeployDialog"
           header={header}
-          done={this.close}
         >
           <WizardStep contentClass="flex gaps column" next={this.handle}>
             <FormGroup row>
