@@ -131,6 +131,7 @@ export class StackDetails extends React.Component<Props> {
                     <SubTitle title={<Trans>Password</Trans>}/>
                     <Input
                       className="item"
+                      type="password"
                       placeholder={_i18n._(t`Password`)}
                       title={this.value[index].password}
                       value={this.value[index].password}

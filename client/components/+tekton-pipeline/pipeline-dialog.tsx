@@ -1,17 +1,13 @@
-import { observer } from "mobx-react";
+import {observer} from "mobx-react";
 import React from "react";
-import { observable, toJS } from "mobx";
-import { SubTitle } from "../layout/sub-title";
-import { Input } from "../input";
-import { _i18n } from "../../i18n";
-import { ActionMeta } from "react-select/src/types";
-import { Trans } from "@lingui/macro";
-import { Dialog } from "../dialog";
-import { Wizard, WizardStep } from "../wizard";
-import { pipelineApi, Pipeline } from "../../api/endpoints";
-import { Notifications } from "../notifications";
-import { configStore } from "../../../client/config.store";
-import { PipelineDetails, PipelineResult, pipeline } from "./pipeline-details";
+import {observable, toJS} from "mobx";
+import {ActionMeta} from "react-select/src/types";
+import {Trans} from "@lingui/macro";
+import {Dialog} from "../dialog";
+import {Wizard, WizardStep} from "../wizard";
+import {pipelineApi, Pipeline} from "../../api/endpoints";
+import {Notifications} from "../notifications";
+import {PipelineDetails, PipelineResult, pipeline} from "./pipeline-details";
 
 interface Props<T = any> extends Partial<Props> {
   value?: T;
@@ -21,22 +17,22 @@ interface Props<T = any> extends Partial<Props> {
 }
 
 @observer
-export class PilelineDialog extends React.Component<Props> {
+export class PipelineDialog extends React.Component<Props> {
   @observable static isOpen = false;
   @observable static currentPipeline: Pipeline;
   @observable value: PipelineResult = this.props.value || pipeline;
 
   static open(pipeline: Pipeline) {
-    PilelineDialog.currentPipeline = pipeline;
-    PilelineDialog.isOpen = true;
+    PipelineDialog.currentPipeline = pipeline;
+    PipelineDialog.isOpen = true;
   }
 
   static close() {
-    PilelineDialog.isOpen = false;
+    PipelineDialog.isOpen = false;
   }
 
   close = () => {
-    PilelineDialog.close();
+    PipelineDialog.close();
   };
 
   reset = () => {
@@ -44,7 +40,7 @@ export class PilelineDialog extends React.Component<Props> {
   };
 
   onOpen = () => {
-    let pipeline = PilelineDialog.currentPipeline;
+    let pipeline = PipelineDialog.currentPipeline;
     this.value.tasks = pipeline.spec.tasks;
     this.value.pipelineName = pipeline.metadata.name;
     if (pipeline.spec.params !== undefined) {
@@ -62,7 +58,7 @@ export class PilelineDialog extends React.Component<Props> {
     try {
       // //will update pipeline
       await pipelineApi.update(
-        { name: this.value.pipelineName, namespace: "ops" },
+        {name: this.value.pipelineName, namespace: "ops"},
         {
           spec: {
             resources: this.value.resources,
@@ -91,7 +87,7 @@ export class PilelineDialog extends React.Component<Props> {
 
     return (
       <Dialog
-        isOpen={PilelineDialog.isOpen}
+        isOpen={PipelineDialog.isOpen}
         close={this.close}
         onOpen={this.onOpen}
       >

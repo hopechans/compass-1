@@ -1,14 +1,14 @@
-import { observer } from "mobx-react";
+import {observer} from "mobx-react";
 import React from "react";
-import { observable } from "mobx";
-import { ActionMeta } from "react-select/src/types";
-import { Collapse, Popconfirm } from "antd";
-import { Button } from "../button";
-import { DeleteOutlined } from "@ant-design/icons";
-import { PipelineTask } from "../../api/endpoints/tekton-pipeline.api";
-import { PipelineTaskDetail, pipelineTask } from "./pipeline-task";
-
-const { Panel } = Collapse;
+import {observable} from "mobx";
+import {ActionMeta} from "react-select/src/types";
+import {Popconfirm} from "antd";
+import {Collapse} from "../collapse";
+import {Button} from "../button";
+import {DeleteOutlined} from "@ant-design/icons";
+import {PipelineTask} from "../../api/endpoints";
+import {PipelineTaskDetail, pipelineTask} from "./pipeline-task";
+import {Trans} from "@lingui/macro";
 
 interface Props<T = any> extends Partial<Props> {
   value?: T;
@@ -48,7 +48,7 @@ export class MultiPipelineTaskStepDetails extends React.Component<Props> {
           >
             <DeleteOutlined
               translate
-              style={{ color: "#ff4d4f" }}
+              style={{color: "#ff4d4f"}}
               onClick={(event: any) => {
                 event.stopPropagation();
               }}
@@ -64,24 +64,19 @@ export class MultiPipelineTaskStepDetails extends React.Component<Props> {
         <Button primary onClick={() => this.add()}>
           <span>Add Pipeline Task</span>
         </Button>
-        <br />
-        <br />
-        {this.value.length > 0 ? (
-          <Collapse>
-            {this.value.map((item, index) => {
-              return (
-                <Panel header={`Task`} key={index} extra={genExtra(index)}>
-                  <PipelineTaskDetail
-                    value={this.value[index]}
-                    onChange={(value) => (this.value[index] = value)}
-                  />
-                </Panel>
-              );
-            })}
-          </Collapse>
-        ) : (
-          <></>
-        )}
+        <br/>
+        <br/>
+        {this.value.length > 0 ?
+          this.value.map((item, index) => {
+            return (
+              <Collapse panelName={<Trans>Task</Trans>} extraExpand={genExtra(index)}>
+                <PipelineTaskDetail
+                  value={this.value[index]}
+                  onChange={(value) => (this.value[index] = value)}
+                />
+              </Collapse>
+            );
+          }) : <></>}
       </div>
     );
   }
