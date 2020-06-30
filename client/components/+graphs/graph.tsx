@@ -2,7 +2,9 @@ import React from "react";
 import { Grid, Divider, Card } from "@material-ui/core";
 import { Trans } from "@lingui/macro";
 import { Button } from "../button";
+import { cssNames } from "../../utils";
 import { observer } from "mobx-react";
+import { themeStore } from "../../theme.store";
 import { observable } from "mobx";
 import {
   PipelineParamsDetails,
@@ -16,12 +18,14 @@ interface IProps {
   open?: boolean;
   showSave?: boolean;
   saveCallback?: (pipeResult: PipelineResult) => void;
+  closeGraph?:()=>void;
 }
 
 interface IState {
   open?: boolean;
   showSave?: boolean;
   saveCallback?: (pipeResult: PipelineResult) => void;
+  closeGraph?:()=>void;
 }
 
 export interface PipelineResult {
@@ -58,6 +62,10 @@ export class Graph extends React.Component<IProps, IState> {
     await this.props.saveCallback(this.value);
   };
 
+  closeGraph = () => {
+    this.props.closeGraph();
+  };
+
   render() {
     const { open, showSave } = this.state;
     return (
@@ -75,6 +83,10 @@ export class Graph extends React.Component<IProps, IState> {
               <Button primary onClick={this.handleClick} hidden={showSave}>
                 <span>Save</span>
               </Button>
+
+              <Button onClick={this.closeGraph} style={{marginLeft:'10px'}}>
+                <span>Close</span>
+              </Button>
             </Grid>
           </Grid>
         </div>
@@ -84,3 +96,4 @@ export class Graph extends React.Component<IProps, IState> {
     );
   }
 }
+

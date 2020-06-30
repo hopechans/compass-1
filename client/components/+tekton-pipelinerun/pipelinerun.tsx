@@ -29,7 +29,7 @@ interface Props extends RouteComponentProps {}
 
 @observer
 export class PipelineRuns extends React.Component<Props> {
-  @observable static isHiddenPipelineGraph: boolean = false;
+  @observable isHiddenPipelineGraph: boolean = true;
   @observable graph: any = null;
 
   getNodeData(pipelineName: string): any {
@@ -80,12 +80,13 @@ export class PipelineRuns extends React.Component<Props> {
 
   //showCurrentPipelineRunStatus show pipeline run status
   showCurrentPipelineRunStatus(pipelinerun: PipelineRun) {
-    if (PipelineRuns.isHiddenPipelineGraph === undefined) {
-      PipelineRuns.isHiddenPipelineGraph = true;
-    }
-    PipelineRuns.isHiddenPipelineGraph
-      ? (PipelineRuns.isHiddenPipelineGraph = false)
-      : (PipelineRuns.isHiddenPipelineGraph = true);
+    this.isHiddenPipelineGraph = false;
+    // if (PipelineRuns.isHiddenPipelineGraph === undefined) {
+    //   PipelineRuns.isHiddenPipelineGraph = true;
+    // }
+    // PipelineRuns.isHiddenPipelineGraph
+    //   ? (PipelineRuns.isHiddenPipelineGraph = false)
+    //   : (PipelineRuns.isHiddenPipelineGraph = true);
 
     //by pipeline ref name get node data
     let nodeData = this.getNodeData(pipelinerun.spec.pipelineRef.name);
@@ -171,15 +172,21 @@ export class PipelineRuns extends React.Component<Props> {
 
     // }
   }
-
+  hiddenPipelineGraph = () => {
+    this.isHiddenPipelineGraph = true
+  }
   render() {
     return (
       <>
-        <div style={{ width: "99%" }}>
+        {/* 99.5% prevent horizontal scroll bar */}
+        {/*↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓ */}
+        <div style={{ width: "99.5%" }}>
           <Graph
-            open={PipelineRuns.isHiddenPipelineGraph}
+            open={this.isHiddenPipelineGraph}
             showSave={true}
-          />
+            closeGraph = {this.hiddenPipelineGraph}
+          ></Graph>
+
         </div>
         <KubeObjectListLayout
           className="PipelineRuns"
