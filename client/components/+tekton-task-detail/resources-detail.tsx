@@ -1,11 +1,14 @@
-import { observer } from "mobx-react";
+import {observer} from "mobx-react";
 import React from "react";
-import { observable } from "mobx";
-import { ActionMeta } from "react-select/src/types";
-import { resources } from "./common";
-import { TaskResources } from "client/api/endpoints/tekton-task.api";
-import { TaskResourceDetails } from "./task-resource-details";
-import { Grid, Divider, Card } from "@material-ui/core";
+import {observable} from "mobx";
+import {ActionMeta} from "react-select/src/types";
+import {resources} from "./common";
+import {TaskResources} from "client/api/endpoints/tekton-task.api";
+import {TaskResourceDetails} from "./task-resource-details";
+import {Grid, Divider, Card} from "@material-ui/core";
+import {SubTitle} from "../layout/sub-title";
+import {Trans} from "@lingui/macro";
+import {Row} from "../grid";
 
 interface Props<T = any> extends Partial<Props> {
   value?: T;
@@ -22,49 +25,21 @@ export class ResourcesDetail extends React.Component<Props> {
   render() {
     return (
       <div>
-        <Grid container spacing={1}>
-          <Grid item xs={12}>
-            <b>Resources</b>
-          </Grid>
-          <Grid item xs={1}></Grid>
-          <Grid item xs={3}>
-            <b>Inputs</b>
-          </Grid>
-          <Grid item xs={6}></Grid>
-          <Grid item xs={2}></Grid>
-          <Grid item xs={1}></Grid>
-          <Grid item xs={11}>
-            <Card>
-              <TaskResourceDetails
-                value={this.value.inputs}
-                onChange={(value) => {
-                  this.value.inputs = value;
-                }}
-              />
-            </Card>
-            <Divider />
-          </Grid>
-
-          <Grid item xs={1}></Grid>
-          <Grid item xs={3}>
-            <b>Outputs</b>
-          </Grid>
-          <Grid item xs={6}></Grid>
-          <Grid item xs={2}></Grid>
-          <Grid item xs={1}></Grid>
-          <Grid item xs={11}>
-            <Card>
-              <TaskResourceDetails
-                value={this.value.outputs}
-                onChange={(value) => {
-                  this.value.outputs = value;
-                }}
-              />
-            </Card>
-            <Divider />
-          </Grid>
-        </Grid>
-        <Divider />
+        <TaskResourceDetails
+          value={this.value.inputs}
+          title={"Resource Inputs"}
+          onChange={(value) => {
+            this.value.inputs = value;
+          }}
+        />
+        <TaskResourceDetails
+          value={this.value.outputs}
+          title={"Resource Outputs"}
+          onChange={(value) => {
+            this.value.outputs = value;
+          }}
+        />
+        <Divider/>
       </div>
     );
   }

@@ -1,26 +1,30 @@
-import { observer } from "mobx-react";
+import {observer} from "mobx-react";
 import React from "react";
-import { observable } from "mobx";
-import { ActionMeta } from "react-select/src/types";
-import { Select, SelectOption } from "../select";
-import { Icon } from "../icon";
-import { t, Trans } from "@lingui/macro";
-import { taskResources, ResourceDeclaration } from "./common";
-import { Col, Row } from "../grid";
-import { SubTitle } from "../layout/sub-title";
-import { _i18n } from "../../i18n";
-import { Input } from "../input";
+import {observable} from "mobx";
+import {ActionMeta} from "react-select/src/types";
+import {Select, SelectOption} from "../select";
+import {Icon} from "../icon";
+import {t, Trans} from "@lingui/macro";
+import {taskResources, ResourceDeclaration} from "./common";
+import {Col, Row} from "../grid";
+import {SubTitle} from "../layout/sub-title";
+import {_i18n} from "../../i18n";
+import {Input} from "../input";
 
 interface Props<T = any> extends Partial<Props> {
   value?: T;
   themeName?: "dark" | "light" | "outlined";
   divider?: true;
+  title?: string
 
   onChange?(option: T, meta?: ActionMeta): void;
 }
 
 @observer
 export class TaskResourceDetails extends React.Component<Props> {
+
+  static defaultProps = {title: "Add Pipeline Resources"}
+
   @observable value: ResourceDeclaration[] = this.props.value || [];
 
   add = () => {
@@ -32,15 +36,18 @@ export class TaskResourceDetails extends React.Component<Props> {
   };
 
   get typeOptions() {
-    return ["image", "git"];
+    return [
+      "image",
+      "git"
+    ];
   }
 
   formatOptionLabel = (option: SelectOption) => {
-    const { value, label } = option;
+    const {value, label} = option;
     return (
       label || (
         <>
-          <Icon small material="layers" />
+          <Icon small material="layers"/>
           {value}
         </>
       )
@@ -48,12 +55,15 @@ export class TaskResourceDetails extends React.Component<Props> {
   };
 
   render() {
+
+    const {title} = this.props;
+
     return (
       <div className="Resource">
-        <SubTitle className="fields-title" title="   Add Pipeline Resources">
+        <SubTitle className="fields-title" title={title}>
           <Icon
             small
-            tooltip={_i18n._(t`Command`)}
+            tooltip={_i18n._(t`Resource`)}
             material="add_circle_outline"
             onClick={(e) => {
               this.add();
@@ -64,14 +74,17 @@ export class TaskResourceDetails extends React.Component<Props> {
         {this.value.length > 0 ? (
           <>
             <Row>
-              <Col span={9}>
+              <Col span={6}>
                 <Trans>Name</Trans>
               </Col>
-              <Col span={9} offset={2}>
+              <Col span={6} offset={2}>
                 <Trans>ResourceType</Trans>
               </Col>
+              <Col span={6} offset={2}>
+                <Trans>TargetPath</Trans>
+              </Col>
             </Row>
-            <br />
+            <br/>
           </>
         ) : (
           <></>
@@ -81,7 +94,7 @@ export class TaskResourceDetails extends React.Component<Props> {
           return (
             <>
               <Row>
-                <Col span={3} offset={1}>
+                <Col span={6}>
                   <Input
                     placeholder={"name"}
                     value={this.value[index].name}
@@ -89,7 +102,7 @@ export class TaskResourceDetails extends React.Component<Props> {
                   />
                 </Col>
 
-                <Col span={3} offset={2}>
+                <Col span={6} offset={2}>
                   <Select
                     value={this.value[index].type}
                     options={this.typeOptions}
@@ -97,7 +110,7 @@ export class TaskResourceDetails extends React.Component<Props> {
                     onChange={(value) => (this.value[index].type = value.value)}
                   />
                 </Col>
-                <Col span={5} offset={7}>
+                <Col span={6} offset={2}>
                   <Input
                     placeholder={"targetpath"}
                     value={this.value[index].targetPath}
@@ -115,7 +128,7 @@ export class TaskResourceDetails extends React.Component<Props> {
                   />
                 </Col>
               </Row>
-              <br />
+              <br/>
             </>
           );
         })}

@@ -51,63 +51,68 @@ export class PipelineParamsDetails extends React.Component<Props> {
           />
         </SubTitle>
         {this.value.length > 0 ? (
-          <Row>
-            <Col span={4}>
-              <Trans>Name</Trans>
-            </Col>
-            <Col span={5} offset={1}>
-              <Trans>Type</Trans>
-            </Col>
-            <Col span={4} offset={1}>
-              <Trans>Description</Trans>
-            </Col>
-            <Col span={4} offset={1}>
-              <Trans>Default</Trans>
-            </Col>
-          </Row>
+          <>
+            <Row>
+              <Col span={4}>
+                <Trans>Name</Trans>
+              </Col>
+              <Col span={5} offset={1}>
+                <Trans>Type</Trans>
+              </Col>
+              <Col span={4} offset={1}>
+                <Trans>Description</Trans>
+              </Col>
+              <Col span={4} offset={1}>
+                <Trans>Default</Trans>
+              </Col>
+            </Row>
+            <br/>
+          </>
         ) : (
           <></>
         )}
         {this.value.map((item, index) => {
           return (
-            <Row>
-              <Col span={4}>
-                <Input
-                  value={this.value[index].name}
-                  onChange={(value) => (this.value[index].name = value)}
-                />
-              </Col>
-              <Col span={5} offset={1}>
-                <Select
-                  value={this.value[index].type}
-                  options={this.Options}
-                  onChange={(value) => (this.value[index].type = value)}
-                />
-              </Col>
-              <Col span={4} offset={1}>
-                <Input
-                  value={this.value[index].description}
-                  onChange={(value) => (this.value[index].description = value)}
-                />
-              </Col>
-              <Col span={4} offset={1}>
-                <Input
-                  value={this.value[index].default}
-                  onChange={(value) => (this.value[index].default = value)}
-                />
-              </Col>
-              <Col span={1} offset={1}>
-                <Icon
-                  small
-                  material="remove_circle_outline"
-                  onClick={(e) => {
-                    this.remove(index);
-                    e.stopPropagation();
-                  }}
-                />
-              </Col>
+            <>
+              <Row>
+                <Col span={4}>
+                  <Input
+                    value={this.value[index].name}
+                    onChange={(value) => (this.value[index].name = value)}
+                  />
+                </Col>
+                <Col span={5} offset={1}>
+                  <Select
+                    value={this.value[index].type}
+                    options={this.Options}
+                    onChange={(value) => (this.value[index].type = value)}
+                  />
+                </Col>
+                <Col span={4} offset={1}>
+                  <Input
+                    value={this.value[index].description}
+                    onChange={(value) => (this.value[index].description = value)}
+                  />
+                </Col>
+                <Col span={4} offset={1}>
+                  <Input
+                    value={this.value[index].default}
+                    onChange={(value) => (this.value[index].default = value)}
+                  />
+                </Col>
+                <Col span={1} offset={1}>
+                  <Icon
+                    small
+                    material="remove_circle_outline"
+                    onClick={(e) => {
+                      this.remove(index);
+                      e.stopPropagation();
+                    }}
+                  />
+                </Col>
+              </Row>
               <br></br>
-            </Row>
+            </>
           );
         })}
       </div>
