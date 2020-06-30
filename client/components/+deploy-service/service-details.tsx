@@ -90,7 +90,7 @@ export class DeployServiceDetails extends React.Component<Props> {
                 <br/>
                 <Icon
                   small
-                  tooltip={<Trans>Remove Command</Trans>}
+                  tooltip={<Trans>Remove</Trans>}
                   className="remove-icon"
                   material="remove_circle_outline"
                   onClick={(e) => {
@@ -103,7 +103,7 @@ export class DeployServiceDetails extends React.Component<Props> {
                   className="item"
                   required={true}
                   placeholder={_i18n._(t`Name`)}
-                  validators={systemName}
+                  // validators={systemName}
                   title={this.value.ports[index].name}
                   value={this.value.ports[index].name}
                   onChange={value => {
