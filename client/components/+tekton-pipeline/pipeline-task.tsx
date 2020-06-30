@@ -1,13 +1,13 @@
 import { observer } from "mobx-react";
 import React from "react";
-import { observable } from "mobx";
+import { observable, toJS } from "mobx";
 import { ActionMeta } from "react-select/src/types";
 import { _i18n } from "../../i18n";
 import {
   PipelineTask,
   TaskRef,
   PipelineTaskResources,
-  ParamSpec,
+  Param,
 } from "../../api/endpoints/tekton-pipeline.api";
 import { SubTitle } from "../layout/sub-title";
 import { Input } from "../input";
@@ -15,7 +15,17 @@ import { Select, SelectOption } from "../select";
 import { taskStore } from "../+tekton-task/task.store";
 import { Icon } from "../icon";
 import { isNumber } from "../input/input.validators";
-import { ResourcesDetail, PipelineParamsDetails } from "../+tekton-task-detail";
+import {
+  ResourcesDetail,
+  PipelineParamsDetails,
+  ParamsDetails,
+  MultiTaskStepDetails,
+} from "../+tekton-task-detail";
+import { TaskSelect } from "./task-select";
+import { Task } from "client/api/endpoints";
+import { Grid, Divider } from "@material-ui/core";
+import { GridList } from "material-ui";
+import { styleFn } from "react-select/src/styles";
 
 interface Props<T = any> extends Partial<Props> {
   value?: T;
@@ -25,27 +35,25 @@ interface Props<T = any> extends Partial<Props> {
   onChange?(option: T, meta?: ActionMeta): void;
 }
 
-const taskRef: TaskRef = {
+export const taskRef: TaskRef = {
   name: "",
   kind: "", //Select  => Task/ClusterTask
 };
 
-const params: ParamSpec = {
-  name: "",
-};
+export const params: Param[] = [];
 
-const pipelineTaskResource: PipelineTaskResources = {
+export const pipelineTaskResource: PipelineTaskResources = {
   inputs: [],
   outputs: [],
 };
 
-const pipelineTask: PipelineTask = {
+export const pipelineTask: PipelineTask = {
   name: "",
   taskRef: taskRef,
-  retries: 0,
   resources: pipelineTaskResource,
   params: params,
   timeout: "",
+  runAfter: [],
   //conditions not support now.
   //conditions?: PipelineTaskCondition;
 };
@@ -53,6 +61,7 @@ const pipelineTask: PipelineTask = {
 @observer
 export class PipelineTaskDetail extends React.Component<Props> {
   @observable value: PipelineTask = this.props.value || pipelineTask;
+  @observable tasks = observable.array<String>([], { deep: false });
 
   get taskOptions() {
     const options = taskStore
@@ -75,44 +84,127 @@ export class PipelineTaskDetail extends React.Component<Props> {
   };
 
   render() {
+    const unwrapTasks = (options: SelectOption[]) =>
+      options.map((option) => option.value);
     return (
       <div>
-        <SubTitle title={"Pipeline Task Name"} />
-        <Input
-          placeholder={_i18n._("Pipeline Task Name")}
-          value={this.value.name}
-          onChange={(value) => (this.value.name = value)}
-        />
-        {/* <Select
-          value={this.value.taskRef.name}
-          options={this.taskOptions}
-          formatOptionLabel={this.formatOptionLabel}
-          onChange={(value: string) => {
-            this.value.taskRef.name = value;
-          }}
-        /> */}
+        <Grid container spacing={1}>
+          <Grid xs={2}>
+            <SubTitle title={"Name:"} />
+          </Grid>
+          <Grid xs={10}>
+            <Input
+              placeholder={_i18n._("Pipeline Task Name")}
+              value={this.value.name}
+              onChange={(value) => (this.value.name = value)}
+            />
+            <br />
+          </Grid>
+          <Grid xs={2}>
+            <SubTitle title={"Ref:"} />
+          </Grid>
+          <Grid xs={10}>
+            <Select
+              value={this.value.taskRef?.name}
+              options={this.taskOptions}
+              formatOptionLabel={this.formatOptionLabel}
+              onChange={(value: string) => {
+                this.value.taskRef.name = value;
+              }}
+            />
+            <br />
+          </Grid>
+
+          <Grid xs={2}>
+            <SubTitle title={"RunAfter:"} />
+          </Grid>
+          <Grid xs={10}>
+            <TaskSelect
+              isMulti
+              value={this.value.runAfter}
+              themeName="light"
+              className="box grow"
+              onChange={(opts: SelectOption[]) => {
+                if (!opts) opts = [];
+                this.tasks.replace(unwrapTasks(opts));
+                let data: any = toJS(this.tasks);
+                this.value.runAfter = data;
+              }}
+            />
+            <br />
+          </Grid>
+
+          <Grid xs={2}>
+            <SubTitle title={"Retries:"} />
+          </Grid>
+          <Grid xs={10}>
+            <Input
+              placeholder={_i18n._("retries")}
+              value={this.value.retries?.toString()}
+              onChange={(value) => (this.value.retries = Number(value))}
+            />
+            <br />
+          </Grid>
+
+          <Grid xs={2}>
+            <SubTitle title={"Timeout:"} />
+          </Grid>
+          <Grid xs={10}>
+            <Input
+              placeholder={_i18n._("timeout")}
+              value={this.value.timeout?.toString()}
+              onChange={(value) => (this.value.timeout = value)}
+            />
+            <br />
+          </Grid>
+        </Grid>
+        <Divider />
         <br />
-        <Input
-          required={true}
+        {/* <Input
           placeholder={`retries`}
-          type="number"
-          validators={isNumber}
-          // value={Number(this.value.retries)}
+          // type="number"
+          // validators={isNumber}
+          value={this.value.retries}
           onChange={(value) => (this.value.retries = Number(value))}
+        /> */}
+
+        <ParamsDetails
+          value={this.value.params}
+          onChange={(value) => {
+            this.value.params = value;
+          }}
         />
+        <br />
         <ResourcesDetail
           value={this.value.resources}
           onChange={(value) => {
             this.value.resources = value;
           }}
         />
+        <br />
 
+        {/* <br />
         <PipelineParamsDetails
-          value={this.value.params}
+          value={this.value.taskSpec?.params}
           onChange={(value) => {
-            this.value.params = value;
+            this.value.taskSpec.params = value;
           }}
         />
+        <br />
+        <ResourcesDetail
+          value={this.value.taskSpec?.resources}
+          onChange={(value) => {
+            this.value.taskSpec.resources = value;
+          }}
+        /> */}
+
+        {/* <br />
+        <MultiTaskStepDetails
+          value={this.value.taskSpec?.steps}
+          onChange={(value) => {
+            this.value.taskSpec.steps = value;
+          }}
+        /> */}
       </div>
     );
   }

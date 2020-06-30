@@ -5,6 +5,7 @@ import React from "react";
 import {
   PipelineParamsDetails,
   WorkspacesDetails,
+  PipelineResourceDetails,
 } from "../+tekton-task-detail";
 import { observable } from "mobx";
 import { ActionMeta } from "react-select/src/types";
@@ -13,7 +14,9 @@ import { Input } from "../input";
 import { _i18n } from "../../i18n";
 import { PipelineSpec } from "../../api/endpoints/tekton-pipeline.api";
 import { ParamsDetails } from "../+tekton-task-detail";
-import { PipelineTaskDetail } from "./pipeline-task";
+import { MultiPipelineTaskStepDetails } from "./multi-pipeline-task-ref-details";
+import { Grid, Divider, Card } from "@material-ui/core";
+import { pipelineTask } from "./pipeline-task";
 
 interface Props<T = any> extends Partial<Props> {
   value?: T;
@@ -30,7 +33,7 @@ export interface PipelineResult extends PipelineSpec {
 export const pipeline: PipelineResult = {
   pipelineName: "",
   resources: [],
-  tasks: [],
+  tasks: [pipelineTask],
   params: [],
   workspaces: [],
 };
@@ -48,24 +51,21 @@ export class PipelineDetails extends React.Component<Props> {
           onChange={(value) => (this.value.pipelineName = value)}
         />
         <br />
-        <ParamsDetails
-          value={this.value.resources}
-          onChange={(value) => (this.value.resources = value)}
-        />
-        <br />
         <PipelineParamsDetails
           value={this.value.params}
           onChange={(value) => {
             this.value.params = value;
           }}
         />
+        <Divider />
         <br />
-        <PipelineTaskDetail
-          value={this.value.tasks}
+        <PipelineResourceDetails
+          value={this.value.resources}
           onChange={(value) => {
-            this.value.tasks = value;
+            this.value.resources = value;
           }}
         />
+        <Divider />
         <br />
         <WorkspacesDetails
           value={this.value.workspaces}
@@ -73,6 +73,15 @@ export class PipelineDetails extends React.Component<Props> {
             this.value.workspaces = value;
           }}
         />
+        <Divider />
+        <br />
+        <MultiPipelineTaskStepDetails
+          value={this.value.tasks}
+          onChange={(value) => {
+            this.value.tasks = value;
+          }}
+        />
+
         <br />
       </div>
     );

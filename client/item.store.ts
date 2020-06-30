@@ -19,16 +19,20 @@ export abstract class ItemStore<T extends ItemObject = ItemObject> {
   @observable selectedItemsIds = observable.map<string, boolean>();
 
   @computed get selectedItems(): T[] {
-    return this.items.filter(item => this.selectedItemsIds.get(item.getId()));
+    return this.items.filter((item) => this.selectedItemsIds.get(item.getId()));
   }
 
   getByName(name: string, ...args: any[]): T;
   getByName(name: string): T {
-    return this.items.find(item => item.getName() === name);
+    return this.items.find((item) => item.getName() === name);
   }
 
   @action
-  protected sortItems(items: T[] = this.items, sorting?: ((item: T) => any)[], order?: "asc" | "desc"): T[] {
+  protected sortItems(
+    items: T[] = this.items,
+    sorting?: ((item: T) => any)[],
+    order?: "asc" | "desc"
+  ): T[] {
     return orderBy(items, sorting || this.defaultSorting, order);
   }
 
@@ -36,11 +40,10 @@ export abstract class ItemStore<T extends ItemObject = ItemObject> {
   @action
   protected async createItem(request: () => Promise<T>) {
     const newItem = await request();
-    const item = this.items.find(item => item.getId() === newItem.getId());
+    const item = this.items.find((item) => item.getId() === newItem.getId());
     if (item) {
       return item;
-    }
-    else {
+    } else {
       const items = this.sortItems([...this.items, newItem]);
       this.items.replace(items);
       return newItem;
@@ -49,7 +52,10 @@ export abstract class ItemStore<T extends ItemObject = ItemObject> {
 
   protected async loadItems(...args: any[]): Promise<any>;
   @action
-  protected async loadItems(request: () => Promise<T[] | any>, sortItems = true) {
+  protected async loadItems(
+    request: () => Promise<T[] | any>,
+    sortItems = true
+  ) {
     if (this.isLoading) {
       await when(() => !this.isLoading);
       return;
@@ -65,17 +71,16 @@ export abstract class ItemStore<T extends ItemObject = ItemObject> {
     }
   }
 
-  protected async loadItem(...args: any[]): Promise<T>
+  protected async loadItem(...args: any[]): Promise<T>;
   @action
   protected async loadItem(request: () => Promise<T>, sortItems = true) {
     const item = await request().catch(() => null);
     if (item) {
-      const existingItem = this.items.find(el => el.getId() === item.getId());
+      const existingItem = this.items.find((el) => el.getId() === item.getId());
       if (existingItem) {
-        const index = this.items.findIndex(item => item === existingItem);
+        const index = this.items.findIndex((item) => item === existingItem);
         this.items.splice(index, 1, item);
-      }
-      else {
+      } else {
         let items = [...this.items, item];
         if (sortItems) items = this.sortItems(items);
         this.items.replace(items);
@@ -87,7 +92,7 @@ export abstract class ItemStore<T extends ItemObject = ItemObject> {
   @action
   protected async updateItem(item: T, request: () => Promise<T>) {
     const updatedItem = await request();
-    const index = this.items.findIndex(i => i.getId() === item.getId());
+    const index = this.items.findIndex((i) => i.getId() === item.getId());
     this.items.splice(index, 1, updatedItem);
     return updatedItem;
   }
@@ -117,8 +122,7 @@ export abstract class ItemStore<T extends ItemObject = ItemObject> {
   toggleSelection(item: T) {
     if (this.isSelected(item)) {
       this.unselect(item);
-    }
-    else {
+    } else {
       this.select(item);
     }
   }
@@ -128,8 +132,7 @@ export abstract class ItemStore<T extends ItemObject = ItemObject> {
     const allSelected = visibleItems.every(this.isSelected);
     if (allSelected) {
       visibleItems.forEach(this.unselect);
-    }
-    else {
+    } else {
       visibleItems.forEach(this.select);
     }
   }
@@ -159,7 +162,7 @@ export abstract class ItemStore<T extends ItemObject = ItemObject> {
     return noop;
   }
 
-  * [Symbol.iterator]() {
+  *[Symbol.iterator]() {
     yield* this.items;
   }
 }

@@ -30,7 +30,7 @@ import { Notifications } from "../notifications";
 import { taskStore } from "../+tekton-task/task.store";
 import { PilelineDialog } from "./pipeline-dialog";
 import { pipelineResourceStore } from "../+tekton-pipelineresource/pipelineresource.store";
-
+import { PilelineRunDialog } from "./pipeline-run-dialog";
 enum sortBy {
   name = "name",
   ownernamespace = "ownernamespace",
@@ -44,7 +44,8 @@ interface Props extends RouteComponentProps {}
 @observer
 export class Pipelines extends React.Component<Props> {
   @observable currentNode: any;
-  @observable static isHiddenPipelineGraph: boolean = false;
+  // @observable static isHiddenPipelineGraph: boolean = false;
+  @observable isHiddenPipelineGraph: boolean = true;
   @observable pipeline: Pipeline;
   @observable task: TaskResult = task;
   @observable pipelineResources: [];
@@ -64,12 +65,13 @@ export class Pipelines extends React.Component<Props> {
   }
 
   showPipeline = (pipeline: Pipeline) => {
-    if (Pipelines.isHiddenPipelineGraph === undefined) {
-      Pipelines.isHiddenPipelineGraph = true;
-    }
-    Pipelines.isHiddenPipelineGraph
-      ? (Pipelines.isHiddenPipelineGraph = false)
-      : (Pipelines.isHiddenPipelineGraph = true);
+    this.isHiddenPipelineGraph = false;
+    // if (Pipelines.isHiddenPipelineGraph === undefined) {
+    //   Pipelines.isHiddenPipelineGraph = true;
+    // }
+    // Pipelines.isHiddenPipelineGraph
+    //   ? (Pipelines.isHiddenPipelineGraph = false)
+    //   : (Pipelines.isHiddenPipelineGraph = true);
 
     let nodeData: any;
     pipeline.getAnnotations().filter((item) => {
@@ -161,21 +163,24 @@ export class Pipelines extends React.Component<Props> {
   }
 
   savePipeline = async (pipeResult: PipelineResult) => {
-    PilelineDialog.open();
     this.data = this.graph.getGraph().save();
 
     const data = JSON.stringify(this.graph.getGraph().save());
+
+    this.pipeline.metadata.labels = {
+      namespace: configStore.getDefaultNamespace(),
+    };
+    this.pipeline.metadata.annotations = { node_data: data };
+    this.pipeline.spec.tasks = [];
+    //todo:this un-direct read pipeResult.pipelineParams data
+    // this.pipeline.spec.params = pipeResult.pipelineParams
+    // this.pipeline.spec.resources = pipeResult.pipelineResources;
+    this.pipeline.spec.tasks.push(...this.getPipelineTasks());
+    //will show pipeline dialog
+    PilelineDialog.open(this.pipeline);
+
     //更新对应的pipeline
     try {
-      this.pipeline.metadata.labels = {
-        namespace: configStore.getDefaultNamespace(),
-      };
-      this.pipeline.metadata.annotations = { node_data: data };
-      this.pipeline.spec.tasks = [];
-      //todo:this un-direct read pipeResult.pipelineParams data
-      // this.pipeline.spec.params = pipeResult.pipelineParams
-      // this.pipeline.spec.resources = pipeResult.pipelineResources;
-      this.pipeline.spec.tasks.push(...this.getPipelineTasks());
       await pipelineStore.update(this.pipeline, { ...this.pipeline });
     } catch (err) {
       console.log(err);
@@ -186,6 +191,10 @@ export class Pipelines extends React.Component<Props> {
     this.graph.getGraph().changeData(JSON.parse(data));
   };
 
+  hiddenPipelineGraph = () => {
+    this.isHiddenPipelineGraph = true
+  }
+
   render() {
     return (
       <>
@@ -193,11 +202,12 @@ export class Pipelines extends React.Component<Props> {
         {/*↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓ */}
         <div style={{ width: "99.5%" }}>
           <Graph
-            open={Pipelines.isHiddenPipelineGraph}
+            open={this.isHiddenPipelineGraph}
             showSave={false}
             saveCallback={(pipelineResult: PipelineResult) => {
               this.savePipeline(pipelineResult);
             }}
+            closeGraph = {this.hiddenPipelineGraph}
           />
         </div>
 
@@ -272,6 +282,7 @@ export class Pipelines extends React.Component<Props> {
         <CopyTaskDialog />
         <AddPipelineDialog />
         <PilelineDialog />
+        <PilelineRunDialog />
       </>
     );
   }
@@ -282,7 +293,11 @@ export function PipelineMenu(props: KubeObjectMenuProps<Pipeline>) {
 
   return (
     <KubeObjectMenu {...props}>
-      <MenuItem onClick={() => {}}>
+      <MenuItem
+        onClick={() => {
+          PilelineRunDialog.open(object.getName());
+        }}
+      >
         <Icon
           material="format_align_left"
           title={"Pipeline"}

@@ -1,6 +1,6 @@
 import { observer } from "mobx-react";
 import React from "react";
-import { observable } from "mobx";
+import { observable, toJS } from "mobx";
 import { SubTitle } from "../layout/sub-title";
 import { Input } from "../input";
 import { _i18n } from "../../i18n";
@@ -8,7 +8,7 @@ import { ActionMeta } from "react-select/src/types";
 import { Trans } from "@lingui/macro";
 import { Dialog } from "../dialog";
 import { Wizard, WizardStep } from "../wizard";
-import { pipelineApi } from "../../api/endpoints";
+import { pipelineApi, Pipeline } from "../../api/endpoints";
 import { Notifications } from "../notifications";
 import { configStore } from "../../../client/config.store";
 import { PipelineDetails, PipelineResult, pipeline } from "./pipeline-details";
@@ -23,9 +23,11 @@ interface Props<T = any> extends Partial<Props> {
 @observer
 export class PilelineDialog extends React.Component<Props> {
   @observable static isOpen = false;
+  @observable static currentPipeline: Pipeline;
   @observable value: PipelineResult = this.props.value || pipeline;
 
-  static open() {
+  static open(pipeline: Pipeline) {
+    PilelineDialog.currentPipeline = pipeline;
     PilelineDialog.isOpen = true;
   }
 
@@ -41,24 +43,39 @@ export class PilelineDialog extends React.Component<Props> {
     this.value.pipelineName = "";
   };
 
+  onOpen = () => {
+    let pipeline = PilelineDialog.currentPipeline;
+    this.value.tasks = pipeline.spec.tasks;
+    this.value.pipelineName = pipeline.metadata.name;
+    if (pipeline.spec.params !== undefined) {
+      this.value.params = pipeline.spec.params;
+    }
+    if (pipeline.spec.resources !== undefined) {
+      this.value.resources = pipeline.spec.resources;
+    }
+    if (pipeline.spec.workspaces !== undefined) {
+      this.value.workspaces = pipeline.spec.workspaces;
+    }
+  };
+
   submit = async () => {
     try {
-      let newPipeline = await pipelineApi.create(
-        { name: this.value.pipelineName, namespace: "" },
+      // //will update pipeline
+      await pipelineApi.update(
+        { name: this.value.pipelineName, namespace: "ops" },
         {
           spec: {
-            resources: [{ name: "", type: "" }],
-            tasks: [],
-            params: [],
+            resources: this.value.resources,
+            tasks: this.value.tasks,
+            params: this.value.params,
+            workspaces: this.value.workspaces,
           },
         }
       );
-      // label the resource labels if the admin the namespace label default
-      newPipeline.metadata.labels = {
-        namespace: configStore.getDefaultNamespace() || "default",
-      };
-      await newPipeline.update(newPipeline);
-      this.reset();
+      Notifications.ok(
+        <>
+          pipeline {this.value.pipelineName} save successed
+        </>);
       this.close();
     } catch (err) {
       Notifications.error(err);
@@ -68,12 +85,16 @@ export class PilelineDialog extends React.Component<Props> {
   render() {
     const header = (
       <h5>
-        <Trans>Create Pipeline</Trans>
+        <Trans>Save Pipeline</Trans>
       </h5>
     );
 
     return (
-      <Dialog isOpen={PilelineDialog.isOpen} close={this.close}>
+      <Dialog
+        isOpen={PilelineDialog.isOpen}
+        close={this.close}
+        onOpen={this.onOpen}
+      >
         <Wizard className="PipelineDialog" header={header} done={this.close}>
           <WizardStep contentClass="flex gaps column" next={this.submit}>
             <PipelineDetails
