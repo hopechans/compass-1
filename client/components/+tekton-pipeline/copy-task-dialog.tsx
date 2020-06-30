@@ -212,7 +212,7 @@ export class CopyTaskDialog extends React.Component<Props> {
                       onChange={this.handleChange}
                     />
                   }
-                  label={this.ifSwitch ? "select" : "input"}
+                  label={this.ifSwitch ? "Select module" : "Template configuration"}
                 />
               </FormGroup>
               <div hidden={this.ifSwitch}>
