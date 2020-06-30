@@ -111,7 +111,7 @@ export class PipelineRunDialog extends React.Component<Props> {
               </Grid>
               <Grid xs={9}>
                 <Input
-                  placeholder={_i18n._("pipeline ref:")}
+                  placeholder={_i18n._("pipeline ref")}
                   value={this.value?.pipelineRef?.name}
                   onChange={(value) => (this.value.pipelineRef.name = value)}
                 />
@@ -129,7 +129,10 @@ export class PipelineRunDialog extends React.Component<Props> {
                 />
                 <br />
               </Grid>
-              <Grid xs>
+              <Grid xs={12}>
+                <Divider />
+              </Grid>
+              <Grid xs={12}>
                 <PipelineRunResourceDetails
                   value={this.value?.resources}
                   onChange={(value) => {

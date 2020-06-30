@@ -1,6 +1,6 @@
 import "./copy-task-dialog.scss";
 
-import {observer} from "mobx-react";
+import { observer } from "mobx-react";
 import React from "react";
 import {
   PipelineParamsDetails,
@@ -11,27 +11,27 @@ import {
   ResourcesDetail,
   resources,
 } from "../+tekton-task-detail";
-import {observable, toJS} from "mobx";
-import {Dialog} from "../dialog";
-import {Wizard, WizardStep} from "../wizard";
-import {Trans} from "@lingui/macro";
-import {ActionMeta} from "react-select/src/types";
-import {SubTitle} from "../layout/sub-title";
-import {Input} from "../input";
-import {_i18n} from "../../i18n";
-import {taskStore} from "../+tekton-task/task.store";
+import { observable, toJS } from "mobx";
+import { Dialog } from "../dialog";
+import { Wizard, WizardStep } from "../wizard";
+import { Trans } from "@lingui/macro";
+import { ActionMeta } from "react-select/src/types";
+import { SubTitle } from "../layout/sub-title";
+import { Input } from "../input";
+import { _i18n } from "../../i18n";
+import { taskStore } from "../+tekton-task/task.store";
 
 import FormGroup from "@material-ui/core/FormGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Switch from "@material-ui/core/Switch";
-import {Select, SelectOption} from "../select";
-import {Icon} from "../icon";
-import {TaskResources, Task} from "../../api/endpoints";
-import {Notifications} from "../notifications";
-import {systemName} from "../input/input.validators";
-import {createMuiTheme} from "@material-ui/core";
-import {ThemeProvider} from "@material-ui/core/styles";
-
+import { Select, SelectOption } from "../select";
+import { Icon } from "../icon";
+import { TaskResources, Task } from "../../api/endpoints";
+import { Notifications } from "../notifications";
+import { systemName } from "../input/input.validators";
+import { createMuiTheme } from "@material-ui/core";
+import { ThemeProvider } from "@material-ui/core/styles";
+import { Divider } from "@material-ui/core";
 interface Props<T = any> extends Partial<Props> {
   value?: T;
 
@@ -45,13 +45,13 @@ const theme = createMuiTheme({
     MuiExpansionPanelDetails: {
       root: {
         display: "gird",
-      }
+      },
     },
     MuiPaper: {
       root: {
-        color: ""
+        color: "",
       },
-    }
+    },
   },
 });
 
@@ -117,11 +117,9 @@ export class CopyTaskDialog extends React.Component<Props> {
   handle = () => {
     CopyTaskDialog.graph.setTaskName(this.value.taskName, CopyTaskDialog.node);
     this.saveTask();
-    // CopyTaskDialog.close();
   };
 
-  toTask() {
-  }
+  toTask() {}
 
   saveTask = async () => {
     const parms = toJS(this.value.pipelineParams);
@@ -139,7 +137,7 @@ export class CopyTaskDialog extends React.Component<Props> {
       const task = taskStore.getByName(this.value.taskName);
       if (task === undefined) {
         await taskStore.create(
-          {name: this.value.taskName, namespace: ""},
+          { name: this.value.taskName, namespace: "" },
           {
             spec: {
               params: parms,
@@ -163,11 +161,11 @@ export class CopyTaskDialog extends React.Component<Props> {
   };
 
   formatOptionLabel = (option: SelectOption) => {
-    const {value, label} = option;
+    const { value, label } = option;
     return (
       label || (
         <>
-          <Icon small material="layers"/>
+          <Icon small material="layers" />
           {value}
         </>
       )
@@ -176,9 +174,9 @@ export class CopyTaskDialog extends React.Component<Props> {
 
   get taskOptions() {
     const options = taskStore
-    .getAllByNs("ops")
-    .map((item) => ({value: item.getName()}))
-    .slice();
+      .getAllByNs("ops")
+      .map((item) => ({ value: item.getName() }))
+      .slice();
     return [...options];
   }
 
@@ -212,13 +210,17 @@ export class CopyTaskDialog extends React.Component<Props> {
                       onChange={this.handleChange}
                     />
                   }
-                  label={this.ifSwitch ?
-                    <SubTitle title={<Trans>Select module</Trans>}/> :
-                    <SubTitle title={<Trans>Template configuration</Trans>}/>}
+                  label={
+                    this.ifSwitch ? (
+                      <SubTitle title={<Trans>Select module</Trans>} />
+                    ) : (
+                      <SubTitle title={<Trans>Template configuration</Trans>} />
+                    )
+                  }
                 />
               </FormGroup>
               <div hidden={this.ifSwitch}>
-                <SubTitle title={<Trans>Task Name</Trans>}/>
+                <SubTitle title={<Trans>Task Name</Trans>} />
                 <Input
                   required={true}
                   validators={systemName}
@@ -226,21 +228,25 @@ export class CopyTaskDialog extends React.Component<Props> {
                   value={this.value.taskName}
                   onChange={(value) => (this.value.taskName = value)}
                 />
-                <br/>
+                <br />
+
                 <PipelineParamsDetails
                   value={this.value.pipelineParams}
                   onChange={(value) => {
                     this.value.pipelineParams = value;
                   }}
                 />
-                <br/>
+                <br />
+                <Divider />
+
                 <ResourcesDetail
                   value={this.value.resources}
                   onChange={(value) => {
                     this.value.resources = value;
                   }}
                 />
-                <br/>
+                <br />
+
                 <MultiTaskStepDetails
                   value={this.value.taskSteps}
                   onChange={(value) => {

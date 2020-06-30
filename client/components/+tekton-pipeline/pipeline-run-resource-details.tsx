@@ -79,10 +79,13 @@ export class PipelineRunResourceDetails extends React.Component<Props> {
         {this.value.map((item, index) => {
           return (
             <Grid container spacing={1}>
+              <Grid xs={12}>
+                <br />
+              </Grid>
               <Grid xs={2}>
                 <SubTitle title={"Name"} />
               </Grid>
-              <Grid xs={10}>
+              <Grid xs={8}>
                 <Input
                   placeholder={_i18n._("name")}
                   value={this.value[index]?.name}
@@ -90,10 +93,11 @@ export class PipelineRunResourceDetails extends React.Component<Props> {
                 />
                 <br />
               </Grid>
+              <Grid xs={2}></Grid>
               <Grid xs={2}>
                 <SubTitle title={"ResourceRef"} />
               </Grid>
-              <Grid xs={9}>
+              <Grid xs={8}>
                 <Select
                   value={this.value[index]?.resourceRef?.name}
                   options={this.pipelineResouceOptions}
@@ -105,6 +109,7 @@ export class PipelineRunResourceDetails extends React.Component<Props> {
                 />
                 <br />
               </Grid>
+              <Grid xs={1}></Grid>
               <Grid xs={1}>
                 <Icon
                   small
