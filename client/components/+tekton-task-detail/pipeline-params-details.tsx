@@ -1,14 +1,15 @@
-import { observer } from "mobx-react";
+import {observer} from "mobx-react";
 import React from "react";
-import { observable } from "mobx";
-import { ActionMeta } from "react-select/src/types";
-import { Icon } from "../icon";
-import { t, Trans } from "@lingui/macro";
-import { Input } from "../input";
-import { PipelineParams, pipelineParams } from "./common";
-import { SubTitle } from "../layout/sub-title";
-import { _i18n } from "../../i18n";
-import { Col, Row } from "../grid";
+import {observable} from "mobx";
+import {ActionMeta} from "react-select/src/types";
+import {Icon} from "../icon";
+import {t, Trans} from "@lingui/macro";
+import {Input} from "../input";
+import {PipelineParams, pipelineParams} from "./common";
+import {SubTitle} from "../layout/sub-title";
+import {_i18n} from "../../i18n";
+import {Col, Row} from "../grid";
+import {Select} from "../select";
 
 interface Props<T = any> extends Partial<Props> {
   value?: T;
@@ -20,6 +21,12 @@ interface Props<T = any> extends Partial<Props> {
 @observer
 export class PipelineParamsDetails extends React.Component<Props> {
   @observable value: PipelineParams[] = this.props.value || [];
+
+  get Options() {
+    return [
+      "string"
+    ]
+  }
 
   add = () => {
     this.value.push(pipelineParams);
@@ -45,16 +52,16 @@ export class PipelineParamsDetails extends React.Component<Props> {
         </SubTitle>
         {this.value.length > 0 ? (
           <Row>
-            <Col span={5}>
+            <Col span={4}>
               <Trans>Name</Trans>
             </Col>
-            <Col span={5}>
+            <Col span={5} offset={1}>
               <Trans>Type</Trans>
             </Col>
-            <Col span={5}>
+            <Col span={4} offset={1}>
               <Trans>Description</Trans>
             </Col>
-            <Col span={5}>
+            <Col span={4} offset={1}>
               <Trans>Default</Trans>
             </Col>
           </Row>
@@ -70,9 +77,10 @@ export class PipelineParamsDetails extends React.Component<Props> {
                   onChange={(value) => (this.value[index].name = value)}
                 />
               </Col>
-              <Col span={4} offset={1}>
-                <Input
+              <Col span={5} offset={1}>
+                <Select
                   value={this.value[index].type}
+                  options={this.Options}
                   onChange={(value) => (this.value[index].type = value)}
                 />
               </Col>
@@ -88,7 +96,7 @@ export class PipelineParamsDetails extends React.Component<Props> {
                   onChange={(value) => (this.value[index].default = value)}
                 />
               </Col>
-              <Col span={2} offset={2}>
+              <Col span={1} offset={1}>
                 <Icon
                   small
                   material="remove_circle_outline"

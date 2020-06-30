@@ -55,7 +55,7 @@ export const maxLength: Validator = {
 
 export const systemName: Validator = {
   message: () => _i18n._(t`This field must contain only lowercase latin characters, numbers and dash.`),
-  validate: value => !!value.match(/^[a-z0-9-]+$/),
+  validate: value => !!value.match(/^[a-z0-9-]+$/) && !!value.match(/^\D+/),
 };
 
 export const accountId: Validator = {

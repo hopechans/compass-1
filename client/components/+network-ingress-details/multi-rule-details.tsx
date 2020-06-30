@@ -2,14 +2,14 @@ import {observer} from "mobx-react";
 import React from "react";
 import {observable} from "mobx";
 import {ActionMeta} from "react-select/src/types";
-import {Collapse, Popconfirm} from "antd";
+import {Popconfirm} from "antd";
+import {Collapse} from "../collapse";
 import {Button} from "../button";
 import {DeleteOutlined} from '@ant-design/icons';
 import {RuleDetails} from "./rule-details";
 import {Rule, rule} from "./common";
 import {_i18n} from "../../i18n";
-
-const {Panel} = Collapse;
+import {Trans} from "@lingui/macro";
 
 interface Props<T = any> extends Partial<Props> {
   value?: T;
@@ -67,15 +67,14 @@ export class MultiRuleDetails extends React.Component<Props> {
         <br/>
         <br/>
         {this.value.length > 0 ?
-          <Collapse>
-            {this.value.map((item, index) => {
-              return (
-                <Panel header={`Rule`} key={index} extra={genExtra(index)}>
-                  <RuleDetails value={this.value[index]} onChange={value => this.value[index] = value}/>
-                </Panel>
-              );
-            })}
-          </Collapse> : <></>}
+          this.value.map((item, index) => {
+            return (
+              <Collapse panelName={<Trans>Rule</Trans>} extraExpand={genExtra(index)}>
+                <RuleDetails value={this.value[index]} onChange={value => this.value[index] = value}/>
+              </Collapse>
+            );
+          }):<></>
+        }
       </div>
     )
   }

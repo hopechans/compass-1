@@ -9,6 +9,7 @@ import {_i18n} from "../../i18n";
 import {Icon} from "../icon";
 import {observable} from "mobx";
 import {app, App} from "./common";
+import {systemName} from "../input/input.validators";
 
 interface Props<T = any> extends Partial<Props> {
   showIcons?: boolean;
@@ -56,6 +57,7 @@ export class AppDetails extends React.Component<Props> {
         <SubTitle title={<Trans>App Name</Trans>}/>
         <Input
           autoFocus required
+          validators={systemName}
           placeholder={_i18n._(t`Name`)}
           value={this.value.name}
           onChange={v => this.value.name = v}

@@ -10,10 +10,8 @@ import {Notifications} from "../notifications";
 import {SubTitle} from "../layout/sub-title";
 import {Input} from "../input";
 import {ConfigMapDataDetails} from "./config-map-data-details";
-import {Collapse} from "antd";
+import {Collapse} from "../collapse";
 import {Data} from "./common";
-
-const {Panel} = Collapse;
 
 interface Props extends Partial<DialogProps> {
 }
@@ -76,13 +74,11 @@ export class AddConfigMapDialog extends React.Component<Props> {
               value={this.name}
               onChange={value => this.name = value}
             />
-            <Collapse>
-              <Panel key={"Data"} header={"Data"}>
-                <ConfigMapDataDetails
-                  value={this.data}
-                  onChange={value => this.data = value}
-                />
-              </Panel>
+            <Collapse panelName={<Trans>Data</Trans>}>
+              <ConfigMapDataDetails
+                value={this.data}
+                onChange={value => this.data = value}
+              />
             </Collapse>
           </WizardStep>
         </Wizard>
