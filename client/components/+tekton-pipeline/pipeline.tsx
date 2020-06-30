@@ -30,7 +30,7 @@ import { Notifications } from "../notifications";
 import { taskStore } from "../+tekton-task/task.store";
 import { PilelineDialog } from "./pipeline-dialog";
 import { pipelineResourceStore } from "../+tekton-pipelineresource/pipelineresource.store";
-
+import { PilelineRunDialog } from "./pipeline-run-dialog";
 enum sortBy {
   name = "name",
   ownernamespace = "ownernamespace",
@@ -273,6 +273,7 @@ export class Pipelines extends React.Component<Props> {
         <CopyTaskDialog />
         <AddPipelineDialog />
         <PilelineDialog />
+        <PilelineRunDialog />
       </>
     );
   }
@@ -283,7 +284,11 @@ export function PipelineMenu(props: KubeObjectMenuProps<Pipeline>) {
 
   return (
     <KubeObjectMenu {...props}>
-      <MenuItem onClick={() => {}}>
+      <MenuItem
+        onClick={() => {
+          PilelineRunDialog.open(object.getName());
+        }}
+      >
         <Icon
           material="format_align_left"
           title={"Pipeline"}

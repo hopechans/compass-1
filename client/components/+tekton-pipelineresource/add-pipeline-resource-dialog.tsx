@@ -72,7 +72,6 @@ export class AddPipelineResourceDialog extends React.Component<Props> {
           spec: {
             type: this.type,
             params: this.params,
-            secrets: [],
           },
         }
       );

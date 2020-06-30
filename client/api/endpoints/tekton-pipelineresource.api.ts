@@ -1,20 +1,12 @@
-import {autobind} from "../../utils";
-import {KubeObject} from "../kube-object";
-import {KubeApi} from "../kube-api";
-
-export interface PipelineResourceSpec {
-  type: string;
-  params: {
-    name: string,
-    value: string
-  }[],
-  secrets: [],
-}
+import { autobind } from "../../utils";
+import { KubeObject } from "../kube-object";
+import { KubeApi } from "../kube-api";
+import { PipelineResourceSpec } from "./tekton-pipelinerun.api";
 
 @autobind()
 export class PipelineResource extends KubeObject {
-  static kind = "PipelineResource"
-  spec: PipelineResourceSpec
+  static kind = "PipelineResource";
+  spec: PipelineResourceSpec;
 
   getOwnerNamespace(): string {
     return this.metadata.namespace || "";
