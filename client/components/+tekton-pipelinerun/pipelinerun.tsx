@@ -128,10 +128,6 @@ export class PipelineRuns extends React.Component<Props> {
           );
 
           const currentTaskRun = currentTaskRunMap[item.taskName];
-          console.log(
-            "----------------------->Status:",
-            currentTaskRun?.status?.conditions[0]?.reason
-          );
           if (currentTaskRun !== undefined) {
             //should get current node itme and update the time.
             let currentitem = this.graph
