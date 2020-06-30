@@ -17,7 +17,7 @@ import {
 import { Notifications } from "../notifications";
 import { Grid, Divider } from "@material-ui/core";
 import { PipelineRunResourceDetails } from "./pipeline-run-resource-details";
-import {systemName} from "../input/input.validators";
+import { systemName } from "../input/input.validators";
 
 interface Props<T = any> extends Partial<Props> {
   value?: T;
@@ -94,48 +94,52 @@ export class PipelineRunDialog extends React.Component<Props> {
         <Wizard className="PipelineRunDialog" header={header} done={this.close}>
           <WizardStep contentClass="flex gaps column" next={this.submit}>
             <Grid container spacing={1}>
-              <Grid xs={2}>
+              <Grid xs={3}>
                 <SubTitle title={"Name:"} />
               </Grid>
-              <Grid xs={10}>
+              <Grid xs={9}>
                 <Input
-                  placeholder={_i18n._("Pipeline Run Name")}
+                  placeholder={_i18n._("pipeline run name")}
                   validators={systemName}
                   value={this.value.name}
                   onChange={(value) => (this.value.name = value)}
                 />
                 <br />
               </Grid>
-              <Grid xs={2}>
-                <SubTitle title={"Pipeline Ref:"} />
+              <Grid xs={3}>
+                <SubTitle title={"Ref"} />
               </Grid>
-              <Grid xs={10}>
+              <Grid xs={9}>
                 <Input
-                  placeholder={_i18n._("Pipeline Ref:")}
+                  placeholder={_i18n._("pipeline ref")}
                   value={this.value?.pipelineRef?.name}
                   onChange={(value) => (this.value.pipelineRef.name = value)}
                 />
                 <br />
               </Grid>
 
-              <Grid xs={2}>
+              <Grid xs={3}>
                 <SubTitle title={"Service Account Name:"} />
               </Grid>
-              <Grid xs={10}>
+              <Grid xs={9}>
                 <Input
-                  placeholder={_i18n._("Service Account Name")}
+                  placeholder={_i18n._("service account name")}
                   value={this.value?.serviceAccountName}
                   onChange={(value) => (this.value.serviceAccountName = value)}
                 />
                 <br />
               </Grid>
-
-              <PipelineRunResourceDetails
-                value={this.value?.resources}
-                onChange={(value) => {
-                  this.value.resources = value;
-                }}
-              />
+              <Grid xs={12}>
+                <Divider />
+              </Grid>
+              <Grid xs={12}>
+                <PipelineRunResourceDetails
+                  value={this.value?.resources}
+                  onChange={(value) => {
+                    this.value.resources = value;
+                  }}
+                />
+              </Grid>
             </Grid>
             <Divider />
           </WizardStep>
