@@ -27,25 +27,25 @@ export class TaskRunDetailsStepState extends React.Component<Props> {
         {stepState.running ?
           <>
             <DrawerItem name={<Trans>StartedAt</Trans>}>
-              StartedAt - <span className="text-secondary">{stepState.running.startedAt}</span>
+              <span className="text-secondary">{stepState.running.startedAt}</span>
             </DrawerItem>
           </> : <></>}
         {stepState.terminated ?
           <>
             <DrawerItem name={<Trans>ContainerID</Trans>}>
-              ContainerID - <span className="text-secondary">{stepState.terminated.containerID}</span>
+              <span className="text-secondary">{stepState.terminated.containerID}</span>
             </DrawerItem>
             <DrawerItem name={<Trans>Reason</Trans>}>
-              Reason - <span className="text-secondary">{stepState.terminated.reason}</span>
+              <span className="text-secondary">{stepState.terminated.reason}</span>
             </DrawerItem>
             <DrawerItem name={<Trans>Message</Trans>}>
-              Message - <span className="text-secondary">{stepState.terminated.message}</span>
+              <span className="text-secondary">{stepState.terminated.message}</span>
             </DrawerItem>
             <DrawerItem name={<Trans>StartedAt</Trans>}>
-              StartedAt - <span className="text-secondary">{stepState.terminated.startedAt}</span>
+              <span className="text-secondary">{stepState.terminated.startedAt}</span>
             </DrawerItem>
             <DrawerItem name={<Trans>FinishedAt</Trans>}>
-              FinishedAt - <span className="text-secondary">{stepState.terminated.finishedAt}</span>
+              <span className="text-secondary">{stepState.terminated.finishedAt}</span>
             </DrawerItem>
           </> : <></>}
       </div>

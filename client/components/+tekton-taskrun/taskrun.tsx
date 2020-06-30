@@ -27,9 +27,22 @@ interface Props extends RouteComponentProps {
 export class TaskRuns extends React.Component<Props> {
 
   renderSteps(taskRun: TaskRun) {
+
     return taskRun.getSteps().map(stepState => {
       const {name, container} = stepState;
-      let ready = false;
+
+      status = "waiting"
+
+      if (stepState.waiting) {
+        status = "waiting"
+      }
+      if (stepState.running) {
+        status = "running"
+      }
+      if (stepState.terminated) {
+        status = "terminated"
+      }
+
       const tooltip = (
         <TooltipContent tableView>
           <Fragment>
@@ -77,7 +90,7 @@ export class TaskRuns extends React.Component<Props> {
       );
       return (
         <Fragment key={name}>
-          <StatusBrick className={cssNames({ready})} tooltip={tooltip}/>
+          <StatusBrick className={cssNames(status)} tooltip={tooltip}/>
         </Fragment>
       )
     });
@@ -86,7 +99,7 @@ export class TaskRuns extends React.Component<Props> {
   render() {
     return (
       <KubeObjectListLayout
-        className="TaskRun" store={taskRunStore}
+        className="TaskRuns" store={taskRunStore}
         sortingCallbacks={{
           [sortBy.name]: (taskRun: TaskRun) => taskRun.getName(),
           [sortBy.age]: (taskRun: TaskRun) => taskRun.getAge(false),
