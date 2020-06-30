@@ -23,7 +23,7 @@ export class TaskRunDetails extends React.Component<Props> {
         <KubeObjectMeta object={taskRun}/>
         <KubeEventDetails object={taskRun}/>
         <DrawerTitle title={<Trans>Steps</Trans>}/>
-        {taskRun.status.steps.length > 0 ? taskRun.status.steps.map(step => {
+        {taskRun.status.steps !== undefined && taskRun.status.steps.length > 0 ? taskRun.status.steps.map(step => {
           return (
             <TaskRunDetailsSteps stepState={step}/>
           )
