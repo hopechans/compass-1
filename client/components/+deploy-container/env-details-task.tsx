@@ -61,7 +61,7 @@ export class EvnVarDetails extends React.Component<EvnVarProps> {
                   <Col span="10">
                     <Input
                       className="item"
-                      validators={systemName}
+                      // validators={systemName}
                       placeholder={_i18n._(t`Name`)}
                       title={this.value[index].name}
                       value={this.value[index].name}
