@@ -72,6 +72,11 @@ export class PilelineDialog extends React.Component<Props> {
           },
         }
       );
+      Notifications.ok(
+        <>
+          pipeline {this.value.pipelineName} save successed
+        </>);
+      this.close();
     } catch (err) {
       Notifications.error(err);
     }

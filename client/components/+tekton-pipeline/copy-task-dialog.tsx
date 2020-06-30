@@ -27,6 +27,7 @@ import Switch from "@material-ui/core/Switch";
 import { Select, SelectOption } from "../select";
 import { Icon } from "../icon";
 import { TaskResources, Task } from "../../api/endpoints/tekton-task.api";
+import { Notifications } from "../notifications/notifications";
 interface Props<T = any> extends Partial<Props> {
   value?: T;
 
@@ -44,18 +45,14 @@ export interface TaskResult {
   taskName: string;
   pipelineParams: PipelineParams[];
   resources: TaskResources;
-  // inputs: Inputs;
-  // outPuts: Outputs;
   taskSteps: TaskStep[];
   volumes?: Volume[];
 }
 
 export const task: TaskResult = {
-  taskName: "task-name",
+  taskName: "task1",
   pipelineParams: [],
   resources: resources,
-  // inputs: inputs,
-  // outPuts: outputs,
   taskSteps: [taskStep],
   volumes: [],
 };
@@ -104,7 +101,7 @@ export class CopyTaskDialog extends React.Component<Props> {
     CopyTaskDialog.close();
   };
 
-  toTask() {}
+  toTask() { }
 
   saveTask = async () => {
     const parms = toJS(this.value.pipelineParams);
@@ -119,32 +116,25 @@ export class CopyTaskDialog extends React.Component<Props> {
     ];
 
     try {
-      const task = taskStore.getByName(this.value.taskName);
-      if (task.getName() === undefined) {
-        await taskStore.create(
-          { name: this.value.taskName, namespace: "" },
-          {
-            spec: {
-              params: parms,
-              resources: resources,
-              // inputs: inputs,
-              // outputs: outputs,
-              steps: steps,
-              volumes: volumes,
-            },
-          }
-        );
-      } else {
-        //not thing todo
-        // let taskuUdate: Task;
-        // task.metadata.name = toJS(this.value.taskName);
-        // task.spec.params = toJS(this.value.pipelineParams);
-        // task.spec.resources = toJS(this.value.resources);
-        // task.spec.steps = toJS(this.value.taskSteps);
-        // await taskStore.update(task, { ...taskuUdate });
-      }
+      // const task = taskStore.getByName(this.value.taskName);
+      await taskStore.create(
+        { name: this.value.taskName, namespace: '' },
+        {
+          spec: {
+            params: parms,
+            resources: resources,
+            steps: steps,
+            volumes: volumes,
+          },
+        }
+      );
+      Notifications.ok(
+        <>
+          task {this.value.taskName} save successed
+        </>);
+      this.close();
     } catch (err) {
-      console.log(err);
+      Notifications.error(err);
     }
   };
 
