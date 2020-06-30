@@ -1,14 +1,11 @@
-import {observer} from "mobx-react";
+import { observer } from "mobx-react";
 import React from "react";
-import {observable} from "mobx";
-import {ActionMeta} from "react-select/src/types";
-import {resources} from "./common";
-import {TaskResources} from "client/api/endpoints/tekton-task.api";
-import {TaskResourceDetails} from "./task-resource-details";
-import {Grid, Divider, Card} from "@material-ui/core";
-import {SubTitle} from "../layout/sub-title";
-import {Trans} from "@lingui/macro";
-import {Row} from "../grid";
+import { observable } from "mobx";
+import { ActionMeta } from "react-select/src/types";
+import { resources } from "./common";
+import { TaskResources } from "client/api/endpoints/tekton-task.api";
+import { TaskResourceDetails } from "./task-resource-details";
+import { Divider } from "@material-ui/core";
 
 interface Props<T = any> extends Partial<Props> {
   value?: T;
@@ -32,6 +29,9 @@ export class ResourcesDetail extends React.Component<Props> {
             this.value.inputs = value;
           }}
         />
+
+        <Divider />
+
         <TaskResourceDetails
           value={this.value.outputs}
           title={"Resource Outputs"}
@@ -39,7 +39,7 @@ export class ResourcesDetail extends React.Component<Props> {
             this.value.outputs = value;
           }}
         />
-        <Divider/>
+        <Divider />
       </div>
     );
   }
