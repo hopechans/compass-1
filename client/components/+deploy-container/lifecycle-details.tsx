@@ -5,11 +5,11 @@ import {observable} from "mobx";
 import {SubTitle} from "../layout/sub-title";
 import {Icon} from "../icon";
 import {_i18n} from "../../i18n";
-import {number, t, Trans} from "@lingui/macro";
+import {t, Trans} from "@lingui/macro";
 import {Col, Row} from "../grid";
 import {Input} from "../input";
 import {Checkbox} from "../checkbox";
-import {isNumber} from "../input/input.validators";
+import {isNumber, isUrl} from "../input/input.validators";
 import {Select, SelectOption} from "../select";
 import {lifeCycle, LifeCycle} from "./common";
 import {Divider} from 'antd';
@@ -136,6 +136,7 @@ export class LifeCycleDetails extends React.Component<Props> {
                       <SubTitle title={<Trans>URL</Trans>}/>
                       <Input
                         placeholder={_i18n._(t`URL`)}
+                        validators={isUrl}
                         value={this.value.preStop.url}
                         onChange={value => this.value.preStop.url = value}
                       />

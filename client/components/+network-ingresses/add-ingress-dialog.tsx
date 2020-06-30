@@ -1,21 +1,19 @@
 import "./add-ingress-dialog.scss"
 
 import React from "react";
-import { observer } from "mobx-react";
-import { Dialog, DialogProps } from "../dialog";
-import { observable } from "mobx";
-import { Wizard, WizardStep } from "../wizard";
-import { t, Trans } from "@lingui/macro";
-import { Notifications } from "../notifications";
-import { Collapse } from "antd";
-import { SubTitle } from "../layout/sub-title";
-import { Input } from "../input";
-import { Backend, backend, BackendDetails, MultiRuleDetails, Rule, TlsDetails, Tls } from "../+network-ingress-details";
-import { Ingress } from "../../../client/api/endpoints";
-import { NamespaceSelect } from "../+namespaces/namespace-select";
-import { ingressStore } from "./ingress.store";
-
-const { Panel } = Collapse;
+import {observer} from "mobx-react";
+import {Dialog, DialogProps} from "../dialog";
+import {observable} from "mobx";
+import {Wizard, WizardStep} from "../wizard";
+import {t, Trans} from "@lingui/macro";
+import {Notifications} from "../notifications";
+import {Collapse} from "../collapse";
+import {SubTitle} from "../layout/sub-title";
+import {Input} from "../input";
+import {Backend, backend, BackendDetails, MultiRuleDetails, Rule, TlsDetails, Tls} from "../+network-ingress-details";
+import {Ingress} from "../../api/endpoints";
+import {NamespaceSelect} from "../+namespaces/namespace-select";
+import {ingressStore} from "./ingress.store";
 
 interface Props extends Partial<DialogProps> {
 }
@@ -45,7 +43,9 @@ export class AddIngressDialog extends React.Component<Props> {
   createIngress = () => {
     let data: Partial<Ingress> = {
       spec: {
-        tls: this.tls.map(item => { return { hosts: item.hosts, secretName: item.secretName }; }).slice(),
+        tls: this.tls.map(item => {
+          return {hosts: item.hosts, secretName: item.secretName};
+        }).slice(),
         rules: JSON.parse(JSON.stringify(this.rules)),
       }
     }
@@ -53,7 +53,7 @@ export class AddIngressDialog extends React.Component<Props> {
       data.spec.backend = JSON.parse(JSON.stringify(this.backend))
     }
     try {
-      ingressStore.create({ name: this.name, namespace: this.namespace }, { ...data })
+      ingressStore.create({name: this.name, namespace: this.namespace}, {...data})
       this.close();
     } catch (err) {
       Notifications.error(err);
@@ -61,7 +61,7 @@ export class AddIngressDialog extends React.Component<Props> {
   }
 
   render() {
-    const { ...dialogProps } = this.props;
+    const {...dialogProps} = this.props;
     const header = <h5><Trans>Create Ingress</Trans></h5>;
     return (
       <Dialog
@@ -71,48 +71,36 @@ export class AddIngressDialog extends React.Component<Props> {
       >
         <Wizard className="AddIngressDialog" header={header} done={this.close}>
           <WizardStep contentClass="flow column" nextLabel={<Trans>Create</Trans>} next={this.createIngress}>
-
-            <SubTitle title={"Namespace"} />
+            <SubTitle title={<Trans>Namespace</Trans>}/>
             <NamespaceSelect
               themeName="light"
               title={"namespace"}
               value={this.namespace}
-              onChange={({ value }) => this.namespace = value}
+              onChange={({value}) => this.namespace = value}
             />
-
-            <SubTitle title={"Name"} />
+            <SubTitle title={<Trans>Name</Trans>}/>
             <Input
               required={true}
               title={"Name"}
               value={this.name}
               onChange={value => this.name = value}
             />
-
-            <br />
-            <Collapse>
-              <Panel key={"Rules"} header={"Rules"}>
-                <MultiRuleDetails
-                  value={this.rules}
-                  onChange={value => this.rules = value} />
-              </Panel>
+            <Collapse panelName={<Trans>Rules</Trans>}>
+              <MultiRuleDetails
+                value={this.rules}
+                onChange={value => this.rules = value}/>
             </Collapse>
-            <br />
-            <Collapse>
-              <Panel key={"Backend"} header={"Backend"}>
-                <BackendDetails
-                  value={this.backend}
-                  onChange={value => this.backend = value}
-                />
-              </Panel>
+            <Collapse panelName={<Trans>Backend</Trans>}>
+              <BackendDetails
+                value={this.backend}
+                onChange={value => this.backend = value}
+              />
             </Collapse>
-            <br />
-            <Collapse>
-              <Panel key={"Tls"} header={"Tls"}>
-                <TlsDetails
-                  value={this.tls}
-                  onChange={value => this.tls = value}
-                />
-              </Panel>
+            <Collapse panelName={<Trans>Transport Layer Security</Trans>}>
+              <TlsDetails
+                value={this.tls}
+                onChange={value => this.tls = value}
+              />
             </Collapse>
           </WizardStep>
         </Wizard>

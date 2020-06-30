@@ -1,18 +1,17 @@
 import React from "react";
 import {observer} from "mobx-react";
-import {Col, Collapse, Row} from "antd";
+import {Row, Col} from "../grid";
 import {SubTitle} from "../layout/sub-title";
 import {t, Trans} from "@lingui/macro";
 import {Select, SelectOption} from "../select";
 import {Icon} from "../icon";
 import {_i18n} from "../../i18n";
 import {Input} from "../input";
-import {isNumber} from "../input/input.validators";
+import {isNumber, systemName} from "../input/input.validators";
 import {observable} from "mobx";
 import {deployPort, deployService, Service} from "./common";
 import {ActionMeta} from "react-select/src/types";
 
-const {Panel} = Collapse;
 
 export interface Props<T = any> extends Partial<Props> {
   value?: T;
@@ -89,26 +88,22 @@ export class DeployServiceDetails extends React.Component<Props> {
             return (
               <div key={index}>
                 <br/>
-                <Row>
-                  <Col>
-                    <Icon
-                      small
-                      tooltip={<Trans>Remove Command</Trans>}
-                      className="remove-icon"
-                      material="remove_circle_outline"
-                      onClick={(e) => {
-                        this.remove(index);
-                        e.stopPropagation()
-                      }}
-                    />
-                  </Col>
-                  <Col offset={1}><p>---------------- {index + 1} ----------------</p></Col>
-                </Row>
+                <Icon
+                  small
+                  tooltip={<Trans>Remove Command</Trans>}
+                  className="remove-icon"
+                  material="remove_circle_outline"
+                  onClick={(e) => {
+                    this.remove(index);
+                    e.stopPropagation()
+                  }}
+                />
                 <SubTitle title={<Trans>Name</Trans>}/>
                 <Input
                   className="item"
                   required={true}
                   placeholder={_i18n._(t`Name`)}
+                  validators={systemName}
                   title={this.value.ports[index].name}
                   value={this.value.ports[index].name}
                   onChange={value => {

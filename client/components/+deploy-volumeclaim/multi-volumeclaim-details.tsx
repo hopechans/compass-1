@@ -4,13 +4,14 @@ import {observable} from "mobx";
 import {ActionMeta} from "react-select/src/types";
 import {Button} from "../button";
 import {VolumeClaimDetails} from "./volumeclaim-details";
-import {DeleteOutlined} from '@ant-design/icons';
 import {Popconfirm} from "antd";
+import {Icon} from "../icon";
 import {Collapse} from "../collapse"
 
 import {volumeClaim, VolumeClaimTemplate} from "./common";
 import {_i18n} from "../../i18n";
 import {t} from "@lingui/macro";
+import {Popper} from "@material-ui/core";
 
 export interface VolumeClaimTemplateProps<T = any> extends Partial<VolumeClaimTemplateProps> {
   value?: T;
@@ -50,8 +51,9 @@ export class MultiVolumeClaimDetails extends React.Component<VolumeClaimTemplate
           }}
           okText="Yes"
           cancelText="No">
-          <DeleteOutlined
-            translate style={{color: '#ff4d4f'}}
+          <Icon
+            material={"delete_outline"}
+            style={{color: '#ff4d4f'}}
             onClick={(event) => {
               event.preventDefault();
               event.stopPropagation();

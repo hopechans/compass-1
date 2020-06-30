@@ -10,13 +10,13 @@ import { pipelineStore } from "../+tekton-pipeline/pipeline.store";
 import {
   KubeObjectMenu,
   KubeObjectMenuProps,
-} from "../kube-object/kube-object-menu";
+} from "../kube-object";
 import { KubeObjectListLayout } from "../kube-object";
 import { apiManager } from "../../api/api-manager";
 import { observable } from "mobx";
 import { PipelineGraph } from "../+graphs/pipeline-graph";
 import { Graph } from "../+graphs/graph";
-import { taskRunStore } from "../+tekton-taskrun/taskrun.store";
+import { taskRunStore } from "../+tekton-taskrun";
 
 enum sortBy {
   name = "name",
@@ -186,6 +186,7 @@ export class PipelineRuns extends React.Component<Props> {
             showSave={true}
             closeGraph = {this.hiddenPipelineGraph}
           ></Graph>
+
         </div>
         <KubeObjectListLayout
           className="PipelineRuns"

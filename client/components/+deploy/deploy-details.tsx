@@ -20,7 +20,6 @@ export class DeployDetails extends React.Component<Props> {
     ])
   }
 
-
   render() {
     const {object: deploy} = this.props;
     if (!deploy) return null;

@@ -6,7 +6,7 @@ import { Select, SelectOption } from "../select";
 import { Icon } from "../icon";
 import { t, Trans } from "@lingui/macro";
 import { taskResources, ResourceDeclaration } from "./common";
-import { Col, Row } from "antd";
+import { Col, Row } from "../grid";
 import { SubTitle } from "../layout/sub-title";
 import { _i18n } from "../../i18n";
 import { Input } from "../input";

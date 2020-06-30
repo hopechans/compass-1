@@ -2,7 +2,6 @@ import {ActionMeta} from "react-select/src/types";
 import {observer} from "mobx-react";
 import React from "react";
 import {Button} from "../button";
-// import {Collapse, Popconfirm} from "antd";
 import {Collapse} from "../collapse";
 import {Popconfirm} from "antd";
 import {ContainerDetails} from "./container-details";
@@ -12,7 +11,6 @@ import {container, Container} from "./common";
 import {_i18n} from "../../i18n";
 import {t, Trans} from "@lingui/macro";
 
-// const {Panel} = Collapse;
 
 interface Props<T = any> extends Partial<Props> {
   value?: T;

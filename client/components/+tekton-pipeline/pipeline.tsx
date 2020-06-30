@@ -8,8 +8,6 @@ import { Trans } from "@lingui/macro";
 import {
   Pipeline,
   pipelineApi,
-  TaskRef,
-  Task,
   PipelineTask,
 } from "../../api/endpoints";
 import { podsStore } from "../+workloads-pods/pods.store";
@@ -18,19 +16,18 @@ import { eventStore } from "../+events/event.store";
 import { KubeObjectMenu, KubeObjectMenuProps } from "../kube-object";
 import { KubeObjectListLayout } from "../kube-object";
 import { apiManager } from "../../api/api-manager";
-import { _i18n } from "../../i18n";
 import { PipelineGraph } from "../+graphs/pipeline-graph";
 import { Graph, PipelineResult, pipelineResult } from "../+graphs/graph";
 import { CopyTaskDialog, task, TaskResult } from "./copy-task-dialog";
 import { MenuItem } from "../menu";
 import { Icon } from "../icon";
 import { AddPipelineDialog } from "./add-pipeline-dialog";
-import { configStore } from "../../../client/config.store";
-import { Notifications } from "../notifications";
+import { configStore } from "../../config.store";
 import { taskStore } from "../+tekton-task/task.store";
-import { PilelineDialog } from "./pipeline-dialog";
+import { PipelineDialog } from "./pipeline-dialog";
 import { pipelineResourceStore } from "../+tekton-pipelineresource/pipelineresource.store";
-import { PilelineRunDialog } from "./pipeline-run-dialog";
+import { PipelineRunDialog } from "./pipeline-run-dialog";
+
 enum sortBy {
   name = "name",
   ownernamespace = "ownernamespace",
@@ -39,10 +36,13 @@ enum sortBy {
   age = "age",
 }
 
-interface Props extends RouteComponentProps {}
+interface Props extends RouteComponentProps {
+
+}
 
 @observer
 export class Pipelines extends React.Component<Props> {
+
   @observable currentNode: any;
   // @observable static isHiddenPipelineGraph: boolean = false;
   @observable isHiddenPipelineGraph: boolean = true;
@@ -177,7 +177,7 @@ export class Pipelines extends React.Component<Props> {
     // this.pipeline.spec.resources = pipeResult.pipelineResources;
     this.pipeline.spec.tasks.push(...this.getPipelineTasks());
     //will show pipeline dialog
-    PilelineDialog.open(this.pipeline);
+    PipelineDialog.open(this.pipeline);
 
     //更新对应的pipeline
     try {
@@ -281,8 +281,8 @@ export class Pipelines extends React.Component<Props> {
         />
         <CopyTaskDialog />
         <AddPipelineDialog />
-        <PilelineDialog />
-        <PilelineRunDialog />
+        <PipelineDialog />
+        <PipelineRunDialog />
       </>
     );
   }
@@ -295,7 +295,7 @@ export function PipelineMenu(props: KubeObjectMenuProps<Pipeline>) {
     <KubeObjectMenu {...props}>
       <MenuItem
         onClick={() => {
-          PilelineRunDialog.open(object.getName());
+          PipelineRunDialog.open(object.getName());
         }}
       >
         <Icon

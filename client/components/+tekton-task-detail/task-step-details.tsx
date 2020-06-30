@@ -14,6 +14,7 @@ import { SubTitle } from "../layout/sub-title";
 import { WorkspacesDetails } from "./workspaces-details";
 import { ResultsDetails } from "./results-details";
 import { _i18n } from "../../i18n";
+import {Trans} from "@lingui/macro";
 
 interface Props<T = any> extends Partial<Props> {
   value?: T;
@@ -85,7 +86,7 @@ export class TaskStepDetails extends React.Component<Props> {
         />
         <br />
         <Divider />
-        <SubTitle title={"Scripts"} />
+        <SubTitle title={<Trans>Scripts</Trans>} />
         <Input
           multiLine={true}
           maxRows={10}

@@ -92,7 +92,6 @@ class LoginComponet extends React.Component<Props>{
                 placeholder={_i18n._(t`Input your password`)}
                 value={this.password}
                 iconLeft="lock"
-                validators={systemName}
                 onChange={v => this.password = v}
                 onKeyDown={e=>this.onKeyDown(e)}
                 type="password"

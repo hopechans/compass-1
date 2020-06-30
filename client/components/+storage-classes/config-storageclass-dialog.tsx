@@ -17,6 +17,7 @@ import {SecretsSelect} from "../+config-secrets/secrets-select";
 import {NamespaceSelect} from "../+namespaces/namespace-select";
 import {Notifications} from "../notifications";
 import {StorageClass} from "../../api/endpoints";
+import {systemName} from "../input/input.validators";
 
 interface Props extends DialogProps {
 }
@@ -160,6 +161,7 @@ export class ConfigStorageClassDialog extends React.Component<Props> {
             <SubTitle title={<Trans>Name</Trans>}/>
             <Input
               required autoFocus
+              validators={systemName}
               placeholder={_i18n._(t`Name`)}
               value={this.name}
               onChange={(value: string) => this.name = value}
@@ -218,10 +220,10 @@ export class ConfigStorageClassDialog extends React.Component<Props> {
                   value={this.params.monitors}
                   onChange={(value: string) => this.params.monitors = value}
                 />
-                <SubTitle title={<Trans>Admin Id</Trans>}/>
+                <SubTitle title={<Trans>Admin ID</Trans>}/>
                 <Input
                   required autoFocus
-                  placeholder={_i18n._(t`Admin Id`)}
+                  placeholder={_i18n._(t`Admin ID`)}
                   value={this.params.adminId}
                   onChange={(value: string) => this.params.adminId = value}
                 />
@@ -231,9 +233,9 @@ export class ConfigStorageClassDialog extends React.Component<Props> {
                   value={this.params.pool}
                   onChange={(value: string) => this.params.pool = value}
                 />
-                <SubTitle title={<Trans>User Id</Trans>}/>
+                <SubTitle title={<Trans>User ID</Trans>}/>
                 <Input
-                  placeholder={_i18n._(t`UserId`)}
+                  placeholder={_i18n._(t`User ID`)}
                   value={this.params.userId}
                   onChange={(value: string) => this.params.userId = value}
                 />

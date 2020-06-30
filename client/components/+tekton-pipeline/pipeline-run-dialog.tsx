@@ -11,17 +11,13 @@ import { Dialog } from "../dialog";
 import { Wizard, WizardStep } from "../wizard";
 import {
   pipelineRunApi,
-  PipelineRunSpec,
   PipelineResourceBinding,
-  Pipeline,
   PipelineRef,
-  PipelineRun,
 } from "../../api/endpoints";
 import { Notifications } from "../notifications";
-import { configStore } from "../../../client/config.store";
-import { PipelineDetails, PipelineResult, pipeline } from "./pipeline-details";
 import { Grid, Divider } from "@material-ui/core";
 import { PipelineRunResourceDetails } from "./pipeline-run-resource-details";
+import {systemName} from "../input/input.validators";
 
 interface Props<T = any> extends Partial<Props> {
   value?: T;
@@ -42,26 +38,26 @@ export const pipelineRunResult: PipelineRunResult = {
 };
 
 @observer
-export class PilelineRunDialog extends React.Component<Props> {
+export class PipelineRunDialog extends React.Component<Props> {
   @observable static isOpen = false;
   @observable static pipelineName: string = "";
   @observable value: PipelineRunResult = this.props.value || pipelineRunResult;
 
   static open(pipelineName: string) {
-    PilelineRunDialog.pipelineName = pipelineName;
-    PilelineRunDialog.isOpen = true;
+    PipelineRunDialog.pipelineName = pipelineName;
+    PipelineRunDialog.isOpen = true;
   }
 
   static close() {
-    PilelineRunDialog.isOpen = false;
+    PipelineRunDialog.isOpen = false;
   }
 
   close = () => {
-    PilelineRunDialog.close();
+    PipelineRunDialog.close();
   };
 
   onOpen = () => {
-    this.value.name = PilelineRunDialog.pipelineName;
+    this.value.name = PipelineRunDialog.pipelineName;
   };
 
   submit = async () => {
@@ -91,7 +87,7 @@ export class PilelineRunDialog extends React.Component<Props> {
 
     return (
       <Dialog
-        isOpen={PilelineRunDialog.isOpen}
+        isOpen={PipelineRunDialog.isOpen}
         close={this.close}
         onOpen={this.onOpen}
       >
@@ -104,6 +100,7 @@ export class PilelineRunDialog extends React.Component<Props> {
               <Grid xs={10}>
                 <Input
                   placeholder={_i18n._("Pipeline Run Name")}
+                  validators={systemName}
                   value={this.value.name}
                   onChange={(value) => (this.value.name = value)}
                 />
@@ -122,11 +119,11 @@ export class PilelineRunDialog extends React.Component<Props> {
               </Grid>
 
               <Grid xs={2}>
-                <SubTitle title={"SrviceAccountName:"} />
+                <SubTitle title={"Service Account Name:"} />
               </Grid>
               <Grid xs={10}>
                 <Input
-                  placeholder={_i18n._("srviceAccountName")}
+                  placeholder={_i18n._("Service Account Name")}
                   value={this.value?.serviceAccountName}
                   onChange={(value) => (this.value.serviceAccountName = value)}
                 />

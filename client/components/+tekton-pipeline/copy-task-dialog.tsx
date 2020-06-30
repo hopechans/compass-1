@@ -26,8 +26,9 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Switch from "@material-ui/core/Switch";
 import { Select, SelectOption } from "../select";
 import { Icon } from "../icon";
-import { TaskResources, Task } from "../../api/endpoints/tekton-task.api";
-import { Notifications } from "../notifications/notifications";
+import { TaskResources, Task } from "../../api/endpoints";
+import { Notifications } from "../notifications";
+import {systemName} from "../input/input.validators";
 interface Props<T = any> extends Partial<Props> {
   value?: T;
 
@@ -195,9 +196,10 @@ export class CopyTaskDialog extends React.Component<Props> {
               />
             </FormGroup>
             <div hidden={this.ifSwitch}>
-              <SubTitle title={"Task Name"} />
+              <SubTitle title={<Trans>Task Name</Trans>} />
               <Input
-                // required={true}
+                required={true}
+                validators={systemName}
                 placeholder={_i18n._("Task Name")}
                 value={this.value.taskName}
                 onChange={(value) => (this.value.taskName = value)}
@@ -216,7 +218,6 @@ export class CopyTaskDialog extends React.Component<Props> {
                   this.value.resources = value;
                 }}
               />
-
               <br />
               <MultiTaskStepDetails
                 value={this.value.taskSteps}
