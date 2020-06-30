@@ -44,7 +44,8 @@ interface Props extends RouteComponentProps {
 export class Pipelines extends React.Component<Props> {
 
   @observable currentNode: any;
-  @observable static isHiddenPipelineGraph: boolean = false;
+  // @observable static isHiddenPipelineGraph: boolean = false;
+  @observable isHiddenPipelineGraph: boolean = true;
   @observable pipeline: Pipeline;
   @observable task: TaskResult = task;
   @observable pipelineResources: [];
@@ -64,12 +65,13 @@ export class Pipelines extends React.Component<Props> {
   }
 
   showPipeline = (pipeline: Pipeline) => {
-    if (Pipelines.isHiddenPipelineGraph === undefined) {
-      Pipelines.isHiddenPipelineGraph = true;
-    }
-    Pipelines.isHiddenPipelineGraph
-      ? (Pipelines.isHiddenPipelineGraph = false)
-      : (Pipelines.isHiddenPipelineGraph = true);
+    this.isHiddenPipelineGraph = false;
+    // if (Pipelines.isHiddenPipelineGraph === undefined) {
+    //   Pipelines.isHiddenPipelineGraph = true;
+    // }
+    // Pipelines.isHiddenPipelineGraph
+    //   ? (Pipelines.isHiddenPipelineGraph = false)
+    //   : (Pipelines.isHiddenPipelineGraph = true);
 
     let nodeData: any;
     pipeline.getAnnotations().filter((item) => {
@@ -189,16 +191,23 @@ export class Pipelines extends React.Component<Props> {
     this.graph.getGraph().changeData(JSON.parse(data));
   };
 
+  hiddenPipelineGraph = () => {
+    this.isHiddenPipelineGraph = true
+  }
+
   render() {
     return (
       <>
-        <div style={{ width: "100%" }}>
+        {/* 99.5% prevent horizontal scroll bar */}
+        {/*↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓ */}
+        <div style={{ width: "99.5%" }}>
           <Graph
-            open={Pipelines.isHiddenPipelineGraph}
+            open={this.isHiddenPipelineGraph}
             showSave={false}
             saveCallback={(pipelineResult: PipelineResult) => {
               this.savePipeline(pipelineResult);
             }}
+            closeGraph = {this.hiddenPipelineGraph}
           />
         </div>
 
