@@ -83,7 +83,7 @@ export class PipelineRun extends KubeObject {
 
   getOwnerNamespace(): string {
     if (this.metadata.labels == undefined) { return "" }
-    return this.metadata.labels.namespace == undefined ? this.metadata.labels.namespace : "";
+    return this.metadata.labels.namespace != undefined ? this.metadata.labels.namespace : "";
   }
 }
 
