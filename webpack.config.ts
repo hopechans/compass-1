@@ -12,7 +12,7 @@ const smp = new SpeedMeasurePlugin();
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const WebpackBar = require('webpackbar');
 export default () => {
-  const { IS_PRODUCTION } = config;
+  const { IS_PRODUCTION } = config; 
   const srcDir = path.resolve(process.cwd(), CLIENT_DIR);
   const buildDir = path.resolve(process.cwd(), BUILD_DIR, CLIENT_DIR);
   const tsConfigClientFile = path.resolve(srcDir, "tsconfig.json");
@@ -33,7 +33,7 @@ export default () => {
     },
     devServer: {
       //项目根目录
-      host: '127.0.0.1',
+      host: '0.0.0.0',
       port: '8087',
       contentBase: path.join(__dirname, "./dist"),
       historyApiFallback: true,
