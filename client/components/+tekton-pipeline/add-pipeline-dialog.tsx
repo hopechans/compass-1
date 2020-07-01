@@ -11,6 +11,7 @@ import { Wizard, WizardStep } from "../wizard";
 import { pipelineApi } from "../../api/endpoints";
 import { Notifications } from "../notifications";
 import { configStore } from "../../config.store";
+import { pipelineStore } from "./pipeline.store";
 
 interface Props<T = any> extends Partial<Props> {
   value?: T;
@@ -54,9 +55,9 @@ export class AddPipelineDialog extends React.Component<Props> {
       );
       // label the resource labels if the admin the namespace label default
       newPipeline.metadata.labels = {
-        namespace: configStore.getDefaultNamespace() || "default",
+        namespace: configStore.getDefaultNamespace(),
       };
-      await newPipeline.update(newPipeline);
+      await pipelineApi.update({ name: newPipeline.metadata.name, namespace: 'ops' }, newPipeline);
       this.reset();
       this.close();
     } catch (err) {

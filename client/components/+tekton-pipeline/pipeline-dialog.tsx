@@ -1,5 +1,3 @@
-import "./pipeline-dialog.scss"
-
 import {observer} from "mobx-react";
 import React from "react";
 import {observable, toJS} from "mobx";
@@ -29,6 +27,10 @@ export class PipelineDialog extends React.Component<Props> {
     PipelineDialog.isOpen = true;
   }
 
+  get CurrentPipeline() {
+    return PipelineDialog.currentPipeline;
+  }
+
   static close() {
     PipelineDialog.isOpen = false;
   }
@@ -42,7 +44,7 @@ export class PipelineDialog extends React.Component<Props> {
   };
 
   onOpen = () => {
-    let pipeline = PipelineDialog.currentPipeline;
+    let pipeline = this.CurrentPipeline;
     this.value.tasks = pipeline.spec.tasks;
     this.value.pipelineName = pipeline.metadata.name;
     if (pipeline.spec.params !== undefined) {
