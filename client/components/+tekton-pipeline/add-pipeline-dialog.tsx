@@ -55,9 +55,9 @@ export class AddPipelineDialog extends React.Component<Props> {
       );
       // label the resource labels if the admin the namespace label default
       newPipeline.metadata.labels = {
-        namespace: configStore.getDefaultNamespace() || "default",
+        namespace: configStore.getDefaultNamespace(),
       };
-      await pipelineStore.update(newPipeline, { ...newPipeline });
+      await pipelineApi.update({ name: newPipeline.metadata.name, namespace: 'ops' }, newPipeline);
       this.reset();
       this.close();
     } catch (err) {
