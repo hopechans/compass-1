@@ -63,7 +63,7 @@ export class TaskResourceDetails extends React.Component<Props> {
         <SubTitle className="fields-title" title={title}>
           <Icon
             small
-            tooltip={_i18n._(t`Resource`)}
+            tooltip={_i18n._(t`Add`)}
             material="add_circle_outline"
             onClick={(e) => {
               this.add();
@@ -96,7 +96,7 @@ export class TaskResourceDetails extends React.Component<Props> {
               <Row>
                 <Col span={6}>
                   <Input
-                    placeholder={"name"}
+                    placeholder={"Name"}
                     value={this.value[index].name}
                     onChange={(value) => (this.value[index].name = value)}
                   />
@@ -112,7 +112,7 @@ export class TaskResourceDetails extends React.Component<Props> {
                 </Col>
                 <Col span={6} offset={2}>
                   <Input
-                    placeholder={"targetpath"}
+                    placeholder={"TargetPath"}
                     value={this.value[index].targetPath}
                     onChange={(value) => (this.value[index].targetPath = value)}
                   />
