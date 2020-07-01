@@ -18,6 +18,10 @@ import { pipeline } from "../+tekton-pipeline/pipeline-details";
 import { TooltipContent } from "../tooltip";
 import { StatusBrick } from "../status-brick";
 import { cssNames } from "../../utils";
+import { MenuItem } from "../menu";
+import { Icon } from "../icon";
+import { task } from "../+tekton-pipeline/copy-task-dialog";
+import { Notifications } from "../notifications";
 
 enum sortBy {
   name = "name",
@@ -198,102 +202,54 @@ export class PipelineRuns extends React.Component<Props> {
 
   renderTasks(pipelinerun: PipelineRun) {
     const names = this.getTaskRunName(pipelinerun);
-    // return taskRun.getSteps().map((stepState) => {
-    //   const { name, container } = stepState;
-    //   status = "waiting";
-    //   if (stepState.waiting) {
-    //     status = "waiting";
-    //   }
-    //   if (stepState.running) {
-    //     status = "running";
-    //   }
-    //   if (stepState.terminated) {
-    //     status = "terminated";
-    //   }
-    //   const tooltip = (
-    //     <TooltipContent tableView>
-    //       <Fragment>
-    //         <div className="title">
-    //           Name - <span className="text-secondary">{name}</span>
-    //         </div>
-    //         <div className="title">
-    //           Container - <span className="text-secondary">{container}</span>
-    //         </div>
-    //         {stepState.waiting ? (
-    //           <>
-    //             <div className="title">
-    //               Message -{" "}
-    //               <span className="text-secondary">
-    //                 {stepState.waiting.message}
-    //               </span>
-    //             </div>
-    //             <div className="title">
-    //               Reason -{" "}
-    //               <span className="text-secondary">
-    //                 {stepState.waiting.reason}
-    //               </span>
-    //             </div>
-    //           </>
-    //         ) : (
-    //           <></>
-    //         )}
-    //         {stepState.running ? (
-    //           <>
-    //             <div className="title">
-    //               StartedAt -{" "}
-    //               <span className="text-secondary">
-    //                 {stepState.running.startedAt}
-    //               </span>
-    //             </div>
-    //           </>
-    //         ) : (
-    //           <></>
-    //         )}
-    //         {stepState.terminated ? (
-    //           <>
-    //             <div className="title">
-    //               ContainerID -{" "}
-    //               <span className="text-secondary">
-    //                 {stepState.terminated.containerID}
-    //               </span>
-    //             </div>
-    //             <div className="title">
-    //               Reason -{" "}
-    //               <span className="text-secondary">
-    //                 {stepState.terminated.reason}
-    //               </span>
-    //             </div>
-    //             <div className="title">
-    //               Message -{" "}
-    //               <span className="text-secondary">
-    //                 {stepState.terminated.message}
-    //               </span>
-    //             </div>
-    //             <div className="title">
-    //               StartedAt -{" "}
-    //               <span className="text-secondary">
-    //                 {stepState.terminated.startedAt}
-    //               </span>
-    //             </div>
-    //             <div className="title">
-    //               FinishedAt -{" "}
-    //               <span className="text-secondary">
-    //                 {stepState.terminated.finishedAt}
-    //               </span>
-    //             </div>
-    //           </>
-    //         ) : (
-    //           <></>
-    //         )}
-    //       </Fragment>
-    //     </TooltipContent>
-    //   );
-    //   return (
-    //     <Fragment key={name}>
-    //       <StatusBrick className={cssNames(status)} tooltip={tooltip} />
-    //     </Fragment>
-    //   );
-    // });
+
+    if (names.length > 0) {
+      return names.map((item: string) => {
+        const taskRun = taskRunStore.getByName(item);
+        if (taskRun === undefined) {
+          return;
+        }
+        let status = taskRun?.status?.conditions[0]?.reason;
+        if (status === undefined) {
+          status = "pending";
+        }
+        status = status.toLowerCase().toString();
+        const stat = status;
+        const name = taskRun.getName();
+        const tooltip = (
+          <TooltipContent tableView>
+            <Fragment>
+              <div className="title">
+                Name - <span className="text-secondary">{name}</span>
+              </div>
+              <div className="title">
+                LastTransitionTime -{" "}
+                <span className="text-secondary">
+                  {taskRun?.status?.conditions[0]?.lastTransitionTime}
+                </span>
+              </div>
+              <div className="title">
+                Massage -{" "}
+                <span className="text-secondary">
+                  {taskRun?.status?.conditions[0]?.message}
+                </span>
+              </div>
+              <div className="title">
+                Reason -{" "}
+                <span className="text-secondary">
+                  {taskRun?.status?.conditions[0]?.reason}
+                </span>
+              </div>
+            </Fragment>
+          </TooltipContent>
+        );
+        return (
+          <Fragment key={name}>
+            <StatusBrick className={cssNames(stat)} tooltip={tooltip} />
+          </Fragment>
+        );
+      });
+    }
   }
 
   render() {
@@ -339,7 +295,7 @@ export class PipelineRuns extends React.Component<Props> {
               sortBy: sortBy.ownernamespace,
             },
             { title: <Trans>Age</Trans>, className: "age", sortBy: sortBy.age },
-            // { title: <Trans>Tasks</Trans>, className: "tasks" },
+            { title: <Trans>Tasks</Trans>, className: "tasks" },
             { title: <Trans>StartTime</Trans>, className: "startTime" },
             {
               title: <Trans>CompletionTime</Trans>,
@@ -350,7 +306,7 @@ export class PipelineRuns extends React.Component<Props> {
             pipelineRun.getName(),
             pipelineRun.getOwnerNamespace(),
             pipelineRun.getAge(),
-            // pipelineRun.status.conditions[0].reason,
+            this.renderTasks(pipelineRun),
             new Date(pipelineRun.status.startTime).toLocaleString(),
             new Date(pipelineRun.status.completionTime).toLocaleString(),
           ]}
@@ -364,7 +320,70 @@ export class PipelineRuns extends React.Component<Props> {
 }
 
 export function PipelineRunMenu(props: KubeObjectMenuProps<PipelineRun>) {
-  return <KubeObjectMenu {...props} />;
+  const { object, toolbar } = props;
+  return (
+    <KubeObjectMenu {...props}>
+      <MenuItem
+        onClick={() => {
+          //Cancel
+          let pipelineRun = object;
+          pipelineRun.spec.status = "PipelineRunCancelled";
+          try {
+            // //will update pipelineRun
+            pipelineRunStore.update(pipelineRun, { ...pipelineRun });
+            Notifications.ok(
+              <>pipeline-run {pipelineRun.getName()} cancel successed</>
+            );
+            this.close();
+          } catch (err) {
+            Notifications.error(err);
+          }
+        }}
+      >
+        <Icon
+          material="format_align_left"
+          title={"rerun"}
+          interactive={toolbar}
+        />
+        <span className="title">
+          <Trans>ReRun</Trans>
+        </span>
+      </MenuItem>
+      <MenuItem
+        onClick={() => {
+          //Cancel
+          const pipelineRun = object;
+          try {
+            // //will delete pipelineRun
+            pipelineRunStore.remove(pipelineRun);
+            //and then create it. will re-run
+            pipelineRunStore.create(
+              { name: pipelineRun.getName(), namespace: "" },
+              {
+                spec: pipelineRun.spec,
+              }
+            );
+
+            Notifications.ok(
+              <>pipeline-run: {pipelineRun.getName()} rerun successed</>
+            );
+            this.close();
+          } catch (err) {
+            Notifications.error(err);
+          }
+        }}
+      >
+        <Icon
+          material="format_align_left"
+          title={"rerun"}
+          interactive={toolbar}
+        />
+        <span className="title">
+          <Trans>Rerun</Trans>
+        </span>
+      </MenuItem>
+    </KubeObjectMenu>
+  );
 }
 
 apiManager.registerViews(pipelineRunApi, { Menu: PipelineRunMenu });
