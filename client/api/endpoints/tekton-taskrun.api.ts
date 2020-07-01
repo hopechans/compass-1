@@ -145,7 +145,10 @@ export class TaskRun extends KubeObject {
   }
 
   getSteps() {
-    return this.status.steps || [];
+    if (this.status.steps !== undefined) {
+      return this.status.steps
+    }
+    return [];
   }
 }
 

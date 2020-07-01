@@ -9,6 +9,8 @@ import {taskStore} from "./task.store";
 import {KubeObjectMenu, KubeObjectMenuProps} from "../kube-object";
 import {KubeObjectListLayout} from "../kube-object";
 import {apiManager} from "../../api/api-manager";
+import {PodContainerStatuses} from "../+workloads-pods";
+import {podsStore} from "../+workloads-pods/pods.store";
 
 enum sortBy {
   name = "name",
@@ -27,6 +29,7 @@ export class Tasks extends React.Component<Props> {
       <>
         <KubeObjectListLayout
           className="Tasks" store={taskStore}
+          dependentStores={[podsStore,]}
           sortingCallbacks={{
             [sortBy.name]: (task: Task) => task.getName(),
             [sortBy.namespace]: (task: Task) => task.getNs(),
