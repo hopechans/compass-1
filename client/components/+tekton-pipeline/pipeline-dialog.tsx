@@ -1,3 +1,5 @@
+import "./pipeline-dialog.scss"
+
 import {observer} from "mobx-react";
 import React from "react";
 import {observable, toJS} from "mobx";
