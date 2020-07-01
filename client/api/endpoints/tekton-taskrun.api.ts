@@ -139,6 +139,11 @@ export class TaskRun extends KubeObject {
     return this.spec.outputs.resources || [];
   }
 
+  getOwnerNamespace(): string {
+    if (this.metadata.labels == undefined) { return "" }
+    return this.metadata.labels.namespace == undefined ? this.metadata.labels.namespace : "";
+  }
+
   getSteps() {
     return this.status.steps || [];
   }

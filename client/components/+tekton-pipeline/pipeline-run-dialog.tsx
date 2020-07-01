@@ -18,6 +18,8 @@ import { Notifications } from "../notifications";
 import { Grid, Divider } from "@material-ui/core";
 import { PipelineRunResourceDetails } from "./pipeline-run-resource-details";
 import { systemName } from "../input/input.validators";
+import { configStore } from "../../../client/config.store";
+import { pipelineRunStore } from "../+tekton-pipelinerun/pipelinerun.store";
 import { Col, Row } from "../grid";
 
 interface Props<T = any> extends Partial<Props> {
@@ -70,8 +72,8 @@ export class PipelineRunDialog extends React.Component<Props> {
   submit = async () => {
     try {
       // create a pipeline run
-      await pipelineRunApi.create(
-        { name: this.value.name, namespace: "ops" },
+      let newPipelineRun = await pipelineRunApi.create(
+        { name: this.value.name, namespace: '' },
         {
           spec: {
             resources: this.value.resources,
@@ -80,6 +82,15 @@ export class PipelineRunDialog extends React.Component<Props> {
           },
         }
       );
+      // label the resource labels
+      newPipelineRun.metadata.labels = { namespace: configStore.getDefaultNamespace() }
+      await pipelineRunApi.update({
+        name: newPipelineRun.metadata.name,
+        namespace: newPipelineRun.metadata.namespace
+      },
+        { ...newPipelineRun },
+      );
+      this.close()
     } catch (err) {
       Notifications.error(err);
     }
