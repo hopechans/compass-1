@@ -18,7 +18,7 @@ import { Notifications } from "../notifications";
 import { PipelineRunResourceDetails } from "./pipeline-run-resource-details";
 import { systemName } from "../input/input.validators";
 import { configStore } from "../../../client/config.store";
-
+import { pipelineStore } from "./pipeline.store";
 interface Props<T = any> extends Partial<Props> {
   value?: T;
   themeName?: "dark" | "light" | "outlined";
@@ -60,13 +60,32 @@ export class PipelineRunDialog extends React.Component<Props> {
   }
 
   close = () => {
+    this.value.resources = [];
     PipelineRunDialog.close();
   };
 
   onOpen = () => {
     this.value.pipelineRef.name = PipelineRunDialog.pipelineName;
-    const timeStamp = Math.round(new Date().getTime()/1000)
-    this.value.name = PipelineRunDialog.pipelineName + '-' + (configStore.getDefaultNamespace() == "" ? 'admin' : configStore.getDefaultNamespace()) + '-' + timeStamp;
+    const timeStamp = Math.round(new Date().getTime() / 1000);
+    this.value.name =
+      PipelineRunDialog.pipelineName +
+      "-" +
+      (configStore.getDefaultNamespace() == ""
+        ? "admin"
+        : configStore.getDefaultNamespace()) +
+      "-" +
+      timeStamp;
+    //fill the  resources
+    const currnetPipeline = pipelineStore.getByName(
+      this.value.pipelineRef.name
+    );
+    currnetPipeline.spec.resources.map((item: any, index: number) => {
+      let resources: PipelineResourceBinding = {
+        name: item.name,
+        resourceRef: { name: "" },
+      };
+      this.value.resources.push(resources);
+    });
   };
 
   submit = async () => {

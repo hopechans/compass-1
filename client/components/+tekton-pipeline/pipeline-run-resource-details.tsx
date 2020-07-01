@@ -10,7 +10,7 @@ import { SubTitle } from "../layout/sub-title";
 import { _i18n } from "../../i18n";
 import { Input } from "../input";
 import { pipelineResourceStore } from "../+tekton-pipelineresource/pipelineresource.store";
-import { Grid, Divider } from "@material-ui/core";
+import { Grid } from "@material-ui/core";
 
 interface Props<T = any> extends Partial<Props> {
   value?: T;
@@ -64,7 +64,10 @@ export class PipelineRunResourceDetails extends React.Component<Props> {
   render() {
     return (
       <div className="Resource">
-        <SubTitle className="fields-title" title={<Trans>Pipeline Run Resources</Trans>}>
+        <SubTitle
+          className="fields-title"
+          title={<Trans>Pipeline Run Resources</Trans>}
+        >
           <Icon
             small
             tooltip={_i18n._(t`Add`)}
@@ -87,6 +90,7 @@ export class PipelineRunResourceDetails extends React.Component<Props> {
               </Grid>
               <Grid xs={8}>
                 <Input
+                  disabled={true}
                   placeholder={_i18n._("name")}
                   value={this.value[index]?.name}
                   onChange={(value) => (this.value[index].name = value)}

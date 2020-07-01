@@ -82,8 +82,17 @@ export class PipelineRun extends KubeObject {
   };
 
   getOwnerNamespace(): string {
-    if (this.metadata.labels == undefined) { return "" }
-    return this.metadata.labels.namespace != undefined ? this.metadata.labels.namespace : "";
+    if (this.metadata.labels == undefined) {
+      return "";
+    }
+    return this.metadata.labels.namespace != undefined
+      ? this.metadata.labels.namespace
+      : "";
+  }
+
+  getTasks(): any {
+    if (this.status.taskRuns === undefined) return [];
+    return this.status.taskRuns;
   }
 }
 

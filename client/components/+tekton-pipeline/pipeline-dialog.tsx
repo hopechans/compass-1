@@ -1,13 +1,14 @@
-import {observer} from "mobx-react";
+import { observer } from "mobx-react";
 import React from "react";
-import {observable, toJS} from "mobx";
-import {ActionMeta} from "react-select/src/types";
-import {Trans} from "@lingui/macro";
-import {Dialog} from "../dialog";
-import {Wizard, WizardStep} from "../wizard";
-import {pipelineApi, Pipeline} from "../../api/endpoints";
-import {Notifications} from "../notifications";
-import {PipelineDetails, PipelineResult, pipeline} from "./pipeline-details";
+import { observable, toJS } from "mobx";
+import { ActionMeta } from "react-select/src/types";
+import { Trans } from "@lingui/macro";
+import { Dialog } from "../dialog";
+import { Wizard, WizardStep } from "../wizard";
+import { Pipeline } from "../../api/endpoints";
+import { Notifications } from "../notifications";
+import { PipelineDetails, PipelineResult, pipeline } from "./pipeline-details";
+import { pipelineStore } from "./pipeline.store";
 
 interface Props<T = any> extends Partial<Props> {
   value?: T;
@@ -47,11 +48,14 @@ export class PipelineDialog extends React.Component<Props> {
     let pipeline = this.CurrentPipeline;
     this.value.tasks = pipeline.spec.tasks;
     this.value.pipelineName = pipeline.metadata.name;
+    const resources = pipeline.spec.resources;
     if (pipeline.spec.params !== undefined) {
       this.value.params = pipeline.spec.params;
     }
-    if (pipeline.spec.resources !== undefined) {
-      this.value.resources = pipeline.spec.resources;
+    if (resources !== undefined) {
+      if (resources[0].name !== "") {
+        this.value.resources = resources;
+      }
     }
     if (pipeline.spec.workspaces !== undefined) {
       this.value.workspaces = pipeline.spec.workspaces;
@@ -59,23 +63,17 @@ export class PipelineDialog extends React.Component<Props> {
   };
 
   submit = async () => {
+    let pipeline = PipelineDialog.currentPipeline;
+    pipeline.metadata.name = this.value.pipelineName;
+    pipeline.metadata.namespace = "ops";
+    pipeline.spec.resources = this.value.resources;
+    pipeline.spec.tasks = this.value.tasks;
+    pipeline.spec.params = this.value.params;
+    pipeline.spec.workspaces = this.value.workspaces;
     try {
       // //will update pipeline
-      await pipelineApi.update(
-        {name: this.value.pipelineName, namespace: "ops"},
-        {
-          spec: {
-            resources: this.value.resources,
-            tasks: this.value.tasks,
-            params: this.value.params,
-            workspaces: this.value.workspaces,
-          },
-        }
-      );
-      Notifications.ok(
-        <>
-          pipeline {this.value.pipelineName} save successed
-        </>);
+      await pipelineStore.update(pipeline, { ...pipeline });
+      Notifications.ok(<>pipeline {this.value.pipelineName} save successed</>);
       this.close();
     } catch (err) {
       Notifications.error(err);
