@@ -3,9 +3,12 @@
     &.name {
       flex-grow: 2;
     }
+    &.containers {
+      flex-grow: 3.0;
+    };
 
     &.pods {
-      flex-grow: 0.3;
+      flex-grow: 2.0;
     }
 
     &.warning {
