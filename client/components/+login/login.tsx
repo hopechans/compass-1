@@ -67,14 +67,15 @@ class LoginComponet extends React.Component<Props>{
   render() {
     return (
       <div className={cssNames("login-main", themeStore.activeTheme.type)}>
+
         <div className="login-header">
           <div className="login-title">
             <img src={require("../../favicon/compass.png")} />
             <div className="text">Compass</div>
           </div>
           <div className="login-sub-title">Compass Cloud Platform</div>
-
         </div>
+
         <div className="login-content">
           <div>
               <SubTitle title={<Trans>Username</Trans>}/>

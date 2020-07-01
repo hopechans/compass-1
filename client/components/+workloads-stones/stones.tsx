@@ -1,10 +1,10 @@
-import "./stones.store.ts";
+import "./stones.scss";
 
-import React from "react";
+import React, {Fragment} from "react";
 import {observer} from "mobx-react";
 import {RouteComponentProps} from "react-router";
 import {t, Trans} from "@lingui/macro";
-import {Stone, stoneApi} from "../../api/endpoints";
+import {Ingress, Pod, Stone, stoneApi} from "../../api/endpoints";
 import {podsStore} from "../+workloads-pods/pods.store";
 import {stoneStore} from "./stones.store";
 import {nodesStore} from "../+nodes/nodes.store";
@@ -19,6 +19,7 @@ import {MenuItem} from "../menu";
 import {Icon} from "../icon";
 import {_i18n} from "../../i18n";
 import {ConfigStoneDialog} from "./config-stone-dialog";
+import {PodContainerStatuses} from "../+workloads-pods";
 
 enum sortBy {
   name = "name",
@@ -63,6 +64,7 @@ export class Stones extends React.Component<Props> {
           renderTableHeader={[
             {title: <Trans>Name</Trans>, className: "name", sortBy: sortBy.name},
             {title: <Trans>Namespace</Trans>, className: "namespace", sortBy: sortBy.namespace},
+            {title: <Trans>Containers</Trans>, className: "containers"},
             {title: <Trans>Pods</Trans>, className: "pods", sortBy: sortBy.pods},
             {className: "warning"},
             {title: <Trans>Strategy</Trans>, className: "strategy", sortBy: sortBy.strategy},
@@ -72,6 +74,7 @@ export class Stones extends React.Component<Props> {
           renderTableContents={(stone: Stone) => [
             stone.getName(),
             stone.getNs(),
+            stoneStore.getChildPods(stone).map(pod => <PodContainerStatuses pod={pod}/>),
             this.getPodsLength(stone),
             <KubeEventIcon object={stone}/>,
             stone.getStrategy(),

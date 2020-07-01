@@ -11,7 +11,6 @@ import {KubeObjectListLayout} from "../kube-object";
 import {Trans} from "@lingui/macro";
 import {apiManager} from "../../api/api-manager";
 import {AddIngressDialog} from "./add-ingress-dialog";
-import {AddFieldDialog} from "../+deploymentengine-field/add-field-dialog";
 
 enum sortBy {
   name = "name",

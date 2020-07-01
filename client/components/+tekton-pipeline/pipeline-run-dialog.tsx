@@ -15,12 +15,9 @@ import {
   PipelineRef,
 } from "../../api/endpoints";
 import { Notifications } from "../notifications";
-import { Grid, Divider } from "@material-ui/core";
 import { PipelineRunResourceDetails } from "./pipeline-run-resource-details";
 import { systemName } from "../input/input.validators";
 import { configStore } from "../../../client/config.store";
-import { pipelineRunStore } from "../+tekton-pipelinerun/pipelinerun.store";
-import { Col, Row } from "../grid";
 
 interface Props<T = any> extends Partial<Props> {
   value?: T;
@@ -68,6 +65,8 @@ export class PipelineRunDialog extends React.Component<Props> {
 
   onOpen = () => {
     this.value.pipelineRef.name = PipelineRunDialog.pipelineName;
+    const timeStamp = Math.round(new Date().getTime()/1000)
+    this.value.name = PipelineRunDialog.pipelineName + '-' + (configStore.getDefaultNamespace() == "" ? 'admin' : configStore.getDefaultNamespace()) + '-' + timeStamp;
   };
 
   submit = async () => {
@@ -118,6 +117,7 @@ export class PipelineRunDialog extends React.Component<Props> {
             <SubTitle title={<Trans>Name</Trans>} />
             <Input
               placeholder={_i18n._("Pipeline Run Name")}
+              disabled={true}
               validators={systemName}
               value={this.value.name}
               onChange={(value) => (this.value.name = value)}
@@ -125,6 +125,7 @@ export class PipelineRunDialog extends React.Component<Props> {
             <SubTitle title={<Trans>Pipeline Ref</Trans>} />
             <Input
               placeholder={_i18n._("pipeline ref")}
+              disabled={true}
               value={this.value?.pipelineRef?.name}
               onChange={(value) => (this.value.pipelineRef.name = value)}
             />

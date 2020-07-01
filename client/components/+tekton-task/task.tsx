@@ -1,18 +1,18 @@
 import "./task.scss";
 
 import React from "react";
-import {observer} from "mobx-react";
-import {RouteComponentProps} from "react-router";
-import {Trans} from "@lingui/macro";
-import {taskApi, Task} from "../../api/endpoints";
-import {taskStore} from "./task.store";
-import {KubeObjectMenu, KubeObjectMenuProps} from "../kube-object";
-import {KubeObjectListLayout} from "../kube-object";
-import {apiManager} from "../../api/api-manager";
+import { observer } from "mobx-react";
+import { RouteComponentProps } from "react-router";
+import { Trans } from "@lingui/macro";
+import { taskApi, Task } from "../../api/endpoints";
+import { taskStore } from "./task.store";
+import { KubeObjectMenu, KubeObjectMenuProps } from "../kube-object";
+import { KubeObjectListLayout } from "../kube-object";
+import { apiManager } from "../../api/api-manager";
 
 enum sortBy {
   name = "name",
-  namespace = "namespace",
+  ownernamespace = "ownernamespace",
   pods = "pods",
   age = "age",
 }
@@ -29,7 +29,7 @@ export class Tasks extends React.Component<Props> {
           className="Tasks" store={taskStore}
           sortingCallbacks={{
             [sortBy.name]: (task: Task) => task.getName(),
-            [sortBy.namespace]: (task: Task) => task.getNs(),
+            [sortBy.ownernamespace]: (task: Task) => task.getOwnerNamespace(),
             [sortBy.age]: (task: Task) => task.getAge(false),
           }}
           searchFilters={[
@@ -37,19 +37,19 @@ export class Tasks extends React.Component<Props> {
           ]}
           renderHeaderTitle={<Trans>Tasks</Trans>}
           renderTableHeader={[
-            {title: <Trans>Name</Trans>, className: "name", sortBy: sortBy.name},
-            {title: <Trans>Namespace</Trans>, className: "namespace", sortBy: sortBy.namespace},
-            {title: <Trans>Pods</Trans>, className: "pods", sortBy: sortBy.pods},
-            {className: "warning"},
-            {title: <Trans>Age</Trans>, className: "age", sortBy: sortBy.age},
+            { title: <Trans>Name</Trans>, className: "name", sortBy: sortBy.name },
+            { title: <Trans>OwnerNamespace</Trans>, className: "ownernamespace", sortBy: sortBy.ownernamespace },
+            { title: <Trans>Pods</Trans>, className: "pods", sortBy: sortBy.pods },
+            { className: "warning" },
+            { title: <Trans>Age</Trans>, className: "age", sortBy: sortBy.age },
           ]}
           renderTableContents={(task: Task) => [
             task.getName(),
-            task.getNs(),
+            task.getOwnerNamespace(),
             task.getAge(),
           ]}
           renderItemMenu={(item: Task) => {
-            return <TaskMenu object={item}/>
+            return <TaskMenu object={item} />
           }}
         />
       </>
@@ -63,4 +63,4 @@ export function TaskMenu(props: KubeObjectMenuProps<Task>) {
   )
 }
 
-apiManager.registerViews(taskApi, {Menu: TaskMenu,})
+apiManager.registerViews(taskApi, { Menu: TaskMenu, })
