@@ -5,11 +5,7 @@ import { observer } from "mobx-react";
 import { observable } from "mobx";
 import { RouteComponentProps } from "react-router";
 import { Trans } from "@lingui/macro";
-import {
-  Pipeline,
-  pipelineApi,
-  PipelineTask,
-} from "../../api/endpoints";
+import { Pipeline, pipelineApi, PipelineTask } from "../../api/endpoints";
 import { podsStore } from "../+workloads-pods/pods.store";
 import { pipelineStore } from "./pipeline.store";
 import { eventStore } from "../+events/event.store";
@@ -36,13 +32,10 @@ enum sortBy {
   age = "age",
 }
 
-interface Props extends RouteComponentProps {
-
-}
+interface Props extends RouteComponentProps {}
 
 @observer
 export class Pipelines extends React.Component<Props> {
-
   @observable currentNode: any;
   // @observable static isHiddenPipelineGraph: boolean = false;
   @observable isHiddenPipelineGraph: boolean = true;
@@ -66,12 +59,6 @@ export class Pipelines extends React.Component<Props> {
 
   showPipeline = (pipeline: Pipeline) => {
     this.isHiddenPipelineGraph = false;
-    // if (Pipelines.isHiddenPipelineGraph === undefined) {
-    //   Pipelines.isHiddenPipelineGraph = true;
-    // }
-    // Pipelines.isHiddenPipelineGraph
-    //   ? (Pipelines.isHiddenPipelineGraph = false)
-    //   : (Pipelines.isHiddenPipelineGraph = true);
 
     let nodeData: any;
     pipeline.getAnnotations().filter((item) => {
@@ -192,8 +179,8 @@ export class Pipelines extends React.Component<Props> {
   };
 
   hiddenPipelineGraph = () => {
-    this.isHiddenPipelineGraph = true
-  }
+    this.isHiddenPipelineGraph = true;
+  };
 
   render() {
     return (
@@ -207,7 +194,7 @@ export class Pipelines extends React.Component<Props> {
             saveCallback={(pipelineResult: PipelineResult) => {
               this.savePipeline(pipelineResult);
             }}
-            closeGraph = {this.hiddenPipelineGraph}
+            closeGraph={this.hiddenPipelineGraph}
           />
         </div>
 

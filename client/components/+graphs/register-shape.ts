@@ -356,7 +356,7 @@ function drawTime(cfg: any, group: any) {
       attrs: {
         y: 42,
         x: 103,
-        text: cfg.time ?? "",
+        text: cfg.time ?? "0s",
         fill: "gray",
         fontSize: 10,
       },
@@ -492,7 +492,8 @@ G6.registerNode(
           fontStyle: "",
         });
       }
-      if (name === "Succeed") {
+
+      if (name === "Succeeded") {
         const shapeImg = group.get("children")[4];
         const shapeText = group.get("children")[5];
         shapeImg.attr({
