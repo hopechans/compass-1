@@ -1,17 +1,17 @@
 import "./taskrun.scss";
 
-import React, {Fragment} from "react";
-import {observer} from "mobx-react";
-import {RouteComponentProps} from "react-router";
-import {Trans} from "@lingui/macro";
-import {TaskRun, taskRunApi} from "../../api/endpoints";
-import {taskRunStore} from "./taskrun.store";
-import {KubeObjectMenu, KubeObjectMenuProps} from "../kube-object";
-import {KubeObjectListLayout} from "../kube-object";
-import {apiManager} from "../../api/api-manager";
-import {TooltipContent} from "../tooltip";
-import {StatusBrick} from "../status-brick";
-import {cssNames} from "../../utils";
+import React, { Fragment } from "react";
+import { observer } from "mobx-react";
+import { RouteComponentProps } from "react-router";
+import { Trans } from "@lingui/macro";
+import { TaskRun, taskRunApi } from "../../api/endpoints";
+import { taskRunStore } from "./taskrun.store";
+import { KubeObjectMenu, KubeObjectMenuProps } from "../kube-object";
+import { KubeObjectListLayout } from "../kube-object";
+import { apiManager } from "../../api/api-manager";
+import { TooltipContent } from "../tooltip";
+import { StatusBrick } from "../status-brick";
+import { cssNames } from "../../utils";
 
 enum sortBy {
   name = "name",
@@ -29,7 +29,7 @@ export class TaskRuns extends React.Component<Props> {
   renderSteps(taskRun: TaskRun) {
 
     return taskRun.getSteps().map(stepState => {
-      const {name, container} = stepState;
+      const { name, container } = stepState;
 
       status = "waiting"
 
@@ -90,7 +90,7 @@ export class TaskRuns extends React.Component<Props> {
       );
       return (
         <Fragment key={name}>
-          <StatusBrick className={cssNames(status)} tooltip={tooltip}/>
+          <StatusBrick className={cssNames(status)} tooltip={tooltip} />
         </Fragment>
       )
     });
@@ -102,6 +102,7 @@ export class TaskRuns extends React.Component<Props> {
         className="TaskRuns" store={taskRunStore}
         sortingCallbacks={{
           [sortBy.name]: (taskRun: TaskRun) => taskRun.getName(),
+          [sortBy.ownernamespace]: (taskRun: TaskRun) => taskRun.getOwnerNamespace(),
           [sortBy.age]: (taskRun: TaskRun) => taskRun.getAge(false),
         }}
         searchFilters={[
@@ -109,19 +110,21 @@ export class TaskRuns extends React.Component<Props> {
         ]}
         renderHeaderTitle={<Trans>TaskRun</Trans>}
         renderTableHeader={[
-          {title: <Trans>Name</Trans>, className: "name", sortBy: sortBy.name},
-          {title: <Trans>Steps</Trans>, className: "steps"},
-          {title: <Trans>Timeout</Trans>, className: "timeout"},
-          {title: <Trans>Age</Trans>, className: "age", sortBy: sortBy.age},
+          { title: <Trans>Name</Trans>, className: "name", sortBy: sortBy.name },
+          { title: <Trans>OwnerNamespace</Trans>, className: "ownernamespace", sortBy: sortBy.ownernamespace },
+          { title: <Trans>Steps</Trans>, className: "steps" },
+          { title: <Trans>Timeout</Trans>, className: "timeout" },
+          { title: <Trans>Age</Trans>, className: "age", sortBy: sortBy.age },
         ]}
         renderTableContents={(taskRun: TaskRun) => [
           taskRun.getName(),
+          taskRun.getOwnerNamespace(),
           this.renderSteps(taskRun),
           taskRun.spec.timeout,
           taskRun.getAge(),
         ]}
         renderItemMenu={(item: TaskRun) => {
-          return <TaskRunMenu object={item}/>
+          return <TaskRunMenu object={item} />
         }}
       />
     )
@@ -134,4 +137,4 @@ export function TaskRunMenu(props: KubeObjectMenuProps<TaskRun>) {
   )
 }
 
-apiManager.registerViews(taskRunApi, {Menu: TaskRunMenu,})
+apiManager.registerViews(taskRunApi, { Menu: TaskRunMenu, })

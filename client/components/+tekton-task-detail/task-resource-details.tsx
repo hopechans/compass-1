@@ -23,7 +23,7 @@ interface Props<T = any> extends Partial<Props> {
 @observer
 export class TaskResourceDetails extends React.Component<Props> {
 
-  static defaultProps = {title: "Add Pipeline Resources"}
+  static defaultProps = {title: "Pipeline Resources"}
 
   @observable value: ResourceDeclaration[] = this.props.value || [];
 

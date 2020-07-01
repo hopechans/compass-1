@@ -180,12 +180,12 @@ export class Pipelines extends React.Component<Props> {
     PipelineDialog.open(this.pipeline);
 
     //更新对应的pipeline
-    try {
-      await pipelineStore.update(this.pipeline, { ...this.pipeline });
-    } catch (err) {
-      console.log(err);
-      // Notifications.error(err);
-    }
+    // try {
+    //   await pipelineStore.update(this.pipeline, { ...this.pipeline });
+    // } catch (err) {
+    //   console.log(err);
+    //   // Notifications.error(err);
+    // }
 
     this.graph.getGraph().clear();
     this.graph.getGraph().changeData(JSON.parse(data));
@@ -207,7 +207,7 @@ export class Pipelines extends React.Component<Props> {
             saveCallback={(pipelineResult: PipelineResult) => {
               this.savePipeline(pipelineResult);
             }}
-            closeGraph = {this.hiddenPipelineGraph}
+            closeGraph={this.hiddenPipelineGraph}
           />
         </div>
 
