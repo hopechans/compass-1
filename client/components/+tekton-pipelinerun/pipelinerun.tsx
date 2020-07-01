@@ -28,6 +28,7 @@ interface Props extends RouteComponentProps {}
 export class PipelineRuns extends React.Component<Props> {
   @observable isHiddenPipelineGraph: boolean = true;
   @observable graph: any = null;
+  @observable timeIntervalID: any;
 
   getNodeData(pipelineName: string): any {
     const pipeline = pipelineStore.getByName(pipelineName);
@@ -55,9 +56,14 @@ export class PipelineRuns extends React.Component<Props> {
   getTaskRunName(pipelinerun: PipelineRun): string[] {
     let taskruns = pipelinerun.status.taskRuns;
     let taskRunNames: string[] = [];
-    Object.keys(taskruns).map(function (key: string, index: number) {
-      taskRunNames.push(key);
-    });
+    if (taskruns !== undefined) {
+      Object.keys(taskruns).map(function (key: string, index: number) {
+        taskRunNames.push(key);
+      });
+    } else {
+      console.error("getTaskRunName error:", pipelinerun.status);
+    }
+
     return taskRunNames;
   }
 
@@ -65,7 +71,9 @@ export class PipelineRuns extends React.Component<Props> {
     let taskMap: any = new Map<string, any>();
     names.map((name: string, index: number) => {
       const currentTask = taskRunStore.getByName(name);
-      taskMap[currentTask.spec.taskRef.name] = currentTask;
+      if (currentTask?.spec !== undefined) {
+        taskMap[currentTask.spec.taskRef.name] = currentTask;
+      }
     });
 
     return taskMap;
@@ -90,70 +98,97 @@ export class PipelineRuns extends React.Component<Props> {
         this.graph.getGraph().changeData(nodeData);
       }, 200);
 
-      const currentTaskRunMap = this.getTaskRun(
-        this.getTaskRunName(pipelinerun)
-      );
+      let statusMap: any = new Map<any, any>();
 
-      nodeData.nodes.map((item: any, index: number) => {
-        const currentTaskRun = currentTaskRunMap[item.taskName];
-        if (currentTaskRun !== undefined) {
-          nodeData.nodes[index].status =
-            currentTaskRun.status.conditions[0].reason;
-        } else {
-          nodeData.nodes[index].status = "Pendding";
+      let drawPipeline = setInterval(() => {
+        const names = this.getTaskRunName(pipelinerun);
+        if (names.length > 0) {
+          const currentTaskRunMap = this.getTaskRun(names);
+          nodeData.nodes.map((item: any, index: number) => {
+            const currentTaskRun = currentTaskRunMap[item.taskName];
+            if (currentTaskRun !== undefined) {
+              // if (currentTaskRun?.status?.conditions[0]?.reason !== undefined) {
+
+              //   statusMap[index] = true;
+              // } else {
+              //   statusMap[index] = false;
+              //   nodeData.nodes[index].status = "Pendding";
+              // }
+
+              //should check when the pipeline-run status
+              nodeData.nodes[index].status =
+                currentTaskRun.status.conditions[0].reason;
+            } else {
+              nodeData.nodes[index].status = "Pendding";
+            }
+            nodeData.nodes[index].showtime = true;
+          });
+          setTimeout(() => {
+            this.graph.getGraph().clear();
+            this.graph.getGraph().changeData(nodeData);
+          });
+          clearInterval(drawPipeline);
         }
-        nodeData.nodes[index].showtime = true;
-      });
-      setTimeout(() => {
-        this.graph.getGraph().clear();
-        this.graph.getGraph().changeData(nodeData);
-      });
+      }, 1000);
 
       //Interval 1s update status and time in graph
-      setInterval(() => {
-        nodeData.nodes.map((item: any, index: number) => {
-          // //set current node status,just like:Failed Succeed... and so on.
-          const currentTaskRunMap = this.getTaskRun(
-            this.getTaskRunName(pipelinerun)
-          );
+      this.timeIntervalID = setInterval(() => {
+        const newPipelineRun = pipelineRunStore.getByName(
+          pipelinerun.getName()
+        );
+        const names = this.getTaskRunName(newPipelineRun);
+        if (names.length > 0) {
+          const currentTaskRunMap = this.getTaskRun(names);
 
-          const currentTaskRun = currentTaskRunMap[item.taskName];
-          if (currentTaskRun !== undefined) {
-            //should get current node itme and update the time.
-            let currentitem = this.graph
-              .getGraph()
-              .findById(nodeData.nodes[index].id);
-            //dynimic set the state: missing notreay
-            this.graph
-              .getGraph()
-              .setItemState(
-                currentitem,
-                currentTaskRun.status.conditions[0].reason,
-                ""
-              );
+          nodeData.nodes.map((item: any, index: number) => {
+            // //set current node status,just like:Failed Succeed... and so on.
 
-            //when show pipeline will use current date time  less start time and then self-increment。
-            let completionTime = currentTaskRun.status.completionTime;
-            let totalTime: string;
-            const currentStartTime = currentTaskRun.status.startTime;
-            const st = new Date(currentStartTime).getTime();
-            if (completionTime !== undefined) {
-              const ct = new Date(completionTime).getTime();
-              let result = Math.floor((ct - st) / 1000);
-              totalTime = this.secondsToHms(result);
-            } else {
-              const ct = new Date().getTime();
-              let result = Math.floor((ct - st) / 1000);
-              totalTime = this.secondsToHms(result);
+            const currentTaskRun = currentTaskRunMap[item.taskName];
+            if (currentTaskRun !== undefined) {
+              //should get current node itme and update the time.
+              let currentitem = this.graph
+                .getGraph()
+                .findById(nodeData.nodes[index].id);
+              //dynimic set the state: missing notreay
+              if (currentTaskRun?.status?.conditions[0]?.reason == undefined) {
+                return;
+              }
+
+              this.graph
+                .getGraph()
+                .setItemState(
+                  currentitem,
+                  currentTaskRun?.status?.conditions[0]?.reason,
+                  ""
+                );
+
+              //when show pipeline will use current date time  less start time and then self-increment。
+              let completionTime = currentTaskRun.status.completionTime;
+              let totalTime: string;
+              const currentStartTime = currentTaskRun.status.startTime;
+              const st = new Date(currentStartTime).getTime();
+              if (completionTime !== undefined) {
+                const ct = new Date(completionTime).getTime();
+                let result = Math.floor((ct - st) / 1000);
+                totalTime = this.secondsToHms(result);
+              } else {
+                const ct = new Date().getTime();
+                let result = Math.floor((ct - st) / 1000);
+                totalTime = this.secondsToHms(result);
+              }
+
+              //set the time
+              this.graph
+                .getGraph()
+                .setItemState(currentitem, "time", totalTime);
             }
-            //set the time
-            this.graph.getGraph().setItemState(currentitem, "time", totalTime);
-          }
-        });
+          });
+        }
       }, 1000);
     }
   }
   hiddenPipelineGraph = () => {
+    clearInterval(this.timeIntervalID);
     this.isHiddenPipelineGraph = true;
   };
   render() {
@@ -180,6 +215,7 @@ export class PipelineRuns extends React.Component<Props> {
               pipelineRun.getAge(false),
           }}
           onDetails={(pipeline: PipelineRun) => {
+            clearInterval(this.timeIntervalID);
             this.showCurrentPipelineRunStatus(pipeline);
           }}
           searchFilters={[
