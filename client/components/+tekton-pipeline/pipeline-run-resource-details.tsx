@@ -64,10 +64,10 @@ export class PipelineRunResourceDetails extends React.Component<Props> {
   render() {
     return (
       <div className="Resource">
-        <SubTitle className="fields-title" title="Add Pipeline Run Resources">
+        <SubTitle className="fields-title" title={<Trans>Pipeline Run Resources</Trans>}>
           <Icon
             small
-            tooltip={_i18n._(t`resources`)}
+            tooltip={_i18n._(t`Add`)}
             material="add_circle_outline"
             onClick={(e) => {
               this.add();

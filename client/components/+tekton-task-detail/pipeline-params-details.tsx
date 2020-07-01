@@ -39,10 +39,10 @@ export class PipelineParamsDetails extends React.Component<Props> {
   render() {
     return (
       <div className="params">
-        <SubTitle className="fields-title" title="Add Pipeline Params">
+        <SubTitle className="fields-title" title="Pipeline Params">
           <Icon
             small
-            tooltip={_i18n._(t`Command`)}
+            tooltip={_i18n._(t`Add`)}
             material="add_circle_outline"
             onClick={(e) => {
               this.add();
