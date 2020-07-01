@@ -44,6 +44,7 @@ export const pipelineRunResult: PipelineRunResult = {
   name: "",
   serviceAccountName: "default",
   pipelineRef: ref,
+  resources: [],
 };
 
 @observer
@@ -73,7 +74,7 @@ export class PipelineRunDialog extends React.Component<Props> {
     try {
       // create a pipeline run
       let newPipelineRun = await pipelineRunApi.create(
-        { name: this.value.name, namespace: '' },
+        { name: this.value.name, namespace: "" },
         {
           spec: {
             resources: this.value.resources,
@@ -83,14 +84,17 @@ export class PipelineRunDialog extends React.Component<Props> {
         }
       );
       // label the resource labels
-      newPipelineRun.metadata.labels = { namespace: configStore.getDefaultNamespace() }
-      await pipelineRunApi.update({
-        name: newPipelineRun.metadata.name,
-        namespace: newPipelineRun.metadata.namespace
-      },
-        { ...newPipelineRun },
+      newPipelineRun.metadata.labels = {
+        namespace: configStore.getDefaultNamespace(),
+      };
+      await pipelineRunApi.update(
+        {
+          name: newPipelineRun.metadata.name,
+          namespace: newPipelineRun.metadata.namespace,
+        },
+        { ...newPipelineRun }
       );
-      this.close()
+      this.close();
     } catch (err) {
       Notifications.error(err);
     }

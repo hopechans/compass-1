@@ -7,10 +7,7 @@ import { Trans } from "@lingui/macro";
 import { PipelineRun, pipelineRunApi, TaskRun } from "../../api/endpoints";
 import { pipelineRunStore } from "./pipelinerun.store";
 import { pipelineStore } from "../+tekton-pipeline/pipeline.store";
-import {
-  KubeObjectMenu,
-  KubeObjectMenuProps,
-} from "../kube-object";
+import { KubeObjectMenu, KubeObjectMenuProps } from "../kube-object";
 import { KubeObjectListLayout } from "../kube-object";
 import { apiManager } from "../../api/api-manager";
 import { observable } from "mobx";
@@ -81,18 +78,9 @@ export class PipelineRuns extends React.Component<Props> {
   //showCurrentPipelineRunStatus show pipeline run status
   showCurrentPipelineRunStatus(pipelinerun: PipelineRun) {
     this.isHiddenPipelineGraph = false;
-    // if (PipelineRuns.isHiddenPipelineGraph === undefined) {
-    //   PipelineRuns.isHiddenPipelineGraph = true;
-    // }
-    // PipelineRuns.isHiddenPipelineGraph
-    //   ? (PipelineRuns.isHiddenPipelineGraph = false)
-    //   : (PipelineRuns.isHiddenPipelineGraph = true);
 
     //by pipeline ref name get node data
     let nodeData = this.getNodeData(pipelinerun.spec.pipelineRef.name);
-
-    // find taskrun by  task name;
-    let taskrun: TaskRun[] = [];
 
     if (nodeData === undefined || nodeData === "") {
     } else {
@@ -120,6 +108,7 @@ export class PipelineRuns extends React.Component<Props> {
         this.graph.getGraph().clear();
         this.graph.getGraph().changeData(nodeData);
       });
+
       //Interval 1s update status and time in graph
       setInterval(() => {
         nodeData.nodes.map((item: any, index: number) => {
@@ -142,6 +131,7 @@ export class PipelineRuns extends React.Component<Props> {
                 currentTaskRun.status.conditions[0].reason,
                 ""
               );
+
             //when show pipeline will use current date time  less start time and then self-increment。
             let completionTime = currentTaskRun.status.completionTime;
             let totalTime: string;
@@ -164,8 +154,8 @@ export class PipelineRuns extends React.Component<Props> {
     }
   }
   hiddenPipelineGraph = () => {
-    this.isHiddenPipelineGraph = true
-  }
+    this.isHiddenPipelineGraph = true;
+  };
   render() {
     return (
       <>
@@ -175,9 +165,8 @@ export class PipelineRuns extends React.Component<Props> {
           <Graph
             open={this.isHiddenPipelineGraph}
             showSave={true}
-            closeGraph = {this.hiddenPipelineGraph}
+            closeGraph={this.hiddenPipelineGraph}
           ></Graph>
-
         </div>
         <KubeObjectListLayout
           className="PipelineRuns"
