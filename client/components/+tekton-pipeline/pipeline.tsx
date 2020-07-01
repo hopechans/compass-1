@@ -172,21 +172,9 @@ export class Pipelines extends React.Component<Props> {
     };
     this.pipeline.metadata.annotations = { node_data: data };
     this.pipeline.spec.tasks = [];
-    //todo:this un-direct read pipeResult.pipelineParams data
-    // this.pipeline.spec.params = pipeResult.pipelineParams
-    // this.pipeline.spec.resources = pipeResult.pipelineResources;
     this.pipeline.spec.tasks.push(...this.getPipelineTasks());
     //will show pipeline dialog
     PipelineDialog.open(this.pipeline);
-
-    //更新对应的pipeline
-    // try {
-    //   await pipelineStore.update(this.pipeline, { ...this.pipeline });
-    // } catch (err) {
-    //   console.log(err);
-    //   // Notifications.error(err);
-    // }
-
     this.graph.getGraph().clear();
     this.graph.getGraph().changeData(JSON.parse(data));
   };
