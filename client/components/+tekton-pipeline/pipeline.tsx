@@ -185,6 +185,8 @@ export class Pipelines extends React.Component<Props> {
     PipelineDialog.open(this.pipeline);
 
     //更新对应的pipeline
+    // TODO need fix
+
     try {
       await pipelineStore.update(this.pipeline, { ...this.pipeline });
     } catch (err) {
