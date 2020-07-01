@@ -84,7 +84,12 @@ export class PipelineRunDialog extends React.Component<Props> {
       );
       // label the resource labels
       newPipelineRun.metadata.labels = { namespace: configStore.getDefaultNamespace() }
-      await pipelineRunStore.update(newPipelineRun, { ...newPipelineRun });
+      await pipelineRunApi.update({
+        name: newPipelineRun.metadata.name,
+        namespace: newPipelineRun.metadata.namespace
+      },
+        { ...newPipelineRun },
+      );
       this.close()
     } catch (err) {
       Notifications.error(err);
