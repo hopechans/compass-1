@@ -1,26 +1,26 @@
 import "./pipeline-run-dialog.scss";
-import { observer } from "mobx-react";
+import {observer} from "mobx-react";
 import React from "react";
-import { observable, toJS } from "mobx";
-import { SubTitle } from "../layout/sub-title";
-import { Input } from "../input";
-import { _i18n } from "../../i18n";
-import { ActionMeta } from "react-select/src/types";
-import { Trans } from "@lingui/macro";
-import { Dialog } from "../dialog";
-import { Wizard, WizardStep } from "../wizard";
+import {observable, toJS} from "mobx";
+import {SubTitle} from "../layout/sub-title";
+import {Input} from "../input";
+import {_i18n} from "../../i18n";
+import {ActionMeta} from "react-select/src/types";
+import {Trans} from "@lingui/macro";
+import {Dialog} from "../dialog";
+import {Wizard, WizardStep} from "../wizard";
 import {
   pipelineRunApi,
   PipelineResourceBinding,
   PipelineRef,
 } from "../../api/endpoints";
-import { Notifications } from "../notifications";
-import { Grid, Divider } from "@material-ui/core";
-import { PipelineRunResourceDetails } from "./pipeline-run-resource-details";
-import { systemName } from "../input/input.validators";
-import { configStore } from "../../../client/config.store";
-import { pipelineRunStore } from "../+tekton-pipelinerun/pipelinerun.store";
-import { Col, Row } from "../grid";
+import {Notifications} from "../notifications";
+import {Grid, Divider} from "@material-ui/core";
+import {PipelineRunResourceDetails} from "./pipeline-run-resource-details";
+import {systemName} from "../input/input.validators";
+import {configStore} from "../../../client/config.store";
+import {pipelineRunStore} from "../+tekton-pipelinerun/pipelinerun.store";
+import {Col, Row} from "../grid";
 
 interface Props<T = any> extends Partial<Props> {
   value?: T;
@@ -68,13 +68,15 @@ export class PipelineRunDialog extends React.Component<Props> {
 
   onOpen = () => {
     this.value.pipelineRef.name = PipelineRunDialog.pipelineName;
+    const timeStamp = Date.parse(new Date().toString())
+    this.value.name = PipelineRunDialog.pipelineName + '-' + configStore.getDefaultNamespace() + '-' + timeStamp;
   };
 
   submit = async () => {
     try {
       // create a pipeline run
       let newPipelineRun = await pipelineRunApi.create(
-        { name: this.value.name, namespace: "" },
+        {name: this.value.name, namespace: ""},
         {
           spec: {
             resources: this.value.resources,
@@ -92,7 +94,7 @@ export class PipelineRunDialog extends React.Component<Props> {
           name: newPipelineRun.metadata.name,
           namespace: newPipelineRun.metadata.namespace,
         },
-        { ...newPipelineRun }
+        {...newPipelineRun}
       );
       this.close();
     } catch (err) {
@@ -115,27 +117,29 @@ export class PipelineRunDialog extends React.Component<Props> {
       >
         <Wizard className="PipelineRunDialog" header={header} done={this.close}>
           <WizardStep contentClass="flex gaps column" next={this.submit}>
-            <SubTitle title={<Trans>Name</Trans>} />
+            <SubTitle title={<Trans>Name</Trans>}/>
             <Input
               placeholder={_i18n._("Pipeline Run Name")}
+              disabled={true}
               validators={systemName}
               value={this.value.name}
               onChange={(value) => (this.value.name = value)}
             />
-            <SubTitle title={<Trans>Pipeline Ref</Trans>} />
+            <SubTitle title={<Trans>Pipeline Ref</Trans>}/>
             <Input
               placeholder={_i18n._("pipeline ref")}
+              disabled={true}
               value={this.value?.pipelineRef?.name}
               onChange={(value) => (this.value.pipelineRef.name = value)}
             />
-            <SubTitle title={<Trans>Service Account Name</Trans>} />
+            <SubTitle title={<Trans>Service Account Name</Trans>}/>
             <Input
               disabled={true}
               placeholder={_i18n._("Service Account Name")}
               value={this.value?.serviceAccountName}
               onChange={(value) => (this.value.serviceAccountName = value)}
             />
-            <br />
+            <br/>
             <PipelineRunResourceDetails
               value={this.value?.resources}
               onChange={(value) => {

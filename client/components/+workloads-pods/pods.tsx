@@ -1,6 +1,6 @@
 import "./pods.scss"
 
-import React, { Fragment } from "react";
+import React from "react";
 import { observer } from "mobx-react";
 import { Link } from "react-router-dom";
 import { Trans } from "@lingui/macro";
@@ -12,16 +12,13 @@ import { eventStore } from "../+events/event.store";
 import { KubeObjectListLayout } from "../kube-object";
 import { Pod, podsApi } from "../../api/endpoints";
 import { PodMenu } from "./pod-menu";
-import { StatusBrick } from "../status-brick";
-import { cssNames, stopPropagation } from "../../utils";
-import { TooltipContent } from "../tooltip";
+import { stopPropagation } from "../../utils";
 import { KubeEventIcon } from "../+events/kube-event-icon";
 import { getDetailsUrl } from "../../navigation";
-import toPairs from "lodash/toPairs";
-import startCase from "lodash/startCase";
 import kebabCase from "lodash/kebabCase";
 import { lookupApiLink } from "../../api/kube-api";
 import { apiManager } from "../../api/api-manager";
+import {PodContainerStatuses} from "./pod-container-statuses";
 
 enum sortBy {
   name = "name",
@@ -39,33 +36,6 @@ interface Props extends RouteComponentProps<IPodsRouteParams> {
 
 @observer
 export class Pods extends React.Component<Props> {
-  renderContainersStatus(pod: Pod) {
-    return pod.getContainerStatuses().map(containerStatus => {
-      const { name, state, ready } = containerStatus;
-      const tooltip = (
-        <TooltipContent tableView>
-          {Object.keys(state).map(status => (
-            <Fragment key={status}>
-              <div className="title">
-                {name} <span className="text-secondary">({status}{ready ? ", ready" : ""})</span>
-              </div>
-              {toPairs(state[status]).map(([name, value]) => (
-                <div key={name} className="flex gaps align-center">
-                  <div className="name">{startCase(name)}</div>
-                  <div className="value ">{value}</div>
-                </div>
-              ))}
-            </Fragment>
-          ))}
-        </TooltipContent>
-      );
-      return (
-        <Fragment key={name}>
-          <StatusBrick className={cssNames(state, { ready })} tooltip={tooltip}/>
-        </Fragment>
-      )
-    });
-  }
 
   render() {
     return (
@@ -102,7 +72,7 @@ export class Pods extends React.Component<Props> {
           pod.getName(),
           pod.hasIssues() && <KubeEventIcon object={pod}/>,
           pod.getNs(),
-          this.renderContainersStatus(pod),
+          <PodContainerStatuses pod={pod}/>,
           pod.getRestartsCount(),
           pod.getOwnerRefs().map(ref => {
             const { kind, name } = ref;
