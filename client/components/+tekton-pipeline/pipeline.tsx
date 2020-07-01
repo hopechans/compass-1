@@ -23,7 +23,6 @@ import { taskStore } from "../+tekton-task/task.store";
 import { PipelineDialog } from "./pipeline-dialog";
 import { pipelineResourceStore } from "../+tekton-pipelineresource/pipelineresource.store";
 import { PipelineRunDialog } from "./pipeline-run-dialog";
-import { Notifications } from "../notifications/notifications";
 
 enum sortBy {
   name = "name",
@@ -33,7 +32,7 @@ enum sortBy {
   age = "age",
 }
 
-interface Props extends RouteComponentProps { }
+interface Props extends RouteComponentProps {}
 
 @observer
 export class Pipelines extends React.Component<Props> {
@@ -183,18 +182,6 @@ export class Pipelines extends React.Component<Props> {
     this.pipeline.spec.tasks.push(...this.getPipelineTasks());
     //will show pipeline dialog
     PipelineDialog.open(this.pipeline);
-
-    //更新对应的pipeline
-    // TODO need fix
-
-    try {
-      await pipelineStore.update(this.pipeline, { ...this.pipeline });
-    } catch (err) {
-      Notifications.error(err);
-    }
-
-    this.graph.getGraph().clear();
-    this.graph.getGraph().changeData(JSON.parse(data));
   };
 
   hiddenPipelineGraph = () => {

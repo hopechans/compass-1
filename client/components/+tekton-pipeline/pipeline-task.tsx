@@ -14,18 +14,9 @@ import { Input } from "../input";
 import { Select, SelectOption } from "../select";
 import { taskStore } from "../+tekton-task/task.store";
 import { Icon } from "../icon";
-import { isNumber } from "../input/input.validators";
-import {
-  ResourcesDetail,
-  PipelineParamsDetails,
-  ParamsDetails,
-  MultiTaskStepDetails,
-} from "../+tekton-task-detail";
+import { ResourcesDetail, ParamsDetails } from "../+tekton-task-detail";
 import { TaskSelect } from "./task-select";
-import { Task } from "client/api/endpoints";
 import { Grid, Divider } from "@material-ui/core";
-import { GridList } from "material-ui";
-import { styleFn } from "react-select/src/styles";
 
 interface Props<T = any> extends Partial<Props> {
   value?: T;
@@ -160,13 +151,6 @@ export class PipelineTaskDetail extends React.Component<Props> {
         </Grid>
         <Divider />
         <br />
-        {/* <Input
-          placeholder={`retries`}
-          // type="number"
-          // validators={isNumber}
-          value={this.value.retries}
-          onChange={(value) => (this.value.retries = Number(value))}
-        /> */}
 
         <ParamsDetails
           value={this.value.params}
@@ -182,29 +166,6 @@ export class PipelineTaskDetail extends React.Component<Props> {
           }}
         />
         <br />
-
-        {/* <br />
-        <PipelineParamsDetails
-          value={this.value.taskSpec?.params}
-          onChange={(value) => {
-            this.value.taskSpec.params = value;
-          }}
-        />
-        <br />
-        <ResourcesDetail
-          value={this.value.taskSpec?.resources}
-          onChange={(value) => {
-            this.value.taskSpec.resources = value;
-          }}
-        /> */}
-
-        {/* <br />
-        <MultiTaskStepDetails
-          value={this.value.taskSpec?.steps}
-          onChange={(value) => {
-            this.value.taskSpec.steps = value;
-          }}
-        /> */}
       </div>
     );
   }

@@ -1,6 +1,6 @@
 import "./pipelinerun.scss";
 
-import React from "react";
+import React, { Fragment } from "react";
 import { observer } from "mobx-react";
 import { RouteComponentProps } from "react-router";
 import { Trans } from "@lingui/macro";
@@ -14,6 +14,10 @@ import { observable } from "mobx";
 import { PipelineGraph } from "../+graphs/pipeline-graph";
 import { Graph } from "../+graphs/graph";
 import { taskRunStore } from "../+tekton-taskrun";
+import { pipeline } from "../+tekton-pipeline/pipeline-details";
+import { TooltipContent } from "../tooltip";
+import { StatusBrick } from "../status-brick";
+import { cssNames } from "../../utils";
 
 enum sortBy {
   name = "name",
@@ -191,6 +195,107 @@ export class PipelineRuns extends React.Component<Props> {
     clearInterval(this.timeIntervalID);
     this.isHiddenPipelineGraph = true;
   };
+
+  renderTasks(pipelinerun: PipelineRun) {
+    const names = this.getTaskRunName(pipelinerun);
+    // return taskRun.getSteps().map((stepState) => {
+    //   const { name, container } = stepState;
+    //   status = "waiting";
+    //   if (stepState.waiting) {
+    //     status = "waiting";
+    //   }
+    //   if (stepState.running) {
+    //     status = "running";
+    //   }
+    //   if (stepState.terminated) {
+    //     status = "terminated";
+    //   }
+    //   const tooltip = (
+    //     <TooltipContent tableView>
+    //       <Fragment>
+    //         <div className="title">
+    //           Name - <span className="text-secondary">{name}</span>
+    //         </div>
+    //         <div className="title">
+    //           Container - <span className="text-secondary">{container}</span>
+    //         </div>
+    //         {stepState.waiting ? (
+    //           <>
+    //             <div className="title">
+    //               Message -{" "}
+    //               <span className="text-secondary">
+    //                 {stepState.waiting.message}
+    //               </span>
+    //             </div>
+    //             <div className="title">
+    //               Reason -{" "}
+    //               <span className="text-secondary">
+    //                 {stepState.waiting.reason}
+    //               </span>
+    //             </div>
+    //           </>
+    //         ) : (
+    //           <></>
+    //         )}
+    //         {stepState.running ? (
+    //           <>
+    //             <div className="title">
+    //               StartedAt -{" "}
+    //               <span className="text-secondary">
+    //                 {stepState.running.startedAt}
+    //               </span>
+    //             </div>
+    //           </>
+    //         ) : (
+    //           <></>
+    //         )}
+    //         {stepState.terminated ? (
+    //           <>
+    //             <div className="title">
+    //               ContainerID -{" "}
+    //               <span className="text-secondary">
+    //                 {stepState.terminated.containerID}
+    //               </span>
+    //             </div>
+    //             <div className="title">
+    //               Reason -{" "}
+    //               <span className="text-secondary">
+    //                 {stepState.terminated.reason}
+    //               </span>
+    //             </div>
+    //             <div className="title">
+    //               Message -{" "}
+    //               <span className="text-secondary">
+    //                 {stepState.terminated.message}
+    //               </span>
+    //             </div>
+    //             <div className="title">
+    //               StartedAt -{" "}
+    //               <span className="text-secondary">
+    //                 {stepState.terminated.startedAt}
+    //               </span>
+    //             </div>
+    //             <div className="title">
+    //               FinishedAt -{" "}
+    //               <span className="text-secondary">
+    //                 {stepState.terminated.finishedAt}
+    //               </span>
+    //             </div>
+    //           </>
+    //         ) : (
+    //           <></>
+    //         )}
+    //       </Fragment>
+    //     </TooltipContent>
+    //   );
+    //   return (
+    //     <Fragment key={name}>
+    //       <StatusBrick className={cssNames(status)} tooltip={tooltip} />
+    //     </Fragment>
+    //   );
+    // });
+  }
+
   render() {
     return (
       <>
@@ -234,11 +339,20 @@ export class PipelineRuns extends React.Component<Props> {
               sortBy: sortBy.ownernamespace,
             },
             { title: <Trans>Age</Trans>, className: "age", sortBy: sortBy.age },
+            // { title: <Trans>Tasks</Trans>, className: "tasks" },
+            { title: <Trans>StartTime</Trans>, className: "startTime" },
+            {
+              title: <Trans>CompletionTime</Trans>,
+              className: "completionTime",
+            },
           ]}
           renderTableContents={(pipelineRun: PipelineRun) => [
             pipelineRun.getName(),
             pipelineRun.getOwnerNamespace(),
             pipelineRun.getAge(),
+            // pipelineRun.status.conditions[0].reason,
+            new Date(pipelineRun.status.startTime).toLocaleString(),
+            new Date(pipelineRun.status.completionTime).toLocaleString(),
           ]}
           renderItemMenu={(item: PipelineRun) => {
             return <PipelineRunMenu object={item} />;

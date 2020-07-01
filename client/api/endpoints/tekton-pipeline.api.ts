@@ -84,7 +84,7 @@ export interface PipelineTask {
 
 // PipelineTask defines a task in a Pipeline, passing inputs from both
 // Params and from the output of previous tasks.
-export class PipelineTask implements PipelineTask { }
+export class PipelineTask implements PipelineTask {}
 
 // PipelineDeclaredResource is used by a Pipeline to declare the types of the
 // PipelineResources that it will required to run and names which can be used to
@@ -133,8 +133,12 @@ export class Pipeline extends KubeObject {
   }
 
   getOwnerNamespace(): string {
-    if (this.metadata.labels == undefined) { return "" }
-    return this.metadata.labels.namespace != undefined ? this.metadata.labels.namespace : "";
+    if (this.metadata.labels == undefined) {
+      return "";
+    }
+    return this.metadata.labels.namespace != undefined
+      ? this.metadata.labels.namespace
+      : "";
   }
 
   getTaskSet() {
