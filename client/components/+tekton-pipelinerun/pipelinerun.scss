@@ -13,7 +13,7 @@
     }
     &.tasks {
       .StatusBrick {
-        @include taskrun-status-colors;
+        @include taskrun-status-bgs;
       }
     }
     &.warning {
