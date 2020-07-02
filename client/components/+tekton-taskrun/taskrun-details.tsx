@@ -1,5 +1,5 @@
 import * as React from "react";
-import {disposeOnUnmount, observer} from "mobx-react";
+import {observer} from "mobx-react";
 import {TaskRun, taskRunApi} from "../../api/endpoints";
 import {KubeEventDetails} from "../+events/kube-event-details";
 import {KubeObjectDetailsProps} from "../kube-object";

@@ -9,7 +9,7 @@ import { pipelineResourceStore } from "./pipelineresource.store";
 import { KubeObjectMenu, KubeObjectMenuProps } from "../kube-object";
 import { KubeObjectListLayout } from "../kube-object";
 import { apiManager } from "../../api/api-manager";
-import { AddPipelineResourceDialog } from "./add-pipeline-resource-dialog";
+import { AddPipelineResourceDialog } from "./add-pipelineresource-dialog";
 
 enum sortBy {
   name = "name",
