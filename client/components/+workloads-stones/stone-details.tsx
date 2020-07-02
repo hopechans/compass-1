@@ -47,7 +47,6 @@ export class StoneDetails extends React.Component<Props> {
     const nodeSelector = stone.getNodeSelectors()
     const childPods = stoneStore.getChildPods(stone)
     const metrics = stoneStore.metrics
-    const childStatefulsets = stoneStore.getChildEnhanceStatefulset(stone)
     return (
       <div className="StoneDetails">
         {podsStore.isLoaded && (

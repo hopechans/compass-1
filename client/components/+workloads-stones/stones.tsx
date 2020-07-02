@@ -19,13 +19,12 @@ import {MenuItem} from "../menu";
 import {Icon} from "../icon";
 import {_i18n} from "../../i18n";
 import {ConfigStoneDialog} from "./config-stone-dialog";
-import {PodContainerStatuses} from "../+workloads-pods";
 
 enum sortBy {
   name = "name",
   namespace = "namespace",
   pods = "pods",
-  statefulsets = "statefulsets",
+  statefulSets = "statefulSets",
   strategy = "strategy",
   age = "age",
 }
@@ -43,6 +42,12 @@ export class Stones extends React.Component<Props> {
     return stoneStore.getChildEnhanceStatefulset(stone).length;
   }
 
+  hasPodIssues(stone: Stone) {
+    return stoneStore.getChildPods(stone).map(pod => {
+      return pod.hasIssues()
+    }).filter(bool => bool === false).length == 0;
+  }
+
   render() {
     return (
       <>
@@ -53,7 +58,7 @@ export class Stones extends React.Component<Props> {
             [sortBy.name]: (stone: Stone) => stone.getName(),
             [sortBy.namespace]: (stone: Stone) => stone.getNs(),
             [sortBy.age]: (stone: Stone) => stone.getAge(false),
-            [sortBy.statefulsets]: (stone: Stone) => this.getEnhanceStatefulSetLength(stone),
+            [sortBy.statefulSets]: (stone: Stone) => this.getEnhanceStatefulSetLength(stone),
             [sortBy.strategy]: (stone: Stone) => stone.getStrategy(),
             [sortBy.pods]: (stone: Stone) => this.getPodsLength(stone),
           }}
@@ -63,20 +68,18 @@ export class Stones extends React.Component<Props> {
           renderHeaderTitle={<Trans>Stones</Trans>}
           renderTableHeader={[
             {title: <Trans>Name</Trans>, className: "name", sortBy: sortBy.name},
-            {title: <Trans>Namespace</Trans>, className: "namespace", sortBy: sortBy.namespace},
-            {title: <Trans>Containers</Trans>, className: "containers"},
-            {title: <Trans>Pods</Trans>, className: "pods", sortBy: sortBy.pods},
             {className: "warning"},
+            {title: <Trans>Namespace</Trans>, className: "namespace", sortBy: sortBy.namespace},
+            {title: <Trans>Pods</Trans>, className: "pods", sortBy: sortBy.pods},
             {title: <Trans>Strategy</Trans>, className: "strategy", sortBy: sortBy.strategy},
-            {title: <Trans>Statefulsets</Trans>, className: "statefulsets", sortBy: sortBy.statefulsets},
+            {title: <Trans>StatefulSets</Trans>, className: "statefulSets", sortBy: sortBy.statefulSets},
             {title: <Trans>Age</Trans>, className: "age", sortBy: sortBy.age},
           ]}
           renderTableContents={(stone: Stone) => [
             stone.getName(),
+            this.hasPodIssues(stone) && <Icon material="warning" className={"StoneWarningIcon"}/>,
             stone.getNs(),
-            stoneStore.getChildPods(stone).map(pod => <PodContainerStatuses pod={pod}/>),
             this.getPodsLength(stone),
-            <KubeEventIcon object={stone}/>,
             stone.getStrategy(),
             this.getEnhanceStatefulSetLength(stone),
             stone.getAge(),
