@@ -7,7 +7,6 @@ import {apiManager} from "../../api/api-manager";
 import {Trans} from "@lingui/macro";
 import {DrawerItem, DrawerTitle} from "../drawer";
 import {KubeEventDetails} from "../+events/kube-event-details";
-import {Divider} from "@material-ui/core";
 
 interface Props extends KubeObjectDetailsProps<Task> {
 }
@@ -34,7 +33,7 @@ export class TaskDetails extends React.Component<Props> {
                     Object.entries(item).map(
                       ([name, value]) =>
                         <DrawerItem key={name} name={name}>
-                          {String(value)}
+                          {JSON.stringify(value)}
                         </DrawerItem>
                     )
                   }
@@ -54,7 +53,7 @@ export class TaskDetails extends React.Component<Props> {
                     Object.entries(item).map(
                       ([name, value]) =>
                         <DrawerItem key={name} name={name}>
-                          {String(value)}
+                          {JSON.stringify(value)}
                         </DrawerItem>
                     )
                   }
