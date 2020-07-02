@@ -72,13 +72,13 @@ export interface Param {
 
 export interface PipelineTask {
   name: string;
-  taskRef?: TaskRef;
-  runAfter?: string[];
+  taskRef: TaskRef;
+  runAfter: string[];
   taskSpec?: TaskSpec;
-  retries?: number;
-  resources?: PipelineTaskResources;
-  params?: Param[];
-  timeout?: string;
+  retries: number;
+  resources: PipelineTaskResources;
+  params: Param[];
+  timeout: string | number | any;
   conditions?: PipelineTaskCondition;
 }
 

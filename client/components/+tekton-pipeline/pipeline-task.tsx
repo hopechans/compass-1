@@ -45,6 +45,7 @@ export const pipelineTask: PipelineTask = {
   params: params,
   timeout: "",
   runAfter: [],
+  retries: 0,
   //conditions not support now.
   //conditions?: PipelineTaskCondition;
 };
