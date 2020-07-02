@@ -1,15 +1,15 @@
-import {observer} from "mobx-react";
+import { observer } from "mobx-react";
 import React from "react";
-import {observable} from "mobx";
-import {ActionMeta} from "react-select/src/types";
-import {Icon} from "../icon";
-import {t, Trans} from "@lingui/macro";
-import {Input} from "../input";
-import {PipelineParams, pipelineParams} from "./common";
-import {SubTitle} from "../layout/sub-title";
-import {_i18n} from "../../i18n";
-import {Col, Row} from "../grid";
-import {Select} from "../select";
+import { observable, toJS } from "mobx";
+import { ActionMeta } from "react-select/src/types";
+import { Icon } from "../icon";
+import { t, Trans } from "@lingui/macro";
+import { Input } from "../input";
+import { PipelineParams, pipelineParams } from "./common";
+import { SubTitle } from "../layout/sub-title";
+import { _i18n } from "../../i18n";
+import { Col, Row } from "../grid";
+import { Select } from "../select";
 
 interface Props<T = any> extends Partial<Props> {
   value?: T;
@@ -23,9 +23,7 @@ export class PipelineParamsDetails extends React.Component<Props> {
   @observable value: PipelineParams[] = this.props.value || [];
 
   get Options() {
-    return [
-      "string"
-    ]
+    return ["string", "array"];
   }
 
   add = () => {
@@ -66,7 +64,7 @@ export class PipelineParamsDetails extends React.Component<Props> {
                 <Trans>Default</Trans>
               </Col>
             </Row>
-            <br/>
+            <br />
           </>
         ) : (
           <></>
@@ -85,13 +83,18 @@ export class PipelineParamsDetails extends React.Component<Props> {
                   <Select
                     value={this.value[index].type}
                     options={this.Options}
-                    onChange={(value) => (this.value[index].type = value)}
+                    onChange={(value) => {
+                      let result = toJS(value);
+                      this.value[index].type = result.value;
+                    }}
                   />
                 </Col>
                 <Col span={4} offset={1}>
                   <Input
                     value={this.value[index].description}
-                    onChange={(value) => (this.value[index].description = value)}
+                    onChange={(value) =>
+                      (this.value[index].description = value)
+                    }
                   />
                 </Col>
                 <Col span={4} offset={1}>

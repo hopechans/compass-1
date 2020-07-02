@@ -17,7 +17,7 @@ interface Props<T = any> extends Partial<Props> {
 
 @observer
 export class ResourcesDetail extends React.Component<Props> {
-  @observable value: TaskResources = this.props.value || resources;
+  @observable value: TaskResources = this.props.value || [];
 
   render() {
     return (
