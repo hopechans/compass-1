@@ -3,12 +3,10 @@
 .TaskRuns {
   .TableCell {
     &.name {
-      flex-grow: 0.8;
+      flex-grow: 3.0;
     }
-    &.pods {
-      flex-grow: 0.3;
-    }
-    &.namespace{
+
+    &.ownernamespace{
       flex-grow: 1.2;
     }
     &.age {

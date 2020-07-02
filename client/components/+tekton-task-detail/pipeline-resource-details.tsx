@@ -32,13 +32,6 @@ export class PipelineResourceDetails extends React.Component<Props> {
     this.value.splice(index, 1);
   };
 
-  get nameOptions() {
-    const options = pipelineResourceStore.items
-      .map((item) => ({ value: item.getName() }))
-      .slice();
-    return [...options];
-  }
-
   get typeOptions() {
     return ["image", "git"];
   }
@@ -58,10 +51,10 @@ export class PipelineResourceDetails extends React.Component<Props> {
   render() {
     return (
       <div className="Resource">
-        <SubTitle className="fields-title" title="Add Pipeline Resources">
+        <SubTitle className="fields-title" title="Pipeline Resources">
           <Icon
             small
-            tooltip={_i18n._(t`Command`)}
+            tooltip={_i18n._(t`resource`)}
             material="add_circle_outline"
             onClick={(e) => {
               this.add();

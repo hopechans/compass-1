@@ -75,12 +75,6 @@ export class AddPipelineResourceDialog extends React.Component<Props> {
           },
         }
       );
-      pipelineResource.metadata.annotations = {
-        namespace: configStore.getDefaultNamespace(),
-      };
-      await pipelineResourceStore.update(pipelineResource, {
-        ...pipelineResource,
-      });
       this.reset();
       this.close();
     } catch (err) {

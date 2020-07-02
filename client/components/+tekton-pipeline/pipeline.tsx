@@ -149,6 +149,23 @@ export class Pipelines extends React.Component<Props> {
     return tasks;
   }
 
+  // savePipeline = async (pipeResult: PipelineResult) => {
+  //   this.data = this.graph.getGraph().save();
+
+  //   const data = JSON.stringify(this.graph.getGraph().save());
+
+  //   this.pipeline.metadata.labels = {
+  //     namespace: configStore.getDefaultNamespace(),
+  //   };
+  //   this.pipeline.metadata.annotations = { node_data: data };
+  //   this.pipeline.spec.tasks = [];
+  //   this.pipeline.spec.tasks.push(...this.getPipelineTasks());
+  //   //will show pipeline dialog
+  //   PipelineDialog.open(this.pipeline);
+  //   this.graph.getGraph().clear();
+  //   this.graph.getGraph().changeData(JSON.parse(data));
+  // };
+
   savePipeline = async (pipeResult: PipelineResult) => {
     this.data = this.graph.getGraph().save();
 
@@ -165,17 +182,6 @@ export class Pipelines extends React.Component<Props> {
     this.pipeline.spec.tasks.push(...this.getPipelineTasks());
     //will show pipeline dialog
     PipelineDialog.open(this.pipeline);
-
-    //更新对应的pipeline
-    try {
-      await pipelineStore.update(this.pipeline, { ...this.pipeline });
-    } catch (err) {
-      console.log(err);
-      // Notifications.error(err);
-    }
-
-    this.graph.getGraph().clear();
-    this.graph.getGraph().changeData(JSON.parse(data));
   };
 
   hiddenPipelineGraph = () => {
