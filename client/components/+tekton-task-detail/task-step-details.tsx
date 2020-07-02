@@ -14,7 +14,7 @@ import { SubTitle } from "../layout/sub-title";
 import { WorkspacesDetails } from "./workspaces-details";
 import { ResultsDetails } from "./results-details";
 import { _i18n } from "../../i18n";
-import {Trans} from "@lingui/macro";
+import { Trans } from "@lingui/macro";
 
 interface Props<T = any> extends Partial<Props> {
   value?: T;
@@ -56,15 +56,17 @@ export class TaskStepDetails extends React.Component<Props> {
           onChange={(value) => (this.value.workingDir = value)}
         />
         <br />
-        <ArgsDetails
-          value={this.value.args}
-          onChange={(value) => (this.value.args = value)}
-        />
-        <Divider />
-        <br />
+
         <CommandDetails
           value={this.value.command}
           onChange={(value) => (this.value.command = value)}
+        />
+        <Divider />
+
+        <br />
+        <ArgsDetails
+          value={this.value.args}
+          onChange={(value) => (this.value.args = value)}
         />
         <Divider />
         <br />
