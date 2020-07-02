@@ -30,7 +30,7 @@ enum sortBy {
   age = "age",
 }
 
-interface Props extends RouteComponentProps {}
+interface Props extends RouteComponentProps { }
 
 @observer
 export class PipelineRuns extends React.Component<Props> {
@@ -62,17 +62,21 @@ export class PipelineRuns extends React.Component<Props> {
   }
 
   getTaskRunName(pipelinerun: PipelineRun): string[] {
-    let taskruns = pipelinerun.status.taskRuns;
-    let taskRunNames: string[] = [];
-    if (taskruns !== undefined) {
-      Object.keys(taskruns).map(function (key: string, index: number) {
-        taskRunNames.push(key);
-      });
-    } else {
-      console.error("getTaskRunName error:", pipelinerun.status);
-    }
+    // let taskruns = pipelinerun.status.taskRuns;
+    // let taskRunNames: string[] = [];
+    // if (taskruns !== undefined) {
+    //   Object.keys(taskruns).map(function (key: string, index: number) {
+    //     taskRunNames.push(key);
+    //   });
+    // } else {
+    //   console.error("getTaskRunName error:", pipelinerun.status);
+    // }
 
-    return taskRunNames;
+    // return taskRunNames;
+
+    if (pipelinerun?.status == undefined) { return [] }
+    if (pipelinerun?.status?.taskRuns == undefined) { return [] }
+    return Object.keys(pipelinerun?.status?.taskRuns).map((item: any) => { return item; }).slice() || [];
   }
 
   getTaskRun(names: string[]): any {
@@ -203,7 +207,7 @@ export class PipelineRuns extends React.Component<Props> {
   renderTasks(pipelinerun: PipelineRun) {
     const names = this.getTaskRunName(pipelinerun);
 
-    if (names.length > 0) {
+    if (names.length > 0) {   // TODO: 
       return names.map((item: string) => {
         const taskRun = taskRunStore.getByName(item);
         if (taskRun === undefined) {
