@@ -26,9 +26,9 @@ $job-complete: $colorSuccess;
 $job-failed: $colorError;
 
 // Steps
-$step-waiting: $colorInfo;
-$step-running: $colorOk;
-$step-terminated: $colorSoftError;
+$step-waiting: $colorVague;
+$step-running: $colorInfo;
+$step-terminated: $colorOk;
 $step-status-pending-color: $colorWarning;
 
 //TaskRuns
