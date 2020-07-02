@@ -61,19 +61,18 @@ export class PipelineDialog extends React.Component<Props> {
       //   params: Param[];
       //   timeout: string;
       //   conditions?: PipelineTaskCondition;
-
       if (item.resources === undefined) {
         this.value.tasks[index].resources = pipelineTaskResource;
       }
-      if (item.params === undefined) {
-        this.value.tasks[index].params = [];
-      }
-      if (item.retries === undefined) {
-        this.value.tasks[index].retries = 0;
-      }
-      if (item.timeout === undefined || item.timeout == "") {
-        this.value.tasks[index].timeout = "0";
-      }
+      // if (item.params === undefined) {
+      //   this.value.tasks[index].params = [];
+      // }
+      // if (item.retries === undefined) {
+      //   this.value.tasks[index].retries = 0;
+      // }
+      // if (item.timeout === undefined || item.timeout == "") {
+      //   this.value.tasks[index].timeout = "0";
+      // }
     });
     this.value.pipelineName = pipeline.metadata.name;
     const resources = pipeline.spec.resources;
@@ -125,7 +124,10 @@ export class PipelineDialog extends React.Component<Props> {
           <WizardStep contentClass="flex gaps column" next={this.submit}>
             <PipelineDetails
               value={this.value}
-              onChange={(value) => (this.value = value)}
+              onChange={(value) => {
+                console.log("-------------_>PipelineDetails", value);
+                this.value = value;
+              }}
             />
           </WizardStep>
         </Wizard>

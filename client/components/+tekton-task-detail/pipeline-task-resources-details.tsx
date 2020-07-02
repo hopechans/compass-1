@@ -27,10 +27,6 @@ export class PipelineTaskInputResourceDetail extends React.Component<Props> {
   static defaultProps = { title: "Pipeline Resources" };
   @observable value: PipelineTaskInputResource[] = this.props.value || [];
 
-  get Options() {
-    return ["string", "array"];
-  }
-
   add = () => {
     this.value.push(pipelineTaskInputResource);
   };
@@ -77,7 +73,10 @@ export class PipelineTaskInputResourceDetail extends React.Component<Props> {
                   <Input
                     placeholder={_i18n._(t`Name`)}
                     value={this.value[index].name}
-                    onChange={(value) => (this.value[index].name = value)}
+                    onChange={(value) => {
+                      this.value[index].name = value;
+                      console.log(this.value[index].name);
+                    }}
                   />
                 </Col>
                 <Col span={10} offset={1}>
