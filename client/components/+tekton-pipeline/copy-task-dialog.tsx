@@ -103,6 +103,8 @@ export class CopyTaskDialog extends React.Component<Props> {
         } else {
           this.value.resources = task.spec.resources;
         }
+      } else {
+        this.value.resources = task.spec.resources;
       }
 
       this.value.pipelineParams =
