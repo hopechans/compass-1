@@ -51,7 +51,7 @@ export class PipelineDialog extends React.Component<Props> {
     let pipeline = this.CurrentPipeline;
 
     this.value.tasks = pipeline.spec.tasks;
-    this.value.tasks.map((item: any) => {
+    this.value.tasks.map((item: any, index: number) => {
       //   name: string;
       //   taskRef: TaskRef;
       //   runAfter: string[];
@@ -63,19 +63,17 @@ export class PipelineDialog extends React.Component<Props> {
       //   conditions?: PipelineTaskCondition;
 
       if (item.resources === undefined) {
-        item.resources = pipelineTaskResource;
+        this.value.tasks[index].resources = pipelineTaskResource;
       }
       if (item.params === undefined) {
-        item.params = [];
+        this.value.tasks[index].params = [];
       }
       if (item.retries === undefined) {
-        item.retries = 0;
+        this.value.tasks[index].retries = 0;
       }
       if (item.timeout === undefined || item.timeout == "") {
-        item.timeout = "0";
+        this.value.tasks[index].timeout = "0";
       }
-
-      this.value.tasks.push(item);
     });
     this.value.pipelineName = pipeline.metadata.name;
     const resources = pipeline.spec.resources;
