@@ -14,13 +14,11 @@ import { observable } from "mobx";
 import { PipelineGraph } from "../+graphs/pipeline-graph";
 import { Graph } from "../+graphs/graph";
 import { taskRunStore } from "../+tekton-taskrun";
-import { pipeline } from "../+tekton-pipeline/pipeline-details";
 import { TooltipContent } from "../tooltip";
 import { StatusBrick } from "../status-brick";
 import { cssNames } from "../../utils";
 import { MenuItem } from "../menu";
 import { Icon } from "../icon";
-import { task } from "../+tekton-pipeline/copy-task-dialog";
 import { Notifications } from "../notifications";
 
 enum sortBy {
