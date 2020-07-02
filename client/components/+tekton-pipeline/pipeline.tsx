@@ -292,7 +292,7 @@ export function PipelineMenu(props: KubeObjectMenuProps<Pipeline>) {
         }}
       >
         <Icon
-          material="format_align_left"
+          material="play_circle_outline"
           title={"Pipeline"}
           interactive={toolbar}
         />

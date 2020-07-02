@@ -98,11 +98,19 @@ export class CopyTaskDialog extends React.Component<Props> {
     const defaultNameSpace = "ops";
     const task = taskStore.getByName(name, defaultNameSpace);
     if (task !== undefined) {
-      this.value.resources = task.spec.resources;
-      this.value.pipelineParams = task.spec.params;
+      if (task.spec.resources == undefined) {
+        if (Object.keys(task.spec.resources).length === 0) {
+        } else {
+          this.value.resources = task.spec.resources;
+        }
+      }
+
+      this.value.pipelineParams =
+        task.spec.params == undefined ? [] : task.spec.params;
       this.value.taskName = task.metadata.name;
       this.value.taskSteps = task.spec.steps;
-      this.value.volumes = task.spec.volumes;
+      this.value.volumes =
+        task.spec.volumes == undefined ? [] : task.spec.volumes;
     }
   };
 
@@ -147,6 +155,12 @@ export class CopyTaskDialog extends React.Component<Props> {
             },
           }
         );
+      } else {
+        task.metadata.name = this.value.taskName;
+        task.spec.params = parms;
+        task.spec.resources = resources;
+        task.spec.steps = steps;
+        await taskStore.update(task, { ...task });
       }
 
       Notifications.ok(<>task {this.value.taskName} save successed</>);
@@ -187,6 +201,7 @@ export class CopyTaskDialog extends React.Component<Props> {
       </h5>
     );
 
+    console.log(toJS(this.value));
     return (
       <ThemeProvider theme={theme}>
         <Dialog

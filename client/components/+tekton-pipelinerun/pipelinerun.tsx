@@ -30,7 +30,7 @@ enum sortBy {
   age = "age",
 }
 
-interface Props extends RouteComponentProps { }
+interface Props extends RouteComponentProps {}
 
 @observer
 export class PipelineRuns extends React.Component<Props> {
@@ -74,9 +74,19 @@ export class PipelineRuns extends React.Component<Props> {
 
     // return taskRunNames;
 
-    if (pipelinerun?.status == undefined) { return [] }
-    if (pipelinerun?.status?.taskRuns == undefined) { return [] }
-    return Object.keys(pipelinerun?.status?.taskRuns).map((item: any) => { return item; }).slice() || [];
+    if (pipelinerun?.status == undefined) {
+      return [];
+    }
+    if (pipelinerun?.status?.taskRuns == undefined) {
+      return [];
+    }
+    return (
+      Object.keys(pipelinerun?.status?.taskRuns)
+        .map((item: any) => {
+          return item;
+        })
+        .slice() || []
+    );
   }
 
   getTaskRun(names: string[]): any {
@@ -207,7 +217,8 @@ export class PipelineRuns extends React.Component<Props> {
   renderTasks(pipelinerun: PipelineRun) {
     const names = this.getTaskRunName(pipelinerun);
 
-    if (names.length > 0) {   // TODO: 
+    if (names.length > 0) {
+      // TODO:
       return names.map((item: string) => {
         const taskRun = taskRunStore.getByName(item);
         if (taskRun === undefined) {
@@ -338,19 +349,14 @@ export function PipelineRunMenu(props: KubeObjectMenuProps<PipelineRun>) {
             Notifications.ok(
               <>pipeline-run {pipelineRun.getName()} cancel successed</>
             );
-            this.close();
           } catch (err) {
             Notifications.error(err);
           }
         }}
       >
-        <Icon
-          material="format_align_left"
-          title={"rerun"}
-          interactive={toolbar}
-        />
+        <Icon material="cancel" title={"cancel"} interactive={toolbar} />
         <span className="title">
-          <Trans>ReRun</Trans>
+          <Trans>Cancel</Trans>
         </span>
       </MenuItem>
       <MenuItem
@@ -371,17 +377,12 @@ export function PipelineRunMenu(props: KubeObjectMenuProps<PipelineRun>) {
             Notifications.ok(
               <>pipeline-run: {pipelineRun.getName()} rerun successed</>
             );
-            this.close();
           } catch (err) {
             Notifications.error(err);
           }
         }}
       >
-        <Icon
-          material="format_align_left"
-          title={"rerun"}
-          interactive={toolbar}
-        />
+        <Icon material="autorenew" title={"rerun"} interactive={toolbar} />
         <span className="title">
           <Trans>Rerun</Trans>
         </span>
