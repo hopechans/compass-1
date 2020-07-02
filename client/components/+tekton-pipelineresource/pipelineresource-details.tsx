@@ -37,7 +37,7 @@ export class PipelineResourceDetails extends React.Component<Props> {
                     Object.entries(item).map(
                       ([name, value]) =>
                         <DrawerItem key={name} name={name}>
-                          {String(value)}
+                          {JSON.stringify(value)}
                         </DrawerItem>
                     )
                   }
