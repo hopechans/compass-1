@@ -9,6 +9,8 @@ import { Pipeline } from "../../api/endpoints";
 import { Notifications } from "../notifications";
 import { PipelineDetails, PipelineResult, pipeline } from "./pipeline-details";
 import { pipelineStore } from "./pipeline.store";
+import { task } from "./copy-task-dialog";
+import { pipelineTaskResource } from "./pipeline-task";
 
 interface Props<T = any> extends Partial<Props> {
   value?: T;
@@ -24,6 +26,7 @@ export class PipelineDialog extends React.Component<Props> {
   @observable value: PipelineResult = this.props.value || pipeline;
 
   static open(pipeline: Pipeline) {
+    PipelineDialog.currentPipeline = null;
     PipelineDialog.currentPipeline = pipeline;
     PipelineDialog.isOpen = true;
   }
@@ -46,7 +49,32 @@ export class PipelineDialog extends React.Component<Props> {
 
   onOpen = () => {
     let pipeline = this.CurrentPipeline;
+
     this.value.tasks = pipeline.spec.tasks;
+    this.value.tasks.map((item: any, index: number) => {
+      //   name: string;
+      //   taskRef: TaskRef;
+      //   runAfter: string[];
+      //   taskSpec?: TaskSpec;
+      //   retries: number;
+      //   resources: PipelineTaskResources;
+      //   params: Param[];
+      //   timeout: string;
+      //   conditions?: PipelineTaskCondition;
+
+      if (item.resources === undefined) {
+        this.value.tasks[index].resources = pipelineTaskResource;
+      }
+      if (item.params === undefined) {
+        this.value.tasks[index].params = [];
+      }
+      if (item.retries === undefined) {
+        this.value.tasks[index].retries = 0;
+      }
+      if (item.timeout === undefined || item.timeout == "") {
+        this.value.tasks[index].timeout = "0";
+      }
+    });
     this.value.pipelineName = pipeline.metadata.name;
     const resources = pipeline.spec.resources;
     if (pipeline.spec.params !== undefined) {
