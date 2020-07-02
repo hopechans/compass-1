@@ -17,7 +17,7 @@ import { Icon } from "../icon";
 import { ResourcesDetail, ParamsDetails } from "../+tekton-task-detail";
 import { TaskSelect } from "./task-select";
 import { Grid, Divider } from "@material-ui/core";
-
+import { PipelineResource } from "../+tekton-task-detail";
 interface Props<T = any> extends Partial<Props> {
   value?: T;
   themeName?: "dark" | "light" | "outlined";
@@ -160,7 +160,7 @@ export class PipelineTaskDetail extends React.Component<Props> {
           }}
         />
         <br />
-        <ResourcesDetail
+        <PipelineResource
           value={this.value.resources}
           onChange={(value) => {
             this.value.resources = value;

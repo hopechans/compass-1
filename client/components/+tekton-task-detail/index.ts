@@ -8,3 +8,4 @@ export * from "./common";
 export * from "./task-resource-details";
 export * from "./resources-detail";
 export * from "./workspaces-details";
+export * from "./pipeline-resource";
