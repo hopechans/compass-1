@@ -23,6 +23,8 @@ import { taskStore } from "../+tekton-task/task.store";
 import { PipelineDialog } from "./pipeline-dialog";
 import { pipelineResourceStore } from "../+tekton-pipelineresource/pipelineresource.store";
 import { PipelineRunDialog } from "./pipeline-run-dialog";
+import { PieChart } from "../chart";
+import Item from "antd/lib/list/Item";
 
 enum sortBy {
   name = "name",
@@ -175,11 +177,21 @@ export class Pipelines extends React.Component<Props> {
       namespace: configStore.getDefaultNamespace(),
     };
     this.pipeline.metadata.annotations = { node_data: data };
-    this.pipeline.spec.tasks = [];
-    //todo:this un-direct read pipeResult.pipelineParams data
-    // this.pipeline.spec.params = pipeResult.pipelineParams
-    // this.pipeline.spec.resources = pipeResult.pipelineResources;
-    this.pipeline.spec.tasks.push(...this.getPipelineTasks());
+    if (this.pipeline.spec.tasks === undefined) {
+      this.pipeline.spec.tasks = [];
+      this.pipeline.spec.tasks.push(...this.getPipelineTasks());
+    } else {
+      let newTasks = this.getPipelineTasks();
+      let oldTasks = new Map(this.pipeline.spec.tasks.map(i => [i.name, i]));
+      newTasks.map((item: any) => {
+        let name: string = item.name;
+        const task = oldTasks.get(name);
+        if (task === undefined) {
+          this.pipeline.spec.tasks.push(item);
+        }
+      })
+    }
+
     //will show pipeline dialog
     PipelineDialog.open(this.pipeline);
   };
@@ -246,6 +258,7 @@ export class Pipelines extends React.Component<Props> {
             },
           }}
           onDetails={(pipeline: Pipeline) => {
+
             this.showPipeline(pipeline);
           }}
         />
