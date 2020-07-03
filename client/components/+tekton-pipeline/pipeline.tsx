@@ -151,38 +151,19 @@ export class Pipelines extends React.Component<Props> {
     return tasks;
   }
 
-  // savePipeline = async (pipeResult: PipelineResult) => {
-  //   this.data = this.graph.getGraph().save();
-
-  //   const data = JSON.stringify(this.graph.getGraph().save());
-
-  //   this.pipeline.metadata.labels = {
-  //     namespace: configStore.getDefaultNamespace(),
-  //   };
-  //   this.pipeline.metadata.annotations = { node_data: data };
-  //   this.pipeline.spec.tasks = [];
-  //   this.pipeline.spec.tasks.push(...this.getPipelineTasks());
-  //   //will show pipeline dialog
-  //   PipelineDialog.open(this.pipeline);
-  //   this.graph.getGraph().clear();
-  //   this.graph.getGraph().changeData(JSON.parse(data));
-  // };
 
   savePipeline = async (pipeResult: PipelineResult) => {
     this.data = this.graph.getGraph().save();
 
     const data = JSON.stringify(this.graph.getGraph().save());
 
-    this.pipeline.metadata.labels = {
-      namespace: configStore.getDefaultNamespace(),
-    };
     this.pipeline.metadata.annotations = { node_data: data };
     if (this.pipeline.spec.tasks === undefined) {
       this.pipeline.spec.tasks = [];
       this.pipeline.spec.tasks.push(...this.getPipelineTasks());
     } else {
       let newTasks = this.getPipelineTasks();
-      let oldTasks = new Map(this.pipeline.spec.tasks.map(i => [i.name, i]));
+      let oldTasks = new Map(this.pipeline.spec.tasks.map(i => [i.taskRef.name, i]));
       newTasks.map((item: any) => {
         let name: string = item.name;
         const task = oldTasks.get(name);

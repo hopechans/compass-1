@@ -158,7 +158,7 @@ export class CopyTaskDialog extends React.Component<Props> {
           }
         );
       } else {
-        if (this.ifSwitch) {
+        if (!this.ifSwitch) {
           task.metadata.name = this.value.taskName;
           task.spec.params = parms;
           task.spec.resources = resources;
