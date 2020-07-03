@@ -64,9 +64,9 @@ export class PipelineDialog extends React.Component<Props> {
       if (item.resources === undefined) {
         this.value.tasks[index].resources = pipelineTaskResource;
       }
-      // if (item.params === undefined) {
-      //   this.value.tasks[index].params = [];
-      // }
+      if (item.params === undefined) {
+        this.value.tasks[index].params = [];
+      }
       // if (item.retries === undefined) {
       //   this.value.tasks[index].retries = 0;
       // }
@@ -125,7 +125,6 @@ export class PipelineDialog extends React.Component<Props> {
             <PipelineDetails
               value={this.value}
               onChange={(value) => {
-                console.log("-------------_>PipelineDetails", value);
                 this.value = value;
               }}
             />

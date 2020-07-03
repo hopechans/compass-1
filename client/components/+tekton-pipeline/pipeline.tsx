@@ -121,7 +121,7 @@ export class Pipelines extends React.Component<Props> {
       let array = dataMap.get(item);
 
       if (tmp === 1) {
-        let task = new PipelineTask();
+        let task: any = {};
         task.runAfter = [];
         array.map((item: any) => {
           task.name = item.taskName;
@@ -131,7 +131,7 @@ export class Pipelines extends React.Component<Props> {
       } else {
         let result = tmp - 1;
         array.map((item: any) => {
-          let task = new PipelineTask();
+          let task: any = {};
           task.runAfter = [];
           task.name = item.taskName;
           task.taskRef = { name: item.taskName };
