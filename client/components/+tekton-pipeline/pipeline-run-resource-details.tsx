@@ -90,7 +90,6 @@ export class PipelineRunResourceDetails extends React.Component<Props> {
               </Grid>
               <Grid xs={8}>
                 <Input
-                  disabled={true}
                   placeholder={_i18n._("name")}
                   value={this.value[index]?.name}
                   onChange={(value) => (this.value[index].name = value)}

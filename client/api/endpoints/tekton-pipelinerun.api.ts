@@ -81,6 +81,17 @@ export class PipelineRun extends KubeObject {
     taskRuns: any;
   };
 
+
+  getStartTime(): any {
+    if (this.status?.startTime == undefined) { return ""; }
+    return this.status?.startTime || "";
+  }
+
+  getCompletionTime(): any {
+    if (this.status?.completionTime == undefined) { return ""; }
+    return this.status?.completionTime || "";
+  }
+
   getOwnerNamespace(): string {
     if (this.metadata.labels == undefined) {
       return "";
@@ -91,7 +102,7 @@ export class PipelineRun extends KubeObject {
   }
 
   getErrorReason(): string {
-    if (this.status?.conditions == undefined || this.status?.conditions == {}) { return "abc"; }
+    if (this.status?.conditions == undefined || this.status?.conditions == {}) { return ""; }
     return this.status?.conditions.map(
       (item: { status: string; reason: string; }) => {
         if (item.status == 'False') {

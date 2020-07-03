@@ -22,7 +22,7 @@ import { ovnURL, ovnRoute, Ovn } from "../+ovn";
 import { Config, configRoute, configURL } from "../+config";
 import { eventRoute, eventsURL } from "../+events";
 import { tenantRoute, tenantURL, Tenant } from "../+tenant";
-import { deployRoute, deployURL, Deploys } from "../+deploy";
+import { deployRoute, deployURL } from "../+workloads";
 import { Apps, appsRoute, appsURL } from "../+apps";
 import { namespaceStore } from "../+namespaces/namespace.store";
 import { TabRoute } from "./main-layout";
@@ -117,6 +117,22 @@ export class Sidebar extends React.Component<Props> {
                             icon={<Icon svg="workloads" />}
                         />
                         <SidebarNavItem
+                            id="tekton"
+                            url={tektonURL({ query })}
+                            routePath={tektonRoute.path}
+                            subMenus={Tekton.tabRoutes}
+                            icon={<Icon material="palette" />}
+                            text={<Trans>Tekton</Trans>}
+                        />
+                        <SidebarNavItem
+                            id="config"
+                            url={configURL({ query })}
+                            routePath={configRoute.path}
+                            subMenus={Config.tabRoutes}
+                            text={<Trans>Configuration</Trans>}
+                            icon={<Icon material="list" />}
+                        />
+                        <SidebarNavItem
                             id="networks"
                             url={networkURL({ query })}
                             routePath={networkRoute.path}
@@ -138,29 +154,6 @@ export class Sidebar extends React.Component<Props> {
                             routePath={eventRoute.path}
                             icon={<Icon material="access_time" />}
                             text={<Trans>Events</Trans>}
-                        />
-                        <SidebarNavItem
-                            id="deploy"
-                            url={deployURL({ query })}
-                            routePath={deployRoute.path}
-                            text={<Trans>Deploy</Trans>}
-                            icon={<Icon material="open_in_browser" />}
-                        />
-                        <SidebarNavItem
-                            id="tekton"
-                            url={tektonURL({ query })}
-                            routePath={tektonRoute.path}
-                            subMenus={Tekton.tabRoutes}
-                            icon={<Icon material="clear_all" />}
-                            text={<Trans>Tekton</Trans>}
-                        />
-                        <SidebarNavItem
-                            id="config"
-                            url={configURL({ query })}
-                            routePath={configRoute.path}
-                            subMenus={Config.tabRoutes}
-                            text={<Trans>Configuration</Trans>}
-                            icon={<Icon material="list" />}
                         />
                         <SidebarNavItem
                             isHidden={!isClusterAdmin}

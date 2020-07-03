@@ -13,12 +13,14 @@ import {
   pipelineRunApi,
   PipelineResourceBinding,
   PipelineRef,
+  PipelineDeclaredResource,
 } from "../../api/endpoints";
 import { Notifications } from "../notifications";
 import { PipelineRunResourceDetails } from "./pipeline-run-resource-details";
 import { systemName } from "../input/input.validators";
 import { configStore } from "../../../client/config.store";
 import { pipelineStore } from "./pipeline.store";
+import { pipelineRunStore } from "../+tekton-pipelinerun/pipelinerun.store";
 interface Props<T = any> extends Partial<Props> {
   value?: T;
   themeName?: "dark" | "light" | "outlined";
@@ -91,27 +93,23 @@ export class PipelineRunDialog extends React.Component<Props> {
   submit = async () => {
     try {
       // create a pipeline run
-      let newPipelineRun = await pipelineRunApi.create(
-        { name: this.value.name, namespace: "" },
+      let resources: PipelineDeclaredResource[] = this.value.resources;
+      let labels = new Map<string, string>();
+      labels.set("namespace", configStore.getDefaultNamespace())
+      // let newPipelineRun =
+      await pipelineRunStore.create(
+        { name: this.value.name, namespace: "", labels: labels },
         {
           spec: {
-            resources: this.value.resources,
+            resources: resources,
             pipelineRef: this.value.pipelineRef,
             serviceAccountName: this.value.serviceAccountName,
           },
         }
       );
       // label the resource labels
-      newPipelineRun.metadata.labels = {
-        namespace: configStore.getDefaultNamespace(),
-      };
-      await pipelineRunApi.update(
-        {
-          name: newPipelineRun.metadata.name,
-          namespace: newPipelineRun.metadata.namespace,
-        },
-        { ...newPipelineRun }
-      );
+      // newPipelineRun.metadata.labels = { namespace: configStore.getDefaultNamespace() };
+      // await pipelineRunStore.update(newPipelineRun, { ...newPipelineRun });
       this.close();
     } catch (err) {
       Notifications.error(err);

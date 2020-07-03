@@ -219,7 +219,7 @@ export class Pipelines extends React.Component<Props> {
         <KubeObjectListLayout
           className="Pipelines"
           store={pipelineStore}
-          // dependentStores={[taskStore, pipelineResourceStore]} // other
+          dependentStores={[taskStore, pipelineResourceStore]} // other
           sortingCallbacks={{
             [sortBy.name]: (pipeline: Pipeline) => pipeline.getName(),
             [sortBy.ownernamespace]: (pipeline: Pipeline) => pipeline.getOwnerNamespace(),

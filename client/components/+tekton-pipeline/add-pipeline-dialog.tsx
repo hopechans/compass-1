@@ -18,6 +18,7 @@ interface Props<T = any> extends Partial<Props> {
 
 @observer
 export class AddPipelineDialog extends React.Component<Props> {
+  @observable prefix: string = configStore.getDefaultNamespace() || "admin";
   @observable static isOpen = false;
   @observable value: string = "";
 
@@ -35,8 +36,10 @@ export class AddPipelineDialog extends React.Component<Props> {
 
   submit = async () => {
     try {
+      let labels = new Map<string, string>();
+      labels.set("namespace", configStore.getDefaultNamespace());
       let newPipeline = await pipelineStore.create(
-        { name: this.value, namespace: "" },
+        { name: this.prefix + '-' + this.value, namespace: "", labels: labels },
         {
           spec: {
             resources: [{ name: "", type: "" }],
@@ -46,8 +49,8 @@ export class AddPipelineDialog extends React.Component<Props> {
         }
       );
       // label the resource labels if the admin the namespace label default
-      newPipeline.metadata.labels = { namespace: configStore.getDefaultNamespace() };
-      await pipelineStore.update(newPipeline, { ...newPipeline });
+      // newPipeline.metadata.labels = { namespace: configStore.getDefaultNamespace() };
+      // await pipelineStore.update(newPipeline, { ...newPipeline });
       this.close();
     } catch (err) {
       Notifications.error(err);
@@ -66,6 +69,7 @@ export class AddPipelineDialog extends React.Component<Props> {
           <WizardStep contentClass="flex gaps column" next={this.submit}>
             <SubTitle title={"Pipeline Name"} />
             <Input
+              iconLeft={<b>{this.prefix}</b>}
               required={true}
               placeholder={_i18n._("Pipeline Name")}
               value={this.value}

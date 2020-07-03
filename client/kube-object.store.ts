@@ -59,7 +59,7 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
   protected async loadItems(namespaces?: string[]): Promise<T[]> {
     let isClusterAdmin = false
     const userConifg = JSON.parse(localStorage.getItem('u_config'))
-    if(userConifg){
+    if (userConifg) {
       isClusterAdmin = userConifg.isClusterAdmin
     }
     if (isClusterAdmin != true && !this.api.isNamespaced) {
@@ -91,7 +91,7 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
       items = await this.loadItems(!isClusterAdmin ? allowedNamespaces : null);
       items = this.filterItemsOnLoad(items);
     } finally {
-      
+
       if (items) {
         items = this.sortItems(items);
         this.items.replace(items);
@@ -123,11 +123,11 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
     return this.load({ name, namespace });
   }
 
-  protected async createItem(params: { name: string; namespace?: string }, data?: Partial<T>): Promise<T> {
+  protected async createItem(params: { name: string; namespace?: string, labels?: Map<string,string> }, data?: Partial<T>): Promise<T> {
     return this.api.create(params, data);
   }
 
-  async create(params: { name: string; namespace?: string }, data?: Partial<T>): Promise<T> {
+  async create(params: { name: string; namespace?: string, labels?: Map<string,string> }, data?: Partial<T>): Promise<T> {
     const newItem = await this.createItem(params, data);
     const items = this.sortItems([...this.items, newItem]);
     this.items.replace(items);
@@ -185,21 +185,21 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
       const api = apiManager.getApi(selfLink);
 
       switch (type) {
-      case "ADDED":
-      case "MODIFIED":
-        const newItem = new api.objectConstructor(object);
-        if (!item) {
-          items.push(newItem);
-        }
-        else {
-          items.splice(index, 1, newItem);
-        }
-        break;
-      case "DELETED":
-        if (item) {
-          items.splice(index, 1);
-        }
-        break;
+        case "ADDED":
+        case "MODIFIED":
+          const newItem = new api.objectConstructor(object);
+          if (!item) {
+            items.push(newItem);
+          }
+          else {
+            items.splice(index, 1, newItem);
+          }
+          break;
+        case "DELETED":
+          if (item) {
+            items.splice(index, 1);
+          }
+          break;
       }
     });
 

@@ -15,7 +15,6 @@ import { usersManagementRoute } from "./+user-management/user-management.routes"
 import { clusterRoute, clusterURL } from "./+cluster";
 import { KubeConfigDialog } from "./kubeconfig-dialog/kubeconfig-dialog";
 import { Nodes, nodesRoute } from "./+nodes";
-import { Deploys, deployURL, deployRoute } from "./+deploy";
 import { Workloads, workloadsRoute, workloadsURL } from "./+workloads";
 import { Tenant, tenantURL, tenantRoute } from "./+tenant";
 import { Namespaces, namespacesRoute } from "./+namespaces";
@@ -72,7 +71,6 @@ class App extends React.Component {
                 <Route component={Cluster} {...clusterRoute} />
                 <Route component={Nodes} {...nodesRoute} />
                 <Route component={DeploymentEngine} {...deploymentEngineRoute} />
-                <Route component={Deploys} {...deployRoute} />
                 <Route component={Workloads} {...workloadsRoute} />
                 <Route component={Config} {...configRoute} />
                 <Route component={Network} {...networkRoute} />

@@ -87,7 +87,7 @@ export interface PipelineTask {
 // refer to these PipelineResources in PipelineTaskResourceBindings.
 export interface PipelineDeclaredResource {
   name: string;
-  type: string;
+  type?: string;
   optional?: boolean;
 }
 
