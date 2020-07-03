@@ -184,7 +184,6 @@ export class KubeApi<T extends KubeObject = any> {
 
     async create({ name = "", namespace = "default", labels = new Map<string, string>() } = {}, data?: Partial<T>): Promise<T> {
         const apiUrl = this.getUrl({ namespace });
-        console.log("lables data", labels.forEach(label => { return { label: labels.get(label) }; }))
 
         return this.request.post(apiUrl, {
             data: merge({
@@ -193,7 +192,7 @@ export class KubeApi<T extends KubeObject = any> {
                 metadata: {
                     name,
                     namespace,
-                    labels: JSON.stringify(Array.from(labels.entries())),
+                    labels: Object.fromEntries(labels),
                 }
             }, data)
         }).then(this.parseResponse);

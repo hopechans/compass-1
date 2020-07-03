@@ -36,10 +36,11 @@ export class AddPipelineDialog extends React.Component<Props> {
 
   submit = async () => {
     try {
-      let labels = new Map<string, string>();
-      labels.set("namespace", configStore.getDefaultNamespace());
-      let newPipeline = await pipelineStore.create(
-        { name: this.prefix + '-' + this.value, namespace: "", labels: labels },
+      await pipelineStore.create(
+        {
+          name: this.prefix + '-' + this.value, namespace: "",
+          labels: new Map<string, string>().set("namespace", configStore.getDefaultNamespace() == "" ? "admin" : configStore.getDefaultNamespace())
+        },
         {
           spec: {
             resources: [{ name: "", type: "" }],
@@ -48,9 +49,6 @@ export class AddPipelineDialog extends React.Component<Props> {
           },
         }
       );
-      // label the resource labels if the admin the namespace label default
-      // newPipeline.metadata.labels = { namespace: configStore.getDefaultNamespace() };
-      // await pipelineStore.update(newPipeline, { ...newPipeline });
       this.close();
     } catch (err) {
       Notifications.error(err);
