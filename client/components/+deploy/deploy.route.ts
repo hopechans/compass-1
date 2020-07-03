@@ -3,7 +3,7 @@ import {buildURL, IURLParams} from "../../navigation";
 import {Deploys} from "./deploy";
 
 export const deployRoute: RouteProps = {
-  path: "/workloads-template"
+  path: "/template"
 }
 
 // Route params

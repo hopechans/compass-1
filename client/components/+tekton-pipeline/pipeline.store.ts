@@ -7,18 +7,6 @@ import { apiManager } from "../../api/api-manager";
 @autobind()
 export class PipelineStore extends KubeObjectStore<Pipeline> {
     api = pipelineApi
-
-    // label的数据过滤
-    getData(ns: string) {
-        pipelineStore.items.filter(item => {
-
-        })
-    }
-    // @observable metrics: IPodMetrics = null;
-
-    // reset() {
-    //   this.metrics = null;
-    // }
 }
 
 export const pipelineStore = new PipelineStore();

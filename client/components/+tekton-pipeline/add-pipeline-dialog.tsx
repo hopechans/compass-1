@@ -14,16 +14,12 @@ import { configStore } from "../../config.store";
 import { pipelineStore } from "./pipeline.store";
 
 interface Props<T = any> extends Partial<Props> {
-  value?: T;
-  themeName?: "dark" | "light" | "outlined";
-
-  onChange?(option: T, meta?: ActionMeta): void;
 }
 
 @observer
 export class AddPipelineDialog extends React.Component<Props> {
   @observable static isOpen = false;
-  @observable value: string = this.props.value || "";
+  @observable value: string = "";
 
   static open() {
     AddPipelineDialog.isOpen = true;
@@ -37,13 +33,9 @@ export class AddPipelineDialog extends React.Component<Props> {
     AddPipelineDialog.close();
   };
 
-  reset = () => {
-    this.value = "";
-  };
-
   submit = async () => {
     try {
-      let newPipeline = await pipelineApi.create(
+      let newPipeline = await pipelineStore.create(
         { name: this.value, namespace: "" },
         {
           spec: {
@@ -54,11 +46,8 @@ export class AddPipelineDialog extends React.Component<Props> {
         }
       );
       // label the resource labels if the admin the namespace label default
-      newPipeline.metadata.labels = {
-        namespace: configStore.getDefaultNamespace(),
-      };
-      await pipelineApi.update({ name: newPipeline.metadata.name, namespace: 'ops' }, newPipeline);
-      this.reset();
+      newPipeline.metadata.labels = { namespace: configStore.getDefaultNamespace() };
+      await pipelineStore.update(newPipeline, { ...newPipeline });
       this.close();
     } catch (err) {
       Notifications.error(err);
@@ -66,14 +55,13 @@ export class AddPipelineDialog extends React.Component<Props> {
   };
 
   render() {
-    const header = (
-      <h5>
-        <Trans>Create Pipeline</Trans>
-      </h5>
-    );
+    const header = (<h5><Trans>Create Pipeline</Trans></h5>);
 
     return (
-      <Dialog isOpen={AddPipelineDialog.isOpen} close={this.close}>
+      <Dialog
+        isOpen={AddPipelineDialog.isOpen}
+        close={this.close}
+      >
         <Wizard className="AddPipelineDialog" header={header} done={this.close}>
           <WizardStep contentClass="flex gaps column" next={this.submit}>
             <SubTitle title={"Pipeline Name"} />

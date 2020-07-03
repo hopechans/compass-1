@@ -90,6 +90,21 @@ export class PipelineRun extends KubeObject {
       : "";
   }
 
+  getErrorReason(): string {
+    if (this.status?.conditions == undefined || this.status?.conditions == {}) { return "abc"; }
+    return this.status?.conditions.map(
+      (item: { status: string; reason: string; }) => {
+        if (item.status == 'False') {
+          return item.reason;
+        }
+      }) || "";
+  }
+
+
+  hasIssues(): boolean {
+    return this.getErrorReason() != "";
+  }
+
   getTasks(): any {
     if (this.status.taskRuns === undefined) return [];
     return this.status.taskRuns;
