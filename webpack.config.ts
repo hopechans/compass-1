@@ -33,7 +33,7 @@ export default () => {
     },
     devServer: {
       //项目根目录
-      host: '0.0.0.0',
+      host: '127.0.0.1',
       port: '8087',
       contentBase: path.join(__dirname, "./dist"),
       historyApiFallback: true,

@@ -32,7 +32,7 @@ enum sortBy {
   age = "age",
 }
 
-interface Props extends RouteComponentProps {}
+interface Props extends RouteComponentProps { }
 
 @observer
 export class Pipelines extends React.Component<Props> {
@@ -207,43 +207,20 @@ export class Pipelines extends React.Component<Props> {
         <KubeObjectListLayout
           className="Pipelines"
           store={pipelineStore}
-          dependentStores={[
-            pipelineStore,
-            podsStore,
-            eventStore,
-            taskStore,
-            pipelineResourceStore,
-          ]} // other
+          // dependentStores={[taskStore, pipelineResourceStore]} // other
           sortingCallbacks={{
             [sortBy.name]: (pipeline: Pipeline) => pipeline.getName(),
-            [sortBy.ownernamespace]: (pipeline: Pipeline) =>
-              pipeline.getOwnerNamespace(),
+            [sortBy.ownernamespace]: (pipeline: Pipeline) => pipeline.getOwnerNamespace(),
             [sortBy.age]: (pipeline: Pipeline) => pipeline.getAge(false),
             [sortBy.tasks]: (pipeline: Pipeline) => pipeline.getTasks().length,
           }}
           searchFilters={[(pipeline: Pipeline) => pipeline.getSearchFields()]}
           renderHeaderTitle={<Trans>Tekton Pipeline</Trans>}
           renderTableHeader={[
-            {
-              title: <Trans>Name</Trans>,
-              className: "name",
-              sortBy: sortBy.name,
-            },
-            {
-              title: <Trans>OwnerNamespace</Trans>,
-              className: "ownernamespace",
-              sortBy: sortBy.ownernamespace,
-            },
-            {
-              title: <Trans>Tasks</Trans>,
-              className: "tasks",
-              sortBy: sortBy.tasks,
-            },
-            {
-              title: <Trans>TaskNames</Trans>,
-              className: "tasknames",
-              sortBy: sortBy.tasknames,
-            },
+            { title: <Trans>Name</Trans>, className: "name", sortBy: sortBy.name },
+            { title: <Trans>OwnerNamespace</Trans>, className: "ownernamespace", sortBy: sortBy.ownernamespace },
+            { title: <Trans>Tasks</Trans>, className: "tasks", sortBy: sortBy.tasks },
+            { title: <Trans>TaskNames</Trans>, className: "tasknames", sortBy: sortBy.tasknames },
             { title: <Trans>Age</Trans>, className: "age", sortBy: sortBy.age },
           ]}
           renderTableContents={(pipeline: Pipeline) => [

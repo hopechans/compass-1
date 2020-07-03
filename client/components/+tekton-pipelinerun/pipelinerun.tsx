@@ -21,14 +21,15 @@ import { MenuItem } from "../menu";
 import { Icon } from "../icon";
 import { Notifications } from "../notifications";
 
+
 enum sortBy {
   name = "name",
   ownernamespace = "ownernamespace",
-  pods = "pods",
+  reason = "reason",
   age = "age",
 }
 
-interface Props extends RouteComponentProps {}
+interface Props extends RouteComponentProps { }
 
 @observer
 export class PipelineRuns extends React.Component<Props> {
@@ -283,10 +284,9 @@ export class PipelineRuns extends React.Component<Props> {
           dependentStores={[pipelineStore, taskRunStore]}
           sortingCallbacks={{
             [sortBy.name]: (pipelineRun: PipelineRun) => pipelineRun.getName(),
-            [sortBy.ownernamespace]: (pipelineRun: PipelineRun) =>
-              pipelineRun.getOwnerNamespace(),
-            [sortBy.age]: (pipelineRun: PipelineRun) =>
-              pipelineRun.getAge(false),
+            [sortBy.ownernamespace]: (pipelineRun: PipelineRun) => pipelineRun.getOwnerNamespace(),
+            [sortBy.reason]: (pipelineRun: PipelineRun) => pipelineRun.getErrorReason(),
+            [sortBy.age]: (pipelineRun: PipelineRun) => pipelineRun.getAge(false),
           }}
           onDetails={(pipeline: PipelineRun) => {
             clearInterval(this.timeIntervalID);
@@ -307,6 +307,11 @@ export class PipelineRuns extends React.Component<Props> {
               className: "ownernamespace",
               sortBy: sortBy.ownernamespace,
             },
+            {
+              title: <Trans>ErrorReason</Trans>,
+              className: "reason",
+              sortBy: sortBy.reason,
+            },
             { title: <Trans>Age</Trans>, className: "age", sortBy: sortBy.age },
             { title: <Trans>Tasks</Trans>, className: "tasks" },
             { title: <Trans>StartTime</Trans>, className: "startTime" },
@@ -318,6 +323,8 @@ export class PipelineRuns extends React.Component<Props> {
           renderTableContents={(pipelineRun: PipelineRun) => [
             pipelineRun.getName(),
             pipelineRun.getOwnerNamespace(),
+            pipelineRun.hasIssues() && <Icon material="warning" className={"pipelineRunWarningIcon"} />,
+            pipelineRun.getErrorReason(),
             pipelineRun.getAge(),
             this.renderTasks(pipelineRun),
             new Date(pipelineRun.status.startTime).toLocaleString(),
