@@ -94,11 +94,12 @@ export class PipelineRunDialog extends React.Component<Props> {
     try {
       // create a pipeline run
       let resources: PipelineDeclaredResource[] = this.value.resources;
-      let labels = new Map<string, string>();
-      labels.set("namespace", configStore.getDefaultNamespace())
-      // let newPipelineRun =
       await pipelineRunStore.create(
-        { name: this.value.name, namespace: "", labels: labels },
+        {
+          name: this.value.name,
+          namespace: "",
+          labels: new Map<string, string>().set("namespace", configStore.getDefaultNamespace() == "" ? "admin" : configStore.getDefaultNamespace())
+        },
         {
           spec: {
             resources: resources,
@@ -107,9 +108,6 @@ export class PipelineRunDialog extends React.Component<Props> {
           },
         }
       );
-      // label the resource labels
-      // newPipelineRun.metadata.labels = { namespace: configStore.getDefaultNamespace() };
-      // await pipelineRunStore.update(newPipelineRun, { ...newPipelineRun });
       this.close();
     } catch (err) {
       Notifications.error(err);

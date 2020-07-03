@@ -68,7 +68,10 @@ export class AddPipelineResourceDialog extends React.Component<Props> {
   submit = async () => {
     try {
       await pipelineResourceApi.create(
-        { name: this.prefix + '-' + this.name, namespace: "" },
+        {
+          name: this.prefix + '-' + this.name, namespace: "",
+          labels: new Map<string, string>().set("namespace", configStore.getDefaultNamespace() == "" ? "admin" : configStore.getDefaultNamespace())
+        },
         {
           spec: {
             type: this.type,
