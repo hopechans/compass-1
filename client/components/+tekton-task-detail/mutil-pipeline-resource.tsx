@@ -22,7 +22,7 @@ export const defaultTaskResources: TaskResources = {
 };
 
 @observer
-export class PipelineResource extends React.Component<Props> {
+export class MutilPipelineResource extends React.Component<Props> {
   @observable value: TaskResources = this.props.value || defaultTaskResources;
 
   render() {

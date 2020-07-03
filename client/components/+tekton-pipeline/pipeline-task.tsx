@@ -17,7 +17,7 @@ import { Icon } from "../icon";
 import { ResourcesDetail, ParamsDetails } from "../+tekton-task-detail";
 import { TaskSelect } from "./task-select";
 import { Grid, Divider } from "@material-ui/core";
-import { PipelineResource } from "../+tekton-task-detail";
+import { MutilPipelineResource } from "../+tekton-task-detail";
 interface Props<T = any> extends Partial<Props> {
   value?: T;
   themeName?: "dark" | "light" | "outlined";
@@ -78,6 +78,10 @@ export class PipelineTaskDetail extends React.Component<Props> {
   render() {
     const unwrapTasks = (options: SelectOption[]) =>
       options.map((option) => option.value);
+    console.log(
+      "---------------------------->：this.value.resources",
+      this.value
+    );
     return (
       <div>
         <Grid container spacing={1}>
@@ -97,7 +101,7 @@ export class PipelineTaskDetail extends React.Component<Props> {
           </Grid>
           <Grid xs={10}>
             <Select
-              value={this.value.taskRef?.name}
+              value={this.value?.taskRef?.name}
               options={this.taskOptions}
               formatOptionLabel={this.formatOptionLabel}
               onChange={(value: string) => {
@@ -132,7 +136,7 @@ export class PipelineTaskDetail extends React.Component<Props> {
           <Grid xs={10}>
             <Input
               placeholder={_i18n._("retries")}
-              value={this.value.retries?.toString()}
+              value={this.value?.retries?.toString()}
               onChange={(value) => (this.value.retries = Number(value))}
             />
             <br />
@@ -144,7 +148,7 @@ export class PipelineTaskDetail extends React.Component<Props> {
           <Grid xs={10}>
             <Input
               placeholder={_i18n._("timeout")}
-              value={this.value.timeout?.toString()}
+              value={this.value?.timeout?.toString()}
               onChange={(value) => (this.value.timeout = value)}
             />
             <br />
@@ -154,14 +158,14 @@ export class PipelineTaskDetail extends React.Component<Props> {
         <br />
 
         <ParamsDetails
-          value={this.value.params}
+          value={this.value?.params}
           onChange={(value) => {
             this.value.params = value;
           }}
         />
         <br />
-        <PipelineResource
-          value={this.value.resources}
+        <MutilPipelineResource
+          value={this.value?.resources}
           onChange={(value) => {
             this.value.resources = value;
           }}
