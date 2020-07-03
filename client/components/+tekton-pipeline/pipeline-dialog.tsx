@@ -48,8 +48,8 @@ export class PipelineDialog extends React.Component<Props> {
   };
 
   onOpen = () => {
-    let pipeline = this.CurrentPipeline;
-
+    let pipeline = pipelineStore.getByName(PipelineDialog.currentPipeline.getName());
+    console.log("----------------------->open pipeline:", pipeline);
     this.value.tasks = pipeline.spec.tasks;
     this.value.tasks.map((item: any, index: number) => {
       //   name: string;
@@ -89,6 +89,7 @@ export class PipelineDialog extends React.Component<Props> {
 
   submit = async () => {
     let pipeline = PipelineDialog.currentPipeline;
+
     pipeline.metadata.name = this.value.pipelineName;
     pipeline.metadata.namespace = "ops";
     pipeline.spec.resources = this.value.resources;

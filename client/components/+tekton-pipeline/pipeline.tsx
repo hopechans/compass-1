@@ -191,9 +191,7 @@ export class Pipelines extends React.Component<Props> {
         }
       })
     }
-    //todo:this un-direct read pipeResult.pipelineParams data
-    this.pipeline.spec.params = pipeResult.pipelineParams
-    this.pipeline.spec.resources = pipeResult.pipelineResources;
+
     //will show pipeline dialog
     PipelineDialog.open(this.pipeline);
   };
