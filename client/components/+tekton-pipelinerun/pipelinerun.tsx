@@ -297,28 +297,13 @@ export class PipelineRuns extends React.Component<Props> {
           ]}
           renderHeaderTitle={<Trans>PipelineRuns</Trans>}
           renderTableHeader={[
-            {
-              title: <Trans>Name</Trans>,
-              className: "name",
-              sortBy: sortBy.name,
-            },
-            {
-              title: <Trans>OwnerNamespace</Trans>,
-              className: "ownernamespace",
-              sortBy: sortBy.ownernamespace,
-            },
-            {
-              title: <Trans>ErrorReason</Trans>,
-              className: "reason",
-              sortBy: sortBy.reason,
-            },
+            { title: <Trans>Name</Trans>, className: "name", sortBy: sortBy.name },
+            { title: <Trans>OwnerNamespace</Trans>, className: "ownernamespace", sortBy: sortBy.ownernamespace },
+            { title: <Trans>ErrorReason</Trans>, className: "reason", sortBy: sortBy.reason },
             { title: <Trans>Age</Trans>, className: "age", sortBy: sortBy.age },
             { title: <Trans>Tasks</Trans>, className: "tasks" },
             { title: <Trans>StartTime</Trans>, className: "startTime" },
-            {
-              title: <Trans>CompletionTime</Trans>,
-              className: "completionTime",
-            },
+            { title: <Trans>CompletionTime</Trans>, className: "completionTime", },
           ]}
           renderTableContents={(pipelineRun: PipelineRun) => [
             pipelineRun.getName(),
@@ -327,8 +312,8 @@ export class PipelineRuns extends React.Component<Props> {
             pipelineRun.getErrorReason(),
             pipelineRun.getAge(),
             this.renderTasks(pipelineRun),
-            new Date(pipelineRun.status.startTime).toLocaleString(),
-            new Date(pipelineRun.status.completionTime).toLocaleString(),
+            pipelineRun.getStartTime() != "" ? new Date(pipelineRun.status.startTime).toLocaleString() : "",
+            pipelineRun.getCompletionTime() != "" ? new Date(pipelineRun.status.startTime).toLocaleString() : "",
           ]}
           renderItemMenu={(item: PipelineRun) => {
             return <PipelineRunMenu object={item} />;
