@@ -23,7 +23,8 @@ import { Notifications } from "../notifications";
 import { PipelineRunIcon } from "./pipeline-run-icon";
 import { PodLogsDialog } from '../+workloads-pods/pod-logs-dialog'
 import { podsStore } from '../+workloads-pods/pods.store'
-import { IPodContainer, Pod, nodesApi, podsApi } from "../../api/endpoints";
+import { Pod } from "../../api/endpoints";
+import { configStore } from "../../../client/config.store";
 
 
 enum sortBy {
@@ -368,19 +369,34 @@ export function PipelineRunMenu(props: KubeObjectMenuProps<PipelineRun>) {
         </span>
       </MenuItem>
       <MenuItem
-        onClick={() => {
+        onClick={async () => {
           //Cancel
           const pipelineRun = object;
           try {
-            // //will delete pipelineRun
-            pipelineRunStore.remove(pipelineRun);
-            //and then create it. will re-run
-            pipelineRunStore.create(
-              { name: pipelineRun.getName(), namespace: "" },
+            // will delete pipelineRun
+            await pipelineRunStore.remove(pipelineRun);
+
+            //create it. will re-run
+            await pipelineRunStore.create(
               {
-                spec: pipelineRun.spec,
+                name: pipelineRun.getName(),
+                namespace: "",
+                labels: new Map<string, string>().set("namespace", configStore.getDefaultNamespace() == "" ? "admin" : configStore.getDefaultNamespace())
+              },
+              {
+                spec: {
+                  pipelineRef: pipelineRun.spec.pipelineRef,
+                  pipelineSpec: pipelineRun.spec.pipelineSpec,
+                  resources: pipelineRun.spec.resources,
+                  params: pipelineRun.spec.params,
+                  serviceAccountName: pipelineRun.spec.serviceAccountName,
+                  serviceAccountNames: pipelineRun.spec.serviceAccountNames,
+                  timeout: pipelineRun.spec.timeout,
+                  podTemplate: pipelineRun.spec.podTemplate,
+                }
               }
             );
+
 
             Notifications.ok(
               <>pipeline-run: {pipelineRun.getName()} rerun successed</>
