@@ -20,6 +20,7 @@ import { cssNames } from "../../utils";
 import { MenuItem } from "../menu";
 import { Icon } from "../icon";
 import { Notifications } from "../notifications";
+import { PipelineRunIcon } from "./pipeline-run-icon";
 
 
 enum sortBy {
@@ -308,12 +309,12 @@ export class PipelineRuns extends React.Component<Props> {
           renderTableContents={(pipelineRun: PipelineRun) => [
             pipelineRun.getName(),
             pipelineRun.getOwnerNamespace(),
-            pipelineRun.hasIssues() && <Icon material="warning" className={"pipelineRunWarningIcon"} />,
-            pipelineRun.getErrorReason(),
+            pipelineRun.hasIssues() && <PipelineRunIcon object={pipelineRun.status.conditions[0]} />,
+            // pipelineRun.getErrorReason(),
             pipelineRun.getAge(),
             this.renderTasks(pipelineRun),
-            pipelineRun.getStartTime() != "" ? new Date(pipelineRun.status.startTime).toLocaleString() : "",
-            pipelineRun.getCompletionTime() != "" ? new Date(pipelineRun.status.startTime).toLocaleString() : "",
+            pipelineRun.getStartTime() != "" ? new Date(pipelineRun.status.startTime).toLocaleString('zh', { hour12: false }) : "",
+            pipelineRun.getCompletionTime() != "" ? new Date(pipelineRun.status.startTime).toLocaleString('zh', { hour12: false }) : "",
           ]}
           renderItemMenu={(item: PipelineRun) => {
             return <PipelineRunMenu object={item} />;
