@@ -1,4 +1,3 @@
-import {observable} from "mobx";
 import {autobind} from "../../utils";
 import {KubeObjectStore} from "../../kube-object.store";
 import {deployApi} from "../../api/endpoints";
