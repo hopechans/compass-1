@@ -1,36 +1,48 @@
 import "./add-secret-dialog.scss"
 
 import React from "react";
-import { observable } from "mobx";
-import { observer } from "mobx-react";
-import { t, Trans } from "@lingui/macro";
-import { _i18n } from "../../i18n";
-import { Dialog, DialogProps } from "../dialog";
-import { Wizard, WizardStep } from "../wizard";
-import { Input } from "../input";
-import { systemName } from "../input/input.validators";
-import { Secret, secretsApi, SecretType } from "../../api/endpoints";
-import { SubTitle } from "../layout/sub-title";
-import { NamespaceSelect } from "../+namespaces/namespace-select";
-import { Select, SelectOption } from "../select";
-import { Icon } from "../icon";
-import { IKubeObjectMetadata } from "../../api/kube-object";
-import { base64 } from "../../utils";
-import { Notifications } from "../notifications";
-import { showDetails } from "../../navigation";
+import {observable} from "mobx";
+import {observer} from "mobx-react";
+import {t, Trans} from "@lingui/macro";
+import {_i18n} from "../../i18n";
+import {Dialog, DialogProps} from "../dialog";
+import {Wizard, WizardStep} from "../wizard";
+import {Input} from "../input";
+import {isUrl, systemName} from "../input/input.validators";
+import {Secret, secretsApi, SecretType} from "../../api/endpoints";
+import {SubTitle} from "../layout/sub-title";
+import {NamespaceSelect} from "../+namespaces/namespace-select";
+import {Select, SelectOption} from "../select";
+import {Icon} from "../icon";
+import {IKubeObjectMetadata} from "../../api/kube-object";
+import {base64} from "../../utils";
+import {Notifications} from "../notifications";
+import {showDetails} from "../../navigation";
 import upperFirst from "lodash/upperFirst";
 
 interface Props extends Partial<DialogProps> {
 }
 
+interface DockerConfig {
+  username: string,
+  password: string,
+  email?: string,
+}
+
+interface DockerConfigAuth {
+  [params: string]: DockerConfig
+}
+
 interface ISecretTemplateField {
-  key: string;
+  key?: string;
   value?: string;
   required?: boolean;
+  ".dockerconfigjson"?: string;
 }
 
 interface ISecretTemplate {
   [field: string]: ISecretTemplateField[];
+
   annotations?: ISecretTemplateField[];
   labels?: ISecretTemplateField[];
   data?: ISecretTemplateField[];
@@ -41,6 +53,13 @@ type ISecretField = keyof ISecretTemplate;
 @observer
 export class AddSecretDialog extends React.Component<Props> {
   @observable static isOpen = false;
+
+  @observable dockerConfigAddress: string = "";
+  @observable dockerConfig: DockerConfig = {
+    username: "",
+    password: "",
+    email: "",
+  };
 
   static open() {
     AddSecretDialog.isOpen = true;
@@ -54,12 +73,11 @@ export class AddSecretDialog extends React.Component<Props> {
     [SecretType.Opaque]: {},
     [SecretType.ServiceAccountToken]: {
       annotations: [
-        { key: "kubernetes.io/service-account.name", required: true },
-        { key: "kubernetes.io/service-account.uid", required: true }
+        {key: "kubernetes.io/service-account.name", required: true},
+        {key: "kubernetes.io/service-account.uid", required: true}
       ],
     },
     [SecretType.DockerConfigJson]: {},
-    [SecretType.Dockercfg]: {},
     [SecretType.CephProvisioner]: {},
   }
 
@@ -82,18 +100,29 @@ export class AddSecretDialog extends React.Component<Props> {
   }
 
   private getDataFromFields = (fields: ISecretTemplateField[] = [], processValue?: (val: string) => string) => {
+
+    if (this.type == SecretType.DockerConfigJson) {
+
+      let auth: DockerConfigAuth = {}
+      auth[this.dockerConfigAddress] = this.dockerConfig;
+      let secretTemplate: ISecretTemplateField = {
+        ".dockerconfigjson": base64.encode(JSON.stringify(auth))
+      }
+      return secretTemplate
+    }
+
     return fields.reduce<any>((data, field) => {
-      const { key, value } = field;
+      const {key, value} = field;
       if (key) {
         data[key] = processValue ? processValue(value) : value;
       }
       return data;
-    }, {})
+    }, {});
   }
 
   createSecret = async () => {
-    const { name, namespace, type } = this;
-    const { data = [], labels = [], annotations = [] } = this.secret[type];
+    const {name, namespace, type} = this;
+    const {data = [], labels = [], annotations = []} = this.secret[type];
     const secret: Partial<Secret> = {
       type: type,
       data: this.getDataFromFields(data, val => val ? base64.encode(val) : ""),
@@ -105,7 +134,7 @@ export class AddSecretDialog extends React.Component<Props> {
       } as IKubeObjectMetadata
     }
     try {
-      const newSecret = await secretsApi.create({ namespace, name }, secret);
+      const newSecret = await secretsApi.create({namespace, name}, secret);
       showDetails(newSecret.selfLink);
       this.reset();
       this.close();
@@ -116,7 +145,7 @@ export class AddSecretDialog extends React.Component<Props> {
 
   addField = (field: ISecretField) => {
     const fields = this.secret[this.type][field] || [];
-    fields.push({ key: "", value: "" });
+    fields.push({key: "", value: ""});
     this.secret[this.type][field] = fields;
   }
 
@@ -139,7 +168,7 @@ export class AddSecretDialog extends React.Component<Props> {
         </SubTitle>
         <div className="secret-fields">
           {fields.map((item, index) => {
-            const { key = "", value = "", required } = item;
+            const {key = "", value = "", required} = item;
             return (
               <div key={index} className="secret-field flex gaps auto align-center">
                 <Input
@@ -173,9 +202,44 @@ export class AddSecretDialog extends React.Component<Props> {
     )
   }
 
+  renderDockerConfigFields() {
+    return (
+      <div>
+        <SubTitle title={<Trans>Address</Trans>}/>
+        <Input
+          required={true}
+          placeholder={_i18n._("Address")}
+          validators={isUrl}
+          value={this.dockerConfigAddress}
+          onChange={value => this.dockerConfigAddress = value}
+        />
+        <SubTitle title={<Trans>User</Trans>}/>
+        <Input
+          required={true}
+          placeholder={_i18n._("User")}
+          value={this.dockerConfig.username}
+          onChange={value => this.dockerConfig.username = value}
+        />
+        <SubTitle title={<Trans>Password</Trans>}/>
+        <Input
+          placeholder={_i18n._("Password")}
+          required={true}
+          value={this.dockerConfig.password}
+          onChange={value => this.dockerConfig.password = value}
+        />
+        <SubTitle title={<Trans>Email</Trans>}/>
+        <Input
+          placeholder={_i18n._("Email")}
+          value={this.dockerConfig.email}
+          onChange={value => this.dockerConfig.email = value}
+        />
+      </div>
+    )
+  }
+
   render() {
-    const { ...dialogProps } = this.props;
-    const { namespace, name, type } = this;
+    const {...dialogProps} = this.props;
+    const {namespace, name, type} = this;
     const header = <h5><Trans>Create Secret</Trans></h5>;
     return (
       <Dialog
@@ -187,7 +251,7 @@ export class AddSecretDialog extends React.Component<Props> {
         <Wizard header={header} done={this.close}>
           <WizardStep contentClass="flow column" nextLabel={<Trans>Create</Trans>} next={this.createSecret}>
             <div className="secret-name">
-              <SubTitle title={<Trans>Secret name</Trans>} />
+              <SubTitle title={<Trans>Secret name</Trans>}/>
               <Input
                 autoFocus required
                 placeholder={_i18n._(t`Name`)}
@@ -197,25 +261,25 @@ export class AddSecretDialog extends React.Component<Props> {
             </div>
             <div className="flex auto gaps">
               <div className="secret-namespace">
-                <SubTitle title={<Trans>Namespace</Trans>} />
+                <SubTitle title={<Trans>Namespace</Trans>}/>
                 <NamespaceSelect
                   themeName="light"
                   value={namespace}
-                  onChange={({ value }) => this.namespace = value}
+                  onChange={({value}) => this.namespace = value}
                 />
               </div>
               <div className="secret-type">
-                <SubTitle title={<Trans>Secret type</Trans>} />
+                <SubTitle title={<Trans>Secret type</Trans>}/>
                 <Select
                   themeName="light"
                   options={this.types}
-                  value={type} onChange={({ value }: SelectOption) => this.type = value}
+                  value={type} onChange={({value}: SelectOption) => this.type = value}
                 />
               </div>
             </div>
             {this.renderFields("annotations")}
             {this.renderFields("labels")}
-            {this.renderFields("data")}
+            {this.type == SecretType.DockerConfigJson ? this.renderDockerConfigFields() : this.renderFields("data")}
           </WizardStep>
         </Wizard>
       </Dialog>
