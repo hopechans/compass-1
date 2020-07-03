@@ -78,10 +78,6 @@ export class PipelineTaskDetail extends React.Component<Props> {
   render() {
     const unwrapTasks = (options: SelectOption[]) =>
       options.map((option) => option.value);
-    console.log(
-      "---------------------------->：this.value.resources",
-      this.value
-    );
     return (
       <div>
         <Grid container spacing={1}>
