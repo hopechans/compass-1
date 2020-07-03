@@ -1,12 +1,13 @@
 @import "../+workloads/workloads-mixins";
 
+
 .PipelineRun {
   .TableCell {
     &.name {
       flex-grow: 2;
     }
     &.ownernamespace {
-      flex-grow: 1.2;
+      flex-grow: 0.1;
     }
     &.age {
       flex-grow: 0.3;
@@ -16,6 +17,7 @@
         @include taskrun-status-bgs;
       }
     }
+    
     &.warning {
       @include table-cell-warning;
     }
