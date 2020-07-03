@@ -129,7 +129,7 @@ export class CopyTaskDialog extends React.Component<Props> {
     this.saveTask();
   };
 
-  toTask() {}
+  toTask() { }
 
   saveTask = async () => {
     const parms = toJS(this.value.pipelineParams);
@@ -158,11 +158,13 @@ export class CopyTaskDialog extends React.Component<Props> {
           }
         );
       } else {
-        task.metadata.name = this.value.taskName;
-        task.spec.params = parms;
-        task.spec.resources = resources;
-        task.spec.steps = steps;
-        await taskStore.update(task, { ...task });
+        if (this.ifSwitch) {
+          task.metadata.name = this.value.taskName;
+          task.spec.params = parms;
+          task.spec.resources = resources;
+          task.spec.steps = steps;
+          await taskStore.update(task, { ...task });
+        }
       }
 
       Notifications.ok(<>task {this.value.taskName} save successed</>);
@@ -231,8 +233,8 @@ export class CopyTaskDialog extends React.Component<Props> {
                     this.ifSwitch ? (
                       <SubTitle title={<Trans>Select module</Trans>} />
                     ) : (
-                      <SubTitle title={<Trans>Template configuration</Trans>} />
-                    )
+                        <SubTitle title={<Trans>Template configuration</Trans>} />
+                      )
                   }
                 />
               </FormGroup>
