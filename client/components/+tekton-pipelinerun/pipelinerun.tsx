@@ -21,6 +21,9 @@ import { MenuItem } from "../menu";
 import { Icon } from "../icon";
 import { Notifications } from "../notifications";
 import { PipelineRunIcon } from "./pipeline-run-icon";
+import { PodLogsDialog } from '../+workloads-pods/pod-logs-dialog'
+import { podsStore } from '../+workloads-pods/pods.store'
+import { IPodContainer, Pod, nodesApi, podsApi } from "../../api/endpoints";
 
 
 enum sortBy {
@@ -37,6 +40,7 @@ export class PipelineRuns extends React.Component<Props> {
   @observable isHiddenPipelineGraph: boolean = true;
   @observable graph: any = null;
   @observable timeIntervalID: any;
+  @observable pipelineRun: any;
 
   getNodeData(pipelineName: string): any {
     const pipeline = pipelineStore.getByName(pipelineName);
@@ -50,6 +54,9 @@ export class PipelineRuns extends React.Component<Props> {
     return JSON.parse(nodeData);
   }
 
+
+
+
   secondsToHms(seconds: number) {
     const h = Math.floor(seconds / 3600);
     const m = Math.floor((seconds % 3600) / 60);
@@ -62,18 +69,6 @@ export class PipelineRuns extends React.Component<Props> {
   }
 
   getTaskRunName(pipelinerun: PipelineRun): string[] {
-    // let taskruns = pipelinerun.status.taskRuns;
-    // let taskRunNames: string[] = [];
-    // if (taskruns !== undefined) {
-    //   Object.keys(taskruns).map(function (key: string, index: number) {
-    //     taskRunNames.push(key);
-    //   });
-    // } else {
-    //   console.error("getTaskRunName error:", pipelinerun.status);
-    // }
-
-    // return taskRunNames;
-
     if (pipelinerun?.status == undefined) {
       return [];
     }
@@ -103,12 +98,34 @@ export class PipelineRuns extends React.Component<Props> {
 
   componentDidMount() {
     this.graph = new PipelineGraph(0, 0);
+    this.graph.bindClickOnNode((currentNode: any) => {
+
+      const group = currentNode.getContainer();
+      let shape = group.get("children")[2];
+      const name = shape.attrs.text;
+
+      const names = this.getTaskRunName(this.pipelineRun);
+      const currentTaskRunMap = this.getTaskRun(names);
+      const currentTaskRun = currentTaskRunMap[name];
+      const podName = currentTaskRun.status.podName;
+      this.showLogs(podName);
+
+    });
   }
+
+  showLogs(podName: string) {
+    let pod: Pod = podsStore.getByName(podName);
+    let container: any = pod.getContainerStatuses();
+    PodLogsDialog.open(pod, container);
+  }
+
+
+
 
   //showCurrentPipelineRunStatus show pipeline run status
   showCurrentPipelineRunStatus(pipelinerun: PipelineRun) {
     this.isHiddenPipelineGraph = false;
-
+    this.pipelineRun = pipelinerun;
     //by pipeline ref name get node data
     let nodeData = this.getNodeData(pipelinerun.spec.pipelineRef.name);
 
@@ -282,7 +299,7 @@ export class PipelineRuns extends React.Component<Props> {
         <KubeObjectListLayout
           className="PipelineRuns"
           store={pipelineRunStore}
-          dependentStores={[pipelineStore, taskRunStore]}
+          dependentStores={[pipelineStore, taskRunStore, podsStore]}
           sortingCallbacks={{
             [sortBy.name]: (pipelineRun: PipelineRun) => pipelineRun.getName(),
             [sortBy.ownernamespace]: (pipelineRun: PipelineRun) => pipelineRun.getOwnerNamespace(),
