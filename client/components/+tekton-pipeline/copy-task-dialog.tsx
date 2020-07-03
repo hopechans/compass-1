@@ -32,6 +32,7 @@ import { systemName } from "../input/input.validators";
 import { createMuiTheme } from "@material-ui/core";
 import { ThemeProvider } from "@material-ui/core/styles";
 import { Divider } from "@material-ui/core";
+import { configStore } from "../../../client/config.store";
 interface Props<T = any> extends Partial<Props> {
   value?: T;
 
@@ -147,7 +148,10 @@ export class CopyTaskDialog extends React.Component<Props> {
       const task = taskStore.getByName(this.value.taskName);
       if (task === undefined) {
         await taskStore.create(
-          { name: this.value.taskName, namespace: "" },
+          {
+            name: this.value.taskName, namespace: "",
+            labels: new Map<string, string>().set("namespace", configStore.getDefaultNamespace() == "" ? "admin" : configStore.getDefaultNamespace())
+          },
           {
             spec: {
               params: parms,
