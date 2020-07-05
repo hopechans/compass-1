@@ -163,7 +163,7 @@ export class PipelineGraph {
                     id: "1-1",
                     x: 0,
                     y: 0,
-                    taskName: "task1",
+                    taskName: "",
                     anchorPoints: [
                         [0, 0.5],
                         [1, 0.5],

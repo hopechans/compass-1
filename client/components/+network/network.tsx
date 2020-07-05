@@ -12,6 +12,7 @@ import { Ingresses, ingressRoute, ingressURL } from "../+network-ingresses";
 import { NetworkPolicies, networkPoliciesRoute, networkPoliciesURL } from "../+network-policies";
 import { namespaceStore } from "../+namespaces/namespace.store";
 import { networkURL } from "./network.route";
+import { configStore } from "../../../client/config.store";
 
 interface Props extends RouteComponentProps<{}> {
 }
@@ -20,7 +21,8 @@ interface Props extends RouteComponentProps<{}> {
 export class Network extends React.Component<Props> {
   static get tabRoutes(): TabRoute[] {
     const query = namespaceStore.getContextParams()
-    return [
+    const { isClusterAdmin } = configStore;
+    let items = [
       {
         title: <Trans>Services</Trans>,
         component: Services,
@@ -39,13 +41,19 @@ export class Network extends React.Component<Props> {
         url: ingressURL({ query }),
         path: ingressRoute.path,
       },
-      {
+
+    ]
+    
+    if (isClusterAdmin) {
+      items.push({
         title: <Trans>Network Policies</Trans>,
         component: NetworkPolicies,
         url: networkPoliciesURL({ query }),
         path: networkPoliciesRoute.path,
-      },
-    ]
+      })
+    }
+
+    return items;
   }
 
   render() {
@@ -53,8 +61,8 @@ export class Network extends React.Component<Props> {
     return (
       <MainLayout className="Network" tabs={tabRoutes}>
         <Switch>
-          {tabRoutes.map((route, index) => <Route key={index} {...route}/>)}
-          <Redirect to={networkURL({ query: namespaceStore.getContextParams() })}/>
+          {tabRoutes.map((route, index) => <Route key={index} {...route} />)}
+          <Redirect to={networkURL({ query: namespaceStore.getContextParams() })} />
         </Switch>
       </MainLayout>
     )

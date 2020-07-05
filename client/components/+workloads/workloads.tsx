@@ -20,6 +20,7 @@ import { Deploys } from "../+workloads-deploy";
 import { StatefulSets } from "../+workloads-statefulsets";
 import { Injectors } from "../+workloads-injectors";
 import { Waters } from "../+workloads-waters"
+import { configStore } from "../../../client/config.store";
 
 interface Props extends RouteComponentProps {
 }
@@ -28,7 +29,8 @@ interface Props extends RouteComponentProps {
 export class Workloads extends React.Component<Props> {
   static get tabRoutes(): TabRoute[] {
     const query = namespaceStore.getContextParams();
-    return [
+    const { isClusterAdmin } = configStore;
+    let items = [
       {
         title: <Trans>Overview</Trans>,
         component: WorkloadsOverview,
@@ -48,60 +50,67 @@ export class Workloads extends React.Component<Props> {
         path: stonesRoute.path
       },
       {
-        title: <Trans>Waters</Trans>,
-        component: Waters,
-        url: watersURL({ query }),
-        path: watersRoute.path
-      },
-      {
         title: <Trans>StatefulSets*</Trans>,
         component: EnhanceStatefulSets,
         url: enhanceStatefulSetsURL({ query }),
         path: enhanceStatefulsetsRoute.path
       },
       {
-        title: <Trans>Injectors</Trans>,
-        component: Injectors,
-        url: injectorURL({ query }),
-        path: injectorsRoute.path
-      },
-      {
         title: <Trans>Pods</Trans>,
         component: Pods,
         url: podsURL({ query }),
         path: podsRoute.path
-      },
-      {
-        title: <Trans>Deployments</Trans>,
-        component: Deployments,
-        url: deploymentsURL({ query }),
-        path: deploymentsRoute.path,
-      },
-      {
-        title: <Trans>DaemonSets</Trans>,
-        component: DaemonSets,
-        url: daemonSetsURL({ query }),
-        path: daemonSetsRoute.path,
-      },
-      {
-        title: <Trans>StatefulSets</Trans>,
-        component: StatefulSets,
-        url: statefulSetsURL({ query }),
-        path: statefulSetsRoute.path,
-      },
-      {
-        title: <Trans>Jobs</Trans>,
-        component: Jobs,
-        url: jobsURL({ query }),
-        path: jobsRoute.path,
-      },
-      {
-        title: <Trans>CronJobs</Trans>,
-        component: CronJobs,
-        url: cronJobsURL({ query }),
-        path: cronJobsRoute.path,
-      },
+      }
     ]
+
+    if (isClusterAdmin) {
+      items.push(
+        {
+          title: <Trans>Waters</Trans>,
+          component: Waters,
+          url: watersURL({ query }),
+          path: watersRoute.path
+        },
+        {
+          title: <Trans>Injectors</Trans>,
+          component: Injectors,
+          url: injectorURL({ query }),
+          path: injectorsRoute.path
+        },
+        {
+          title: <Trans>Deployments</Trans>,
+          component: Deployments,
+          url: deploymentsURL({ query }),
+          path: deploymentsRoute.path,
+        },
+        {
+          title: <Trans>DaemonSets</Trans>,
+          component: DaemonSets,
+          url: daemonSetsURL({ query }),
+          path: daemonSetsRoute.path,
+        },
+        {
+          title: <Trans>StatefulSets</Trans>,
+          component: StatefulSets,
+          url: statefulSetsURL({ query }),
+          path: statefulSetsRoute.path,
+        },
+        {
+          title: <Trans>Jobs</Trans>,
+          component: Jobs,
+          url: jobsURL({ query }),
+          path: jobsRoute.path,
+        },
+        {
+          title: <Trans>CronJobs</Trans>,
+          component: CronJobs,
+          url: cronJobsURL({ query }),
+          path: cronJobsRoute.path,
+        },
+      )
+    }
+
+    return items
   };
   render() {
     const tabRoutes = Workloads.tabRoutes;
