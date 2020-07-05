@@ -5,7 +5,7 @@ import { ActionMeta } from "react-select/src/types";
 import { Trans } from "@lingui/macro";
 import { Dialog } from "../dialog";
 import { Wizard, WizardStep } from "../wizard";
-import { Pipeline, PipelineTask } from "../../api/endpoints";
+import { Pipeline } from "../../api/endpoints";
 import { Notifications } from "../notifications";
 import { PipelineDetails, PipelineResult, pipeline } from "./pipeline-details";
 import { pipelineStore } from "./pipeline.store";
@@ -54,46 +54,38 @@ export class PipelineDialog extends React.Component<Props> {
 
 
     currentPipeline.spec.tasks.map((item, index) => {
+
+
       let task = taskStore.getByName(item.name);
       if (task !== undefined) {
         this.value.tasks.push(currentPipeline.spec.tasks[index]);
+
+        this.value.tasks[index].resources = null;
+        this.value.tasks[index].resources = pipelineTaskResource;
         if (task.spec.resources.inputs !== undefined) {
           task.spec.resources.inputs.map((task) => {
-            currentPipeline.spec.tasks[index].resources.inputs = [];
-            currentPipeline.spec.tasks[index].resources.inputs.push({ name: task.name, resource: "" })
+            this.value.tasks[index].resources.inputs.push({ name: task.name, resource: "" })
           });
-          this.value.tasks[index].resources.inputs = [];
-          this.value.tasks[index].resources.inputs = currentPipeline.spec.tasks[index].resources.inputs;
         }
+
         if (task.spec.resources.outputs !== undefined) {
           task.spec.resources.outputs.map((task) => {
-            currentPipeline.spec.tasks[index].resources.outputs = [];
-            currentPipeline.spec.tasks[index].resources.outputs.push({ name: task.name, resource: "" })
+            this.value.tasks[index].resources.outputs.push({ name: task.name, resource: "" });
           });
 
-          this.value.tasks[index].resources.outputs = [];
-          this.value.tasks[index].resources.outputs = currentPipeline.spec.tasks[index].resources.outputs;
+
+
         }
       }
 
-    })
-
-    // currentPipeline.spec.tasks.map
-    // this.value.tasks = currentPipeline.spec.tasks;
+    });
 
     this.value.tasks.map((item: any, index: number) => {
-      //   name: string;
-      //   taskRef: TaskRef;
-      //   runAfter: string[];
-      //   taskSpec?: TaskSpec;
-      //   retries: number;
-      //   resources: PipelineTaskResources;
-      //   params: Param[];
-      //   timeout: string;
-      //   conditions?: PipelineTaskCondition;
+
       if (item.resources === undefined) {
         this.value.tasks[index].resources = pipelineTaskResource;
       }
+
 
       if (item.params === undefined) {
         this.value.tasks[index].params = [];
@@ -122,6 +114,8 @@ export class PipelineDialog extends React.Component<Props> {
   };
 
   submit = async () => {
+
+
     let pipeline = PipelineDialog.currentPipeline;
 
     pipeline.metadata.name = this.value.pipelineName;
@@ -129,7 +123,6 @@ export class PipelineDialog extends React.Component<Props> {
     // pipeline.metadata.namespace = "ops";
     pipeline.spec.resources = this.value.resources;
 
-    console.log("--------------------->:task", this.value.tasks)
     //a b[] //a.b.
     pipeline.spec.tasks = this.value.tasks;
     pipeline.spec.params = this.value.params;

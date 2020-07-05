@@ -72,7 +72,7 @@ export class PipelineTaskInputResourceDetail extends React.Component<Props> {
                 <Col span={10}>
                   <Input
                     placeholder={_i18n._(t`Name`)}
-                    disabled={true}
+                    // disabled={true}
                     value={this.value[index].name}
                     onChange={(value) => {
                       this.value[index].name = value;

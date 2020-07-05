@@ -18,10 +18,15 @@ import { CopyTaskDialog, task, TaskResult } from "./copy-task-dialog";
 import { MenuItem } from "../menu";
 import { Icon } from "../icon";
 import { AddPipelineDialog } from "./add-pipeline-dialog";
+import { configStore } from "../../config.store";
 import { taskStore } from "../+tekton-task/task.store";
 import { PipelineDialog } from "./pipeline-dialog";
 import { pipelineResourceStore } from "../+tekton-pipelineresource/pipelineresource.store";
 import { PipelineRunDialog } from "./pipeline-run-dialog";
+import { PieChart } from "../chart";
+import Item from "antd/lib/list/Item";
+import { Tasks } from "../+tekton-task";
+import _ from 'lodash';
 
 enum sortBy {
   name = "name",
