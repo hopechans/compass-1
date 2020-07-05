@@ -10,7 +10,7 @@ import { _i18n } from "../../i18n";
 import { NodeSelect } from "../+nodes"
 import { apiBase } from "../../api";
 import { Notifications } from "../notifications";
-import { Namespace } from "../../api/endpoints"
+import { Namespace, StorageClass } from "../../api/endpoints"
 import { SelectOption } from "../select/select";
 import { namespaceStore } from "./namespace.store";
 import { StorageClassSelect } from "../+storage-classes/storage-select";
@@ -23,7 +23,8 @@ export class NamespaceStorageClasslimit extends React.Component<Props> {
 
     @observable static isOpen = false;
     @observable static namespace: Namespace;
-    @observable storageClasses = observable.array<any>([], { deep: false });
+    // @observable storageClasses = observable.array<any>([], { deep: false });
+    @observable storageClasses: string = "";
 
 
     static open(namespace: Namespace) {
@@ -44,7 +45,7 @@ export class NamespaceStorageClasslimit extends React.Component<Props> {
         NamespaceStorageClasslimit.namespace.getAnnotations().map(annotation => {
             const annotationKeyValue = annotation.split("=");
             if (annotationKeyValue[0] == "fuxi.kubernetes.io/default_storage_limit") {
-                this.storageClasses = JSON.parse(annotationKeyValue[1]);
+                this.storageClasses = JSON.parse(annotationKeyValue[1])[0];
             }
         })
     }
@@ -54,9 +55,10 @@ export class NamespaceStorageClasslimit extends React.Component<Props> {
             namespace: NamespaceStorageClasslimit.namespace.getName(),
             storageClasses: new Array<string>()
         };
-        this.storageClasses.map(storageClass => {
-            data.storageClasses.push(storageClass);
-        })
+        // this.storageClasses.map(storageClass => {
+        //     data.storageClasses.push(storageClass);
+        // })
+        data.storageClasses.push(this.storageClasses);
 
         try {
             await apiBase.post("/namespaces/annotation/storageclass", { data }).
@@ -74,7 +76,7 @@ export class NamespaceStorageClasslimit extends React.Component<Props> {
 
     render() {
         const { ...dialogProps } = this.props;
-        const unwrapStorageClasses = (options: SelectOption[]) => options.map(option => option.value);
+        // const unwrapStorageClasses = (options: SelectOption[]) => options.map(option => option.value);
         const header = <h5><Trans>Annotate StorageClass</Trans></h5>;
         return (
             <Dialog
@@ -90,15 +92,16 @@ export class NamespaceStorageClasslimit extends React.Component<Props> {
                         <div className="node">
                             <SubTitle title={<Trans>Annotate StorageClass</Trans>} />
                             <StorageClassSelect
-                                isMulti
+                                // isMulti
                                 value={this.storageClasses}
                                 placeholder={_i18n._(t`StorageClass`)}
                                 themeName="light"
                                 className="box grow"
-                                onChange={(opts: SelectOption[]) => {
-                                    if (!opts) opts = [];
-                                    this.storageClasses.replace(unwrapStorageClasses(opts));
-                                }}
+                                onChange={value => this.storageClasses = value.value}
+                                // onChange={(opts: SelectOption[]) => {
+                                //     if (!opts) opts = [];
+                                //     this.storageClasses.replace(unwrapStorageClasses(opts));
+                                // }}
                             />
                         </div>
                     </WizardStep>
