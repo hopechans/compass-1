@@ -3,8 +3,8 @@ import "./config-deploy-dialog.scss"
 import React, { ReactElement } from "react";
 import { observer } from "mobx-react";
 import { Dialog, DialogProps } from "../dialog";
-import { computed, observable } from "mobx";
-import { number, t, Trans } from "@lingui/macro";
+import { observable } from "mobx";
+import { Trans } from "@lingui/macro";
 import { Wizard, WizardStep } from "../wizard";
 import { Container, container, MultiContainerDetails } from "../+deploy-container";
 import { Collapse } from "../collapse";
@@ -14,7 +14,6 @@ import { app, App } from "../+deploy-app";
 import { AppDetails } from "../+deploy-app";
 import { deployStore } from "./deploy.store";
 import { Notifications } from "../notifications";
-import { configStore } from "../../config.store";
 import { Deploy } from "../../api/endpoints";
 
 interface Props extends DialogProps {
