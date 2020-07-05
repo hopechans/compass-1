@@ -5,6 +5,7 @@ import { observer } from "mobx-react";
 import { RouteComponentProps } from "react-router";
 import { t, Trans } from "@lingui/macro";
 import { cssNames, interval } from "../../utils";
+import { themeStore } from "../../theme.store";
 import { MainLayout } from "../layout/main-layout";
 import { nodesStore } from "./nodes.store";
 import { podsStore } from "../+workloads-pods/pods.store";
@@ -20,7 +21,7 @@ import kebabCase from "lodash/kebabCase";
 import upperFirst from "lodash/upperFirst";
 import { apiManager } from "../../api/api-manager";
 import {NodeAnnotationDialog} from "./node-annotation-dialog";
-
+import { NodeZoneGraph } from "./node-zone-graph";
 enum sortBy {
   name = "name",
   cpu = "cpu",
@@ -43,6 +44,7 @@ export class Nodes extends React.Component<Props> {
 
   componentDidMount() {
     this.metricsWatcher.start(true);
+    new NodeZoneGraph(1000,350)
   }
 
   componentWillUnmount() {
@@ -119,8 +121,12 @@ export class Nodes extends React.Component<Props> {
   render() {
     return (
       <MainLayout>
+        <div className={cssNames("node-zone-graph", themeStore.activeTheme.type)}>
+          <h5>节点分布图</h5>
+          <div id="node-zone-graph"> </div>
+        </div>
         <KubeObjectListLayout
-          className="Nodes"
+          className={cssNames("Nodes mt-10")}
           store={nodesStore} isClusterScoped
           isReady={nodesStore.isLoaded && nodesStore.metricsLoaded}
           dependentStores={[podsStore]}
