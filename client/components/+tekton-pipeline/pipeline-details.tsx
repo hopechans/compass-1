@@ -60,7 +60,7 @@ export class PipelineDetails extends React.Component<Props> {
         <PipelineResourceDetails
           value={this.value.resources}
           onChange={(value) => {
-            this.value.resources = value;
+            this.value.resources = value.value;
           }}
         />
         <Divider />

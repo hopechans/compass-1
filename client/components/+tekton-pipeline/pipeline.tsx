@@ -74,7 +74,7 @@ export class Pipelines extends React.Component<Props> {
             id: "1-1",
             x: 0,
             y: 0,
-            taskName: "",
+            taskName: ``,
             anchorPoints: [
               [0, 0.5],
               [1, 0.5],
@@ -126,6 +126,8 @@ export class Pipelines extends React.Component<Props> {
           task.name = item.taskName;
           task.taskRef = { name: item.taskName };
         });
+        task.params = [];
+        task.resources = [];
         tasks.push(task);
       } else {
         let result = tmp - 1;
@@ -138,6 +140,8 @@ export class Pipelines extends React.Component<Props> {
           dataMap.get(result.toString()).map((item: any) => {
             task.runAfter.push(item.taskName);
           });
+          task.params = [];
+          task.resources = [];
           tasks.push(task);
         });
       }
@@ -154,20 +158,22 @@ export class Pipelines extends React.Component<Props> {
     const data = JSON.stringify(this.graph.getGraph().save());
 
     this.pipeline.metadata.annotations = { node_data: data };
-    if (this.pipeline.spec.tasks === undefined) {
-      this.pipeline.spec.tasks = [];
-      this.pipeline.spec.tasks.push(...this.getPipelineTasks());
-    } else {
-      let newTasks = this.getPipelineTasks();
-      let oldTasks = new Map(this.pipeline.spec.tasks.map(i => [i.name, i]));
-      newTasks.map((item: any) => {
-        let name: string = item.name;
-        const task = oldTasks.get(name);
-        if (task === undefined) {
-          this.pipeline.spec.tasks.push(item);
+
+    const pipelineTasks = this.pipeline.spec.tasks;
+    if (pipelineTasks !== undefined) {
+
+      this.getPipelineTasks().map((task) => {
+        const t = pipelineTasks.find(x => x.name == task.name);
+        if (t === undefined) {
+          this.pipeline.spec.tasks.push(task);
         }
-      })
+      });
+    } else {
+      this.pipeline.spec.tasks = [];
+      this.pipeline.spec.tasks.push(... this.getPipelineTasks());
+
     }
+
 
     //will show pipeline dialog
     PipelineDialog.open(this.pipeline);

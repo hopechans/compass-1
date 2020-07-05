@@ -32,6 +32,7 @@ export class MutilPipelineResource extends React.Component<Props> {
           value={this.value.inputs}
           title={"Resource Inputs"}
           onChange={(value) => {
+
             this.value.inputs = value;
           }}
         />

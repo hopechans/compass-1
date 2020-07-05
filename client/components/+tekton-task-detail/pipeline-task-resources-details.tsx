@@ -63,8 +63,8 @@ export class PipelineTaskInputResourceDetail extends React.Component<Props> {
             <br />
           </>
         ) : (
-          <></>
-        )}
+            <></>
+          )}
         {this.value.map((item, index) => {
           return (
             <>
@@ -72,10 +72,11 @@ export class PipelineTaskInputResourceDetail extends React.Component<Props> {
                 <Col span={10}>
                   <Input
                     placeholder={_i18n._(t`Name`)}
+                    disabled={true}
                     value={this.value[index].name}
                     onChange={(value) => {
                       this.value[index].name = value;
-                      console.log(this.value[index].name);
+
                     }}
                   />
                 </Col>
@@ -83,7 +84,10 @@ export class PipelineTaskInputResourceDetail extends React.Component<Props> {
                   <Input
                     placeholder={_i18n._(t`Value`)}
                     value={this.value[index].resource}
-                    onChange={(value) => (this.value[index].resource = value)}
+                    onChange={(value) => {
+                      this.value[index].resource = value;
+                      console.log(this.value[index].resource);
+                    }}
                   />
                 </Col>
                 <Col span={1} offset={1}>

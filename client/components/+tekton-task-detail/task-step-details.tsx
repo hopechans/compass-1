@@ -38,7 +38,6 @@ export class TaskStepDetails extends React.Component<Props> {
         <SubTitle title={"StepName"} />
         <Input
           placeholder={"StepName"}
-          required={true}
           value={this.value.name}
           onChange={(value) => (this.value.name = value)}
         />
