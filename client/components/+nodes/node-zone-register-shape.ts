@@ -10,7 +10,10 @@ G6.registerCombo('cCircle', {
       // 绘制一个矩形作为 keyShape，与 'rect' Combo 的 keyShape 一致
       const circle = group.addShape('circle', {
         attrs: {
-          ...style,
+           ...style,
+          //fill:'r(0.5, 0.5, 0.8) 0:#ffffff 0.5:#ffffff 1:#FFCC99',
+          fill:'r(0.5, 0.5, 0.6) 0:#ffffff 0.6:#ffffff 1:#99CCCC',
+          
           x: 0,
           y: 0,
           r: style.r

@@ -109,7 +109,7 @@ export class NodeZoneGraph {
         this.graph = new G6.Graph({
          
             container: "node-zone-graph",
-            width: 1350,
+            width: 1250,
             height: 370,
             renderer: "svg",
             fitView:true,
@@ -147,10 +147,14 @@ export class NodeZoneGraph {
                 label:true, 
                 style:{
                     stroke:'opacity',
+                    opacity:0.8,
+                    fillOpacity:0.9,
                 },
                 labelCfg: {
                     style: {
-                      fontSize: 28,
+                      fontSize: 24,
+                      fill:'#666',
+                      
                     }
                   }
             },
