@@ -1,16 +1,17 @@
 import React from "react";
-import {observer} from "mobx-react";
-import {Dialog, DialogProps} from "../dialog";
-import {observable} from "mobx";
-import {Namespace} from "../../api/endpoints";
-import {Input} from "../input"
-import {Wizard, WizardStep} from "../wizard";
-import {t, Trans} from "@lingui/macro";
-import {SubTitle} from "../layout/sub-title";
-import {_i18n} from "../../i18n";
-import {NamespaceSelect} from "../+namespaces/namespace-select";
-import {apiBase} from "../../api";
-import {Notifications} from "../notifications";
+import { observer } from "mobx-react";
+import { Dialog, DialogProps } from "../dialog";
+import { observable } from "mobx";
+import { Namespace } from "../../api/endpoints";
+import { Input } from "../input"
+import { Wizard, WizardStep } from "../wizard";
+import { t, Trans } from "@lingui/macro";
+import { SubTitle } from "../layout/sub-title";
+import { _i18n } from "../../i18n";
+import { NamespaceSelect } from "../+namespaces/namespace-select";
+import { apiBase } from "../../api";
+import { Notifications } from "../notifications";
+import { NamespaceAllowStorageClassSelect } from "../+namespaces/namespace-allow-storageclass-select";
 
 interface Props extends Partial<DialogProps> {
 }
@@ -23,6 +24,7 @@ export class DeployDialog extends React.Component<Props> {
   @observable static templateName = "";
   @observable namespace = "";
   @observable replicas = "1";
+  @observable storageClass = "";
 
   static open(appName: string, templateName: string) {
     DeployDialog.isOpen = true;
@@ -60,7 +62,7 @@ export class DeployDialog extends React.Component<Props> {
       replicas: this.replicas,
     }
     try {
-      await apiBase.post("/deploy", {data}).then((data) => {
+      await apiBase.post("/deploy", { data }).then((data) => {
         this.reset();
         this.close();
       })
@@ -70,7 +72,7 @@ export class DeployDialog extends React.Component<Props> {
   }
 
   render() {
-    const {...dialogProps} = this.props;
+    const { ...dialogProps } = this.props;
     const header = <h5><Trans>Deploy</Trans></h5>;
     return (
       <Dialog
@@ -81,19 +83,28 @@ export class DeployDialog extends React.Component<Props> {
       >
         <Wizard header={header} done={this.close}>
           <WizardStep contentClass="flow column" nextLabel={<Trans>Create</Trans>}
-                      next={this.updateDeploy}>
+            next={this.updateDeploy}>
             <div className="namespace">
-              <SubTitle title={<Trans>Namespace</Trans>}/>
+              <SubTitle title={<Trans>Namespace</Trans>} />
               <NamespaceSelect
                 value={this.namespace}
                 placeholder={_i18n._(t`Namespace`)}
                 themeName="light"
                 className="box grow"
-                onChange={(v) => {
-                  this.namespace = v
-                }}
+                onChange={(v) => this.namespace = v.value}
               />
-              <SubTitle title={<Trans>Replicas</Trans>}/>
+
+              <SubTitle title={<Trans>StorageClass</Trans>} />
+              <NamespaceAllowStorageClassSelect
+                themeName="light"
+                className="box grow"
+                placeholder={_i18n._(t`StorageClass`)}
+                namespaceName={this.namespace}
+                value={this.storageClass}
+                onChange={({ value }) => this.storageClass = value}
+              />
+
+              <SubTitle title={<Trans>Replicas</Trans>} />
               <Input
                 autoFocus
                 placeholder={_i18n._(t`Replicas`)}
