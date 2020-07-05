@@ -26,13 +26,13 @@ export class VolumeClaimDetails extends React.Component<VolumeClaimProps> {
   render() {
     return (
       <>
-        <Checkbox
+        {/* <Checkbox
           theme="light"
           label={<Trans>Use Default StorageClass</Trans>}
           value={this.value.metadata.isUseDefaultStorageClass}
           onChange={value => this.value.metadata.isUseDefaultStorageClass = value}
-        />
-        {
+        /> */}
+        {/* {
           !this.value.metadata.isUseDefaultStorageClass ?
             <>
               <SubTitle title={<Trans>StorageClass Name</Trans>}/>
@@ -42,7 +42,7 @@ export class VolumeClaimDetails extends React.Component<VolumeClaimProps> {
                 onChange={value => this.value.spec.storageClassName = value}
               />
             </> : <></>
-        }
+        } */}
         <SubTitle title={<Trans>Name</Trans>}/>
         <Input
           required={true}
