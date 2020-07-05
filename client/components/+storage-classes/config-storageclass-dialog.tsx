@@ -30,7 +30,7 @@ export class ConfigStorageClassDialog extends React.Component<Props> {
   @observable name: string = "";
   @observable provisioner: string = "ceph.com/rbd";
   @observable volumeBindingMode: string = "Immediate";
-  @observable reclaimPolicy: string = "Delete";
+  @observable reclaimPolicy: string = "Retain";
   @observable params: CephParams = cephParams;
 
   static open(data: StorageClass) {
@@ -47,10 +47,10 @@ export class ConfigStorageClassDialog extends React.Component<Props> {
   }
 
   formatOptionLabel = (option: SelectOption) => {
-    const {value, label} = option;
+    const { value, label } = option;
     return label || (
       <>
-        <Icon small material="layers"/>
+        <Icon small material="layers" />
         {value}
       </>
     );
@@ -70,13 +70,15 @@ export class ConfigStorageClassDialog extends React.Component<Props> {
 
   get reclaimPolicyOptions() {
     return [
+      "Retain",
       "Delete"
     ]
   }
 
   get fsTypeOptions() {
     return [
-      "ext4"
+      "ext4",
+      "xfs"
     ]
   }
 
@@ -117,7 +119,7 @@ export class ConfigStorageClassDialog extends React.Component<Props> {
   updateStorageClass = async () => {
 
     try {
-      await storageClassStore.create({name: this.name, namespace: ''}, {
+      await storageClassStore.create({ name: this.name, namespace: '' }, {
         provisioner: this.provisioner,
         volumeBindingMode: this.volumeBindingMode,
         reclaimPolicy: this.reclaimPolicy,
@@ -143,7 +145,7 @@ export class ConfigStorageClassDialog extends React.Component<Props> {
   }
 
   render() {
-    const {...dialogProps} = this.props;
+    const { ...dialogProps } = this.props;
     const header = <h5><Trans>Update StorageClass</Trans></h5>;
     return (
       <Dialog
@@ -158,7 +160,7 @@ export class ConfigStorageClassDialog extends React.Component<Props> {
             nextLabel={<Trans>Apply</Trans>}
             next={this.updateStorageClass}
           >
-            <SubTitle title={<Trans>Name</Trans>}/>
+            <SubTitle title={<Trans>Name</Trans>} />
             <Input
               required autoFocus
               validators={systemName}
@@ -166,21 +168,21 @@ export class ConfigStorageClassDialog extends React.Component<Props> {
               value={this.name}
               onChange={(value: string) => this.name = value}
             />
-            <SubTitle title={<Trans>VolumeBindingMode</Trans>}/>
+            <SubTitle title={<Trans>VolumeBindingMode</Trans>} />
             <Select
               value={this.volumeBindingMode}
               options={this.volumeBindingModeOptions}
               formatOptionLabel={this.formatOptionLabel}
               onChange={value => this.volumeBindingMode = value.value}
             />
-            <SubTitle title={<Trans>ReclaimPolicy</Trans>}/>
+            <SubTitle title={<Trans>ReclaimPolicy</Trans>} />
             <Select
               value={this.reclaimPolicy}
               options={this.reclaimPolicyOptions}
               formatOptionLabel={this.formatOptionLabel}
               onChange={value => this.reclaimPolicy = value.value}
             />
-            <SubTitle title={<Trans>Provisioner</Trans>}/>
+            <SubTitle title={<Trans>Provisioner</Trans>} />
             <Select
               value={this.provisioner}
               options={this.provisionerOptions}
@@ -189,71 +191,71 @@ export class ConfigStorageClassDialog extends React.Component<Props> {
             />
             {this.provisioner == "ceph.com/rbd" ?
               <>
-                <SubTitle title={<Trans>Admin Secret Namespace:</Trans>}/>
+                <SubTitle title={<Trans>Admin Secret Namespace:</Trans>} />
                 <NamespaceSelect
                   required autoFocus
                   value={this.params.adminSecretNamespace}
-                  onChange={value => this.params.adminSecretNamespace = value.value}/>
-                <SubTitle title={<Trans>Admin Secret Name</Trans>}/>
+                  onChange={value => this.params.adminSecretNamespace = value.value} />
+                <SubTitle title={<Trans>Admin Secret Name</Trans>} />
                 <SecretsSelect
                   required autoFocus
                   value={this.params.adminSecretName}
                   namespace={this.params.adminSecretNamespace}
                   onChange={value => this.params.adminSecretName = value.value}
                 />
-                <SubTitle title={<Trans>User Secret Namespace:</Trans>}/>
+                <SubTitle title={<Trans>User Secret Namespace:</Trans>} />
                 <NamespaceSelect
                   required autoFocus
                   value={this.params.userSecretNamespace}
-                  onChange={value => this.params.userSecretNamespace = value.value}/>
-                <SubTitle title={<Trans>User Secret Name</Trans>}/>
+                  onChange={value => this.params.userSecretNamespace = value.value} />
+                <SubTitle title={<Trans>User Secret Name</Trans>} />
                 <SecretsSelect
                   required autoFocus
                   value={this.params.userSecretName}
                   namespace={this.params.userSecretNamespace}
                   onChange={value => this.params.userSecretName = value.value}
                 />
-                <SubTitle title={<Trans>Monitors</Trans>}/>
+                <SubTitle title={<Trans>Monitors</Trans>} />
                 <Input
                   required autoFocus
                   placeholder={_i18n._(t`Monitors`)}
                   value={this.params.monitors}
                   onChange={(value: string) => this.params.monitors = value}
                 />
-                <SubTitle title={<Trans>Admin ID</Trans>}/>
+                <SubTitle title={<Trans>Admin ID</Trans>} />
                 <Input
                   required autoFocus
                   placeholder={_i18n._(t`Admin ID`)}
                   value={this.params.adminId}
                   onChange={(value: string) => this.params.adminId = value}
                 />
-                <SubTitle title={<Trans>Pool</Trans>}/>
+                <SubTitle title={<Trans>Pool</Trans>} />
                 <Input
                   placeholder={_i18n._(t`Pool`)}
                   value={this.params.pool}
                   onChange={(value: string) => this.params.pool = value}
                 />
-                <SubTitle title={<Trans>User ID</Trans>}/>
+                <SubTitle title={<Trans>User ID</Trans>} />
                 <Input
                   placeholder={_i18n._(t`User ID`)}
                   value={this.params.userId}
                   onChange={(value: string) => this.params.userId = value}
                 />
-                <SubTitle title={<Trans>FileSystem Type</Trans>}/>
+                <SubTitle title={<Trans>FileSystem Type</Trans>} />
                 <Select
                   options={this.fsTypeOptions}
                   value={this.params.fsType}
-                  onChange={value => this.params.fsType = value.value}/>
-                <SubTitle title={<Trans>Image Format</Trans>}/>
+                  onChange={value => this.params.fsType = value.value} />
+                <SubTitle title={<Trans>Image Format</Trans>} />
                 <Select
                   options={this.imageFormatOptions}
                   value={this.params.imageFormat}
-                  onChange={value => this.params.imageFormat = value.value}/>
-                <SubTitle title={<Trans>Image Features</Trans>}/>
+                  onChange={value => this.params.imageFormat = value.value} />
+                <SubTitle title={<Trans>Image Features</Trans>} />
                 <Select
                   options={this.imageFeaturesOptions}
                   value={this.params.imageFeatures}
-                  onChange={value => this.params.imageFeatures = value.value}/>
+                  onChange={value => this.params.imageFeatures = value.value} />
               </> : <></>
             }
           </WizardStep>
