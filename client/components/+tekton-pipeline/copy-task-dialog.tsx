@@ -86,7 +86,6 @@ export class CopyTaskDialog extends React.Component<Props> {
   @observable static node: any;
   @observable static data: any;
   @observable ifSwitch: boolean = false;
-  @observable prefix: string = configStore.getDefaultNamespace() || "admin";
 
   static open(graph: any, node: any) {
     CopyTaskDialog.isOpen = true;
@@ -156,12 +155,8 @@ export class CopyTaskDialog extends React.Component<Props> {
       if (task === undefined) {
         await taskStore.create(
           {
-<<<<<<< HEAD
             name: this.value.taskName,
             namespace: "",
-=======
-            name: this.prefix + '-' + this.value.taskName, namespace: "",
->>>>>>> 75e2633f3a03ae0c5100bb42bb8b9494686f5fc0
             labels: new Map<string, string>().set("namespace", configStore.getDefaultNamespace() == "" ? "admin" : configStore.getDefaultNamespace())
           },
           {
@@ -261,7 +256,7 @@ export class CopyTaskDialog extends React.Component<Props> {
                   validators={systemName}
                   placeholder={_i18n._("Task Name")}
                   value={this.value.taskName}
-                  onChange={(value) => (this.value.taskName = this.prefix + '-' + value)}
+                  onChange={(value) => (this.value.taskName = value)}
                 />
                 <br />
 
