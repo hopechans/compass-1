@@ -1,21 +1,20 @@
 import "./config-deploy-dialog.scss"
 
-import React, {ReactElement} from "react";
-import {observer} from "mobx-react";
-import {Dialog, DialogProps} from "../dialog";
-import {computed, observable} from "mobx";
-import {number, t, Trans} from "@lingui/macro";
-import {Wizard, WizardStep} from "../wizard";
-import {Container, container, MultiContainerDetails} from "../+deploy-container";
-import {Collapse} from "../collapse";
-import {deployService, DeployServiceDetails, Service} from "../+deploy-service";
-import {MultiVolumeClaimDetails, VolumeClaimTemplate} from "../+deploy-volumeclaim";
-import {app, App} from "../+deploy-app";
-import {AppDetails} from "../+deploy-app";
-import {deployStore} from "./deploy.store";
-import {Notifications} from "../notifications";
-import {configStore} from "../../config.store";
-import {Deploy} from "../../api/endpoints";
+import React, { ReactElement } from "react";
+import { observer } from "mobx-react";
+import { Dialog, DialogProps } from "../dialog";
+import { observable } from "mobx";
+import { Trans } from "@lingui/macro";
+import { Wizard, WizardStep } from "../wizard";
+import { Container, container, MultiContainerDetails } from "../+deploy-container";
+import { Collapse } from "../collapse";
+import { deployService, DeployServiceDetails, Service } from "../+deploy-service";
+import { MultiVolumeClaimDetails, VolumeClaimTemplate } from "../+deploy-volumeclaim";
+import { app, App } from "../+deploy-app";
+import { AppDetails } from "../+deploy-app";
+import { deployStore } from "./deploy.store";
+import { Notifications } from "../notifications";
+import { Deploy } from "../../api/endpoints";
 
 interface Props extends DialogProps {
 
@@ -67,18 +66,17 @@ export class ConfigDeployDialog extends React.Component<Props> {
 
   updateDeploy = async () => {
     try {
-      const newDeploy = await deployStore.update(this.deploy, {
-        spec: {
-          appName: this.app.name,
-          resourceType: this.app.type,
-          metadata: JSON.stringify(this.containers),
-          service: JSON.stringify(this.service),
-          volumeClaims: JSON.stringify(this.volumeClaims),
-        },
-      });
-      // label the resource labels
-      newDeploy.metadata.labels = {namespace: configStore.getDefaultNamespace()}
-      await deployStore.update(newDeploy, {...newDeploy});
+      await deployStore.update(
+        this.deploy,
+        {
+          spec: {
+            appName: this.app.name,
+            resourceType: this.app.type,
+            metadata: JSON.stringify(this.containers),
+            service: JSON.stringify(this.service),
+            volumeClaims: JSON.stringify(this.volumeClaims),
+          },
+        });
       this.reset();
       this.close();
     } catch (err) {
@@ -99,22 +97,22 @@ export class ConfigDeployDialog extends React.Component<Props> {
           <WizardStep contentClass="flex gaps column" next={this.updateDeploy}>
             <div className="init-form">
               <Collapse panelName={<Trans>App</Trans>}>
-                <AppDetails value={this.app} onChange={value => this.app = value}/>
+                <AppDetails value={this.app} onChange={value => this.app = value} />
               </Collapse>
-              <br/>
+              <br />
               <Collapse panelName={<Trans>MultiContainer</Trans>}>
                 <MultiContainerDetails value={this.containers}
-                                       onChange={value => this.containers = value}/>
+                  onChange={value => this.containers = value} />
               </Collapse>
-              <br/>
+              <br />
               <Collapse panelName={<Trans>DeployService</Trans>}>
                 <DeployServiceDetails value={this.service}
-                                      onChange={value => this.service = value}/>
+                  onChange={value => this.service = value} />
               </Collapse>
-              <br/>
+              <br />
               <Collapse panelName={<Trans>MultiVolumeClaim</Trans>}>
                 <MultiVolumeClaimDetails value={this.volumeClaims}
-                                         onChange={value => this.volumeClaims = value}/>
+                  onChange={value => this.volumeClaims = value} />
               </Collapse>
             </div>
           </WizardStep>

@@ -1,10 +1,12 @@
-@import "../+workloads/workloads-mixins";
-
-
+// @import "../+workloads/workloads-mixins";
 .PipelineRun {
   .TableCell {
     &.name {
+<<<<<<< HEAD
       flex-grow: 3.0;
+=======
+      flex-grow: 4;
+>>>>>>> 75e2633f3a03ae0c5100bb42bb8b9494686f5fc0
     }
     &.ownernamespace {
       flex-grow: 0.1;

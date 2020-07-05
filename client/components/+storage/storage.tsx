@@ -11,6 +11,7 @@ import { StorageClasses, storageClassesRoute, storageClassesURL } from "../+stor
 import { PersistentVolumeClaims, volumeClaimsRoute, volumeClaimsURL } from "../+storage-volume-claims";
 import { namespaceStore } from "../+namespaces/namespace.store";
 import { storageURL } from "./storage.route";
+import { configStore } from "../../../client/config.store";
 
 interface Props extends RouteComponentProps<{}> {
 }
@@ -20,6 +21,7 @@ export class Storage extends React.Component<Props> {
   static get tabRoutes() {
     const tabRoutes: TabRoute[] = [];
     const query = namespaceStore.getContextParams()
+    const { isClusterAdmin } = configStore;
 
     tabRoutes.push({
       title: <Trans>Persistent Volume Claims</Trans>,
@@ -37,7 +39,7 @@ export class Storage extends React.Component<Props> {
       });
     }
 
-    if (true) {
+    if (isClusterAdmin) {
       tabRoutes.push({
         title: <Trans>Storage Classes</Trans>,
         component: StorageClasses,
@@ -53,8 +55,8 @@ export class Storage extends React.Component<Props> {
     return (
       <MainLayout className="Storage" tabs={tabRoutes}>
         <Switch>
-          {tabRoutes.map((route, index) => <Route key={index} {...route}/>)}
-          <Redirect to={storageURL({ query: namespaceStore.getContextParams() })}/>
+          {tabRoutes.map((route, index) => <Route key={index} {...route} />)}
+          <Redirect to={storageURL({ query: namespaceStore.getContextParams() })} />
         </Switch>
       </MainLayout>
     )

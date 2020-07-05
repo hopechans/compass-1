@@ -18,15 +18,17 @@ import { CopyTaskDialog, task, TaskResult } from "./copy-task-dialog";
 import { MenuItem } from "../menu";
 import { Icon } from "../icon";
 import { AddPipelineDialog } from "./add-pipeline-dialog";
-import { configStore } from "../../config.store";
 import { taskStore } from "../+tekton-task/task.store";
 import { PipelineDialog } from "./pipeline-dialog";
 import { pipelineResourceStore } from "../+tekton-pipelineresource/pipelineresource.store";
 import { PipelineRunDialog } from "./pipeline-run-dialog";
+<<<<<<< HEAD
 import { PieChart } from "../chart";
 import Item from "antd/lib/list/Item";
 import { Tasks } from "../+tekton-task";
 import _ from 'lodash';
+=======
+>>>>>>> 75e2633f3a03ae0c5100bb42bb8b9494686f5fc0
 
 enum sortBy {
   name = "name",
@@ -79,7 +81,11 @@ export class Pipelines extends React.Component<Props> {
             id: "1-1",
             x: 0,
             y: 0,
+<<<<<<< HEAD
             taskName: ``,
+=======
+            taskName: "",
+>>>>>>> 75e2633f3a03ae0c5100bb42bb8b9494686f5fc0
             anchorPoints: [
               [0, 0.5],
               [1, 0.5],

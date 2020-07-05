@@ -191,6 +191,7 @@ export class Sidebar extends React.Component<Props> {
                         />
                         <SidebarNavItem
                             id="apps"
+                            isHidden={!isClusterAdmin}
                             url={appsURL({ query })}
                             subMenus={Apps.tabRoutes}
                             routePath={appsRoute.path}
