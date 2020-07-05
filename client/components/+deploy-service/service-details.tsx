@@ -39,8 +39,8 @@ export class DeployServiceDetails extends React.Component<Props> {
 
   get typeOptions() {
     return [
-      "NodePort",
       "ClusterIP",
+      "NodePort",
       "LoadBalancer",
     ]
   }

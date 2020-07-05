@@ -70,7 +70,7 @@ export interface TaskResult {
 }
 
 export const task: TaskResult = {
-  taskName: "task1",
+  taskName: "",
   pipelineParams: [],
   resources: resources,
   taskSteps: [taskStep],
@@ -79,6 +79,7 @@ export const task: TaskResult = {
 
 @observer
 export class CopyTaskDialog extends React.Component<Props> {
+  @observable prefix: string = configStore.getDefaultNamespace() || "admin";
   @observable value: TaskResult = this.props.value || task;
   @observable static isOpen = false;
   @observable static graph: any;
@@ -149,7 +150,7 @@ export class CopyTaskDialog extends React.Component<Props> {
       if (task === undefined) {
         await taskStore.create(
           {
-            name: this.value.taskName, namespace: "",
+            name: this.prefix + '-' + this.value.taskName, namespace: "",
             labels: new Map<string, string>().set("namespace", configStore.getDefaultNamespace() == "" ? "admin" : configStore.getDefaultNamespace())
           },
           {
@@ -245,11 +246,12 @@ export class CopyTaskDialog extends React.Component<Props> {
               <div hidden={this.ifSwitch}>
                 <SubTitle title={<Trans>Task Name</Trans>} />
                 <Input
+                  iconLeft={<b>{this.prefix}</b>}
                   required={true}
                   validators={systemName}
                   placeholder={_i18n._("Task Name")}
                   value={this.value.taskName}
-                  onChange={(value) => (this.value.taskName = value)}
+                  onChange={(value) => (this.value.taskName = this.prefix + '-' + value)}
                 />
                 <br />
 

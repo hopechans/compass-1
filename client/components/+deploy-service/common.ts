@@ -19,6 +19,6 @@ export const deployPort: ServicePorts = {
 }
 
 export const deployService: Service = {
-    type: "NodePort",
+    type: "",
     ports: []
 }
