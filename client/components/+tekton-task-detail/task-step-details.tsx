@@ -80,21 +80,21 @@ export class TaskStepDetails extends React.Component<Props> {
           value={this.value.workspaces}
           onChange={(value) => (this.value.workspaces = value)}
         />
-        <Divider />
+        {/* <Divider />
         <br />
         <ResultsDetails
           value={this.value.results}
           onChange={(value) => (this.value.results = value)}
-        />
+        /> */}
         <br />
         <Divider />
-        <SubTitle title={<Trans>Scripts</Trans>} />
+        <SubTitle title={<Trans>Script</Trans>} />
         <Input
           multiLine={true}
           maxRows={10}
-          placeholder={_i18n._("Scripts")}
-          value={this.value.scripts}
-          onChange={(value) => (this.value.scripts = value)}
+          placeholder={_i18n._("Script")}
+          value={this.value.script}
+          onChange={(value) => (this.value.script = value)}
         />
       </>
     );

@@ -14,7 +14,7 @@ import {
 import { observable, toJS } from "mobx";
 import { Dialog } from "../dialog";
 import { Wizard, WizardStep } from "../wizard";
-import { Trans } from "@lingui/macro";
+import { Trans, t } from "@lingui/macro";
 import { ActionMeta } from "react-select/src/types";
 import { SubTitle } from "../layout/sub-title";
 import { Input } from "../input";
@@ -89,7 +89,6 @@ export class CopyTaskDialog extends React.Component<Props> {
 
   static open(graph: any, node: any) {
     CopyTaskDialog.isOpen = true;
-    taskStore.loadAll();
     this.graph = graph;
     this.node = node;
   }
@@ -101,11 +100,15 @@ export class CopyTaskDialog extends React.Component<Props> {
     const defaultNameSpace = "ops";
     const task = taskStore.getByName(name, defaultNameSpace);
     if (task !== undefined) {
-      if (task.spec.resources == undefined || Object.keys(task.spec.resources).length === 0) {
-        this.value.resources = resources;
-      } else {
-        this.value.resources = task.spec.resources;
-      }
+      // if (task.spec.resources == undefined || Object.keys(task.spec.resources).length === 0) {
+      //   this.value.resources = resources;
+      // } else {
+      //   this.value.resources = task.spec.resources;
+      // }
+
+      this.value.resources = resources;
+      this.value.resources.inputs = task.spec.resources?.inputs == undefined ? [] : task.spec.resources?.inputs;
+      this.value.resources.outputs = task.spec.resources?.outputs == undefined ? [] : task.spec.resources?.outputs;
 
       this.value.pipelineParams =
         task.spec.params == undefined ? [] : task.spec.params;
@@ -173,6 +176,10 @@ export class CopyTaskDialog extends React.Component<Props> {
           task.metadata.name = this.value.taskName;
           task.spec.params = parms;
           task.spec.resources = resources;
+          //TODO:查出来的task有些字段直接没有的。
+          // let a:any = task
+          // a.scirp= null;
+
           task.spec.steps = steps;
           await taskStore.update(task, { ...task });
         }

@@ -132,6 +132,7 @@ export class PipelineRuns extends React.Component<Props> {
     let nodeData = this.getNodeData(pipelinerun.spec.pipelineRef.name);
 
     if (nodeData === undefined || nodeData === "") {
+
     } else {
       this.graph.getGraph().clear();
 

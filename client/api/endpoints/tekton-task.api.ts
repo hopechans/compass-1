@@ -35,7 +35,7 @@ export interface ResourceDeclaration {
 // the Task definition, and when provided as an Input, the Name will be the
 // path to the volume mounted containing this Resource as an input (e.g.
 // an input Resource named `workspace` will be mounted at `/workspace`).
-export interface TaskResource extends ResourceDeclaration {}
+export interface TaskResource extends ResourceDeclaration { }
 
 export interface Inputs {
   // Resources is a list of the input resources required to run the task.
@@ -94,8 +94,8 @@ export interface TaskStep {
   env: EnvVar[];
   workspaces: Workspace[];
   workingDir: string;
-  results: Result[];
-  scripts: string;
+  // results: Result[];
+  script: string;
 }
 
 export interface Workspace {
