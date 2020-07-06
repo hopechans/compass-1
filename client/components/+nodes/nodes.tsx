@@ -44,7 +44,8 @@ export class Nodes extends React.Component<Props> {
 
   componentDidMount() {
     this.metricsWatcher.start(true);
-    new NodeZoneGraph(1000,350)
+    // *******HC WIP ******* // 
+    // new NodeZoneGraph(1000,350); WIP
   }
 
   componentWillUnmount() {
@@ -121,10 +122,11 @@ export class Nodes extends React.Component<Props> {
   render() {
     return (
       <MainLayout>
-        <div className={cssNames("node-zone-graph", themeStore.activeTheme.type)}>
+        {/* // *******HC WIP ******* //  */}
+        {/* <div className={cssNames("node-zone-graph", themeStore.activeTheme.type)}>
           <h5>节点分布图</h5>
           <div id="node-zone-graph"> </div>
-        </div>
+        </div> */}
         <KubeObjectListLayout
           className={cssNames("Nodes mt-10")}
           store={nodesStore} isClusterScoped
