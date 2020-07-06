@@ -4,7 +4,7 @@ import {
   PipelineParamsDetails,
   WorkspacesDetails,
   PipelineResourceDetails,
-} from "../+tekton-task-detail";
+} from "../+tekton-common";
 import { observable } from "mobx";
 import { ActionMeta } from "react-select/src/types";
 import { SubTitle } from "../layout/sub-title";

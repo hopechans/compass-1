@@ -6,7 +6,7 @@ import { apiManager } from "../../api/api-manager";
 
 @autobind()
 export class PipelineStore extends KubeObjectStore<Pipeline> {
-    api = pipelineApi
+  api = pipelineApi;
 }
 
 export const pipelineStore = new PipelineStore();

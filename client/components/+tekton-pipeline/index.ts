@@ -1,2 +1,2 @@
-export * from './pipeline'
-export * from './copy-task-dialog'
+export * from "./pipeline";
+export * from "../+tekton-task/copy-task-dialog";
