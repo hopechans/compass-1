@@ -74,12 +74,12 @@ export class TaskStepDetails extends React.Component<Props> {
           value={this.value.env}
           onChange={(value) => (this.value.env = value)}
         />
-        <Divider />
+        {/* <Divider />
         <br />
         <WorkspacesDetails
           value={this.value.workspaces}
           onChange={(value) => (this.value.workspaces = value)}
-        />
+        /> */}
         {/* <Divider />
         <br />
         <ResultsDetails

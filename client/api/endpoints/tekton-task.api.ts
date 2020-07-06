@@ -35,7 +35,7 @@ export interface ResourceDeclaration {
 // the Task definition, and when provided as an Input, the Name will be the
 // path to the volume mounted containing this Resource as an input (e.g.
 // an input Resource named `workspace` will be mounted at `/workspace`).
-export interface TaskResource extends ResourceDeclaration { }
+export interface TaskResource extends ResourceDeclaration {}
 
 export interface Inputs {
   // Resources is a list of the input resources required to run the task.
@@ -92,7 +92,7 @@ export interface TaskStep {
   args: string[];
   command: string[];
   env: EnvVar[];
-  workspaces: Workspace[];
+  // workspaces: Workspace[];
   workingDir: string;
   // results: Result[];
   script: string;
@@ -146,8 +146,12 @@ export class Task extends KubeObject {
   spec: TaskSpec;
 
   getOwnerNamespace(): string {
-    if (this.metadata.labels == undefined) { return "" }
-    return this.metadata.labels.namespace != undefined ? this.metadata.labels.namespace : "";
+    if (this.metadata.labels == undefined) {
+      return "";
+    }
+    return this.metadata.labels.namespace != undefined
+      ? this.metadata.labels.namespace
+      : "";
   }
 }
 

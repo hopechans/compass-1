@@ -100,12 +100,6 @@ export class CopyTaskDialog extends React.Component<Props> {
     const defaultNameSpace = "ops";
     const task = taskStore.getByName(name, defaultNameSpace);
     if (task !== undefined) {
-      // if (task.spec.resources == undefined || Object.keys(task.spec.resources).length === 0) {
-      //   this.value.resources = resources;
-      // } else {
-      //   this.value.resources = task.spec.resources;
-      // }
-
       this.value.resources = resources;
       this.value.resources.inputs =
         task.spec.resources?.inputs == undefined
@@ -198,6 +192,7 @@ export class CopyTaskDialog extends React.Component<Props> {
       Notifications.ok(<>task {this.value.taskName} save successed</>);
       this.close();
     } catch (err) {
+      this.value.taskName = "";
       Notifications.error(err);
     }
   };
