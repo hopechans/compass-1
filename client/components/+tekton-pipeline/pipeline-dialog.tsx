@@ -59,18 +59,16 @@ export class PipelineDialog extends React.Component<Props> {
       if (task !== undefined) {
         this.value.tasks.push(currentPipeline.spec.tasks[index]);
         if (task.spec.resources.inputs !== undefined) {
-          task.spec.resources.inputs.map((task) => {
-            currentPipeline.spec.tasks[index].resources.inputs = [];
-            currentPipeline.spec.tasks[index].resources.inputs.push({ name: task.name, resource: "" })
+          task.spec.resources.inputs.map((task: { name: any; }) => {
+            this.value.tasks[index].resources.inputs.push({ name: task.name, resource: "" })
           });
           this.value.tasks[index].resources.inputs = [];
           this.value.tasks[index].resources.inputs = currentPipeline.spec.tasks[index].resources.inputs;
         }
 
         if (task.spec.resources.outputs !== undefined) {
-          task.spec.resources.outputs.map((task) => {
-            currentPipeline.spec.tasks[index].resources.outputs = [];
-            currentPipeline.spec.tasks[index].resources.outputs.push({ name: task.name, resource: "" })
+          task.spec.resources.outputs.map((task: { name: any; }) => {
+            this.value.tasks[index].resources.outputs.push({ name: task.name, resource: "" });
           });
 
           this.value.tasks[index].resources.outputs = [];
