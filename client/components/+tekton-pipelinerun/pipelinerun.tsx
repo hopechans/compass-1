@@ -25,6 +25,7 @@ import { PodLogsDialog } from '../+workloads-pods/pod-logs-dialog'
 import { podsStore } from '../+workloads-pods/pods.store'
 import { Pod } from "../../api/endpoints";
 import { configStore } from "../../../client/config.store";
+import Tooltip from '@material-ui/core/Tooltip';
 
 
 enum sortBy {
@@ -285,6 +286,26 @@ export class PipelineRuns extends React.Component<Props> {
     }
   }
 
+  renderTime(time: string) {
+    return (
+      <TooltipContent className="PiplineRunTooltip">
+        {time}
+      </TooltipContent>
+    )
+  }
+
+  renderPipelineName(name: string) {
+    return (
+      <div>
+        <Tooltip title={name} placement="top-start">
+          <span>{name}</span>
+        </Tooltip>
+
+      </div >
+
+    )
+  }
+
   render() {
     return (
       <>
@@ -325,14 +346,15 @@ export class PipelineRuns extends React.Component<Props> {
             { title: <Trans>CompletionTime</Trans>, className: "completionTime", },
           ]}
           renderTableContents={(pipelineRun: PipelineRun) => [
-            pipelineRun.getName(),
+            this.renderPipelineName(pipelineRun.getName()),
             pipelineRun.getOwnerNamespace(),
             pipelineRun.hasIssues() && <PipelineRunIcon object={pipelineRun.status.conditions[0]} />,
             // pipelineRun.getErrorReason(),
             pipelineRun.getAge(),
             this.renderTasks(pipelineRun),
-            pipelineRun.getStartTime() != "" ? new Date(pipelineRun.status.startTime).toLocaleString('zh', { hour12: false }) : "",
-            pipelineRun.getCompletionTime() != "" ? new Date(pipelineRun.status.startTime).toLocaleString('zh', { hour12: false }) : "",
+            this.renderTime(pipelineRun.getStartTime() != "" ? new Date(pipelineRun.status.startTime).toLocaleString() : "",),
+            this.renderTime(pipelineRun.getCompletionTime() != "" ? new Date(pipelineRun.status.startTime).toLocaleString() : "")
+            ,
           ]}
           renderItemMenu={(item: PipelineRun) => {
             return <PipelineRunMenu object={item} />;

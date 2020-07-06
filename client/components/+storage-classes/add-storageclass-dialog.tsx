@@ -28,7 +28,7 @@ export class AddStorageClassDialog extends React.Component<Props> {
   @observable name: string = "";
   @observable provisioner: string = "ceph.com/rbd";
   @observable volumeBindingMode: string = "Immediate";
-  @observable reclaimPolicy: string = "Delete";
+  @observable reclaimPolicy: string = "Retain";
   @observable params: CephParams = cephParams;
   @observable userSecretNamespace = "";
 
@@ -73,7 +73,8 @@ export class AddStorageClassDialog extends React.Component<Props> {
 
   get reclaimPolicyOptions() {
     return [
-      "Delete"
+      "Delete",
+      "Retain",
     ]
   }
 

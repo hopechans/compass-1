@@ -46,13 +46,13 @@ export class NamespaceAllowStorageClassSelect extends React.Component<Props> {
     const { customizeOptions, showClusterOption, clusterOptionLabel, namespaceName } = this.props;
     let options: SelectOption[];
     if (namespaceName != '') {
+
       try {
         options = namespaceStore.items.find(item => item.getName() === namespaceName)
-          .getAnnotations()
+          .getAnnotations().filter(item => item.startsWith("fuxi.kubernetes.io/default_storage_limit"))
           .map(item => (
-            { value: item.startsWith("fuxi.kubernetes.io/default_storage_limit") ? item.split('=')[1] : "" }
+            { value: JSON.parse(item.split('=')[1])[0] }
           ))
-
       } catch (err) {
         options = [];
       }
@@ -82,8 +82,8 @@ export class NamespaceAllowStorageClassSelect extends React.Component<Props> {
     const { className, showIcons, showClusterOption, clusterOptionLabel, customizeOptions, ...selectProps } = this.props;
     return (
       <Select
-        className={cssNames("NamesapceAllowStorageClassSelect", className)}
-        menuClass="NamesapceAllowStorageClassSelect"
+        className={cssNames("NamespaceAllowStorageClassSelect", className)}
+        menuClass="NamespaceAllowStorageClassSelect"
         formatOptionLabel={this.formatOptionLabel}
         options={this.options}
         {...selectProps}

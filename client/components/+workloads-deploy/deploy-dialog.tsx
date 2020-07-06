@@ -58,6 +58,7 @@ export class DeployDialog extends React.Component<Props> {
     const data = {
       appName: this.appName,
       templateName: this.templateName,
+      storageClass: this.storageClass,
       namespace: this.namespace,
       replicas: this.replicas,
     }
