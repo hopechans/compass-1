@@ -14,10 +14,10 @@ import { Input } from "../input";
 import { Select, SelectOption } from "../select";
 import { taskStore } from "../+tekton-task/task.store";
 import { Icon } from "../icon";
-import { ResourcesDetail, ParamsDetails } from "../+tekton-task-detail";
+import { ResourcesDetail, ParamsDetails } from "../+tekton-common";
 import { TaskSelect } from "./task-select";
 import { Grid, Divider } from "@material-ui/core";
-import { MutilPipelineResource } from "../+tekton-task-detail";
+import { MutilPipelineResource } from "../+tekton-common";
 interface Props<T = any> extends Partial<Props> {
   value?: T;
   themeName?: "dark" | "light" | "outlined";

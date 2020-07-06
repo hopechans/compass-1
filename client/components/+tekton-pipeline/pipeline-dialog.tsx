@@ -9,7 +9,7 @@ import { Pipeline } from "../../api/endpoints";
 import { Notifications } from "../notifications";
 import { PipelineDetails, PipelineResult, pipeline } from "./pipeline-details";
 import { pipelineStore } from "./pipeline.store";
-import { task } from "./copy-task-dialog";
+import { task } from "../+tekton-task/copy-task-dialog";
 import { pipelineTaskResource } from "./pipeline-task";
 import { taskStore } from "../+tekton-task/task.store";
 
@@ -52,10 +52,7 @@ export class PipelineDialog extends React.Component<Props> {
     this.value.tasks = [];
     let currentPipeline = PipelineDialog.currentPipeline;
 
-
     currentPipeline.spec.tasks.map((item, index) => {
-
-
       let task = taskStore.getByName(item.name);
       if (task !== undefined) {
         this.value.tasks.push(currentPipeline.spec.tasks[index]);
@@ -63,29 +60,29 @@ export class PipelineDialog extends React.Component<Props> {
         this.value.tasks[index].resources = null;
         this.value.tasks[index].resources = pipelineTaskResource;
         if (task.spec.resources.inputs !== undefined) {
-          task.spec.resources.inputs.map((task: { name: any; }) => {
-            this.value.tasks[index].resources.inputs.push({ name: task.name, resource: "" })
+          task.spec.resources.inputs.map((task: { name: any }) => {
+            this.value.tasks[index].resources.inputs.push({
+              name: task.name,
+              resource: "",
+            });
           });
         }
 
         if (task.spec.resources.outputs !== undefined) {
-          task.spec.resources.outputs.map((task: { name: any; }) => {
-            this.value.tasks[index].resources.outputs.push({ name: task.name, resource: "" });
+          task.spec.resources.outputs.map((task: { name: any }) => {
+            this.value.tasks[index].resources.outputs.push({
+              name: task.name,
+              resource: "",
+            });
           });
-
-
-
         }
       }
-
     });
 
     this.value.tasks.map((item: any, index: number) => {
-
       if (item.resources === undefined) {
         this.value.tasks[index].resources = pipelineTaskResource;
       }
-
 
       if (item.params === undefined) {
         this.value.tasks[index].params = [];
@@ -114,8 +111,6 @@ export class PipelineDialog extends React.Component<Props> {
   };
 
   submit = async () => {
-
-
     let pipeline = PipelineDialog.currentPipeline;
 
     pipeline.metadata.name = this.value.pipelineName;
@@ -154,7 +149,9 @@ export class PipelineDialog extends React.Component<Props> {
           <WizardStep contentClass="flex gaps column" next={this.submit}>
             <PipelineDetails
               value={this.value}
-              onChange={(value) => { this.value = value.value; }}
+              onChange={(value) => {
+                this.value = value.value;
+              }}
             />
           </WizardStep>
         </Wizard>

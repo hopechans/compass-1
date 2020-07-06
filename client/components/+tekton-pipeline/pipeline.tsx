@@ -12,9 +12,13 @@ import { eventStore } from "../+events/event.store";
 import { KubeObjectMenu, KubeObjectMenuProps } from "../kube-object";
 import { KubeObjectListLayout } from "../kube-object";
 import { apiManager } from "../../api/api-manager";
-import { PipelineGraph } from "../+graphs/pipeline-graph";
-import { Graph, PipelineResult, pipelineResult } from "../+graphs/graph";
-import { CopyTaskDialog, task, TaskResult } from "./copy-task-dialog";
+import { PipelineGraph } from "../+tekton-graph/pipeline-graph";
+import { Graph, PipelineResult, pipelineResult } from "../+tekton-graph/graph";
+import {
+  CopyTaskDialog,
+  task,
+  TaskResult,
+} from "../+tekton-task/copy-task-dialog";
 import { MenuItem } from "../menu";
 import { Icon } from "../icon";
 import { AddPipelineDialog } from "./add-pipeline-dialog";
@@ -22,11 +26,11 @@ import { configStore } from "../../config.store";
 import { taskStore } from "../+tekton-task/task.store";
 import { PipelineDialog } from "./pipeline-dialog";
 import { pipelineResourceStore } from "../+tekton-pipelineresource/pipelineresource.store";
-import { PipelineRunDialog } from "./pipeline-run-dialog";
+import { PipelineRunDialog } from "../+tekton-pipelinerun/pipeline-run-dialog";
 import { PieChart } from "../chart";
 import Item from "antd/lib/list/Item";
 import { Tasks } from "../+tekton-task";
-import _ from 'lodash';
+import _ from "lodash";
 
 enum sortBy {
   name = "name",
@@ -36,7 +40,7 @@ enum sortBy {
   age = "age",
 }
 
-interface Props extends RouteComponentProps { }
+interface Props extends RouteComponentProps {}
 
 @observer
 export class Pipelines extends React.Component<Props> {
@@ -166,19 +170,16 @@ export class Pipelines extends React.Component<Props> {
 
     const pipelineTasks = this.pipeline.spec.tasks;
     if (pipelineTasks !== undefined) {
-
       this.getPipelineTasks().map((task) => {
-        const t = pipelineTasks.find(x => x.name == task.name);
+        const t = pipelineTasks.find((x) => x.name == task.name);
         if (t === undefined) {
           this.pipeline.spec.tasks.push(task);
         }
       });
     } else {
       this.pipeline.spec.tasks = [];
-      this.pipeline.spec.tasks.push(... this.getPipelineTasks());
-
+      this.pipeline.spec.tasks.push(...this.getPipelineTasks());
     }
-
 
     //will show pipeline dialog
     PipelineDialog.open(this.pipeline);
@@ -210,17 +211,34 @@ export class Pipelines extends React.Component<Props> {
           dependentStores={[taskStore, pipelineResourceStore]} // other
           sortingCallbacks={{
             [sortBy.name]: (pipeline: Pipeline) => pipeline.getName(),
-            [sortBy.ownernamespace]: (pipeline: Pipeline) => pipeline.getOwnerNamespace(),
+            [sortBy.ownernamespace]: (pipeline: Pipeline) =>
+              pipeline.getOwnerNamespace(),
             [sortBy.age]: (pipeline: Pipeline) => pipeline.getAge(false),
             [sortBy.tasks]: (pipeline: Pipeline) => pipeline.getTasks().length,
           }}
           searchFilters={[(pipeline: Pipeline) => pipeline.getSearchFields()]}
           renderHeaderTitle={<Trans>Tekton Pipeline</Trans>}
           renderTableHeader={[
-            { title: <Trans>Name</Trans>, className: "name", sortBy: sortBy.name },
-            { title: <Trans>OwnerNamespace</Trans>, className: "ownernamespace", sortBy: sortBy.ownernamespace },
-            { title: <Trans>Tasks</Trans>, className: "tasks", sortBy: sortBy.tasks },
-            { title: <Trans>TaskNames</Trans>, className: "tasknames", sortBy: sortBy.tasknames },
+            {
+              title: <Trans>Name</Trans>,
+              className: "name",
+              sortBy: sortBy.name,
+            },
+            {
+              title: <Trans>OwnerNamespace</Trans>,
+              className: "ownernamespace",
+              sortBy: sortBy.ownernamespace,
+            },
+            {
+              title: <Trans>Tasks</Trans>,
+              className: "tasks",
+              sortBy: sortBy.tasks,
+            },
+            {
+              title: <Trans>TaskNames</Trans>,
+              className: "tasknames",
+              sortBy: sortBy.tasknames,
+            },
             { title: <Trans>Age</Trans>, className: "age", sortBy: sortBy.age },
           ]}
           renderTableContents={(pipeline: Pipeline) => [
@@ -246,7 +264,6 @@ export class Pipelines extends React.Component<Props> {
             },
           }}
           onDetails={(pipeline: Pipeline) => {
-
             this.showPipeline(pipeline);
           }}
         />

@@ -13,8 +13,7 @@ import { Notifications } from "../notifications";
 import { configStore } from "../../config.store";
 import { pipelineStore } from "./pipeline.store";
 
-interface Props<T = any> extends Partial<Props> {
-}
+interface Props<T = any> extends Partial<Props> {}
 
 @observer
 export class AddPipelineDialog extends React.Component<Props> {
@@ -38,8 +37,14 @@ export class AddPipelineDialog extends React.Component<Props> {
     try {
       await pipelineStore.create(
         {
-          name: this.prefix + '-' + this.value, namespace: "",
-          labels: new Map<string, string>().set("namespace", configStore.getDefaultNamespace() == "" ? "admin" : configStore.getDefaultNamespace())
+          name: this.prefix + "-" + this.value,
+          namespace: "",
+          labels: new Map<string, string>().set(
+            "namespace",
+            configStore.getDefaultNamespace() == ""
+              ? "admin"
+              : configStore.getDefaultNamespace()
+          ),
         },
         {
           spec: {
@@ -56,13 +61,14 @@ export class AddPipelineDialog extends React.Component<Props> {
   };
 
   render() {
-    const header = (<h5><Trans>Create Pipeline</Trans></h5>);
+    const header = (
+      <h5>
+        <Trans>Create Pipeline</Trans>
+      </h5>
+    );
 
     return (
-      <Dialog
-        isOpen={AddPipelineDialog.isOpen}
-        close={this.close}
-      >
+      <Dialog isOpen={AddPipelineDialog.isOpen} close={this.close}>
         <Wizard className="AddPipelineDialog" header={header} done={this.close}>
           <WizardStep contentClass="flex gaps column" next={this.submit}>
             <SubTitle title={"Pipeline Name"} />

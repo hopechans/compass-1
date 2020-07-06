@@ -12,10 +12,9 @@ import { pipelineResourceApi } from "../../api/endpoints";
 import { Notifications } from "../notifications";
 import { Select, SelectOption } from "../select";
 import { Icon } from "../icon";
-import { Params } from "../+tekton-task-detail";
-import { ParamsDetails } from "../+tekton-task-detail";
+import { Params } from "../+tekton-common";
+import { ParamsDetails } from "../+tekton-common";
 import { configStore } from "../../config.store";
-
 
 interface Props<T = any> extends Partial<Props> {
   value?: T;
@@ -69,8 +68,14 @@ export class AddPipelineResourceDialog extends React.Component<Props> {
     try {
       await pipelineResourceApi.create(
         {
-          name: this.prefix + '-' + this.name, namespace: "",
-          labels: new Map<string, string>().set("namespace", configStore.getDefaultNamespace() == "" ? "admin" : configStore.getDefaultNamespace())
+          name: this.prefix + "-" + this.name,
+          namespace: "",
+          labels: new Map<string, string>().set(
+            "namespace",
+            configStore.getDefaultNamespace() == ""
+              ? "admin"
+              : configStore.getDefaultNamespace()
+          ),
         },
         {
           spec: {
