@@ -19,10 +19,10 @@ export interface TaskStep {
   args: string[];
   command: string[];
   env: EnvVar[];
-  workspaces: Workspace[];
+  // workspaces: Workspace[];
   workingDir: string;
-  results: Result[];
-  scripts: string;
+  // results: Result[];
+  script: string;
 }
 
 export interface Workspace {
@@ -98,10 +98,10 @@ export const taskStep: TaskStep = {
   args: [],
   command: [],
   env: [],
-  workspaces: [],
+  // workspaces: [],
   workingDir: "",
-  results: [],
-  scripts: "",
+  // results: [],
+  script: "",
 };
 
 export const workspace: Workspace = {

@@ -18,9 +18,9 @@ import {
 import { Notifications } from "../notifications";
 import { PipelineRunResourceDetails } from "./pipeline-run-resource-details";
 import { systemName } from "../input/input.validators";
-import { configStore } from "../../../client/config.store";
-import { pipelineStore } from "./pipeline.store";
-import { pipelineRunStore } from "../+tekton-pipelinerun/pipelinerun.store";
+import { configStore } from "../../config.store";
+import { pipelineStore } from "../+tekton-pipeline/pipeline.store";
+import { pipelineRunStore } from "./pipelinerun.store";
 interface Props<T = any> extends Partial<Props> {
   value?: T;
   themeName?: "dark" | "light" | "outlined";
@@ -98,7 +98,12 @@ export class PipelineRunDialog extends React.Component<Props> {
         {
           name: this.value.name,
           namespace: "",
-          labels: new Map<string, string>().set("namespace", configStore.getDefaultNamespace() == "" ? "admin" : configStore.getDefaultNamespace())
+          labels: new Map<string, string>().set(
+            "namespace",
+            configStore.getDefaultNamespace() == ""
+              ? "admin"
+              : configStore.getDefaultNamespace()
+          ),
         },
         {
           spec: {

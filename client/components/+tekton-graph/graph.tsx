@@ -11,21 +11,21 @@ import {
   PipelineResourceDetails,
   PipelineParams,
   PipelineResources,
-} from "../+tekton-task-detail";
+} from "../+tekton-common";
 import "./graph.scss";
 
 interface IProps {
   open?: boolean;
   showSave?: boolean;
   saveCallback?: (pipeResult: PipelineResult) => void;
-  closeGraph?:()=>void;
+  closeGraph?: () => void;
 }
 
 interface IState {
   open?: boolean;
   showSave?: boolean;
   saveCallback?: (pipeResult: PipelineResult) => void;
-  closeGraph?:()=>void;
+  closeGraph?: () => void;
 }
 
 export interface PipelineResult {
@@ -84,7 +84,7 @@ export class Graph extends React.Component<IProps, IState> {
                 <span>Save</span>
               </Button>
 
-              <Button onClick={this.closeGraph} style={{marginLeft:'10px'}}>
+              <Button onClick={this.closeGraph} style={{ marginLeft: "10px" }}>
                 <span>Close</span>
               </Button>
             </Grid>
@@ -96,4 +96,3 @@ export class Graph extends React.Component<IProps, IState> {
     );
   }
 }
-

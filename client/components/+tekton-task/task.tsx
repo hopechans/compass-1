@@ -17,8 +17,7 @@ enum sortBy {
   age = "age",
 }
 
-interface Props extends RouteComponentProps {
-}
+interface Props extends RouteComponentProps {}
 
 @observer
 export class Tasks extends React.Component<Props> {
@@ -26,20 +25,31 @@ export class Tasks extends React.Component<Props> {
     return (
       <>
         <KubeObjectListLayout
-          className="Tasks" store={taskStore}
+          className="Tasks"
+          store={taskStore}
           sortingCallbacks={{
             [sortBy.name]: (task: Task) => task.getName(),
             [sortBy.ownernamespace]: (task: Task) => task.getOwnerNamespace(),
             [sortBy.age]: (task: Task) => task.getAge(false),
           }}
-          searchFilters={[
-            (task: Task) => task.getSearchFields(),
-          ]}
+          searchFilters={[(task: Task) => task.getSearchFields()]}
           renderHeaderTitle={<Trans>Tasks</Trans>}
           renderTableHeader={[
-            { title: <Trans>Name</Trans>, className: "name", sortBy: sortBy.name },
-            { title: <Trans>OwnerNamespace</Trans>, className: "ownernamespace", sortBy: sortBy.ownernamespace },
-            { title: <Trans>Pods</Trans>, className: "pods", sortBy: sortBy.pods },
+            {
+              title: <Trans>Name</Trans>,
+              className: "name",
+              sortBy: sortBy.name,
+            },
+            {
+              title: <Trans>OwnerNamespace</Trans>,
+              className: "ownernamespace",
+              sortBy: sortBy.ownernamespace,
+            },
+            {
+              title: <Trans>Pods</Trans>,
+              className: "pods",
+              sortBy: sortBy.pods,
+            },
             { className: "warning" },
             { title: <Trans>Age</Trans>, className: "age", sortBy: sortBy.age },
           ]}
@@ -49,18 +59,16 @@ export class Tasks extends React.Component<Props> {
             task.getAge(),
           ]}
           renderItemMenu={(item: Task) => {
-            return <TaskMenu object={item} />
+            return <TaskMenu object={item} />;
           }}
         />
       </>
-    )
+    );
   }
 }
 
 export function TaskMenu(props: KubeObjectMenuProps<Task>) {
-  return (
-    <KubeObjectMenu {...props} />
-  )
+  return <KubeObjectMenu {...props} />;
 }
 
-apiManager.registerViews(taskApi, { Menu: TaskMenu, })
+apiManager.registerViews(taskApi, { Menu: TaskMenu });

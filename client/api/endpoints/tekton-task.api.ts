@@ -92,10 +92,10 @@ export interface TaskStep {
   args: string[];
   command: string[];
   env: EnvVar[];
-  workspaces: Workspace[];
+  // workspaces: Workspace[];
   workingDir: string;
-  results: Result[];
-  scripts: string;
+  // results: Result[];
+  script: string;
 }
 
 export interface Workspace {
@@ -146,8 +146,12 @@ export class Task extends KubeObject {
   spec: TaskSpec;
 
   getOwnerNamespace(): string {
-    if (this.metadata.labels == undefined) { return "" }
-    return this.metadata.labels.namespace != undefined ? this.metadata.labels.namespace : "";
+    if (this.metadata.labels == undefined) {
+      return "";
+    }
+    return this.metadata.labels.namespace != undefined
+      ? this.metadata.labels.namespace
+      : "";
   }
 }
 
