@@ -75,7 +75,8 @@ export class Sidebar extends React.Component<Props> {
 
     render() {
         const { toggle, isPinned, className } = this.props;
-        const { isClusterAdmin } = configStore;
+        const userConifg = JSON.parse(localStorage.getItem('u_config'))
+        const isClusterAdmin = userConifg ? userConifg.isClusterAdmin : false
         const query = namespaceStore.getContextParams();
         return (
             <SidebarContext.Provider value={{ pinned: isPinned }}>
