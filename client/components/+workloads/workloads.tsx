@@ -29,7 +29,8 @@ interface Props extends RouteComponentProps {
 export class Workloads extends React.Component<Props> {
   static get tabRoutes(): TabRoute[] {
     const query = namespaceStore.getContextParams();
-    const { isClusterAdmin } = configStore;
+    const userConifg = JSON.parse(localStorage.getItem('u_config'))
+    const isClusterAdmin = userConifg ? userConifg.isClusterAdmin : false
     let items = [
       {
         title: <Trans>Overview</Trans>,

@@ -21,8 +21,8 @@ export class Storage extends React.Component<Props> {
   static get tabRoutes() {
     const tabRoutes: TabRoute[] = [];
     const query = namespaceStore.getContextParams()
-    const { isClusterAdmin } = configStore;
-
+    const userConifg = JSON.parse(localStorage.getItem('u_config'))
+    const isClusterAdmin = userConifg ? userConifg.isClusterAdmin : false
     tabRoutes.push({
       title: <Trans>Persistent Volume Claims</Trans>,
       component: PersistentVolumeClaims,
