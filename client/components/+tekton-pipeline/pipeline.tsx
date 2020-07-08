@@ -20,7 +20,7 @@ import {MenuItem} from "../menu";
 import {Icon} from "../icon";
 import {AddPipelineDialog} from "./add-pipeline-dialog";
 import {taskStore} from "../+tekton-task/task.store";
-import {PipelineDialog} from "./pipeline-dialog";
+import {PipelineSaveDialog} from "./pipeline-save-dialog";
 import {pipelineResourceStore} from "../+tekton-pipelineresource/pipelineresource.store";
 import {PipelineRunDialog} from "../+tekton-pipelinerun/pipeline-run-dialog";
 import {PipelineVisualDialog} from "./pipeline-visual-dialog";
@@ -112,7 +112,7 @@ export class Pipelines extends React.Component<Props> {
         <PipelineVisualDialog />
         <CopyTaskDialog />
         <AddPipelineDialog />
-        <PipelineDialog />
+        <PipelineSaveDialog />
         <PipelineRunDialog />
       </>
     );

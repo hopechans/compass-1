@@ -10,7 +10,7 @@ import {Pipeline, PipelineTask} from "../../api/endpoints";
 import {graphId, Graphs, initData} from "../+tekton-graph/graphs";
 import {CopyTaskDialog} from "../+tekton-task/copy-task-dialog";
 import {PipelineResult} from "../+tekton-graph/graph";
-import {PipelineDialog} from "./pipeline-dialog";
+import {PipelineSaveDialog} from "./pipeline-save-dialog";
 
 interface Props extends Partial<Props> {
 }
@@ -145,7 +145,7 @@ export class PipelineVisualDialog extends React.Component<Props> {
       this.pipeline.spec.tasks.push(...this.getPipelineTasks());
     }
 
-    PipelineDialog.open(this.pipeline)
+    PipelineSaveDialog.open(this.pipeline)
   };
 
   static close() {

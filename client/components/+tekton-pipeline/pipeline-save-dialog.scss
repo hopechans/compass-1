@@ -1,0 +1,18 @@
+.PipelineSaveDialog {
+  .Wizard {
+    --wizard-width: 45vw;
+    --wizard-content-height: 35vw;
+    --wizard-content-max-height: 35vw;
+
+  }
+
+  .WizardStep {
+    .step-content {
+      padding: var(--wizard-spacing);
+    }
+
+    code {
+      max-height: 100vh;
+    }
+  }
+}
