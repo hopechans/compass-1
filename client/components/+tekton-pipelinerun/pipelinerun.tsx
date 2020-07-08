@@ -197,7 +197,8 @@ export class PipelineRuns extends React.Component<Props> {
               //when show pipeline will use current date time  less start time and then self-increment。
               let completionTime = currentTaskRun.status.completionTime;
               let totalTime: string;
-              const currentStartTime = currentTaskRun.status.startTime;
+              const currentStartTime =
+                currentTaskRun.metadata.creationTimestamp;
               const st = new Date(currentStartTime).getTime();
               if (completionTime !== undefined) {
                 const ct = new Date(completionTime).getTime();
@@ -234,7 +235,15 @@ export class PipelineRuns extends React.Component<Props> {
         if (taskRun === undefined) {
           return;
         }
+        if (
+          taskRun.status?.podName === "" ||
+          taskRun.status?.podName === undefined
+        ) {
+          return;
+        }
+        //TODO：TypeError: Cannot read property '0' of undefined case page panic
         let status = taskRun?.status?.conditions[0]?.reason;
+
         if (status === undefined) {
           status = "pending";
         }
