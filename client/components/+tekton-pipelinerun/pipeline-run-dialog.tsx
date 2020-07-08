@@ -78,10 +78,10 @@ export class PipelineRunDialog extends React.Component<Props> {
       "-" +
       timeStamp;
     //fill the  resources
-    const currnetPipeline = pipelineStore.getByName(
+    const currentPipeline = pipelineStore.getByName(
       this.value.pipelineRef.name
     );
-    currnetPipeline.spec.resources.map((item: any, index: number) => {
+    currentPipeline.spec.resources.map((item: any, index: number) => {
       let resources: PipelineResourceBinding = {
         name: item.name,
         resourceRef: { name: "" },

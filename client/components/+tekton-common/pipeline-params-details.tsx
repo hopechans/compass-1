@@ -49,7 +49,7 @@ export class PipelineParamsDetails extends React.Component<Props> {
           />
         </SubTitle>
         {this.value.length > 0 ? (
-          <>
+          <div>
             <Row>
               <Col span={4}>
                 <Trans>Name</Trans>
@@ -57,7 +57,7 @@ export class PipelineParamsDetails extends React.Component<Props> {
               <Col span={5} offset={1}>
                 <Trans>Type</Trans>
               </Col>
-              <Col span={4} offset={1}>
+              <Col span={4} offset={2}>
                 <Trans>Description</Trans>
               </Col>
               <Col span={4} offset={1}>
@@ -65,13 +65,13 @@ export class PipelineParamsDetails extends React.Component<Props> {
               </Col>
             </Row>
             <br />
-          </>
+          </div>
         ) : (
           <></>
         )}
         {this.value.map((item, index) => {
           return (
-            <>
+            <div>
               <Row>
                 <Col span={4}>
                   <Input
@@ -89,7 +89,7 @@ export class PipelineParamsDetails extends React.Component<Props> {
                     }}
                   />
                 </Col>
-                <Col span={4} offset={1}>
+                <Col span={4} offset={2}>
                   <Input
                     value={this.value[index].description}
                     onChange={(value) =>
@@ -114,8 +114,8 @@ export class PipelineParamsDetails extends React.Component<Props> {
                   />
                 </Col>
               </Row>
-              <br></br>
-            </>
+              <br/>
+            </div>
           );
         })}
       </div>

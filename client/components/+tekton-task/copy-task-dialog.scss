@@ -1,4 +1,17 @@
 .CopyAddDeployDialog {
-  width: 1000px;
-  height: 1000px;
+  .Wizard {
+    --wizard-width: 60vw;
+    --wizard-content-height: 60vh;
+    --wizard-content-max-height: 60vh;
+  }
+
+  .WizardStep {
+    .step-content {
+      padding: var(--wizard-spacing);
+    }
+
+    code {
+      max-height: 100vh;
+    }
+  }
 }

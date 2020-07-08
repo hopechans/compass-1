@@ -1,14 +1,9 @@
 import React from "react";
 import { Grid, Divider, Card } from "@material-ui/core";
-import { Trans } from "@lingui/macro";
 import { Button } from "../button";
-import { cssNames } from "../../utils";
 import { observer } from "mobx-react";
-import { themeStore } from "../../theme.store";
 import { observable } from "mobx";
 import {
-  PipelineParamsDetails,
-  PipelineResourceDetails,
   PipelineParams,
   PipelineResources,
 } from "../+tekton-common";
@@ -72,13 +67,8 @@ export class Graph extends React.Component<IProps, IState> {
       <div>
         <div hidden={open}>
           <Grid container spacing={1}>
-            <Grid item xs={3}>
-              <h5 className="title">
-                <Trans>Pipeline Visualization</Trans>
-              </h5>
-            </Grid>
-            <Grid item xs={1}></Grid>
-            <Grid item xs={5}></Grid>
+            <Grid item xs={1} />
+            <Grid item xs={5} />
             <Grid item xs={3} className="btn-group">
               <Button primary onClick={this.handleClick} hidden={showSave}>
                 <span>Save</span>
@@ -91,7 +81,7 @@ export class Graph extends React.Component<IProps, IState> {
           </Grid>
         </div>
 
-        <div className="pipeline-graph" id="pipeline-graph" hidden={open}></div>
+        <div className="pipeline-graph" id="pipeline-graph" hidden={open} />
       </div>
     );
   }

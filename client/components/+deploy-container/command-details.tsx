@@ -81,6 +81,7 @@ export class CommandDetails extends React.Component<Props> {
                     />
                   </Col>
                 </Row>
+                <br/>
               </div>
             )
           })}

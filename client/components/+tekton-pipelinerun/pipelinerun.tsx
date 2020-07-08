@@ -26,6 +26,7 @@ import { podsStore } from "../+workloads-pods/pods.store";
 import { Pod } from "../../api/endpoints";
 import { configStore } from "../../../client/config.store";
 import Tooltip from "@material-ui/core/Tooltip";
+import {PipelineRunVisualDialog} from "./pipelinerun-visual-dialog";
 
 enum sortBy {
   name = "name",
@@ -94,20 +95,20 @@ export class PipelineRuns extends React.Component<Props> {
     return taskMap;
   }
 
-  componentDidMount() {
-    this.graph = new PipelineGraph(0, 0);
-    this.graph.bindClickOnNode((currentNode: any) => {
-      const group = currentNode.getContainer();
-      let shape = group.get("children")[2];
-      const name = shape.attrs.text;
-
-      const names = this.getTaskRunName(this.pipelineRun);
-      const currentTaskRunMap = this.getTaskRun(names);
-      const currentTaskRun = currentTaskRunMap[name];
-      const podName = currentTaskRun.status.podName;
-      this.showLogs(podName);
-    });
-  }
+  // componentDidMount() {
+  //   this.graph = new PipelineGraph(0, 0);
+  //   this.graph.bindClickOnNode((currentNode: any) => {
+  //     const group = currentNode.getContainer();
+  //     let shape = group.get("children")[2];
+  //     const name = shape.attrs.text;
+  //
+  //     const names = this.getTaskRunName(this.pipelineRun);
+  //     const currentTaskRunMap = this.getTaskRun(names);
+  //     const currentTaskRun = currentTaskRunMap[name];
+  //     const podName = currentTaskRun.status.podName;
+  //     this.showLogs(podName);
+  //   });
+  // }
 
   showLogs(podName: string) {
     let pod: Pod = podsStore.getByName(podName);
@@ -307,13 +308,13 @@ export class PipelineRuns extends React.Component<Props> {
       <>
         {/* 99.5% prevent horizontal scroll bar */}
         {/*↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓ */}
-        <div style={{ width: "99.5%" }}>
-          <Graph
-            open={this.isHiddenPipelineGraph}
-            showSave={true}
-            closeGraph={this.hiddenPipelineGraph}
-          ></Graph>
-        </div>
+        {/*<div style={{ width: "99.5%" }}>*/}
+        {/*  <Graph*/}
+        {/*    open={this.isHiddenPipelineGraph}*/}
+        {/*    showSave={true}*/}
+        {/*    closeGraph={this.hiddenPipelineGraph}*/}
+        {/*  ></Graph>*/}
+        {/*</div>*/}
         <KubeObjectListLayout
           className="PipelineRuns"
           store={pipelineRunStore}
@@ -327,9 +328,10 @@ export class PipelineRuns extends React.Component<Props> {
             [sortBy.age]: (pipelineRun: PipelineRun) =>
               pipelineRun.getAge(false),
           }}
-          onDetails={(pipeline: PipelineRun) => {
+          onDetails={(pipelineRun: PipelineRun) => {
             clearInterval(this.timeIntervalID);
-            this.showCurrentPipelineRunStatus(pipeline);
+            // this.showCurrentPipelineRunStatus(pipeline);
+            PipelineRunVisualDialog.open(pipelineRun)
           }}
           searchFilters={[
             (pipelineRun: PipelineRun) => pipelineRun.getSearchFields(),
@@ -383,6 +385,7 @@ export class PipelineRuns extends React.Component<Props> {
             return <PipelineRunMenu object={item} />;
           }}
         />
+        <PipelineRunVisualDialog />
       </>
     );
   }

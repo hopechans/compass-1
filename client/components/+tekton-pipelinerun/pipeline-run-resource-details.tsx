@@ -70,7 +70,7 @@ export class PipelineRunResourceDetails extends React.Component<Props> {
         >
           <Icon
             small
-            tooltip={_i18n._(t`Add`)}
+            tooltip={_i18n._(t`Add Resource`)}
             material="add_circle_outline"
             onClick={(e) => {
               this.add();
@@ -90,15 +90,15 @@ export class PipelineRunResourceDetails extends React.Component<Props> {
               </Grid>
               <Grid xs={8}>
                 <Input
-                  placeholder={_i18n._("name")}
+                  placeholder={_i18n._("Name")}
                   value={this.value[index]?.name}
                   onChange={(value) => (this.value[index].name = value)}
                 />
                 <br />
               </Grid>
-              <Grid xs={2}></Grid>
+              <Grid xs={2} />
               <Grid xs={2}>
-                <SubTitle title={"ResourceRef"} />
+                <SubTitle title={"Resource Reference"} />
               </Grid>
               <Grid xs={8}>
                 <Select
@@ -112,11 +112,11 @@ export class PipelineRunResourceDetails extends React.Component<Props> {
                 />
                 <br />
               </Grid>
-              <Grid xs={1}></Grid>
+              <Grid xs={1} />
               <Grid xs={1}>
                 <Icon
                   small
-                  tooltip={<Trans>remove</Trans>}
+                  tooltip={<Trans>Remove</Trans>}
                   className="remove-icon"
                   material="remove_circle_outline"
                   onClick={(e) => {
