@@ -92,17 +92,40 @@ export interface TaskStep {
   args: string[];
   command: string[];
   env: EnvVar[];
-  // workspaces: Workspace[];
+  // workspaces?: WorkspaceDeclaration[];
   workingDir: string;
   // results: Result[];
   script: string;
 }
 
-export interface Workspace {
+// WorkspaceDeclaration is a declaration of a volume that a Task requires.
+export interface WorkspaceDeclaration {
   name: string;
-  description: string;
-  mountPath: string;
+  description?: string;
+  mountPath?: string;
+  readOnly?: boolean;
 }
+
+// export interface WorkspaceBinding {
+//   // Name is the name of the workspace populated by the volume.
+//   name: string;
+//   // SubPath is optionally a directory on the volume which should be used
+//   // for this binding (i.e. the volume will be mounted at this sub directory).
+//   // +optional
+//   subPath?: string;
+
+//   persistentVolumeClaim?: PersistentVolumeClaimVolumeSource;
+
+//   //not support it
+//   emptyDir?: any;
+//   configMap?: any;
+//   secret?: any;
+// }
+
+// export interface PersistentVolumeClaimVolumeSource {
+//   claimName: string;
+//   readOnly: string;
+// }
 
 export interface VolumeMount {
   name: string;
@@ -132,10 +155,10 @@ export interface TaskSpec {
   outputs?: Outputs;
   steps?: TaskStep[];
   volumes?: Volume[];
+  workspaces?: WorkspaceDeclaration[];
   //----The following types are not supported now
   stepTemplate?: any;
   sidecars?: any;
-  workspaces?: any;
   results?: any;
   //----The following types are not supported now
 }

@@ -10,6 +10,7 @@ import {
   taskStep,
   ResourcesDetail,
   resources,
+  TaskSpecWorkSpaces,
 } from "../+tekton-common";
 import { observable, toJS } from "mobx";
 import { Dialog } from "../dialog";
@@ -33,6 +34,7 @@ import { createMuiTheme } from "@material-ui/core";
 import { ThemeProvider } from "@material-ui/core/styles";
 import { Divider } from "@material-ui/core";
 import { configStore } from "../../config.store";
+import { WorkspaceDeclaration as Workspace } from "../../api/endpoints/tekton-task.api";
 interface Props<T = any> extends Partial<Props> {
   value?: T;
 
@@ -67,6 +69,7 @@ export interface TaskResult {
   resources: TaskResources;
   taskSteps: TaskStep[];
   volumes?: Volume[];
+  workspace?: Workspace[];
 }
 
 export const task: TaskResult = {
@@ -75,6 +78,7 @@ export const task: TaskResult = {
   resources: resources,
   taskSteps: [taskStep],
   volumes: [],
+  workspace: [],
 };
 
 @observer
@@ -110,6 +114,9 @@ export class CopyTaskDialog extends React.Component<Props> {
           ? []
           : task.spec.resources?.outputs;
 
+      this.value.workspace =
+        task.spec.workspaces === undefined ? [] : task.spec.workspaces;
+
       this.value.pipelineParams =
         task.spec.params == undefined ? [] : task.spec.params;
       const names = task.metadata.name.split("-");
@@ -140,6 +147,7 @@ export class CopyTaskDialog extends React.Component<Props> {
     const parms = toJS(this.value.pipelineParams);
     const resources = toJS(this.value.resources);
     const steps = toJS(this.value.taskSteps);
+    const workspaces = toJS(this.value.workspace);
 
     const volumes = [
       {
@@ -172,6 +180,7 @@ export class CopyTaskDialog extends React.Component<Props> {
               resources: resources,
               steps: steps,
               volumes: volumes,
+              workspaces: workspaces,
             },
           }
         );
@@ -180,6 +189,7 @@ export class CopyTaskDialog extends React.Component<Props> {
           task.metadata.name = this.value.taskName;
           task.spec.params = parms;
           task.spec.resources = resources;
+          task.spec.workspaces = workspaces;
           //TODO:查出来的task有些字段直接没有的。
           // let a:any = task
           // a.scirp= null;
@@ -236,10 +246,7 @@ export class CopyTaskDialog extends React.Component<Props> {
           onOpen={this.onOpen}
           close={this.close}
         >
-          <Wizard
-            header={header}
-            done={this.close}
-          >
+          <Wizard header={header} done={this.close}>
             <WizardStep contentClass="flex gaps column" next={this.handle}>
               <FormGroup row>
                 <FormControlLabel
@@ -270,21 +277,28 @@ export class CopyTaskDialog extends React.Component<Props> {
                   value={this.value.taskName}
                   onChange={(value) => (this.value.taskName = value)}
                 />
-                <br/>
+                <br />
+                <TaskSpecWorkSpaces
+                  value={this.value.workspace}
+                  onChange={(vaule) => {
+                    this.value.workspace = vaule;
+                  }}
+                />
+                <br />
                 <PipelineParamsDetails
                   value={this.value.pipelineParams}
                   onChange={(value) => {
                     this.value.pipelineParams = value;
                   }}
                 />
-                <br/>
+                <br />
                 <ResourcesDetail
                   value={this.value.resources}
                   onChange={(value) => {
                     this.value.resources = value;
                   }}
                 />
-                <br/>
+                <br />
                 <MultiTaskStepDetails
                   value={this.value.taskSteps}
                   onChange={(value) => {
