@@ -1,17 +1,22 @@
 import "./add-config-map-dialog.scss"
 
 import React from "react";
-import {observer} from "mobx-react";
-import {Dialog, DialogProps} from "../dialog";
-import {observable} from "mobx";
-import {Wizard, WizardStep} from "../wizard";
-import {t, Trans} from "@lingui/macro";
-import {Notifications} from "../notifications";
-import {SubTitle} from "../layout/sub-title";
-import {Input} from "../input";
-import {ConfigMapDataDetails} from "./config-map-data-details";
-import {Collapse} from "../collapse";
-import {Data} from "./common";
+import { observer } from "mobx-react";
+import { Dialog, DialogProps } from "../dialog";
+import { observable } from "mobx";
+import { Wizard, WizardStep } from "../wizard";
+import { t, Trans } from "@lingui/macro";
+import { Notifications } from "../notifications";
+import { SubTitle } from "../layout/sub-title";
+import { Input } from "../input";
+import { ConfigMapDataDetails } from "./config-map-data-details";
+import { Collapse } from "../collapse";
+import { Data } from "./common";
+import { configMapApi, ConfigMap } from "../../../client/api/endpoints";
+import { NamespaceSelect } from "../+namespaces/namespace-select";
+import { _i18n } from "../../../client/i18n";
+import { IKubeObjectMetadata } from "../../../client/api/kube-object";
+import { showDetails } from "../../../client/navigation";
 
 interface Props extends Partial<DialogProps> {
 }
@@ -20,6 +25,7 @@ interface Props extends Partial<DialogProps> {
 export class AddConfigMapDialog extends React.Component<Props> {
 
   @observable static isOpen = false;
+  @observable namespace = "";
   @observable name = "";
   @observable data: Data[] = [];
 
@@ -42,14 +48,25 @@ export class AddConfigMapDialog extends React.Component<Props> {
 
   createConfigMap = async () => {
     try {
-      // unfinished api
       let dataMap = new Map<string, string>();
       this.data.map((item, index) => {
         dataMap.set(item.key, item.value)
       })
 
-      console.log(dataMap)
+      const configMap: Partial<ConfigMap> = {
+        data: Object.fromEntries(dataMap),
+        metadata: {
+          name: this.name,
+          namespace: this.namespace,
+        } as IKubeObjectMetadata
+      }
 
+      const newConfigMap =
+        await configMapApi.create(
+          { name: this.name, namespace: this.namespace },
+          configMap,
+        );
+      showDetails(newConfigMap.selfLink);
       this.reset();
       this.close();
     } catch (err) {
@@ -58,7 +75,7 @@ export class AddConfigMapDialog extends React.Component<Props> {
   }
 
   render() {
-    const {...dialogProps} = this.props;
+    const { ...dialogProps } = this.props;
     const header = <h5><Trans>Create Config Map</Trans></h5>;
     return (
       <Dialog
@@ -68,12 +85,24 @@ export class AddConfigMapDialog extends React.Component<Props> {
       >
         <Wizard className="AddConfigMapDialog" header={header} done={this.close}>
           <WizardStep contentClass="flow column" nextLabel={<Trans>Create</Trans>} next={this.createConfigMap}>
-            <SubTitle title={"Name"}/>
+
+            <SubTitle title={<Trans>Namespace</Trans>} />
+            <NamespaceSelect
+              value={this.namespace}
+              placeholder={_i18n._(t`Namespace`)}
+              themeName="light"
+              className="box grow"
+              onChange={({ value }) => this.namespace = value}
+            />
+
+            <SubTitle title={<Trans>Name</Trans>} />
             <Input
               required={true}
+              placeholder={_i18n._(t`Name`)}
               value={this.name}
               onChange={value => this.name = value}
             />
+
             <Collapse panelName={<Trans>Data</Trans>}>
               <ConfigMapDataDetails
                 value={this.data}

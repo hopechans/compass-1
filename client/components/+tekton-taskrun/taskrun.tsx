@@ -20,7 +20,7 @@ enum sortBy {
   age = "age",
 }
 
-interface Props extends RouteComponentProps {}
+interface Props extends RouteComponentProps { }
 
 @observer
 export class TaskRuns extends React.Component<Props> {
@@ -65,8 +65,8 @@ export class TaskRuns extends React.Component<Props> {
                 </div>
               </>
             ) : (
-              <></>
-            )}
+                <></>
+              )}
             {stepState.running ? (
               <>
                 <div className="title">
@@ -77,8 +77,8 @@ export class TaskRuns extends React.Component<Props> {
                 </div>
               </>
             ) : (
-              <></>
-            )}
+                <></>
+              )}
             {stepState.terminated ? (
               <>
                 <div className="title">
@@ -113,8 +113,8 @@ export class TaskRuns extends React.Component<Props> {
                 </div>
               </>
             ) : (
-              <></>
-            )}
+                <></>
+              )}
           </Fragment>
         </TooltipContent>
       );
@@ -129,6 +129,7 @@ export class TaskRuns extends React.Component<Props> {
   render() {
     return (
       <KubeObjectListLayout
+        isClusterScoped
         className="TaskRuns"
         store={taskRunStore}
         sortingCallbacks={{

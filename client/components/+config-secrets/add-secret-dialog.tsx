@@ -262,15 +262,21 @@ export class AddSecretDialog extends React.Component<Props> {
       >
         <Wizard header={header} done={this.close}>
           <WizardStep contentClass="flow column" nextLabel={<Trans>Create</Trans>} next={this.createSecret}>
+            <div className="secret-userNotVisiable">
+              {isClusterAdmin ?
+                <>
+                  <SubTitle title={"UserNotVisiable"} />
+                  <Checkbox
+                    theme="light"
+                    value={this.userNotVisible}
+                    onChange={(value: boolean) => this.userNotVisible = value}
+                  />
+                </> : <></>
+              }
+            </div>
+
             <div className="secret-name">
-              <SubTitle title={"Secret name"} children={isClusterAdmin ?
-                <Checkbox
-                  theme="light"
-                  
-                  value={this.userNotVisible}
-                  onChange={(value: boolean) => this.userNotVisible = value}
-                /> : <></>
-              } />
+              <SubTitle title={"Secret name"} />
               <Input
                 autoFocus required
                 placeholder={_i18n._(t`Name`)}
