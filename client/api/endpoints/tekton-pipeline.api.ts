@@ -2,7 +2,6 @@ import { autobind } from "../../utils";
 import { KubeObject } from "../kube-object";
 import { KubeApi } from "../kube-api";
 import { TaskSpec, Params } from "./tekton-task.api";
-import { type } from "os";
 
 export interface TaskRef {
   name: string;

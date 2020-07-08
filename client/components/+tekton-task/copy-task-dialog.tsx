@@ -232,11 +232,11 @@ export class CopyTaskDialog extends React.Component<Props> {
       <ThemeProvider theme={theme}>
         <Dialog
           isOpen={CopyTaskDialog.isOpen}
+          className="CopyAddDeployDialog"
           onOpen={this.onOpen}
           close={this.close}
         >
           <Wizard
-            className="CopyAddDeployDialog"
             header={header}
             done={this.close}
           >
@@ -270,25 +270,21 @@ export class CopyTaskDialog extends React.Component<Props> {
                   value={this.value.taskName}
                   onChange={(value) => (this.value.taskName = value)}
                 />
-                <br />
-
+                <br/>
                 <PipelineParamsDetails
                   value={this.value.pipelineParams}
                   onChange={(value) => {
                     this.value.pipelineParams = value;
                   }}
                 />
-                <br />
-                <Divider />
-
+                <br/>
                 <ResourcesDetail
                   value={this.value.resources}
                   onChange={(value) => {
                     this.value.resources = value;
                   }}
                 />
-                <br />
-
+                <br/>
                 <MultiTaskStepDetails
                   value={this.value.taskSteps}
                   onChange={(value) => {

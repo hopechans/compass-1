@@ -1,36 +1,29 @@
 import "./pipeline.scss";
 
 import React from "react";
-import { observer } from "mobx-react";
-import { observable } from "mobx";
-import { RouteComponentProps } from "react-router";
-import { Trans } from "@lingui/macro";
-import { Pipeline, pipelineApi, PipelineTask } from "../../api/endpoints";
-import { podsStore } from "../+workloads-pods/pods.store";
-import { pipelineStore } from "./pipeline.store";
-import { eventStore } from "../+events/event.store";
-import { KubeObjectMenu, KubeObjectMenuProps } from "../kube-object";
-import { KubeObjectListLayout } from "../kube-object";
-import { apiManager } from "../../api/api-manager";
-import { PipelineGraph } from "../+tekton-graph/pipeline-graph";
-import { Graph, PipelineResult, pipelineResult } from "../+tekton-graph/graph";
+import {observer} from "mobx-react";
+import {observable} from "mobx";
+import {RouteComponentProps} from "react-router";
+import {Trans} from "@lingui/macro";
+import {Pipeline, pipelineApi, PipelineTask} from "../../api/endpoints";
+import {pipelineStore} from "./pipeline.store";
+import {KubeObjectMenu, KubeObjectMenuProps} from "../kube-object";
+import {KubeObjectListLayout} from "../kube-object";
+import {apiManager} from "../../api/api-manager";
+import {Graph, PipelineResult, pipelineResult} from "../+tekton-graph/graph";
 import {
   CopyTaskDialog,
   task,
   TaskResult,
 } from "../+tekton-task/copy-task-dialog";
-import { MenuItem } from "../menu";
-import { Icon } from "../icon";
-import { AddPipelineDialog } from "./add-pipeline-dialog";
-import { configStore } from "../../config.store";
-import { taskStore } from "../+tekton-task/task.store";
-import { PipelineDialog } from "./pipeline-dialog";
-import { pipelineResourceStore } from "../+tekton-pipelineresource/pipelineresource.store";
-import { PipelineRunDialog } from "../+tekton-pipelinerun/pipeline-run-dialog";
-import { PieChart } from "../chart";
-import Item from "antd/lib/list/Item";
-import { Tasks } from "../+tekton-task";
-import _ from "lodash";
+import {MenuItem} from "../menu";
+import {Icon} from "../icon";
+import {AddPipelineDialog} from "./add-pipeline-dialog";
+import {taskStore} from "../+tekton-task/task.store";
+import {PipelineDialog} from "./pipeline-dialog";
+import {pipelineResourceStore} from "../+tekton-pipelineresource/pipelineresource.store";
+import {PipelineRunDialog} from "../+tekton-pipelinerun/pipeline-run-dialog";
+import {PipelineVisualDialog} from "./pipeline-visual-dialog";
 
 enum sortBy {
   name = "name",
@@ -40,171 +33,20 @@ enum sortBy {
   age = "age",
 }
 
-interface Props extends RouteComponentProps {}
+interface Props extends RouteComponentProps {
+}
 
 @observer
 export class Pipelines extends React.Component<Props> {
-  @observable currentNode: any;
-  // @observable static isHiddenPipelineGraph: boolean = false;
-  @observable isHiddenPipelineGraph: boolean = true;
+
   @observable pipeline: Pipeline;
   @observable task: TaskResult = task;
   @observable pipelineResources: [];
   @observable pipeResult: PipelineResult = pipelineResult;
 
-  private graph: PipelineGraph = null;
-  data: any;
-
-  componentDidMount() {
-    this.graph = new PipelineGraph(0, 0);
-    this.graph.bindClickOnNode((currentNode: any) => {
-      this.currentNode = currentNode;
-      CopyTaskDialog.open(this.graph, this.currentNode);
-    });
-    this.graph.bindMouseenter();
-    this.graph.bindMouseleave();
-  }
-
-  showPipeline = (pipeline: Pipeline) => {
-    this.isHiddenPipelineGraph = false;
-
-    let nodeData: any;
-    pipeline.getAnnotations().filter((item) => {
-      const tmp = item.split("=");
-      if (tmp[0] == "node_data") {
-        nodeData = tmp[1];
-      }
-    });
-    this.graph.getGraph().clear();
-    if (nodeData === undefined || nodeData === "") {
-      const data: any = {
-        nodes: [
-          {
-            id: "1-1",
-            x: 0,
-            y: 0,
-            taskName: ``,
-            anchorPoints: [
-              [0, 0.5],
-              [1, 0.5],
-            ],
-          },
-        ],
-      };
-
-      this.graph.getGraph().changeData(data);
-    } else {
-      setTimeout(() => {
-        this.graph.getGraph().changeData(JSON.parse(nodeData));
-      }, 20);
-    }
-
-    this.pipeline = pipeline;
-  };
-
-  //存取node{id,...} => <id,node>
-  nodeToMap(): Map<string, any> {
-    let items: Map<string, any> = new Map<string, any>();
-    this.data.nodes.map((item: any, index: number) => {
-      const ids = item.id.split("-");
-      if (items.get(ids[0]) === undefined) {
-        items.set(ids[0], new Array<any>());
-      }
-      items.get(ids[0]).push(item);
-    });
-
-    return items;
-  }
-
-  //通过map的关系，形成要提交的任务，组装数据。
-  getPipelineTasks(): PipelineTask[] {
-    const dataMap = this.nodeToMap();
-    let keys = Array.from(dataMap.keys());
-
-    let tasks: PipelineTask[] = [];
-
-    let tmp = 1;
-
-    keys.map((item: any, index: number) => {
-      let array = dataMap.get(item);
-
-      if (tmp === 1) {
-        let task: any = {};
-        task.runAfter = [];
-        array.map((item: any) => {
-          task.name = item.taskName;
-          task.taskRef = { name: item.taskName };
-        });
-        task.params = [];
-        task.resources = [];
-        tasks.push(task);
-      } else {
-        let result = tmp - 1;
-        array.map((item: any) => {
-          let task: any = {};
-          task.runAfter = [];
-          task.name = item.taskName;
-          task.taskRef = { name: item.taskName };
-          //set task runAfter
-          dataMap.get(result.toString()).map((item: any) => {
-            task.runAfter.push(item.taskName);
-          });
-          task.params = [];
-          task.resources = [];
-          tasks.push(task);
-        });
-      }
-
-      tmp++;
-    });
-
-    return tasks;
-  }
-
-  savePipeline = async (pipeResult: PipelineResult) => {
-    this.data = this.graph.getGraph().save();
-
-    const data = JSON.stringify(this.graph.getGraph().save());
-
-    this.pipeline.metadata.annotations = { node_data: data };
-
-    const pipelineTasks = this.pipeline.spec.tasks;
-    if (pipelineTasks !== undefined) {
-      this.getPipelineTasks().map((task) => {
-        const t = pipelineTasks.find((x) => x.name == task.name);
-        if (t === undefined) {
-          this.pipeline.spec.tasks.push(task);
-        }
-      });
-    } else {
-      this.pipeline.spec.tasks = [];
-      this.pipeline.spec.tasks.push(...this.getPipelineTasks());
-    }
-
-    //will show pipeline dialog
-    PipelineDialog.open(this.pipeline);
-  };
-
-  hiddenPipelineGraph = () => {
-    this.isHiddenPipelineGraph = true;
-  };
-
   render() {
     return (
       <>
-        {/* 99.5% prevent horizontal scroll bar */}
-        {/*↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓ */}
-        <div style={{ width: "99.5%" }}>
-          <Graph
-            open={this.isHiddenPipelineGraph}
-            showSave={false}
-            saveCallback={(pipelineResult: PipelineResult) => {
-              this.savePipeline(pipelineResult);
-            }}
-            closeGraph={this.hiddenPipelineGraph}
-          />
-        </div>
-
         <KubeObjectListLayout
           className="Pipelines"
           store={pipelineStore}
@@ -239,7 +81,7 @@ export class Pipelines extends React.Component<Props> {
               className: "tasknames",
               sortBy: sortBy.tasknames,
             },
-            { title: <Trans>Age</Trans>, className: "age", sortBy: sortBy.age },
+            {title: <Trans>Age</Trans>, className: "age", sortBy: sortBy.age},
           ]}
           renderTableContents={(pipeline: Pipeline) => [
             pipeline.getName(),
@@ -249,7 +91,7 @@ export class Pipelines extends React.Component<Props> {
             pipeline.getAge(),
           ]}
           renderItemMenu={(item: Pipeline) => {
-            return <PipelineMenu object={item} />;
+            return <PipelineMenu object={item}/>;
           }}
           tableProps={{
             customRowHeights: (item: Pipeline, lineHeight, paddings) => {
@@ -263,10 +105,11 @@ export class Pipelines extends React.Component<Props> {
               AddPipelineDialog.open();
             },
           }}
-          onDetails={(pipeline: Pipeline) => {
-            this.showPipeline(pipeline);
-          }}
+          onDetails={
+            (pipeline: Pipeline) => PipelineVisualDialog.open(pipeline)
+          }
         />
+        <PipelineVisualDialog />
         <CopyTaskDialog />
         <AddPipelineDialog />
         <PipelineDialog />
@@ -277,20 +120,13 @@ export class Pipelines extends React.Component<Props> {
 }
 
 export function PipelineMenu(props: KubeObjectMenuProps<Pipeline>) {
-  const { object, toolbar } = props;
+  const {object, toolbar} = props;
 
   return (
     <KubeObjectMenu {...props}>
-      <MenuItem
-        onClick={() => {
-          PipelineRunDialog.open(object.getName());
-        }}
-      >
+      <MenuItem onClick={() => { PipelineRunDialog.open(object.getName()) }}>
         <Icon
-          material="play_circle_outline"
-          title={"Pipeline"}
-          interactive={toolbar}
-        />
+          material="play_circle_outline" title={"Pipeline"} interactive={toolbar}/>
         <span className="title">
           <Trans>Run</Trans>
         </span>
@@ -299,4 +135,4 @@ export function PipelineMenu(props: KubeObjectMenuProps<Pipeline>) {
   );
 }
 
-apiManager.registerViews(pipelineApi, { Menu: PipelineMenu });
+apiManager.registerViews(pipelineApi, {Menu: PipelineMenu});

@@ -50,7 +50,7 @@ export class EvnVarDetails extends React.Component<EvnVarProps> {
     return (
       <>
         {this.props.divider ? <Divider/> : <></>}
-        <SubTitle className="fields-title" title={<Trans>Env</Trans>}>
+        <SubTitle className="fields-title" title={<Trans>Environment</Trans>}>
           {this.renderAdd()}
         </SubTitle>
         <div className="envs">
@@ -61,7 +61,6 @@ export class EvnVarDetails extends React.Component<EvnVarProps> {
                   <Col span="10">
                     <Input
                       className="item"
-                      // validators={systemName}
                       placeholder={_i18n._(t`Name`)}
                       title={this.value[index].name}
                       value={this.value[index].name}
@@ -70,7 +69,7 @@ export class EvnVarDetails extends React.Component<EvnVarProps> {
                       }}
                     />
                   </Col>
-                  <Col span="10" offset={2}>
+                  <Col span="10" offset={1}>
                     <Input
                       className="item"
                       placeholder={_i18n._(t`Value`)}
@@ -81,7 +80,7 @@ export class EvnVarDetails extends React.Component<EvnVarProps> {
                       }}
                     />
                   </Col>
-                  <Col span="2">
+                  <Col span="1" offset={1}>
                     <Icon
                       small
                       tooltip={_i18n._(t`Remove Env`)}
@@ -94,6 +93,7 @@ export class EvnVarDetails extends React.Component<EvnVarProps> {
                     />
                   </Col>
                 </Row>
+                <br/>
               </div>
             );
           })}

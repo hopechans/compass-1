@@ -81,6 +81,7 @@ export class ArgsDetails extends React.Component<ArgsProps> {
                     />
                   </Col>
                 </Row>
+                <br/>
               </div>
             )
           })}
