@@ -1,29 +1,29 @@
 import "./pipeline.scss";
 
 import React from "react";
-import {observer} from "mobx-react";
-import {observable} from "mobx";
-import {RouteComponentProps} from "react-router";
-import {Trans} from "@lingui/macro";
-import {Pipeline, pipelineApi, PipelineTask} from "../../api/endpoints";
-import {pipelineStore} from "./pipeline.store";
-import {KubeObjectMenu, KubeObjectMenuProps} from "../kube-object";
-import {KubeObjectListLayout} from "../kube-object";
-import {apiManager} from "../../api/api-manager";
-import {Graph, PipelineResult, pipelineResult} from "../+tekton-graph/graph";
+import { observer } from "mobx-react";
+import { observable } from "mobx";
+import { RouteComponentProps } from "react-router";
+import { Trans } from "@lingui/macro";
+import { Pipeline, pipelineApi, PipelineTask } from "../../api/endpoints";
+import { pipelineStore } from "./pipeline.store";
+import { KubeObjectMenu, KubeObjectMenuProps } from "../kube-object";
+import { KubeObjectListLayout } from "../kube-object";
+import { apiManager } from "../../api/api-manager";
+import { Graph, PipelineResult, pipelineResult } from "../+tekton-graph/graph";
 import {
   CopyTaskDialog,
   task,
   TaskResult,
 } from "../+tekton-task/copy-task-dialog";
-import {MenuItem} from "../menu";
-import {Icon} from "../icon";
-import {AddPipelineDialog} from "./add-pipeline-dialog";
-import {taskStore} from "../+tekton-task/task.store";
-import {PipelineDialog} from "./pipeline-dialog";
-import {pipelineResourceStore} from "../+tekton-pipelineresource/pipelineresource.store";
-import {PipelineRunDialog} from "../+tekton-pipelinerun/pipeline-run-dialog";
-import {PipelineVisualDialog} from "./pipeline-visual-dialog";
+import { MenuItem } from "../menu";
+import { Icon } from "../icon";
+import { AddPipelineDialog } from "./add-pipeline-dialog";
+import { taskStore } from "../+tekton-task/task.store";
+import { PipelineDialog } from "./pipeline-dialog";
+import { pipelineResourceStore } from "../+tekton-pipelineresource/pipelineresource.store";
+import { PipelineRunDialog } from "../+tekton-pipelinerun/pipeline-run-dialog";
+import { PipelineVisualDialog } from "./pipeline-visual-dialog";
 
 enum sortBy {
   name = "name",
@@ -48,6 +48,7 @@ export class Pipelines extends React.Component<Props> {
     return (
       <>
         <KubeObjectListLayout
+          isClusterScoped
           className="Pipelines"
           store={pipelineStore}
           dependentStores={[taskStore, pipelineResourceStore]} // other
@@ -81,7 +82,7 @@ export class Pipelines extends React.Component<Props> {
               className: "tasknames",
               sortBy: sortBy.tasknames,
             },
-            {title: <Trans>Age</Trans>, className: "age", sortBy: sortBy.age},
+            { title: <Trans>Age</Trans>, className: "age", sortBy: sortBy.age },
           ]}
           renderTableContents={(pipeline: Pipeline) => [
             pipeline.getName(),
@@ -91,7 +92,7 @@ export class Pipelines extends React.Component<Props> {
             pipeline.getAge(),
           ]}
           renderItemMenu={(item: Pipeline) => {
-            return <PipelineMenu object={item}/>;
+            return <PipelineMenu object={item} />;
           }}
           tableProps={{
             customRowHeights: (item: Pipeline, lineHeight, paddings) => {
@@ -120,13 +121,13 @@ export class Pipelines extends React.Component<Props> {
 }
 
 export function PipelineMenu(props: KubeObjectMenuProps<Pipeline>) {
-  const {object, toolbar} = props;
+  const { object, toolbar } = props;
 
   return (
     <KubeObjectMenu {...props}>
       <MenuItem onClick={() => { PipelineRunDialog.open(object.getName()) }}>
         <Icon
-          material="play_circle_outline" title={"Pipeline"} interactive={toolbar}/>
+          material="play_circle_outline" title={"Pipeline"} interactive={toolbar} />
         <span className="title">
           <Trans>Run</Trans>
         </span>
@@ -135,4 +136,4 @@ export function PipelineMenu(props: KubeObjectMenuProps<Pipeline>) {
   );
 }
 
-apiManager.registerViews(pipelineApi, {Menu: PipelineMenu});
+apiManager.registerViews(pipelineApi, { Menu: PipelineMenu });

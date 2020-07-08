@@ -26,7 +26,7 @@ import { podsStore } from "../+workloads-pods/pods.store";
 import { Pod } from "../../api/endpoints";
 import { configStore } from "../../../client/config.store";
 import Tooltip from "@material-ui/core/Tooltip";
-import {PipelineRunVisualDialog} from "./pipelinerun-visual-dialog";
+import { PipelineRunVisualDialog } from "./pipelinerun-visual-dialog";
 
 enum sortBy {
   name = "name",
@@ -35,7 +35,7 @@ enum sortBy {
   age = "age",
 }
 
-interface Props extends RouteComponentProps {}
+interface Props extends RouteComponentProps { }
 
 @observer
 export class PipelineRuns extends React.Component<Props> {
@@ -316,6 +316,7 @@ export class PipelineRuns extends React.Component<Props> {
         {/*  ></Graph>*/}
         {/*</div>*/}
         <KubeObjectListLayout
+          isClusterScoped
           className="PipelineRuns"
           store={pipelineRunStore}
           dependentStores={[pipelineStore, taskRunStore, podsStore]}
