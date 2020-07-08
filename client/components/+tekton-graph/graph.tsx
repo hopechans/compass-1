@@ -3,10 +3,7 @@ import { Grid, Divider, Card } from "@material-ui/core";
 import { Button } from "../button";
 import { observer } from "mobx-react";
 import { observable } from "mobx";
-import {
-  PipelineParams,
-  PipelineResources,
-} from "../+tekton-common";
+import { PipelineParams, PipelineResources } from "../+tekton-common";
 import "./graph.scss";
 
 interface IProps {
@@ -81,7 +78,11 @@ export class Graph extends React.Component<IProps, IState> {
           </Grid>
         </div>
 
-        <div className="pipeline-graph" id="pipeline-graph" hidden={open} />
+        <div
+          className="pipeline-container"
+          id="pipeline-container"
+          hidden={open}
+        />
       </div>
     );
   }

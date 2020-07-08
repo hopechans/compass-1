@@ -2,7 +2,6 @@ import "./register-shape";
 import G6 from "@antv/g6";
 
 export class PipelineGraph {
-
   public graph: any = null;
   private width: number;
   private height: number;
@@ -43,21 +42,20 @@ export class PipelineGraph {
   }
 
   public bindClickOnNode(callback: (currentNode: any) => any): void {
-
     this.graph.on("node:click", (evt: any) => {
-      const {item} = evt;
+      const { item } = evt;
       const shape = evt.target.cfg.name;
 
       if (shape === "right-plus") {
         const source = item._cfg.id.toString();
-        let splitSource = source.split('-');
+        let splitSource = source.split("-");
         const target = Number(splitSource[0]) + 1;
         splitSource[0] = target;
 
         let tragetId = splitSource.join("-");
 
         const model = item.getModel();
-        const {x, y} = model;
+        const { x, y } = model;
         const point = this.graph.getCanvasByPoint(x, y);
         this.graph.addItem("node", {
           id: tragetId,
@@ -80,14 +78,14 @@ export class PipelineGraph {
 
       if (shape === "bottom-plus") {
         const source = item._cfg.id;
-        let splitSource = source.split('-');
+        let splitSource = source.split("-");
 
         const target = Number(splitSource[1]) + 1;
         splitSource[1] = target;
 
         let tragetId = splitSource.join("-");
         const model = item.getModel();
-        const {x, y} = model;
+        const { x, y } = model;
         const point = this.graph.getCanvasByPoint(x, y);
         this.graph.addItem("node", {
           id: tragetId,
@@ -101,10 +99,10 @@ export class PipelineGraph {
         });
 
         let edgeTarge = model.id.toString();
-        let splitEdgeTarge = edgeTarge.split('-');
+        let splitEdgeTarge = edgeTarge.split("-");
         let edgeTargetPostion = Number(splitEdgeTarge[0]) - 1;
         splitEdgeTarge[0] = edgeTargetPostion;
-        splitEdgeTarge[1] = '1';
+        splitEdgeTarge[1] = "1";
         let edgeTargeId = splitEdgeTarge.join("-");
 
         this.graph.addItem("edge", {
@@ -116,7 +114,6 @@ export class PipelineGraph {
       }
 
       callback(item);
-
     });
   }
 
@@ -124,10 +121,10 @@ export class PipelineGraph {
     let nodes = this.graph.save();
     nodes.nodes.map((item: any, index: number) => {
       if (node._cfg.id === item.id) {
-        item.taskName = taskName
+        item.taskName = taskName;
       }
       nodes[index] = item;
-    })
+    });
     this.graph.changeData(nodes);
     this.graph.setItemState(node, "click", taskName);
   }
@@ -135,7 +132,6 @@ export class PipelineGraph {
   public bindMouseenter(): void {
     // 监听鼠标进入节点事件
     this.graph.on("node:mouseenter", (evt: { item: any }) => {
-
       const node = evt.item;
       // 激活该节点的 hover 状态
       this.graph.setItemState(node, "hover", true);
@@ -152,7 +148,6 @@ export class PipelineGraph {
   }
 
   public initDrawGraphInstance(): void {
-
     const data: any = {
       nodes: [
         {
@@ -174,7 +169,6 @@ export class PipelineGraph {
       height: 305,
       renderer: "svg",
       modes: {
-
         // default: [
         //     // "drag-node",
         //     {
@@ -186,7 +180,6 @@ export class PipelineGraph {
         //         // offset: 30
         //     },
         // ],
-
         //   edit: ['click-select'],
         // addEdge: ['click-add-edge', 'click-select'],
       },

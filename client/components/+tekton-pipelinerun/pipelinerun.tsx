@@ -35,7 +35,7 @@ enum sortBy {
   age = "age",
 }
 
-interface Props extends RouteComponentProps { }
+interface Props extends RouteComponentProps {}
 
 @observer
 export class PipelineRuns extends React.Component<Props> {
@@ -332,7 +332,7 @@ export class PipelineRuns extends React.Component<Props> {
           onDetails={(pipelineRun: PipelineRun) => {
             clearInterval(this.timeIntervalID);
             // this.showCurrentPipelineRunStatus(pipeline);
-            PipelineRunVisualDialog.open(pipelineRun)
+            PipelineRunVisualDialog.open(pipelineRun);
           }}
           searchFilters={[
             (pipelineRun: PipelineRun) => pipelineRun.getSearchFields(),
