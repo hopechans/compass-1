@@ -17,7 +17,7 @@ enum sortBy {
   age = "age",
 }
 
-interface Props extends RouteComponentProps {}
+interface Props extends RouteComponentProps { }
 
 @observer
 export class Tasks extends React.Component<Props> {
@@ -25,6 +25,7 @@ export class Tasks extends React.Component<Props> {
     return (
       <>
         <KubeObjectListLayout
+          isClusterScoped
           className="Tasks"
           store={taskStore}
           sortingCallbacks={{
