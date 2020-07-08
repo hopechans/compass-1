@@ -1,27 +1,33 @@
-import { observer } from "mobx-react";
+import {observer} from "mobx-react";
 import React from "react";
-import { observable } from "mobx";
-import { ActionMeta } from "react-select/src/types";
-import { Select, SelectOption } from "../select";
-import { Icon } from "../icon";
-import { t, Trans } from "@lingui/macro";
-import { PipelineResources, pipelineResources } from "./common";
-import { Col, Row } from "antd";
-import { SubTitle } from "../layout/sub-title";
-import { _i18n } from "../../i18n";
-import { Input } from "../input";
-import { pipelineResourceStore } from "../+tekton-pipelineresource/pipelineresource.store";
+import {observable} from "mobx";
+import {ActionMeta} from "react-select/src/types";
+import {Select, SelectOption} from "../select";
+import {Icon} from "../icon";
+import {t, Trans} from "@lingui/macro";
+import {PipelineResources, pipelineResources} from "./common";
+import {Col, Row} from "antd";
+import {SubTitle} from "../layout/sub-title";
+import {_i18n} from "../../i18n";
+import {Input} from "../input";
+import {pipelineResourceStore} from "../+tekton-pipelineresource/pipelineresource.store";
 
 interface Props<T = any> extends Partial<Props> {
   value?: T;
   themeName?: "dark" | "light" | "outlined";
-  divider?: true;
+  divider?: boolean;
+  disable?: boolean
 
   onChange?(option: T, meta?: ActionMeta): void;
 }
 
 @observer
 export class PipelineResourceDetails extends React.Component<Props> {
+
+  static defaultProps = {
+    disable: false,
+  }
+
   @observable value: PipelineResources[] = this.props.value || [];
 
   add = () => {
@@ -37,11 +43,11 @@ export class PipelineResourceDetails extends React.Component<Props> {
   }
 
   formatOptionLabel = (option: SelectOption) => {
-    const { value, label } = option;
+    const {value, label} = option;
     return (
       label || (
         <>
-          <Icon small material="layers" />
+          <Icon small material="layers"/>
           {value}
         </>
       )
@@ -49,12 +55,15 @@ export class PipelineResourceDetails extends React.Component<Props> {
   };
 
   render() {
+
+    const {disable} = this.props
+
     return (
       <div className="Resource">
         <SubTitle className="fields-title" title="Pipeline Resources">
           <Icon
             small
-            tooltip={_i18n._(t`resource`)}
+            tooltip={_i18n._(t`Resource`)}
             material="add_circle_outline"
             onClick={(e) => {
               this.add();
@@ -72,7 +81,7 @@ export class PipelineResourceDetails extends React.Component<Props> {
                 <Trans>ResourceType</Trans>
               </Col>
             </Row>
-            <br />
+            <br/>
           </>
         ) : (
           <></>
@@ -85,6 +94,7 @@ export class PipelineResourceDetails extends React.Component<Props> {
                 <Col span={9}>
                   <Input
                     placeholder={"name"}
+                    disabled={disable}
                     value={this.value[index].name}
                     onChange={(value) => (this.value[index].name = value)}
                   />
@@ -92,6 +102,7 @@ export class PipelineResourceDetails extends React.Component<Props> {
                 <Col span={9} offset={2}>
                   <Select
                     value={this.value[index].type}
+                    isDisabled={disable}
                     options={this.typeOptions}
                     formatOptionLabel={this.formatOptionLabel}
                     onChange={(value) => (this.value[index].type = value.value)}
@@ -108,7 +119,7 @@ export class PipelineResourceDetails extends React.Component<Props> {
                   />
                 </Col>
               </Row>
-              <br />
+              <br/>
             </>
           );
         })}

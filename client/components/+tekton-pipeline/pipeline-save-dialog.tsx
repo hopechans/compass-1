@@ -1,18 +1,18 @@
 import "./pipeline-save-dialog.scss"
 
-import { observer } from "mobx-react";
+import {observer} from "mobx-react";
 import React from "react";
-import { observable, toJS } from "mobx";
-import { ActionMeta } from "react-select/src/types";
-import { Trans } from "@lingui/macro";
-import { Dialog } from "../dialog";
-import { Wizard, WizardStep } from "../wizard";
-import { Pipeline } from "../../api/endpoints";
-import { Notifications } from "../notifications";
-import { PipelineDetails, PipelineResult, pipeline } from "./pipeline-details";
-import { pipelineStore } from "./pipeline.store";
-import { pipelineTaskResource } from "./pipeline-task";
-import { taskStore } from "../+tekton-task/task.store";
+import {observable, toJS} from "mobx";
+import {ActionMeta} from "react-select/src/types";
+import {Trans} from "@lingui/macro";
+import {Dialog} from "../dialog";
+import {Wizard, WizardStep} from "../wizard";
+import {Pipeline} from "../../api/endpoints";
+import {Notifications} from "../notifications";
+import {PipelineDetails, PipelineResult, pipeline} from "./pipeline-details";
+import {pipelineStore} from "./pipeline.store";
+import {pipelineTaskResource} from "./pipeline-task";
+import {taskStore} from "../+tekton-task/task.store";
 
 interface Props<T = any> extends Partial<Props> {
   value?: T;
@@ -125,7 +125,7 @@ export class PipelineSaveDialog extends React.Component<Props> {
     pipeline.spec.workspaces = this.value.workspaces;
     try {
       // //will update pipeline
-      await pipelineStore.update(pipeline, { ...pipeline });
+      await pipelineStore.update(pipeline, {...pipeline});
       Notifications.ok(<>pipeline {this.value.pipelineName} save successed</>);
       this.close();
     } catch (err) {
@@ -147,7 +147,7 @@ export class PipelineSaveDialog extends React.Component<Props> {
         close={this.close}
         onOpen={this.onOpen}
       >
-        <Wizard  header={header} done={this.close}>
+        <Wizard header={header} done={this.close}>
           <WizardStep contentClass="flex gaps column" next={this.submit}>
             <PipelineDetails
               value={this.value}
