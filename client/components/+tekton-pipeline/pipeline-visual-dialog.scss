@@ -1,0 +1,23 @@
+.PipelineVisualDialog {
+  .Wizard {
+    --wizard-width: 95vw;
+    --wizard-content-height: 90vh;
+  }
+
+  .WizardStep {
+    .step-content {
+      padding: var(--wizard-spacing);
+      background-color: #F0F1F4;
+    }
+
+    code {
+      max-height: 100vh;
+    }
+  }
+}
+
+.btn-group{
+  justify-content: flex-end;
+  display: flex;
+  align-items: baseline;
+}
