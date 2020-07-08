@@ -1,19 +1,21 @@
-import { observer } from "mobx-react";
+import {observer} from "mobx-react";
 import React from "react";
-import { observable } from "mobx";
-import { ActionMeta } from "react-select/src/types";
-import { Icon } from "../icon";
-import { t, Trans } from "@lingui/macro";
-import { Input } from "../input";
-import { PipelineTaskInputResource } from "../../api/endpoints/tekton-pipeline.api";
-import { SubTitle } from "../layout/sub-title";
-import { _i18n } from "../../i18n";
-import { Col, Row } from "../grid";
+import {observable} from "mobx";
+import {ActionMeta} from "react-select/src/types";
+import {Icon} from "../icon";
+import {t, Trans} from "@lingui/macro";
+import {Input} from "../input";
+import {PipelineTaskInputResource} from "../../api/endpoints/tekton-pipeline.api";
+import {SubTitle} from "../layout/sub-title";
+import {_i18n} from "../../i18n";
+import {Col, Row} from "../grid";
 
 interface Props<T = any> extends Partial<Props> {
   value?: T;
   themeName?: "dark" | "light" | "outlined";
   title?: string;
+  disable?: boolean;
+
   onChange?(option: T, meta?: ActionMeta): void;
 }
 
@@ -24,7 +26,12 @@ export const pipelineTaskInputResource: PipelineTaskInputResource = {
 
 @observer
 export class PipelineTaskInputResourceDetail extends React.Component<Props> {
-  static defaultProps = { title: "Pipeline Resources" };
+
+  static defaultProps = {
+    title: "Pipeline Resources",
+    disable: false
+  };
+
   @observable value: PipelineTaskInputResource[] = this.props.value || [];
 
   add = () => {
@@ -36,21 +43,23 @@ export class PipelineTaskInputResourceDetail extends React.Component<Props> {
   };
 
   render() {
-    const { title } = this.props;
+    const {title, disable} = this.props;
     return (
       <div className="params">
         <SubTitle className="fields-title" title={title}>
-          <Icon
-            small
-            tooltip={_i18n._(t`resource`)}
-            material="add_circle_outline"
-            onClick={(e) => {
-              this.add();
-              e.stopPropagation();
-            }}
-          />
+          {
+            !disable ?? <Icon
+              small
+              tooltip={_i18n._(t`resource`)}
+              material="add_circle_outline"
+              onClick={(e) => {
+                this.add();
+                e.stopPropagation();
+              }}
+            />
+          }
         </SubTitle>
-        {this.value.length > 0 ? (
+        {this.value.length > 0 ?? (
           <>
             <Row>
               <Col span={12}>
@@ -60,14 +69,12 @@ export class PipelineTaskInputResourceDetail extends React.Component<Props> {
                 <Trans>Resource</Trans>
               </Col>
             </Row>
-            <br />
+            <br/>
           </>
-        ) : (
-            <></>
-          )}
+        )}
         {this.value.map((item, index) => {
           return (
-            <>
+            <div>
               <Row>
                 <Col span={10}>
                   <Input
@@ -90,7 +97,7 @@ export class PipelineTaskInputResourceDetail extends React.Component<Props> {
                     }}
                   />
                 </Col>
-                <Col span={1} offset={1}>
+                {!disable ?? <Col span={1} offset={1}>
                   <Icon
                     small
                     material="remove_circle_outline"
@@ -99,11 +106,11 @@ export class PipelineTaskInputResourceDetail extends React.Component<Props> {
                       e.stopPropagation();
                     }}
                   />
-                </Col>
+                </Col>}
               </Row>
-              <br></br>
-            </>
-          );
+              <br/>
+            </div>
+          )
         })}
       </div>
     );

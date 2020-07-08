@@ -1,17 +1,18 @@
-import { observer } from "mobx-react";
+import "./pipeline-save-dialog.scss"
+
+import {observer} from "mobx-react";
 import React from "react";
-import { observable, toJS } from "mobx";
-import { ActionMeta } from "react-select/src/types";
-import { Trans } from "@lingui/macro";
-import { Dialog } from "../dialog";
-import { Wizard, WizardStep } from "../wizard";
-import { Pipeline } from "../../api/endpoints";
-import { Notifications } from "../notifications";
-import { PipelineDetails, PipelineResult, pipeline } from "./pipeline-details";
-import { pipelineStore } from "./pipeline.store";
-import { task } from "../+tekton-task/copy-task-dialog";
-import { pipelineTaskResource } from "./pipeline-task";
-import { taskStore } from "../+tekton-task/task.store";
+import {observable, toJS} from "mobx";
+import {ActionMeta} from "react-select/src/types";
+import {Trans} from "@lingui/macro";
+import {Dialog} from "../dialog";
+import {Wizard, WizardStep} from "../wizard";
+import {Pipeline} from "../../api/endpoints";
+import {Notifications} from "../notifications";
+import {PipelineDetails, PipelineResult, pipeline} from "./pipeline-details";
+import {pipelineStore} from "./pipeline.store";
+import {pipelineTaskResource} from "./pipeline-task";
+import {taskStore} from "../+tekton-task/task.store";
 
 interface Props<T = any> extends Partial<Props> {
   value?: T;
@@ -21,27 +22,27 @@ interface Props<T = any> extends Partial<Props> {
 }
 
 @observer
-export class PipelineDialog extends React.Component<Props> {
+export class PipelineSaveDialog extends React.Component<Props> {
   @observable static isOpen = false;
   @observable static currentPipeline: Pipeline;
   @observable value: PipelineResult = this.props.value || pipeline;
 
   static open(pipeline: Pipeline) {
-    PipelineDialog.currentPipeline = null;
-    PipelineDialog.currentPipeline = pipeline;
-    PipelineDialog.isOpen = true;
+    PipelineSaveDialog.currentPipeline = null;
+    PipelineSaveDialog.currentPipeline = pipeline;
+    PipelineSaveDialog.isOpen = true;
   }
 
   get CurrentPipeline() {
-    return PipelineDialog.currentPipeline;
+    return PipelineSaveDialog.currentPipeline;
   }
 
   static close() {
-    PipelineDialog.isOpen = false;
+    PipelineSaveDialog.isOpen = false;
   }
 
   close = () => {
-    PipelineDialog.close();
+    PipelineSaveDialog.close();
   };
 
   reset = () => {
@@ -50,7 +51,7 @@ export class PipelineDialog extends React.Component<Props> {
 
   onOpen = () => {
     this.value.tasks = [];
-    let currentPipeline = PipelineDialog.currentPipeline;
+    let currentPipeline = PipelineSaveDialog.currentPipeline;
 
     currentPipeline.spec.tasks.map((item, index) => {
       let task = taskStore.getByName(item.name);
@@ -111,7 +112,7 @@ export class PipelineDialog extends React.Component<Props> {
   };
 
   submit = async () => {
-    let pipeline = PipelineDialog.currentPipeline;
+    let pipeline = PipelineSaveDialog.currentPipeline;
 
     pipeline.metadata.name = this.value.pipelineName;
 
@@ -124,7 +125,7 @@ export class PipelineDialog extends React.Component<Props> {
     pipeline.spec.workspaces = this.value.workspaces;
     try {
       // //will update pipeline
-      await pipelineStore.update(pipeline, { ...pipeline });
+      await pipelineStore.update(pipeline, {...pipeline});
       Notifications.ok(<>pipeline {this.value.pipelineName} save successed</>);
       this.close();
     } catch (err) {
@@ -141,11 +142,12 @@ export class PipelineDialog extends React.Component<Props> {
 
     return (
       <Dialog
-        isOpen={PipelineDialog.isOpen}
+        className="PipelineSaveDialog"
+        isOpen={PipelineSaveDialog.isOpen}
         close={this.close}
         onOpen={this.onOpen}
       >
-        <Wizard className="PipelineDialog" header={header} done={this.close}>
+        <Wizard header={header} done={this.close}>
           <WizardStep contentClass="flex gaps column" next={this.submit}>
             <PipelineDetails
               value={this.value}

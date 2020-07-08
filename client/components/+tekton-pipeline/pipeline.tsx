@@ -16,14 +16,14 @@ import {
   task,
   TaskResult,
 } from "../+tekton-task/copy-task-dialog";
-import { MenuItem } from "../menu";
-import { Icon } from "../icon";
-import { AddPipelineDialog } from "./add-pipeline-dialog";
-import { taskStore } from "../+tekton-task/task.store";
-import { PipelineDialog } from "./pipeline-dialog";
-import { pipelineResourceStore } from "../+tekton-pipelineresource/pipelineresource.store";
-import { PipelineRunDialog } from "../+tekton-pipelinerun/pipeline-run-dialog";
-import { PipelineVisualDialog } from "./pipeline-visual-dialog";
+import {MenuItem} from "../menu";
+import {Icon} from "../icon";
+import {AddPipelineDialog} from "./add-pipeline-dialog";
+import {taskStore} from "../+tekton-task/task.store";
+import {PipelineSaveDialog} from "./pipeline-save-dialog";
+import {pipelineResourceStore} from "../+tekton-pipelineresource/pipelineresource.store";
+import {PipelineRunDialog} from "../+tekton-pipelinerun/pipeline-run-dialog";
+import {PipelineVisualDialog} from "./pipeline-visual-dialog";
 
 enum sortBy {
   name = "name",
@@ -113,7 +113,7 @@ export class Pipelines extends React.Component<Props> {
         <PipelineVisualDialog />
         <CopyTaskDialog />
         <AddPipelineDialog />
-        <PipelineDialog />
+        <PipelineSaveDialog />
         <PipelineRunDialog />
       </>
     );

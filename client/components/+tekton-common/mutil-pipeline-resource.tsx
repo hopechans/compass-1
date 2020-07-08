@@ -1,17 +1,18 @@
-import { observer } from "mobx-react";
+import {observer} from "mobx-react";
 import React from "react";
-import { observable } from "mobx";
-import { ActionMeta } from "react-select/src/types";
-import { resources } from "./common";
-import { TaskResources } from "client/api/endpoints/tekton-task.api";
-import { TaskResourceDetails } from "./task-resource-details";
-import { Divider } from "@material-ui/core";
-import { PipelineTaskInputResourceDetail } from "./pipeline-task-resources-details";
+import {observable} from "mobx";
+import {ActionMeta} from "react-select/src/types";
+import {resources} from "./common";
+import {TaskResources} from "client/api/endpoints/tekton-task.api";
+import {TaskResourceDetails} from "./task-resource-details";
+import {Divider} from "@material-ui/core";
+import {PipelineTaskInputResourceDetail} from "./pipeline-task-resources-details";
 
 interface Props<T = any> extends Partial<Props> {
   value?: T;
   themeName?: "dark" | "light" | "outlined";
-  divider?: true;
+  divider?: boolean;
+  disable?: boolean;
 
   onChange?(option: T, meta?: ActionMeta): void;
 }
@@ -23,30 +24,37 @@ export const defaultTaskResources: TaskResources = {
 
 @observer
 export class MutilPipelineResource extends React.Component<Props> {
+
+  static defaultProps = {
+    divider: true,
+    disable: true
+  }
+
   @observable value: TaskResources = this.props.value || defaultTaskResources;
 
   render() {
+
+    const {disable} = this.props;
+
     return (
       <div>
         <PipelineTaskInputResourceDetail
+          disable={disable}
           value={this.value.inputs}
           title={"Resource Inputs"}
           onChange={(value) => {
-
             this.value.inputs = value;
           }}
         />
-
-        <Divider />
-
+        <br/>
         <PipelineTaskInputResourceDetail
+          disable={disable}
           value={this.value.outputs}
           title={"Resource Outputs"}
           onChange={(value) => {
             this.value.outputs = value;
           }}
         />
-        <Divider />
       </div>
     );
   }

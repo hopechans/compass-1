@@ -55,7 +55,6 @@ export class PipelineDetails extends React.Component<Props> {
             this.value.params = value;
           }}
         />
-        <Divider />
         <br />
         <PipelineResourceDetails
           value={this.value.resources}
@@ -63,7 +62,6 @@ export class PipelineDetails extends React.Component<Props> {
             this.value.resources = value.value;
           }}
         />
-        <Divider />
         <br />
         <WorkspacesDetails
           value={this.value.workspaces}
@@ -71,9 +69,9 @@ export class PipelineDetails extends React.Component<Props> {
             this.value.workspaces = value;
           }}
         />
-        <Divider />
         <br />
         <MultiPipelineTaskStepDetails
+          disable={true}
           value={this.value.tasks}
           onChange={(value) => {
             this.value.tasks = value;

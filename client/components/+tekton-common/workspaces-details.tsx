@@ -34,7 +34,7 @@ export class WorkspacesDetails extends React.Component<Props> {
     return (
       <Icon
         small
-        tooltip={_i18n._(t`Workspaces`)}
+        tooltip={_i18n._(t`WorkSpaces`)}
         material="add_circle_outline"
         onClick={(e) => {
           this.add();
@@ -48,7 +48,7 @@ export class WorkspacesDetails extends React.Component<Props> {
     return (
       <>
         {this.props.divider ? <Divider /> : <></>}
-        <SubTitle className="fields-title" title="Workspaces">
+        <SubTitle className="fields-title" title="WorkSpaces">
           {this.renderAdd()}
         </SubTitle>
         <div className="Workspaces">

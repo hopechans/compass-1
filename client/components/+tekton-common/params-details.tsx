@@ -14,13 +14,19 @@ import {Params} from "./common";
 interface Props<T = any> extends Partial<Props> {
   value?: T;
   themeName?: "dark" | "light" | "outlined";
-  divider?: true;
+  divider?: boolean;
+  disable?: boolean;
 
   onChange?(option: T, meta?: ActionMeta): void;
 }
 
 @observer
 export class ParamsDetails extends React.Component<Props> {
+
+  static defaultProps = {
+    divider: false,
+    disable: false,
+  }
 
   @observable value: Params[] = this.props.value || [];
 
@@ -32,7 +38,7 @@ export class ParamsDetails extends React.Component<Props> {
   }
 
   remove = (index: number) => {
-    this.value.splice(index, 1);
+    this.value.splice(index, 1)
   }
 
   renderAdd() {
@@ -51,18 +57,21 @@ export class ParamsDetails extends React.Component<Props> {
 
   render() {
 
+    const {disable} = this.props;
+
     return (
       <>
         {this.props.divider ? <Divider/> : <></>}
-        <SubTitle className="fields-title" title="Params">{this.renderAdd()}</SubTitle>
+        <SubTitle className="fields-title" title="Params">{!disable ?? this.renderAdd()}</SubTitle>
         <div className="params">
           {this.value.map((item, index) => {
             return (
               <div key={index}>
                 <Row>
-                  <Col span="10" >
+                  <Col span="10">
                     <Input
                       className="item"
+                      disabled={disable}
                       placeholder={_i18n._(t`Name`)}
                       title={this.value[index].name}
                       value={this.value[index].name}
@@ -74,6 +83,7 @@ export class ParamsDetails extends React.Component<Props> {
                   <Col span="10" offset={2}>
                     <Input
                       className="item"
+                      disabled={disable}
                       placeholder={_i18n._(t`Value`)}
                       title={this.value[index].value}
                       value={this.value[index].value}
@@ -82,7 +92,7 @@ export class ParamsDetails extends React.Component<Props> {
                       }}
                     />
                   </Col>
-                  <Col span="1" offset={1}>
+                  {!disable ?? <Col span="1" offset={1}>
                     <Icon
                       small
                       tooltip={<Trans>Remove Command</Trans>}
@@ -93,7 +103,7 @@ export class ParamsDetails extends React.Component<Props> {
                         e.stopPropagation()
                       }}
                     />
-                  </Col>
+                  </Col>}
                 </Row>
               </div>
             )
