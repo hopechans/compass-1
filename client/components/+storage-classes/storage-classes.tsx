@@ -12,7 +12,6 @@ import { storageClassStore } from "./storage-class.store";
 import { apiManager } from "../../api/api-manager";
 import { MainLayout } from "../layout/main-layout";
 import { AddStorageClassDialog } from "./add-storageclass-dialog";
-import { ConfigStorageClassDialog } from "./config-storageclass-dialog";
 import { MenuItem } from "../menu/menu";
 import { Icon } from "../icon/icon";
 import { _i18n } from "../../../client/i18n";
@@ -75,7 +74,6 @@ export class StorageClasses extends React.Component<Props> {
                     }}
                 />
                 <AddStorageClassDialog />
-                <ConfigStorageClassDialog />
             </>
         )
     }
@@ -85,12 +83,6 @@ export function StorageClassMenu(props: KubeObjectMenuProps<StorageClass>) {
     const { object, toolbar } = props;
     return (
         <KubeObjectMenu {...props} >
-            <MenuItem onClick={() => {
-                ConfigStorageClassDialog.open(object)
-            }}>
-                <Icon material="settings" title={_i18n._(t`Config`)} interactive={toolbar} />
-                <span className="title"><Trans>Config</Trans></span>
-            </MenuItem>
         </KubeObjectMenu>
     )
 }

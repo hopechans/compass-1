@@ -16,7 +16,10 @@ import { cephParams, CephParams } from "./common";
 import { SecretsSelect } from "../+config-secrets/secrets-select";
 import { NamespaceSelect } from "../+namespaces/namespace-select";
 import { Notifications } from "../notifications";
-import { storageClassApi } from "../../api/endpoints";
+import { storageClassApi, StorageClass } from "../../api/endpoints";
+import { systemName } from "../input/input.validators";
+import { IKubeObjectMetadata } from "../../../client/api/kube-object";
+import { showDetails } from "../../../client/navigation";
 
 interface Props extends DialogProps {
 }
@@ -73,30 +76,60 @@ export class AddStorageClassDialog extends React.Component<Props> {
 
   get reclaimPolicyOptions() {
     return [
-      "Delete",
       "Retain",
+      "Delete"
+    ]
+  }
+
+  get fsTypeOptions() {
+    return [
+      "ext4",
+      "xfs"
+    ]
+  }
+
+  get imageFormatOptions() {
+    return [
+      "1",
+      "2",
+      "3",
+      "4",
+      "5"
+    ]
+  }
+
+  get imageFeaturesOptions() {
+    return [
+      "layering",
     ]
   }
 
   addStorageClass = async () => {
 
     try {
-      await storageClassApi.create({ name: this.name, namespace: '' }, {
+      const storageClass: Partial<StorageClass> = {
+        metadata: {
+          name: this.name,
+        } as IKubeObjectMetadata,
         provisioner: this.provisioner,
         volumeBindingMode: this.volumeBindingMode,
         reclaimPolicy: this.reclaimPolicy,
         parameters: {
           adminSecretNamespace: this.params.adminSecretNamespace,
           adminSecretName: this.params.adminSecretName,
+          userSecretNamespace: this.params.userSecretNamespace,
           userSecretName: this.params.userSecretName,
           monitors: this.params.monitors,
           adminId: this.params.adminId,
           pool: this.params.pool,
           userId: this.params.userId,
+          fsType: this.params.fsType,
           imageFormat: this.params.imageFormat,
           imageFeatures: this.params.imageFeatures
         }
-      })
+      };
+      let newStorageClass = await storageClassApi.create({ name: this.name, namespace: '' }, storageClass)
+      showDetails(newStorageClass.selfLink)
       this.reset();
       this.close();
     } catch (err) {
@@ -106,7 +139,7 @@ export class AddStorageClassDialog extends React.Component<Props> {
   }
 
   render() {
-    const {...dialogProps} = this.props;
+    const { ...dialogProps } = this.props;
     const header = <h5><Trans>Create StorageClass</Trans></h5>;
     return (
       <Dialog
@@ -117,12 +150,13 @@ export class AddStorageClassDialog extends React.Component<Props> {
         <Wizard className="AddStorageClassDialog" header={header} done={this.close}>
           <WizardStep
             contentClass="flex gaps column"
-            nextLabel={<Trans>Create</Trans>}
+            nextLabel={<Trans>Apply</Trans>}
             next={this.addStorageClass}
           >
             <SubTitle title={<Trans>Name</Trans>} />
             <Input
               required autoFocus
+              validators={systemName}
               placeholder={_i18n._(t`Name`)}
               value={this.name}
               onChange={(value: string) => this.name = value}
@@ -162,18 +196,16 @@ export class AddStorageClassDialog extends React.Component<Props> {
                   namespace={this.params.adminSecretNamespace}
                   onChange={value => this.params.adminSecretName = value.value}
                 />
-
-                <SubTitle title={<Trans>User Secret Namespace</Trans>} />
+                <SubTitle title={<Trans>User Secret Namespace:</Trans>} />
                 <NamespaceSelect
                   required autoFocus
-                  value={this.userSecretNamespace}
-                  onChange={value => this.userSecretNamespace = value.value} />
-
+                  value={this.params.userSecretNamespace}
+                  onChange={value => this.params.userSecretNamespace = value.value} />
                 <SubTitle title={<Trans>User Secret Name</Trans>} />
                 <SecretsSelect
                   required autoFocus
                   value={this.params.userSecretName}
-                  namespace={this.userSecretNamespace}
+                  namespace={this.params.userSecretNamespace}
                   onChange={value => this.params.userSecretName = value.value}
                 />
                 <SubTitle title={<Trans>Monitors</Trans>} />
@@ -202,20 +234,21 @@ export class AddStorageClassDialog extends React.Component<Props> {
                   value={this.params.userId}
                   onChange={(value: string) => this.params.userId = value}
                 />
+                <SubTitle title={<Trans>FileSystem Type</Trans>} />
+                <Select
+                  options={this.fsTypeOptions}
+                  value={this.params.fsType}
+                  onChange={value => this.params.fsType = value.value} />
                 <SubTitle title={<Trans>Image Format</Trans>} />
-                <Input
-                  required autoFocus
-                  placeholder={_i18n._(t`ImageFormat`)}
+                <Select
+                  options={this.imageFormatOptions}
                   value={this.params.imageFormat}
-                  onChange={(value: string) => this.params.imageFormat = value}
-                />
+                  onChange={value => this.params.imageFormat = value.value} />
                 <SubTitle title={<Trans>Image Features</Trans>} />
-                <Input
-                  required autoFocus
-                  placeholder={_i18n._(t`ImageFeatures`)}
+                <Select
+                  options={this.imageFeaturesOptions}
                   value={this.params.imageFeatures}
-                  onChange={(value: string) => this.params.imageFeatures = value}
-                />
+                  onChange={value => this.params.imageFeatures = value.value} />
               </> : <></>
             }
           </WizardStep>
