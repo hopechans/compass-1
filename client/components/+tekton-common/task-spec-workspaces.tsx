@@ -11,7 +11,6 @@ import { Icon } from "../icon";
 import { t, Trans } from "@lingui/macro";
 import { _i18n } from "../../i18n";
 import { Col, Row } from "../grid";
-import { string } from "yargs";
 
 interface Props<T = any> extends Partial<Props> {
   value?: T;
