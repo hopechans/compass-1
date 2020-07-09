@@ -2,7 +2,7 @@ import { observer } from "mobx-react";
 import React from "react";
 import {
   PipelineParamsDetails,
-  WorkspacesDetails,
+  PipelineWorkspaces,
   PipelineResourceDetails,
 } from "../+tekton-common";
 import { observable } from "mobx";
@@ -63,7 +63,7 @@ export class PipelineDetails extends React.Component<Props> {
           }}
         />
         <br />
-        <WorkspacesDetails
+        <PipelineWorkspaces
           value={this.value.workspaces}
           onChange={(value) => {
             this.value.workspaces = value;

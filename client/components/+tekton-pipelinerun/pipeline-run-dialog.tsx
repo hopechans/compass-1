@@ -14,6 +14,7 @@ import {
   PipelineResourceBinding,
   PipelineRef,
   PipelineDeclaredResource,
+  WorkspaceBinding,
 } from "../../api/endpoints";
 import { Notifications } from "../notifications";
 import { PipelineRunResourceDetails } from "./pipeline-run-resource-details";
@@ -21,6 +22,8 @@ import { systemName } from "../input/input.validators";
 import { configStore } from "../../config.store";
 import { pipelineStore } from "../+tekton-pipeline/pipeline.store";
 import { pipelineRunStore } from "./pipelinerun.store";
+import { PipelineRunWorkspaces } from "../+tekton-common/pipelinerun-workspaces";
+import { workspaceBinding } from "../+tekton-common";
 interface Props<T = any> extends Partial<Props> {
   value?: T;
   themeName?: "dark" | "light" | "outlined";
@@ -33,6 +36,7 @@ export interface PipelineRunResult {
   pipelineRef: PipelineRef;
   resources?: PipelineResourceBinding[];
   serviceAccountName?: string;
+  workspces: WorkspaceBinding[];
 }
 
 export const ref: PipelineRef = {
@@ -44,6 +48,7 @@ export const pipelineRunResult: PipelineRunResult = {
   serviceAccountName: "default",
   pipelineRef: ref,
   resources: [],
+  workspces: [],
 };
 
 @observer
@@ -88,12 +93,15 @@ export class PipelineRunDialog extends React.Component<Props> {
       };
       this.value.resources.push(resources);
     });
+    //TODO:need callback workspace.but pipeline-run name problem.  and operater it.
+    // this.value.workspces;
   };
 
   submit = async () => {
     try {
       // create a pipeline run
       let resources: PipelineDeclaredResource[] = this.value.resources;
+      let workspaces = this.value.workspces;
       await pipelineRunStore.create(
         {
           name: this.value.name,
@@ -110,6 +118,7 @@ export class PipelineRunDialog extends React.Component<Props> {
             resources: resources,
             pipelineRef: this.value.pipelineRef,
             serviceAccountName: this.value.serviceAccountName,
+            workspaces: workspaces,
           },
         }
       );
@@ -161,6 +170,14 @@ export class PipelineRunDialog extends React.Component<Props> {
               value={this.value?.resources}
               onChange={(value) => {
                 this.value.resources = value;
+              }}
+            />
+            <br />
+
+            <PipelineRunWorkspaces
+              value={this.value?.workspces}
+              onChange={(value) => {
+                this.value.workspces = value;
               }}
             />
           </WizardStep>

@@ -3,6 +3,7 @@ import { KubeObject } from "../kube-object";
 import { KubeApi } from "../kube-api";
 import { PipelineSpec, Param } from "./tekton-pipeline.api";
 import { Params } from "./tekton-task.api";
+import { PersistentVolumeClaimVolumeSource } from "./persistent-volume-claims.api";
 
 export interface PipelineRef {
   name: string;
@@ -67,6 +68,23 @@ export interface PipelineRunSpec {
   status?: string;
   timeout?: string | number;
   podTemplate?: PodTemplate;
+  workspaces?: WorkspaceBinding[];
+}
+
+export interface WorkspaceBinding {
+  // Name is the name of the workspace populated by the volume.
+  name: string;
+  // SubPath is optionally a directory on the volume which should be used
+  // for this binding (i.e. the volume will be mounted at this sub directory).
+  // +optional
+  subPath?: string;
+
+  persistentVolumeClaim?: PersistentVolumeClaimVolumeSource;
+
+  //not support it
+  emptyDir?: any;
+  configMap?: any;
+  secret?: any;
 }
 
 @autobind()
@@ -81,14 +99,17 @@ export class PipelineRun extends KubeObject {
     taskRuns: any;
   };
 
-
   getStartTime(): any {
-    if (this.status?.startTime == undefined) { return ""; }
+    if (this.status?.startTime == undefined) {
+      return "";
+    }
     return this.status?.startTime || "";
   }
 
   getCompletionTime(): any {
-    if (this.status?.completionTime == undefined) { return ""; }
+    if (this.status?.completionTime == undefined) {
+      return "";
+    }
     return this.status?.completionTime || "";
   }
 
@@ -102,15 +123,19 @@ export class PipelineRun extends KubeObject {
   }
 
   getErrorReason(): string {
-    if (this.status?.conditions == undefined || this.status?.conditions == {}) { return ""; }
-    return this.status?.conditions.map(
-      (item: { status: string; reason: string; }) => {
-        if (item.status == 'False') {
-          return item.reason;
+    if (this.status?.conditions == undefined || this.status?.conditions == {}) {
+      return "";
+    }
+    return (
+      this.status?.conditions.map(
+        (item: { status: string; reason: string }) => {
+          if (item.status == "False") {
+            return item.reason;
+          }
         }
-      }) || "";
+      ) || ""
+    );
   }
-
 
   hasIssues(): boolean {
     return this.getErrorReason() != "";

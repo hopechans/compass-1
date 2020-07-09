@@ -106,27 +106,6 @@ export interface WorkspaceDeclaration {
   readOnly?: boolean;
 }
 
-// export interface WorkspaceBinding {
-//   // Name is the name of the workspace populated by the volume.
-//   name: string;
-//   // SubPath is optionally a directory on the volume which should be used
-//   // for this binding (i.e. the volume will be mounted at this sub directory).
-//   // +optional
-//   subPath?: string;
-
-//   persistentVolumeClaim?: PersistentVolumeClaimVolumeSource;
-
-//   //not support it
-//   emptyDir?: any;
-//   configMap?: any;
-//   secret?: any;
-// }
-
-// export interface PersistentVolumeClaimVolumeSource {
-//   claimName: string;
-//   readOnly: string;
-// }
-
 export interface VolumeMount {
   name: string;
   mountPath: string;
