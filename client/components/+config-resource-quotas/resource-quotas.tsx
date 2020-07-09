@@ -12,7 +12,6 @@ import {resourceQuotaStore} from "./resource-quotas.store";
 import {IResourceQuotaRouteParams} from "./resource-quotas.route";
 import {apiManager} from "../../api/api-manager";
 import {MenuItem} from "../menu";
-import {ConfigStorageClassDialog} from "../+storage-classes/config-storageclass-dialog";
 import {Icon} from "../icon";
 import {_i18n} from "../../i18n";
 import {ConfigResourceQuotaDialog} from "./config-resource-quota-dialog";
