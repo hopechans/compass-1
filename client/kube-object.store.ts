@@ -123,12 +123,16 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
     return this.load({ name, namespace });
   }
 
-  protected async createItem(params: { name: string; namespace?: string, labels?: Map<string,string> }, data?: Partial<T>): Promise<T> {
+  protected async createItem(params: { name: string; namespace?: string, labels?: Map<string, string> }, data?: Partial<T>): Promise<T> {
     return this.api.create(params, data);
   }
 
-  async create(params: { name: string; namespace?: string, labels?: Map<string,string> }, data?: Partial<T>): Promise<T> {
+  async create(params: { name: string; namespace?: string, labels?: Map<string, string> }, data?: Partial<T>): Promise<T> {
     const newItem = await this.createItem(params, data);
+    // if the item already in store ignore replace
+    if (this.items.findIndex(item => item.getId() === newItem.getId()) > 0) {
+      return newItem;
+    }
     const items = this.sortItems([...this.items, newItem]);
     this.items.replace(items);
     return newItem;
