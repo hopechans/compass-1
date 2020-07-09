@@ -12,3 +12,4 @@ export * from "./mutil-pipeline-resource";
 export * from "./task-spec-workspaces";
 export * from "./pipeline-workspaces";
 export * from "./pipelinerun-workspaces";
+export * from "./pipeline-task-workspaces";
