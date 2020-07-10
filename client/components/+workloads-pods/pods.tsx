@@ -18,7 +18,7 @@ import { getDetailsUrl } from "../../navigation";
 import kebabCase from "lodash/kebabCase";
 import { lookupApiLink } from "../../api/kube-api";
 import { apiManager } from "../../api/api-manager";
-import {PodContainerStatuses} from "./pod-container-statuses";
+import { PodContainerStatuses } from "./pod-container-statuses";
 
 enum sortBy {
   name = "name",
@@ -27,6 +27,7 @@ enum sortBy {
   restarts = "restarts",
   age = "age",
   qos = "qos",
+  node = "node",
   owners = "owners",
   status = "status",
 }
@@ -47,6 +48,7 @@ export class Pods extends React.Component<Props> {
           [sortBy.namespace]: (pod: Pod) => pod.getNs(),
           [sortBy.containers]: (pod: Pod) => pod.getContainers().length,
           [sortBy.restarts]: (pod: Pod) => pod.getRestartsCount(),
+          [sortBy.node]: (pod: Pod) => pod.getNodeName(),
           [sortBy.owners]: (pod: Pod) => pod.getOwnerRefs().map(ref => ref.kind),
           [sortBy.qos]: (pod: Pod) => pod.getQosClass(),
           [sortBy.age]: (pod: Pod) => pod.getAge(false),
@@ -64,15 +66,16 @@ export class Pods extends React.Component<Props> {
           { title: <Trans>Containers</Trans>, className: "containers", sortBy: sortBy.containers },
           { title: <Trans>Restarts</Trans>, className: "restarts", sortBy: sortBy.restarts },
           { title: <Trans>Controlled By</Trans>, className: "owners", sortBy: sortBy.owners },
+          { title: <Trans>Node</Trans>, className: "node", sortBy: sortBy.node },
           { title: <Trans>QoS</Trans>, className: "qos", sortBy: sortBy.qos },
           { title: <Trans>Age</Trans>, className: "age", sortBy: sortBy.age },
           { title: <Trans>Status</Trans>, className: "status", sortBy: sortBy.status },
         ]}
         renderTableContents={(pod: Pod) => [
           pod.getName(),
-          pod.hasIssues() && <KubeEventIcon object={pod}/>,
+          pod.hasIssues() && <KubeEventIcon object={pod} />,
           pod.getNs(),
-          <PodContainerStatuses pod={pod}/>,
+          <PodContainerStatuses pod={pod} />,
           pod.getRestartsCount(),
           pod.getOwnerRefs().map(ref => {
             const { kind, name } = ref;
@@ -83,12 +86,13 @@ export class Pods extends React.Component<Props> {
               </Link>
             )
           }),
+          pod.getNodeName(),
           pod.getQosClass(),
           pod.getAge(),
           { title: pod.getStatusMessage(), className: kebabCase(pod.getStatusMessage()) }
         ]}
         renderItemMenu={(item: Pod) => {
-          return <PodMenu object={item}/>
+          return <PodMenu object={item} />
         }}
       />
     )
