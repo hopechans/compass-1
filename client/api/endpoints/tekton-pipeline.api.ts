@@ -78,6 +78,7 @@ export interface PipelineTask {
   resources: PipelineTaskResources;
   params: Param[];
   timeout: string | number | any;
+  workspaces?: WorkspacePipelineTaskBinding[];
   conditions?: PipelineTaskCondition;
 }
 
