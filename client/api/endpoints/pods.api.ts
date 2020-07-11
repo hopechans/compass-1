@@ -1,7 +1,7 @@
-import {IAffinity, WorkloadKubeObject} from "../workload-kube-object";
-import {autobind} from "../../utils";
-import {IMetrics, metricsApi} from "./metrics.api";
-import {KubeApi} from "../kube-api";
+import { IAffinity, WorkloadKubeObject } from "../workload-kube-object";
+import { autobind } from "../../utils";
+import { IMetrics, metricsApi } from "./metrics.api";
+import { KubeApi } from "../kube-api";
 
 export class PodsApi extends KubeApi<Pod> {
 
@@ -12,7 +12,7 @@ export class PodsApi extends KubeApi<Pod> {
 
     async getLogs(params: { namespace: string; name: string }, query?: IPodLogsQuery): Promise<string> {
         const path = this.getUrl(params) + "/log";
-        return this.request.get(path, {query});
+        return this.request.get(path, { query });
     }
 
     getMetrics(pods: Pod[], namespace: string, selector = "pod, namespace"): Promise<IPodMetrics> {
@@ -240,6 +240,7 @@ export class Pod extends WorkloadKubeObject {
         return this.spec.containers || [];
     }
 
+
     getAllContainers() {
         return this.getContainers().concat(this.getInitContainers());
     }
@@ -247,14 +248,14 @@ export class Pod extends WorkloadKubeObject {
     getRunningContainers() {
         const statuses = this.getContainerStatuses()
         return this.getAllContainers().filter(container => {
-                return statuses.find(status => status.name === container.name && !!status.state["running"])
-            }
+            return statuses.find(status => status.name === container.name && !!status.state["running"])
+        }
         )
     }
 
     getContainerStatuses(includeInitContainers = true) {
         const statuses: IPodContainerStatus[] = [];
-        const {containerStatuses, initContainerStatuses} = this.status;
+        const { containerStatuses, initContainerStatuses } = this.status;
         if (containerStatuses) {
             statuses.push(...containerStatuses);
         }
@@ -265,7 +266,7 @@ export class Pod extends WorkloadKubeObject {
     }
 
     getRestartsCount(): number {
-        const {containerStatuses} = this.status;
+        const { containerStatuses } = this.status;
         if (!containerStatuses) return 0;
         return containerStatuses.reduce((count, item) => count + item.restartCount, 0);
     }
@@ -310,13 +311,13 @@ export class Pod extends WorkloadKubeObject {
         const statuses = this.getContainerStatuses(false); // not including initContainers
         if (statuses.length) {
             statuses.forEach(status => {
-                const {state} = status;
+                const { state } = status;
                 if (state.waiting) {
-                    const {reason} = state.waiting;
+                    const { reason } = state.waiting;
                     message = reason ? reason : "Waiting";
                 }
                 if (state.terminated) {
-                    const {reason} = state.terminated;
+                    const { reason } = state.terminated;
                     message = reason ? reason : "Terminated";
                 }
             })
@@ -345,7 +346,7 @@ export class Pod extends WorkloadKubeObject {
     }
 
     getNodeSelectors(): string[] {
-        const {nodeSelector} = this.spec
+        const { nodeSelector } = this.spec
         if (!nodeSelector) return []
         return Object.entries(nodeSelector).map(values => values.join(": "))
     }
@@ -390,7 +391,7 @@ export class Pod extends WorkloadKubeObject {
         const probe = [];
         // HTTP Request
         if (httpGet) {
-            const {path, port, host, scheme} = httpGet;
+            const { path, port, host, scheme } = httpGet;
             probe.push(
                 "http-get",
                 `${scheme.toLowerCase()}://${host || ""}:${port || ""}${path || ""}`,
