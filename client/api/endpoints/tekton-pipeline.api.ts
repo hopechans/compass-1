@@ -153,7 +153,7 @@ export class Pipeline extends KubeObject {
     let graphName: string = ""
     this.getAnnotations().filter((item) => {
       const R = item.split("=");
-      if (R[0] == "fuxi.nip.io/tektongraphs") { graphName = R[1] }
+      if (R[0] == "fuxi.nip.io/newtektongraphs") { graphName = R[1] }
     });
     if (graphName) {
       return  JSON.parse(tektonGraphStore.getByName(graphName).spec.data);

@@ -9,8 +9,9 @@ import { observer } from "mobx-react";
 import { Pipeline, PipelineTask } from "../../api/endpoints";
 import { graphId, Graphs, initData } from "../+tekton-graph/graphs";
 import { CopyTaskDialog } from "../+tekton-task/copy-task-dialog";
-import { PipelineResult } from "../+tekton-graph/graph";
 import { PipelineSaveDialog } from "./pipeline-save-dialog";
+import { tektonGraphStore } from "../+tekton-graph/tekton-graph.store";
+import { pipelineStore } from "./pipeline.store";
 
 interface Props extends Partial<Props> {}
 
@@ -33,40 +34,31 @@ export class PipelineVisualDialog extends React.Component<Props> {
 
   onOpen = async () => {
     setTimeout(() => {
-      this.graph = new Graphs();
+      const anchor = document.getElementsByClassName("step-content")[0];
+      // const anchor = document.getElementById("container")
+      const width = anchor.scrollWidth - 50;
+      const height = anchor.scrollHeight - 60;
+
+      this.graph = new Graphs(width, height);
       this.graph.init();
 
-      let nodeData: any = null;
-      this.pipeline.getAnnotations().filter((item) => {
-        const tmp = item.split("=");
-        if (tmp[0] == "node_data") {
-          nodeData = tmp[1];
-        }
-      });
-
-      this.graph.instance.clear();
-      if (nodeData === undefined || nodeData === "") {
-        this.graph.instance.changeData(initData);
-      } else {
-        setTimeout(() => {
-          this.graph.instance.changeData(JSON.parse(nodeData));
-        }, 10);
-      }
-
+      this.graph.instance.data(this.pipeline.getNodeData());
       this.graph.bindClickOnNode((currentNode: any) => {
         this.currentNode = currentNode;
         CopyTaskDialog.open(this.graph, this.currentNode);
       });
+
       this.graph.bindMouseenter();
       this.graph.bindMouseleave();
+      // this.graph.instance.bindMouseleave();
+      // this.graph.instance.bindClickOnNode();
+
       this.graph.render();
     }, 100);
   };
 
   //存取node{id,...} => <id,node>
   nodeToMap(): Map<string, any> {
-    console.log("data", this.data);
-
     let items: Map<string, any> = new Map<string, any>();
     this.data.nodes.map((item: any) => {
       const ids = item.id.split("-");
@@ -123,10 +115,49 @@ export class PipelineVisualDialog extends React.Component<Props> {
     return tasks;
   }
 
+  updateTektonGraph = async (data: string, lastGraphName: string = "") => {
+    const graphName = this.pipeline.getName() + new Date().getTime().toString();
+    await tektonGraphStore.create(
+      { name: graphName, namespace: "ops" },
+      {
+        spec: {
+          data: data,
+        },
+      }
+    );
+    this.pipeline.metadata.annotations = {
+      "fuxi.nip.io/newtektongraphs": graphName,
+    };
+    if (lastGraphName != "") {
+      this.pipeline.metadata.annotations[
+        "fuxi.nip.io/oldtektongraphs"
+      ] = lastGraphName;
+    }
+    await pipelineStore.update(this.pipeline, { ...this.pipeline });
+  };
+
   save = async () => {
     this.data = this.graph.instance.save();
     const data = JSON.stringify(this.data);
-    this.pipeline.metadata.annotations = { node_data: data };
+    let annotations = this.pipeline.metadata
+      ? this.pipeline.metadata.annotations
+      : undefined;
+    const graphName = annotations
+      ? annotations["fuxi.nip.io/newtektongraphs"]
+      : "";
+
+    if (graphName != "") {
+      try {
+        let tektonGraph = tektonGraphStore.getByName(graphName, "ops");
+        if (tektonGraph.spec.data !== data) {
+          await this.updateTektonGraph(data, graphName);
+        }
+      } catch (e) {
+        await this.updateTektonGraph(data, graphName);
+      }
+    } else {
+      await this.updateTektonGraph(data);
+    }
 
     const pipelineTasks = this.pipeline.spec.tasks;
     if (pipelineTasks !== undefined) {
@@ -176,7 +207,7 @@ export class PipelineVisualDialog extends React.Component<Props> {
             nextLabel={<Trans>Save</Trans>}
             next={this.save}
           >
-            <div className="container" id={graphId} />
+            <div className={graphId} id={graphId} />
           </WizardStep>
         </Wizard>
       </Dialog>
