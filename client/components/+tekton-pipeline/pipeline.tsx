@@ -24,6 +24,7 @@ import {PipelineSaveDialog} from "./pipeline-save-dialog";
 import {pipelineResourceStore} from "../+tekton-pipelineresource/pipelineresource.store";
 import {PipelineRunDialog} from "../+tekton-pipelinerun/pipeline-run-dialog";
 import {PipelineVisualDialog} from "./pipeline-visual-dialog";
+import {tektonGraphStore} from "../+tekton-graph/tekton-graph.store";
 
 enum sortBy {
   name = "name",
@@ -44,14 +45,18 @@ export class Pipelines extends React.Component<Props> {
   @observable pipelineResources: [];
   @observable pipeResult: PipelineResult = pipelineResult;
 
+
   render() {
+
+    console.log("tG", tektonGraphStore.getByName("admin-aaa"))
+
     return (
       <>
         <KubeObjectListLayout
           isClusterScoped
           className="Pipelines"
           store={pipelineStore}
-          dependentStores={[taskStore, pipelineResourceStore]} // other
+          dependentStores={[taskStore, pipelineResourceStore, tektonGraphStore]} // other
           sortingCallbacks={{
             [sortBy.name]: (pipeline: Pipeline) => pipeline.getName(),
             [sortBy.ownernamespace]: (pipeline: Pipeline) =>

@@ -1,32 +1,30 @@
 import "./pipelinerun.scss";
 
-import React, { Fragment } from "react";
-import { observer } from "mobx-react";
-import { RouteComponentProps } from "react-router";
-import { Trans } from "@lingui/macro";
-import { PipelineRun, pipelineRunApi, TaskRun } from "../../api/endpoints";
-import { pipelineRunStore } from "./pipelinerun.store";
-import { pipelineStore } from "../+tekton-pipeline/pipeline.store";
-import { KubeObjectMenu, KubeObjectMenuProps } from "../kube-object";
-import { KubeObjectListLayout } from "../kube-object";
-import { apiManager } from "../../api/api-manager";
-import { observable } from "mobx";
-import { PipelineGraph } from "../+tekton-graph/pipeline-graph";
-import { Graph } from "../+tekton-graph/graph";
-import { taskRunStore } from "../+tekton-taskrun";
-import { TooltipContent } from "../tooltip";
-import { StatusBrick } from "../status-brick";
-import { cssNames } from "../../utils";
-import { MenuItem } from "../menu";
-import { Icon } from "../icon";
-import { Notifications } from "../notifications";
-import { PipelineRunIcon } from "./pipeline-run-icon";
-import { PodLogsDialog } from "../+workloads-pods/pod-logs-dialog";
-import { podsStore } from "../+workloads-pods/pods.store";
-import { Pod } from "../../api/endpoints";
-import { configStore } from "../../../client/config.store";
+import React, {Fragment} from "react";
+import {observer} from "mobx-react";
+import {RouteComponentProps} from "react-router";
+import {Trans} from "@lingui/macro";
+import {PipelineRun, pipelineRunApi, TaskRun} from "../../api/endpoints";
+import {pipelineRunStore} from "./pipelinerun.store";
+import {pipelineStore} from "../+tekton-pipeline/pipeline.store";
+import {KubeObjectMenu, KubeObjectMenuProps} from "../kube-object";
+import {KubeObjectListLayout} from "../kube-object";
+import {apiManager} from "../../api/api-manager";
+import {observable} from "mobx";
+import {taskRunStore} from "../+tekton-taskrun";
+import {TooltipContent} from "../tooltip";
+import {StatusBrick} from "../status-brick";
+import {cssNames} from "../../utils";
+import {MenuItem} from "../menu";
+import {Icon} from "../icon";
+import {Notifications} from "../notifications";
+import {PipelineRunIcon} from "./pipeline-run-icon";
+import {PodLogsDialog} from "../+workloads-pods/pod-logs-dialog";
+import {podsStore} from "../+workloads-pods/pods.store";
+import {Pod} from "../../api/endpoints";
+import {configStore} from "../../config.store";
 import Tooltip from "@material-ui/core/Tooltip";
-import { PipelineRunVisualDialog } from "./pipelinerun-visual-dialog";
+import {PipelineRunVisualDialog} from "./pipelinerun-visual-dialog";
 
 enum sortBy {
   name = "name",
@@ -35,7 +33,8 @@ enum sortBy {
   age = "age",
 }
 
-interface Props extends RouteComponentProps {}
+interface Props extends RouteComponentProps {
+}
 
 @observer
 export class PipelineRuns extends React.Component<Props> {
@@ -45,42 +44,7 @@ export class PipelineRuns extends React.Component<Props> {
   @observable pipelineRun: any;
 
   getNodeData(pipelineName: string): any {
-    const pipeline = pipelineStore.getByName(pipelineName);
-    let nodeData: any;
-    pipeline.getAnnotations().filter((item) => {
-      const tmp = item.split("=");
-      if (tmp[0] == "node_data") {
-        nodeData = tmp[1];
-      }
-    });
-    return JSON.parse(nodeData);
-  }
-
-  secondsToHms(seconds: number) {
-    const h = Math.floor(seconds / 3600);
-    const m = Math.floor((seconds % 3600) / 60);
-    const s = Math.floor((seconds % 3600) % 60);
-
-    let hDisplay = h > 0 ? h + (h == 1 ? "h " : "h") : "";
-    let mDisplay = m > 0 ? m + (m == 1 ? "m " : "m") : "";
-    let sDisplay = s > 0 ? s + (s == 1 ? "s " : "s") : "";
-    return hDisplay + mDisplay + sDisplay;
-  }
-
-  getTaskRunName(pipelinerun: PipelineRun): string[] {
-    if (pipelinerun?.status == undefined) {
-      return [];
-    }
-    if (pipelinerun?.status?.taskRuns == undefined) {
-      return [];
-    }
-    return (
-      Object.keys(pipelinerun?.status?.taskRuns)
-        .map((item: any) => {
-          return item;
-        })
-        .slice() || []
-    );
+    return pipelineStore.getByName(pipelineName).getNodeData();
   }
 
   getTaskRun(names: string[]): any {
@@ -88,10 +52,9 @@ export class PipelineRuns extends React.Component<Props> {
     names.map((name: string, index: number) => {
       const currentTask = taskRunStore.getByName(name);
       if (currentTask?.spec !== undefined) {
-        taskMap[currentTask.spec.taskRef.name] = currentTask;
+        taskMap[currentTask.spec.taskRef.name] = currentTask
       }
     });
-
     return taskMap;
   }
 
@@ -116,118 +79,9 @@ export class PipelineRuns extends React.Component<Props> {
     PodLogsDialog.open(pod, container);
   }
 
-  //showCurrentPipelineRunStatus show pipeline run status
-  showCurrentPipelineRunStatus(pipelinerun: PipelineRun) {
-    this.isHiddenPipelineGraph = false;
-    this.pipelineRun = pipelinerun;
-    //by pipeline ref name get node data
-    let nodeData = this.getNodeData(pipelinerun.spec.pipelineRef.name);
-
-    if (nodeData === undefined || nodeData === "") {
-    } else {
-      this.graph.getGraph().clear();
-
-      setTimeout(() => {
-        this.graph.getGraph().changeData(nodeData);
-      }, 200);
-
-      let statusMap: any = new Map<any, any>();
-
-      let drawPipeline = setInterval(() => {
-        const names = this.getTaskRunName(pipelinerun);
-        if (names.length > 0) {
-          const currentTaskRunMap = this.getTaskRun(names);
-          nodeData.nodes.map((item: any, index: number) => {
-            const currentTaskRun = currentTaskRunMap[item.taskName];
-            if (currentTaskRun !== undefined) {
-              // if (currentTaskRun?.status?.conditions[0]?.reason !== undefined) {
-
-              //   statusMap[index] = true;
-              // } else {
-              //   statusMap[index] = false;
-              //   nodeData.nodes[index].status = "Pendding";
-              // }
-
-              //should check when the pipeline-run status
-              nodeData.nodes[index].status =
-                currentTaskRun.status.conditions[0].reason;
-            } else {
-              nodeData.nodes[index].status = "Pendding";
-            }
-            nodeData.nodes[index].showtime = true;
-          });
-          setTimeout(() => {
-            this.graph.getGraph().clear();
-            this.graph.getGraph().changeData(nodeData);
-          });
-          clearInterval(drawPipeline);
-        }
-      }, 1000);
-
-      //Interval 1s update status and time in graph
-      this.timeIntervalID = setInterval(() => {
-        const newPipelineRun = pipelineRunStore.getByName(
-          pipelinerun.getName()
-        );
-        const names = this.getTaskRunName(newPipelineRun);
-        if (names.length > 0) {
-          const currentTaskRunMap = this.getTaskRun(names);
-
-          nodeData.nodes.map((item: any, index: number) => {
-            // //set current node status,just like:Failed Succeed... and so on.
-
-            const currentTaskRun = currentTaskRunMap[item.taskName];
-            if (currentTaskRun !== undefined) {
-              //should get current node itme and update the time.
-              let currentitem = this.graph
-                .getGraph()
-                .findById(nodeData.nodes[index].id);
-              //dynimic set the state: missing notreay
-              if (currentTaskRun?.status?.conditions[0]?.reason == undefined) {
-                return;
-              }
-
-              this.graph
-                .getGraph()
-                .setItemState(
-                  currentitem,
-                  currentTaskRun?.status?.conditions[0]?.reason,
-                  ""
-                );
-
-              //when show pipeline will use current date time  less start time and then self-increment。
-              let completionTime = currentTaskRun.status.completionTime;
-              let totalTime: string;
-              const currentStartTime =
-                currentTaskRun.metadata.creationTimestamp;
-              const st = new Date(currentStartTime).getTime();
-              if (completionTime !== undefined) {
-                const ct = new Date(completionTime).getTime();
-                let result = Math.floor((ct - st) / 1000);
-                totalTime = this.secondsToHms(result);
-              } else {
-                const ct = new Date().getTime();
-                let result = Math.floor((ct - st) / 1000);
-                totalTime = this.secondsToHms(result);
-              }
-
-              //set the time
-              this.graph
-                .getGraph()
-                .setItemState(currentitem, "time", totalTime);
-            }
-          });
-        }
-      }, 1000);
-    }
-  }
-  hiddenPipelineGraph = () => {
-    clearInterval(this.timeIntervalID);
-    this.isHiddenPipelineGraph = true;
-  };
-
-  renderTasks(pipelinerun: PipelineRun) {
-    const names = this.getTaskRunName(pipelinerun);
+  renderTasks(pipelineRun: PipelineRun) {
+    // const names = pipelineRun.getPipelineRefNodeData();
+    const names: string[] = [];
 
     if (names.length > 0) {
       // TODO:
@@ -280,7 +134,7 @@ export class PipelineRuns extends React.Component<Props> {
         );
         return (
           <Fragment key={name}>
-            <StatusBrick className={cssNames(stat)} tooltip={tooltip} />
+            <StatusBrick className={cssNames(stat)} tooltip={tooltip}/>
           </Fragment>
         );
       });
@@ -289,7 +143,7 @@ export class PipelineRuns extends React.Component<Props> {
 
   renderTime(time: string) {
     return (
-      <TooltipContent className="PiplineRunTooltip">{time}</TooltipContent>
+      <TooltipContent className="PipelineRunTooltip">{time}</TooltipContent>
     );
   }
 
@@ -306,15 +160,6 @@ export class PipelineRuns extends React.Component<Props> {
   render() {
     return (
       <>
-        {/* 99.5% prevent horizontal scroll bar */}
-        {/*↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓ */}
-        {/*<div style={{ width: "99.5%" }}>*/}
-        {/*  <Graph*/}
-        {/*    open={this.isHiddenPipelineGraph}*/}
-        {/*    showSave={true}*/}
-        {/*    closeGraph={this.hiddenPipelineGraph}*/}
-        {/*  ></Graph>*/}
-        {/*</div>*/}
         <KubeObjectListLayout
           isClusterScoped
           className="PipelineRuns"
@@ -354,9 +199,9 @@ export class PipelineRuns extends React.Component<Props> {
               className: "reason",
               sortBy: sortBy.reason,
             },
-            { title: <Trans>Age</Trans>, className: "age", sortBy: sortBy.age },
-            { title: <Trans>Tasks</Trans>, className: "tasks" },
-            { title: <Trans>StartTime</Trans>, className: "startTime" },
+            {title: <Trans>Age</Trans>, className: "age", sortBy: sortBy.age},
+            {title: <Trans>Tasks</Trans>, className: "tasks"},
+            {title: <Trans>StartTime</Trans>, className: "startTime"},
             {
               title: <Trans>CompletionTime</Trans>,
               className: "completionTime",
@@ -366,7 +211,7 @@ export class PipelineRuns extends React.Component<Props> {
             this.renderPipelineName(pipelineRun.getName()),
             pipelineRun.getOwnerNamespace(),
             pipelineRun.hasIssues() && (
-              <PipelineRunIcon object={pipelineRun.status.conditions[0]} />
+              <PipelineRunIcon object={pipelineRun.status.conditions[0]}/>
             ),
             // pipelineRun.getErrorReason(),
             pipelineRun.getAge(),
@@ -383,17 +228,17 @@ export class PipelineRuns extends React.Component<Props> {
             ),
           ]}
           renderItemMenu={(item: PipelineRun) => {
-            return <PipelineRunMenu object={item} />;
+            return <PipelineRunMenu object={item}/>;
           }}
         />
-        <PipelineRunVisualDialog />
+        <PipelineRunVisualDialog/>
       </>
     );
   }
 }
 
 export function PipelineRunMenu(props: KubeObjectMenuProps<PipelineRun>) {
-  const { object, toolbar } = props;
+  const {object, toolbar} = props;
   return (
     <KubeObjectMenu {...props}>
       <MenuItem
@@ -403,7 +248,7 @@ export function PipelineRunMenu(props: KubeObjectMenuProps<PipelineRun>) {
           pipelineRun.spec.status = "PipelineRunCancelled";
           try {
             // //will update pipelineRun
-            pipelineRunStore.update(pipelineRun, { ...pipelineRun });
+            pipelineRunStore.update(pipelineRun, {...pipelineRun});
             Notifications.ok(
               <>pipeline-run {pipelineRun.getName()} cancel successed</>
             );
@@ -412,7 +257,7 @@ export function PipelineRunMenu(props: KubeObjectMenuProps<PipelineRun>) {
           }
         }}
       >
-        <Icon material="cancel" title={"cancel"} interactive={toolbar} />
+        <Icon material="cancel" title={"cancel"} interactive={toolbar}/>
         <span className="title">
           <Trans>Cancel</Trans>
         </span>

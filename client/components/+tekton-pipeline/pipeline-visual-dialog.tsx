@@ -9,8 +9,8 @@ import {observer} from "mobx-react";
 import {Pipeline, PipelineTask} from "../../api/endpoints";
 import {graphId, Graphs, initData} from "../+tekton-graph/graphs";
 import {CopyTaskDialog} from "../+tekton-task/copy-task-dialog";
-import {PipelineResult} from "../+tekton-graph/graph";
 import {PipelineSaveDialog} from "./pipeline-save-dialog";
+import {tektonGraphStore} from "../+tekton-graph/tekton-graph.store";
 
 interface Props extends Partial<Props> {
 }
@@ -39,22 +39,9 @@ export class PipelineVisualDialog extends React.Component<Props> {
       this.graph.init();
 
       let nodeData: any = null;
-      this.pipeline.getAnnotations().filter((item) => {
-        const tmp = item.split("=");
-        if (tmp[0] == "node_data") {
-          nodeData = tmp[1];
-        }
-      });
 
-      this.graph.instance.clear();
-      if (nodeData === undefined || nodeData === "") {
-        this.graph.instance.changeData(initData);
-      } else {
-        setTimeout(() => {
-          this.graph.instance.changeData(JSON.parse(nodeData));
-        }, 10);
-      }
-
+      nodeData = this.pipeline.getNodeData();
+      this.graph.instance.data(nodeData)
       this.graph.bindClickOnNode((currentNode: any) => {
         this.currentNode = currentNode;
         CopyTaskDialog.open(this.graph, this.currentNode);
@@ -68,9 +55,6 @@ export class PipelineVisualDialog extends React.Component<Props> {
 
   //存取node{id,...} => <id,node>
   nodeToMap(): Map<string, any> {
-
-    console.log("data", this.data)
-
     let items: Map<string, any> = new Map<string, any>();
     this.data.nodes.map((item: any) => {
       const ids = item.id.split("-");
@@ -127,10 +111,31 @@ export class PipelineVisualDialog extends React.Component<Props> {
     return tasks;
   }
 
+  updateTektonGraph = async (data: string) => {
+    const graphName = this.pipeline.getName() + (new Date().getTime().toString())
+    await tektonGraphStore.create({name: graphName, namespace: "ops"}, {
+      spec: {
+        data: data
+      }
+    })
+    this.pipeline.metadata.annotations = { "fuxi.nip.io/tektongraphs": graphName };
+  }
+
   save = async () => {
     this.data = this.graph.instance.save()
     const data = JSON.stringify(this.data);
-    this.pipeline.metadata.annotations = { node_data: data };
+
+    let annotations = this.pipeline.metadata.annotations;
+    const graphName = annotations["fuxi.nip.io/tektongraphs"]
+
+    if (graphName) {
+      try{
+        let tektonGraph = tektonGraphStore.getByName(graphName, "ops");
+        if (tektonGraph.spec.data !== data) { await this.updateTektonGraph(data) }
+      }catch (e) { await this.updateTektonGraph(data) }
+    }else {
+      await this.updateTektonGraph(data)
+    }
 
     const pipelineTasks = this.pipeline.spec.tasks;
     if (pipelineTasks !== undefined) {
