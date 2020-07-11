@@ -18,39 +18,45 @@ export const initData = {
   ],
 }
 
-export const cfg = {
-  container: graphId,
-  width: 1000,
-  height: 800,
-  renderer: "svg",
-  defaultEdge: {
-    type: "Line",
-    style: {
-      stroke: "#959DA5",
-      lineWidth: 4,
-    },
-    // 其他配置
-  },
-  defaultNode: {
-    type: "card-node",
-    size: [120, 40],
-    linkPoints: {
-      left: true,
-      right: true,
-      size: 5,
-    },
-  },
-  nodeStateStyles: {
-    hover: {
-      fillOpacity: 0.1,
-      lineWidth: 2,
-    },
-  },
-}
-
 export class Graphs {
 
   public instance: any = null;
+  public cfg: any = null;
+
+  constructor(width?: number, height?: number) {
+    this.cfg = {
+      container: graphId,
+      width: width,
+      height: height,
+      renderer: "svg",
+      // fitView: true,
+      // fitViewPadding: "20",
+      autoPaint: true,
+      defaultEdge: {
+        type: "Line",
+        style: {
+          stroke: "#959DA5",
+          lineWidth: 4,
+        },
+        // 其他配置
+      },
+      defaultNode: {
+        type: "card-node",
+        size: [120, 40],
+        linkPoints: {
+          left: true,
+          right: true,
+          size: 5,
+        },
+      },
+      nodeStateStyles: {
+        hover: {
+          fillOpacity: 0.1,
+          lineWidth: 2,
+        },
+      },
+    }
+  }
 
   setNodeStatusToSucceed(node: any): void {
     this.instance.setItemState("succeed", false, node);
@@ -158,7 +164,6 @@ export class Graphs {
   bindMouseenter(): void {
     // 监听鼠标进入节点事件
     this.instance.on("node:mouseenter", (evt: { item: any }) => {
-
       const node = evt.item;
       // 激活该节点的 hover 状态
       this.instance.setItemState(node, "hover", true);
@@ -175,7 +180,7 @@ export class Graphs {
   }
 
   init() {
-    this.instance = new G6.Graph(cfg);
+    this.instance = new G6.Graph(this.cfg);
     this.instance.data(initData);
     this.instance.setMode("addEdge");
   }
