@@ -25,7 +25,7 @@ export class PipelineRunVisualDialog extends React.Component<Props> {
   @observable static Data: PipelineRun = null;
   @observable graph: any = null;
   @observable currentNode: any = null;
-  @observable timeIntervalID: any = null  ;
+  @observable timeIntervalID: any = null;
 
   get pipelineRun() {
     return PipelineRunVisualDialog.Data
@@ -151,6 +151,7 @@ export class PipelineRunVisualDialog extends React.Component<Props> {
 
   onOpen = async () => {
     setTimeout(() => {
+
       this.graph = new Graphs();
       this.graph.init();
 
@@ -164,10 +165,10 @@ export class PipelineRunVisualDialog extends React.Component<Props> {
 
       this.graph.instance.clear();
       if (nodeData === undefined || nodeData === "") {
-        this.graph.instance.changeData(initData);
+        this.graph.instance.data(initData);
       } else {
         setTimeout(() => {
-          this.graph.instance.changeData(JSON.parse(nodeData));
+          this.graph.instance.data(JSON.parse(nodeData));
         }, 10);
       }
 
@@ -181,7 +182,6 @@ export class PipelineRunVisualDialog extends React.Component<Props> {
         const currentTaskRun = currentTaskRunMap[name];
         const podName = currentTaskRun.status.podName;
         this.showLogs(podName);
-
       });
       this.graph.render();
 

@@ -55,8 +55,8 @@ export interface Outputs {
     // Task's steps.
     name: string;
     // TODO: maybe this is an enum with types like "go test", "junit", etc.
-    format: string;
-    path: string;
+    format?: string;
+    path?: string;
   }[];
   resources?: TaskResource[];
 }
@@ -132,7 +132,7 @@ export interface TaskSpec {
   description?: string;
   inputs?: Inputs;
   outputs?: Outputs;
-  steps?: TaskStep[];
+  steps: TaskStep[];
   volumes?: Volume[];
   workspaces?: WorkspaceDeclaration[];
   //----The following types are not supported now
@@ -141,6 +141,23 @@ export interface TaskSpec {
   results?: any;
   //----The following types are not supported now
 }
+
+const taskInput: TaskResource[] = [];
+
+const taskResource: TaskResources = {
+  inputs: taskInput,
+  outputs: taskInput,
+};
+
+const inputs: Inputs = {
+  resources: [],
+  params: [],
+};
+
+const outputs: Outputs = {
+  resources: [],
+  results: [],
+};
 
 @autobind()
 export class Task extends KubeObject {
@@ -154,6 +171,63 @@ export class Task extends KubeObject {
     return this.metadata.labels.namespace != undefined
       ? this.metadata.labels.namespace
       : "";
+  }
+
+  getResources(): TaskResources {
+    if (this.spec.resources === undefined) {
+      return taskResource;
+    }
+    return this.spec.resources;
+  }
+
+  getParams(): PipelineParams[] {
+    return this.spec.params || [];
+  }
+
+  getInputs(): Inputs {
+    return this.spec.inputs || inputs;
+  }
+
+  getOutputs(): Outputs {
+    return this.spec.outputs || outputs;
+  }
+
+  getSteps(): TaskStep[] {
+    if (this.spec.steps === undefined) {
+      return [];
+    }
+    this.spec.steps.map((item, index) => {
+      if (item.args === undefined) {
+        this.spec.steps[index].args = [];
+      }
+      if (item.command === undefined) {
+        this.spec.steps[index].command = [];
+      }
+      if (item.env === undefined) {
+        this.spec.steps[index].env = [];
+      }
+      if (item.image == undefined) {
+        this.spec.steps[index].image = "";
+      }
+      if (item.name == undefined) {
+        this.spec.steps[index].name = "";
+      }
+      if (item.script == undefined) {
+        this.spec.steps[index].script = "";
+      }
+      if (item.workingDir === undefined) {
+        this.spec.steps[index].workingDir = "";
+      }
+    });
+    return this.spec.steps;
+  }
+
+  getVolumes(): Volume[] {
+    return this.spec.volumes || [];
+  }
+
+  getWorkspaces(): WorkspaceDeclaration[] {
+    return this.spec.workspaces || [];
   }
 }
 
