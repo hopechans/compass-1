@@ -90,6 +90,8 @@ export class CopyTaskDialog extends React.Component<Props> {
   @observable static node: any;
   @observable static data: any;
   @observable ifSwitch: boolean = false;
+  @observable name: string;
+  @observable change: boolean;
 
   static open(graph: any, node: any) {
     CopyTaskDialog.isOpen = true;
@@ -97,34 +99,43 @@ export class CopyTaskDialog extends React.Component<Props> {
     this.node = node;
   }
 
+  loadData = async (name: string) => {
+    try {
+      const defaultNameSpace = "ops";
+      if (name.split("-")[0] !== this.prefix) {
+        name = `${this.prefix}-${name}`;
+      }
+      const task = taskStore.getByName(name, defaultNameSpace);
+      if (task !== undefined) {
+        this.value.resources = task.getResources();
+        this.value.taskSteps = task.getSteps();
+        this.value.workspace = task.getWorkspaces();
+        this.value.volumes = task.getVolumes();
+        this.value.pipelineParams = task.getParams();
+        if (!this.ifSwitch) {
+          const names = task.metadata.name.split("-");
+          names.shift();
+          this.value.taskName = names.join("-");
+        } else {
+          this.value.taskName = task.getName();
+        }
+      }
+    } catch (err) {
+      return err;
+    }
+  };
+
   onOpen = () => {
-    const group = CopyTaskDialog.node.getContainer();
-    let shape = group.get("children")[2];
-    const name = shape.attrs.text;
-    const defaultNameSpace = "ops";
-    const task = taskStore.getByName(name, defaultNameSpace);
-    if (task !== undefined) {
-      this.value.resources = resources;
-      this.value.resources.inputs =
-        task.spec.resources?.inputs == undefined
-          ? []
-          : task.spec.resources?.inputs;
-      this.value.resources.outputs =
-        task.spec.resources?.outputs == undefined
-          ? []
-          : task.spec.resources?.outputs;
+    try {
+      if (this.ifSwitch) {
+      }
 
-      this.value.workspace =
-        task.spec.workspaces === undefined ? [] : task.spec.workspaces;
-
-      this.value.pipelineParams =
-        task.spec.params == undefined ? [] : task.spec.params;
-      const names = task.metadata.name.split("-");
-      names.shift();
-      this.value.taskName = names.join("-");
-      this.value.taskSteps = task.spec.steps;
-      this.value.volumes =
-        task.spec.volumes == undefined ? [] : task.spec.volumes;
+      const group = CopyTaskDialog.node.getContainer();
+      let shape = group.get("children")[2];
+      const name = shape.attrs.text;
+      this.loadData(name);
+    } catch (err) {
+      Notifications.error(err);
     }
   };
 
@@ -140,8 +151,6 @@ export class CopyTaskDialog extends React.Component<Props> {
     this.saveTask();
     CopyTaskDialog.graph.setTaskName(this.value.taskName, CopyTaskDialog.node);
   };
-
-  toTask() {}
 
   saveTask = async () => {
     const parms = toJS(this.value.pipelineParams);
@@ -190,9 +199,6 @@ export class CopyTaskDialog extends React.Component<Props> {
           task.spec.params = parms;
           task.spec.resources = resources;
           task.spec.workspaces = workspaces;
-          //TODO:查出来的task有些字段直接没有的。
-          // let a:any = task
-          // a.scirp= null;
 
           task.spec.steps = steps;
           await taskStore.update(task, { ...task });
@@ -207,7 +213,16 @@ export class CopyTaskDialog extends React.Component<Props> {
     }
   };
 
-  handleChange = (event: any) => {
+  handleChange = async (event: any) => {
+    if (!event.target.checked) {
+      // await this.loadData(this.value.taskName);
+      if (this.value.taskName.split("-")[0] === this.prefix) {
+        const names = this.value.taskName.split("-");
+        names.shift();
+        this.value.taskName = names.join("-");
+      }
+    }
+    console.log(this.value.taskName);
     this.ifSwitch = event.target.checked;
   };
 
