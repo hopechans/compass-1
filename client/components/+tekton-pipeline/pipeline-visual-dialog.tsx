@@ -40,7 +40,7 @@ export class PipelineVisualDialog extends React.Component<Props> {
       const anchor = document.getElementsByClassName("step-content")[0]
       // const anchor = document.getElementById("container")
       const width = anchor.scrollWidth - 50;
-      const height = anchor.scrollHeight - 50;
+      const height = anchor.scrollHeight - 60;
 
       this.graph = new Graphs(width, height);
       this.graph.init();
@@ -117,28 +117,32 @@ export class PipelineVisualDialog extends React.Component<Props> {
     return tasks;
   }
 
-  updateTektonGraph = async (data: string) => {
+  updateTektonGraph = async (data: string, lastGraphName: string = "") => {
     const graphName = this.pipeline.getName() + (new Date().getTime().toString())
     await tektonGraphStore.create({name: graphName, namespace: "ops"}, {
       spec: {
         data: data
       }
     })
-    this.pipeline.metadata.annotations = { "fuxi.nip.io/tektongraphs": graphName };
+    this.pipeline.metadata.annotations = { "fuxi.nip.io/newtektongraphs": graphName };
+    if (lastGraphName != "") {
+      this.pipeline.metadata.annotations["fuxi.nip.io/oldtektongraphs"] = lastGraphName;
+    }
     await pipelineStore.update(this.pipeline, {...this.pipeline});
   }
 
   save = async () => {
+
     this.data = this.graph.instance.save()
     const data = JSON.stringify(this.data);
     let annotations = this.pipeline.metadata? this.pipeline.metadata.annotations: undefined;
-    const graphName = annotations? annotations["fuxi.nip.io/tektongraphs"] : "";
+    const graphName = annotations? annotations["fuxi.nip.io/newtektongraphs"] : "";
 
     if (graphName != "") {
       try{
         let tektonGraph = tektonGraphStore.getByName(graphName, "ops");
-        if (tektonGraph.spec.data !== data) { await this.updateTektonGraph(data) }
-      }catch (e) { await this.updateTektonGraph(data) }
+        if (tektonGraph.spec.data !== data) { await this.updateTektonGraph(data, graphName) }
+      }catch (e) { await this.updateTektonGraph(data, graphName) }
     }else {
       await this.updateTektonGraph(data)
     }
