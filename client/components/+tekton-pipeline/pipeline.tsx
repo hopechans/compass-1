@@ -5,7 +5,7 @@ import { observer } from "mobx-react";
 import { observable } from "mobx";
 import { RouteComponentProps } from "react-router";
 import { Trans } from "@lingui/macro";
-import { Pipeline, pipelineApi, PipelineTask } from "../../api/endpoints";
+import { Pipeline, pipelineApi } from "../../api/endpoints";
 import { pipelineStore } from "./pipeline.store";
 import { KubeObjectMenu, KubeObjectMenuProps } from "../kube-object";
 import { KubeObjectListLayout } from "../kube-object";
@@ -48,8 +48,6 @@ export class Pipelines extends React.Component<Props> {
 
   render() {
 
-    console.log("tG", tektonGraphStore.getByName("admin-aaa"))
-
     return (
       <>
         <KubeObjectListLayout
@@ -87,7 +85,10 @@ export class Pipelines extends React.Component<Props> {
               className: "tasknames",
               sortBy: sortBy.tasknames,
             },
-            { title: <Trans>Age</Trans>, className: "age", sortBy: sortBy.age },
+            { title: <Trans>Age</Trans>,
+              className: "age",
+              sortBy: sortBy.age
+            },
           ]}
           renderTableContents={(pipeline: Pipeline) => [
             pipeline.getName(),
