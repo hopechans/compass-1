@@ -4,6 +4,8 @@ import { KubeApi } from "../kube-api";
 import { PipelineSpec, Param } from "./tekton-pipeline.api";
 import { Params } from "./tekton-task.api";
 import { PersistentVolumeClaimVolumeSource } from "./persistent-volume-claims.api";
+import {taskRunStore} from "../../components/+tekton-taskrun";
+import {pipelineStore} from "../../components/+tekton-pipeline/pipeline.store";
 
 export interface PipelineRef {
   name: string;
@@ -126,24 +128,48 @@ export class PipelineRun extends KubeObject {
     if (this.status?.conditions == undefined || this.status?.conditions == {}) {
       return "";
     }
-    return (
-      this.status?.conditions.map(
-        (item: { status: string; reason: string }) => {
-          if (item.status == "False") {
-            return item.reason;
-          }
+    return this.status?.conditions.map(
+      (item: { status: string; reason: string; }) => {
+        if (item.status == 'False') {
+          return item.reason;
         }
-      ) || ""
-    );
+      }) || "";
   }
 
   hasIssues(): boolean {
     return this.getErrorReason() != "";
   }
 
+  getPipelineRefNodeData() {
+    const pipeline = pipelineStore.getByName(this.spec.pipelineRef.name)
+    if (pipeline) {
+      return pipeline.getNodeData()
+    }
+    return []
+  }
+
   getTasks(): any {
     if (this.status.taskRuns === undefined) return [];
     return this.status.taskRuns;
+  }
+
+  getTaskRunName(): string[] {
+    return (
+      Object.keys(this.getTasks()).map((item: any) => {
+        return item;
+      }).slice() || []
+    );
+  }
+
+  getTaskRunMap() {
+    let taskMap: any = new Map<string, any>();
+    this.getTaskRunName().map((name: string, index: number) => {
+      const currentTask = taskRunStore.getByName(name);
+      if (currentTask?.spec !== undefined) {
+        taskMap[currentTask.spec.taskRef.name] = currentTask
+      }
+    });
+    return taskMap;
   }
 }
 
@@ -153,3 +179,4 @@ export const pipelineRunApi = new KubeApi({
   isNamespaced: true,
   objectConstructor: PipelineRun,
 });
+
