@@ -68,9 +68,7 @@ export class PipelineRunVisualDialog extends React.Component<Props> {
     PodLogsDialog.open(pod, container);
   }
 
-  onOpen = async () => {
-    let nodeData = pipelineRunStore.getNodeData(this.pipelineRun);
-
+  initGraph(nodeData: any) {
     setTimeout(() => {
       const anchor = document.getElementsByClassName("step-content")[0];
       const width = anchor.scrollWidth - 50;
@@ -99,7 +97,9 @@ export class PipelineRunVisualDialog extends React.Component<Props> {
 
       this.graph.render();
     }, 100);
+  }
 
+  renderGraphData(nodeData: any) {
     this.pendingTimeInterval = setInterval(() => {
       const names = this.pipelineRun.getTaskRunName();
       if (names.length > 0) {
@@ -120,7 +120,9 @@ export class PipelineRunVisualDialog extends React.Component<Props> {
         this.graph.instance.changeData(nodeData);
       }
     }, 500);
+  }
 
+  renderTimeInterval(nodeData: any) {
     //Interval 1s update status and time in graph
     this.updateTimeInterval = setInterval(() => {
       const names = this.pipelineRun.getTaskRunName();
@@ -128,7 +130,7 @@ export class PipelineRunVisualDialog extends React.Component<Props> {
       if (names.length > 0) {
         const currentTaskRunMap = this.getTaskRun(names);
         nodeData.nodes.map((item: any, index: number) => {
-          // //set current node status,just like:Failed Succeed... and so on.
+          //set current node status,just like:Failed Succeed... and so on.
 
           const currentTaskRun = currentTaskRunMap[item.taskName];
           if (currentTaskRun !== undefined) {
@@ -168,6 +170,13 @@ export class PipelineRunVisualDialog extends React.Component<Props> {
         });
       }
     }, 1000);
+  }
+
+  onOpen = async () => {
+    let nodeData = pipelineRunStore.getNodeData(this.pipelineRun);
+    this.initGraph(nodeData);
+    this.renderGraphData(nodeData);
+    this.renderTimeInterval(nodeData);
   };
 
   static close() {
