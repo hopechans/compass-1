@@ -15,7 +15,6 @@ import { secondsToHms } from "../../api/endpoints/tekton-graph.api";
 import { pipelineRunStore } from "./pipelinerun.store";
 
 
-
 interface Props extends Partial<Props> {
 }
 
@@ -26,7 +25,8 @@ export class PipelineRunVisualDialog extends React.Component<Props> {
   @observable static Data: PipelineRun = null;
   @observable graph: any = null;
   @observable currentNode: any = null;
-  @observable timeIntervalID: any = null;
+  @observable pendingTimeInterval: any = null;
+  @observable updateTimeInterval: any = null;
 
   get pipelineRun() {
     return PipelineRunVisualDialog.Data
@@ -108,7 +108,7 @@ export class PipelineRunVisualDialog extends React.Component<Props> {
 
     }, 100)
 
-    setInterval(() => {
+    this.pendingTimeInterval = setInterval(() => {
       const names = this.pipelineRun.getTaskRunName();
       if (names.length > 0) {
 
@@ -131,15 +131,21 @@ export class PipelineRunVisualDialog extends React.Component<Props> {
     }, 500);
 
     //Interval 1s update status and time in graph
-    setInterval(() => {
-      const names = this.pipelineRun.getTaskRunName();
-      if (names.length > 0) {
-        const currentTaskRunMap = this.getTaskRun(names);
+    this.updateTimeInterval = setInterval(() => {
 
+      const names = this.pipelineRun.getTaskRunName();
+
+      console.log(names)
+      if (names.length > 0) {
+
+        const currentTaskRunMap = this.getTaskRun(names);
+        console.log(currentTaskRunMap);
+        console.log(nodeData);
         nodeData.nodes.map((item: any, index: number) => {
           // //set current node status,just like:Failed Succeed... and so on.
 
           const currentTaskRun = currentTaskRunMap[item.taskName];
+          console.log("currentTaskRun", currentTaskRun);
           if (currentTaskRun !== undefined) {
             //should get current node itme and update the time.
             let currentItem = this.graph.instance.findById(nodeData.nodes[index].id);
@@ -149,10 +155,7 @@ export class PipelineRunVisualDialog extends React.Component<Props> {
             }
 
             this.graph.instance.setItemState(
-              currentItem,
-              currentTaskRun?.status?.conditions[0]?.reason,
-              ""
-            );
+              currentItem, currentTaskRun?.status?.conditions[0]?.reason, "");
 
             //when show pipeline will use current date time  less start time and then self-increment。
             let completionTime = currentTaskRun.status.completionTime;
@@ -188,6 +191,10 @@ export class PipelineRunVisualDialog extends React.Component<Props> {
 
   reset = () => {
     this.graph = null;
+    clearInterval(this.pendingTimeInterval);
+    this.pendingTimeInterval = null;
+    clearInterval(this.updateTimeInterval);
+    this.updateTimeInterval = null;
   }
 
   render() {

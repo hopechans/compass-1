@@ -70,7 +70,7 @@ export class PipelineRunWorkspaces extends React.Component<Props> {
               <>
                 <div key={index}>
                   <Row>
-                    <Col span={6} offset={1}>
+                    <Col span={7}>
                       <Input
                         placeholder={"Name"}
                         value={this.value[index].name}
@@ -87,7 +87,7 @@ export class PipelineRunWorkspaces extends React.Component<Props> {
                       />
                     </Col>
 
-                    <Col span={6} offset={1}>
+                    <Col span={7} offset={1}>
                       <Input
                         placeholder={"PersistentVolumeClaimName"}
                         value={
