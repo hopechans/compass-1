@@ -108,21 +108,27 @@ export class PipelineRunDialog extends React.Component<Props> {
   submit = async () => {
     try {
       // create a pipeline run
-      let resources: PipelineDeclaredResource[] = this.value.resources;
-      let workspaces = this.value.workspces;
 
       const runNodeData = pipelineStore.getNodeData(this.pipeline);
-      const runTektonGraphName = "run-" + this.pipeline.getName() + "-" + new Date().getTime().toString();
-      await tektonGraphStore.create({name: runTektonGraphName, namespace: "ops"}, {
+      const runTektonGraphName = "run" + "-" + this.pipeline.getName() + "-" + new Date().getTime().toString();
+
+      let resources: PipelineDeclaredResource[] = this.value.resources;
+      let workspaces = this.value.workspces;
+      const graph = await tektonGraphStore.create({name: runTektonGraphName, namespace: "ops"}, {
         spec: {
           data: JSON.stringify(runNodeData),
         },
       })
 
+      console.log("graph name", graph.getName());
       const pipelineRun: Partial<PipelineRun> = {
         metadata: {
           name: this.value.name,
-          annotations: {},
+          annotations: Object.fromEntries(new Map<string, string>().set("fuxi.nip.io/tektongraphs", graph.getName())),
+          labels: Object.fromEntries(
+            new Map<string, string>().set("namespace", configStore.getDefaultNamespace() == ""
+              ? "admin"
+              : configStore.getDefaultNamespace())),
         } as IKubeObjectMetadata,
         spec: {
           resources: resources,
@@ -131,19 +137,11 @@ export class PipelineRunDialog extends React.Component<Props> {
           workspaces: workspaces,
         },
       }
-      // // setting annotations.
-      pipelineRun.metadata["annotations"] = {"fuxi.nip.io/tektongraphs": runTektonGraphName};
 
       await pipelineRunStore.create(
         {
           name: this.value.name,
           namespace: "",
-          labels: new Map<string, string>().set(
-            "namespace",
-            configStore.getDefaultNamespace() == ""
-              ? "admin"
-              : configStore.getDefaultNamespace()
-          ),
         },
         {...pipelineRun}
       );

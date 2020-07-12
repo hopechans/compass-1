@@ -19,9 +19,7 @@ import { MenuItem } from "../menu";
 import { Icon } from "../icon";
 import { Notifications } from "../notifications";
 import { PipelineRunIcon } from "./pipeline-run-icon";
-import { PodLogsDialog } from "../+workloads-pods/pod-logs-dialog";
 import { podsStore } from "../+workloads-pods/pods.store";
-import { Pod } from "../../api/endpoints";
 import { configStore } from "../../config.store";
 import Tooltip from "@material-ui/core/Tooltip";
 import { PipelineRunVisualDialog } from "./pipelinerun-visual-dialog";
@@ -44,46 +42,13 @@ export class PipelineRuns extends React.Component<Props> {
   @observable timeIntervalID: any;
   @observable pipelineRun: any;
 
-  getNodeData(pipelineName: string): any {
-    return pipelineStore.getNodeData(pipelineStore.getByName(pipelineName));
-  }
-
-  getTaskRun(names: string[]): any {
-    let taskMap: any = new Map<string, any>();
-    names.map((name: string, index: number) => {
-      const currentTask = taskRunStore.getByName(name);
-      if (currentTask?.spec !== undefined) {
-        taskMap[currentTask.spec.taskRef.name] = currentTask
-      }
-    });
-    return taskMap;
-  }
-
-  // componentDidMount() {
-  //   this.graph = new PipelineGraph(0, 0);
-  //   this.graph.bindClickOnNode((currentNode: any) => {
-  //     const group = currentNode.getContainer();
-  //     let shape = group.get("children")[2];
-  //     const name = shape.attrs.text;
-  //
-  //     const names = this.getTaskRunName(this.pipelineRun);
-  //     const currentTaskRunMap = this.getTaskRun(names);
-  //     const currentTaskRun = currentTaskRunMap[name];
-  //     const podName = currentTaskRun.status.podName;
-  //     this.showLogs(podName);
-  //   });
-  // }
-
-  showLogs(podName: string) {
-    let pod: Pod = podsStore.getByName(podName);
-    let container: any = pod.getContainerStatuses();
-    PodLogsDialog.open(pod, container);
-  }
-
   renderTasks(pipelineRun: PipelineRun) {
     // const names: string[] = pipelineRun.getPipelineRefNodeData(
     //   pipelineRun.spec.pipelineRef.name
     // );
+
+    console.log(pipelineRunStore.getNodeData(pipelineRun))
+
     const names: string[] = [];
 
     if (names.length > 0) {
@@ -202,13 +167,13 @@ export class PipelineRuns extends React.Component<Props> {
               className: "reason",
               sortBy: sortBy.reason,
             },
-            { title: <Trans>Age</Trans>, className: "age", sortBy: sortBy.age },
             { title: <Trans>Tasks</Trans>, className: "tasks" },
             { title: <Trans>StartTime</Trans>, className: "startTime" },
             {
               title: <Trans>CompletionTime</Trans>,
               className: "completionTime",
             },
+            { title: <Trans>Age</Trans>, className: "age", sortBy: sortBy.age },
           ]}
           renderTableContents={(pipelineRun: PipelineRun) => [
             this.renderPipelineName(pipelineRun.getName()),
@@ -217,7 +182,7 @@ export class PipelineRuns extends React.Component<Props> {
               <PipelineRunIcon object={pipelineRun.status.conditions[0]} />
             ),
             // pipelineRun.getErrorReason(),
-            pipelineRun.getAge(),
+
             this.renderTasks(pipelineRun),
             this.renderTime(
               pipelineRun.getStartTime() != ""
@@ -229,6 +194,7 @@ export class PipelineRuns extends React.Component<Props> {
                 ? new Date(pipelineRun.status.startTime).toLocaleString()
                 : ""
             ),
+            pipelineRun.getAge(),
           ]}
           renderItemMenu={(item: PipelineRun) => {
             return <PipelineRunMenu object={item} />;
