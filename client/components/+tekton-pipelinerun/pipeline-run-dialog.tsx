@@ -1,29 +1,32 @@
 import "./pipeline-run-dialog.scss";
-import { observer } from "mobx-react";
+import {observer} from "mobx-react";
 import React from "react";
-import { observable, toJS } from "mobx";
-import { SubTitle } from "../layout/sub-title";
-import { Input } from "../input";
-import { _i18n } from "../../i18n";
-import { ActionMeta } from "react-select/src/types";
-import { Trans } from "@lingui/macro";
-import { Dialog } from "../dialog";
-import { Wizard, WizardStep } from "../wizard";
+import {observable, toJS} from "mobx";
+import {SubTitle} from "../layout/sub-title";
+import {Input} from "../input";
+import {_i18n} from "../../i18n";
+import {ActionMeta} from "react-select/src/types";
+import {Trans} from "@lingui/macro";
+import {Dialog} from "../dialog";
+import {Wizard, WizardStep} from "../wizard";
 import {
   pipelineRunApi,
   PipelineResourceBinding,
   PipelineRef,
   PipelineDeclaredResource,
-  WorkspaceBinding,
+  WorkspaceBinding, Pipeline, TenantRole, PipelineRun,
 } from "../../api/endpoints";
-import { Notifications } from "../notifications";
-import { PipelineRunResourceDetails } from "./pipeline-run-resource-details";
-import { systemName } from "../input/input.validators";
-import { configStore } from "../../config.store";
-import { pipelineStore } from "../+tekton-pipeline/pipeline.store";
-import { pipelineRunStore } from "./pipelinerun.store";
-import { PipelineRunWorkspaces } from "../+tekton-common/pipelinerun-workspaces";
-import { workspaceBinding } from "../+tekton-common";
+import {Notifications} from "../notifications";
+import {PipelineRunResourceDetails} from "./pipeline-run-resource-details";
+import {systemName} from "../input/input.validators";
+import {configStore} from "../../config.store";
+import {pipelineStore} from "../+tekton-pipeline/pipeline.store";
+import {pipelineRunStore} from "./pipelinerun.store";
+import {PipelineRunWorkspaces} from "../+tekton-common/pipelinerun-workspaces";
+import {workspaceBinding} from "../+tekton-common";
+import {tektonGraphStore} from "../+tekton-graph/tekton-graph.store";
+import {IKubeObjectMetadata} from "../../api/kube-object";
+
 interface Props<T = any> extends Partial<Props> {
   value?: T;
   themeName?: "dark" | "light" | "outlined";
@@ -54,12 +57,13 @@ export const pipelineRunResult: PipelineRunResult = {
 @observer
 export class PipelineRunDialog extends React.Component<Props> {
   @observable static isOpen = false;
-  @observable static pipelineName: string = "";
+  @observable static pipelineData: Pipeline = null;
+  @observable graph: any = null;
   @observable value: PipelineRunResult = this.props.value || pipelineRunResult;
 
-  static open(pipelineName: string) {
-    PipelineRunDialog.pipelineName = pipelineName;
+  static open(pipeline: Pipeline) {
     PipelineRunDialog.isOpen = true;
+    PipelineRunDialog.pipelineData = pipeline;
   }
 
   static close() {
@@ -68,14 +72,21 @@ export class PipelineRunDialog extends React.Component<Props> {
 
   close = () => {
     this.value.resources = [];
+    this.reset();
     PipelineRunDialog.close();
   };
 
+  get pipeline() {
+    return PipelineRunDialog.pipelineData
+  }
+
   onOpen = () => {
-    this.value.pipelineRef.name = PipelineRunDialog.pipelineName;
+    const pipelineName = this.pipeline.getName();
     const timeStamp = Math.round(new Date().getTime() / 1000);
+
+    this.value.pipelineRef.name = pipelineName;
     this.value.name =
-      PipelineRunDialog.pipelineName +
+      pipelineName +
       "-" +
       (configStore.getDefaultNamespace() == ""
         ? "admin"
@@ -83,13 +94,10 @@ export class PipelineRunDialog extends React.Component<Props> {
       "-" +
       timeStamp;
     //fill the  resources
-    const currentPipeline = pipelineStore.getByName(
-      this.value.pipelineRef.name
-    );
-    currentPipeline.spec.resources.map((item: any, index: number) => {
+    this.pipeline.spec.resources.map((item: any, index: number) => {
       let resources: PipelineResourceBinding = {
         name: item.name,
-        resourceRef: { name: "" },
+        resourceRef: {name: ""},
       };
       this.value.resources.push(resources);
     });
@@ -102,6 +110,30 @@ export class PipelineRunDialog extends React.Component<Props> {
       // create a pipeline run
       let resources: PipelineDeclaredResource[] = this.value.resources;
       let workspaces = this.value.workspces;
+
+      const runNodeData = this.pipeline.getNodeData();
+      const runTektonGraphName = "run-" + this.pipeline.getName() + "-" + new Date().getTime().toString();
+      await tektonGraphStore.create({name: runTektonGraphName, namespace: "ops"}, {
+        spec: {
+          data: JSON.stringify(runNodeData),
+        },
+      })
+
+      const pipelineRun: Partial<PipelineRun> = {
+        metadata: {
+          name: this.value.name,
+          annotations: {},
+        } as IKubeObjectMetadata,
+        spec: {
+          resources: resources,
+          pipelineRef: this.value.pipelineRef,
+          serviceAccountName: this.value.serviceAccountName,
+          workspaces: workspaces,
+        },
+      }
+      // // setting annotations.
+      pipelineRun.metadata["annotations"] = {"fuxi.nip.io/tektongraphs": runTektonGraphName};
+
       await pipelineRunStore.create(
         {
           name: this.value.name,
@@ -113,20 +145,17 @@ export class PipelineRunDialog extends React.Component<Props> {
               : configStore.getDefaultNamespace()
           ),
         },
-        {
-          spec: {
-            resources: resources,
-            pipelineRef: this.value.pipelineRef,
-            serviceAccountName: this.value.serviceAccountName,
-            workspaces: workspaces,
-          },
-        }
+        {...pipelineRun}
       );
       this.close();
     } catch (err) {
       Notifications.error(err);
     }
   };
+
+  reset = () => {
+    this.graph = null;
+  }
 
   render() {
     const header = (
@@ -143,7 +172,7 @@ export class PipelineRunDialog extends React.Component<Props> {
       >
         <Wizard className="PipelineRunDialog" header={header} done={this.close}>
           <WizardStep contentClass="flex gaps column" next={this.submit}>
-            <SubTitle title={<Trans>Name</Trans>} />
+            <SubTitle title={<Trans>Name</Trans>}/>
             <Input
               placeholder={_i18n._("Pipeline Run Name")}
               disabled={true}
@@ -151,29 +180,28 @@ export class PipelineRunDialog extends React.Component<Props> {
               value={this.value.name}
               onChange={(value) => (this.value.name = value)}
             />
-            <SubTitle title={<Trans>Pipeline Ref</Trans>} />
+            <SubTitle title={<Trans>Pipeline Ref</Trans>}/>
             <Input
-              placeholder={_i18n._("pipeline ref")}
+              placeholder={_i18n._("Pipeline Ref")}
               disabled={true}
               value={this.value?.pipelineRef?.name}
               onChange={(value) => (this.value.pipelineRef.name = value)}
             />
-            <SubTitle title={<Trans>Service Account Name</Trans>} />
+            <SubTitle title={<Trans>Service Account Name</Trans>}/>
             <Input
               disabled={true}
               placeholder={_i18n._("Service Account Name")}
               value={this.value?.serviceAccountName}
               onChange={(value) => (this.value.serviceAccountName = value)}
             />
-            <br />
+            <br/>
             <PipelineRunResourceDetails
               value={this.value?.resources}
               onChange={(value) => {
                 this.value.resources = value;
               }}
             />
-            <br />
-
+            <br/>
             <PipelineRunWorkspaces
               value={this.value?.workspces}
               onChange={(value) => {

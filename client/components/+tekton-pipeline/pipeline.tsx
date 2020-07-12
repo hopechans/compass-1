@@ -131,7 +131,7 @@ export function PipelineMenu(props: KubeObjectMenuProps<Pipeline>) {
 
   return (
     <KubeObjectMenu {...props}>
-      <MenuItem onClick={() => { PipelineRunDialog.open(object.getName()) }}>
+      <MenuItem onClick={() => { PipelineRunDialog.open(object) }}>
         <Icon
           material="play_circle_outline" title={"Pipeline"} interactive={toolbar} />
         <span className="title">

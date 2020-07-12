@@ -181,7 +181,7 @@ export class Graphs {
 
   init() {
     this.instance = new G6.Graph(this.cfg);
-    this.instance.data(initData);
+    // this.instance.data(initData);
     this.instance.setMode("addEdge");
   }
 
