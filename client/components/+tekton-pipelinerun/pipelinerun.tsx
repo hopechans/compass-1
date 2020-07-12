@@ -24,6 +24,7 @@ import { configStore } from "../../config.store";
 import Tooltip from "@material-ui/core/Tooltip";
 import { PipelineRunVisualDialog } from "./pipelinerun-visual-dialog";
 import { tektonGraphStore } from "../+tekton-graph/tekton-graph.store";
+import {PodLogsDialog} from "../+workloads-pods/pod-logs-dialog";
 
 enum sortBy {
   name = "name",
@@ -201,6 +202,7 @@ export class PipelineRuns extends React.Component<Props> {
           }}
         />
         <PipelineRunVisualDialog />
+        <PodLogsDialog />
       </>
     );
   }
