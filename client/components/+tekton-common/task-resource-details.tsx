@@ -59,7 +59,7 @@ export class TaskResourceDetails extends React.Component<Props> {
         <SubTitle className="fields-title" title={title}>
           <Icon
             small
-            tooltip={_i18n._(t`resoure`)}
+            tooltip={_i18n._(t`resource`)}
             material="add_circle_outline"
             onClick={(e) => {
               this.add();

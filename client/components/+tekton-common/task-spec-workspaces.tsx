@@ -59,7 +59,7 @@ export class TaskSpecWorkSpaces extends React.Component<Props> {
       <Icon
         small
         tooltip={_i18n._(t`Workspaces`)}
-        material="add_circle"
+        material="add_circle_outline"
         onClick={(e) => {
           this.add();
           e.stopPropagation();
@@ -81,7 +81,7 @@ export class TaskSpecWorkSpaces extends React.Component<Props> {
               <>
                 <div key={index}>
                   <Row>
-                    <Col span={4}>
+                    <Col span={10}>
                       <Input
                         placeholder={"Name"}
                         value={this.value[index].name}
@@ -89,7 +89,7 @@ export class TaskSpecWorkSpaces extends React.Component<Props> {
                       />
                     </Col>
 
-                    <Col span={4} offset={1}>
+                    {/* <Col span={4} offset={1}>
                       <Input
                         placeholder={"Description"}
                         value={this.value[index].description}
@@ -97,9 +97,9 @@ export class TaskSpecWorkSpaces extends React.Component<Props> {
                           (this.value[index].description = value)
                         }
                       />
-                    </Col>
+                    </Col> */}
 
-                    <Col span={4} offset={1}>
+                    <Col span={10} offset={1}>
                       <Input
                         placeholder={"MountPath"}
                         value={this.value[index].mountPath}
@@ -109,8 +109,8 @@ export class TaskSpecWorkSpaces extends React.Component<Props> {
                       />
                     </Col>
 
-                    <Col span={4} offset={1}>
-                      {/* <Select
+                    {/* <Col span={4} offset={1}> */}
+                    {/* <Select
                         value={this.value[index].readOnly}
                         options={this.typeOptions}
                         formatOptionLabel={this.formatOptionLabel}
@@ -118,7 +118,7 @@ export class TaskSpecWorkSpaces extends React.Component<Props> {
                           (this.value[index].readOnly = value.value)
                         }
                       /> */}
-                      <Input
+                    {/* <Input
                         placeholder={"ReadOnly:true/false"}
                         value={
                           this.value[index]?.readOnly === true
@@ -133,15 +133,15 @@ export class TaskSpecWorkSpaces extends React.Component<Props> {
                             this.value[index].readOnly = false;
                           }
                         }}
-                      />
-                    </Col>
+                      /> */}
+                    {/* </Col> */}
 
-                    <Col span={1} offset={2}>
+                    <Col span={1} offset={1}>
                       <Icon
                         small
                         tooltip={<Trans>Remove Workspaces</Trans>}
                         className="remove-icon"
-                        material="remove_circle"
+                        material="remove_circle_outline"
                         onClick={(e) => {
                           this.remove(index);
                           e.stopPropagation();

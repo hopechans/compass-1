@@ -300,6 +300,7 @@ export class CopyTaskDialog extends React.Component<Props> {
                   }}
                 />
                 <br />
+                <Divider />
                 <PipelineParamsDetails
                   value={this.value.pipelineParams}
                   onChange={(value) => {
@@ -307,6 +308,7 @@ export class CopyTaskDialog extends React.Component<Props> {
                   }}
                 />
                 <br />
+                <Divider />
                 <ResourcesDetail
                   value={this.value.resources}
                   onChange={(value) => {
@@ -314,6 +316,7 @@ export class CopyTaskDialog extends React.Component<Props> {
                   }}
                 />
                 <br />
+                <Divider />
                 <MultiTaskStepDetails
                   value={this.value.taskSteps}
                   onChange={(value) => {
