@@ -1,4 +1,4 @@
-import "./pipelinerun-visual-dialog.scss"
+import "./pipelinerun-visual-dialog.scss";
 
 import React from "react";
 import { observable } from "mobx";
@@ -14,13 +14,10 @@ import { PodLogsDialog } from "../+workloads-pods/pod-logs-dialog";
 import { secondsToHms } from "../../api/endpoints/tekton-graph.api";
 import { pipelineRunStore } from "./pipelinerun.store";
 
-
-interface Props extends Partial<Props> {
-}
+interface Props extends Partial<Props> {}
 
 @observer
 export class PipelineRunVisualDialog extends React.Component<Props> {
-
   @observable static isOpen = false;
   @observable static Data: PipelineRun = null;
   @observable graph: any = null;
@@ -29,7 +26,7 @@ export class PipelineRunVisualDialog extends React.Component<Props> {
   @observable updateTimeInterval: any = null;
 
   get pipelineRun() {
-    return PipelineRunVisualDialog.Data
+    return PipelineRunVisualDialog.Data;
   }
 
   static open(pipelineRun: PipelineRun) {
@@ -45,9 +42,11 @@ export class PipelineRunVisualDialog extends React.Component<Props> {
       return [];
     }
     return (
-      Object.keys(pipelinerun?.status?.taskRuns).map((item: any) => {
-        return item;
-      }).slice() || []
+      Object.keys(pipelinerun?.status?.taskRuns)
+        .map((item: any) => {
+          return item;
+        })
+        .slice() || []
     );
   }
 
@@ -70,19 +69,16 @@ export class PipelineRunVisualDialog extends React.Component<Props> {
   }
 
   onOpen = async () => {
-
     let nodeData = pipelineRunStore.getNodeData(this.pipelineRun);
 
     setTimeout(() => {
-
-      const anchor = document.getElementsByClassName("step-content")[0]
+      const anchor = document.getElementsByClassName("step-content")[0];
       // const anchor = document.getElementById("container")
       const width = anchor.scrollWidth - 50;
       const height = anchor.scrollHeight - 60;
 
       this.graph = new Graphs(width, height);
       this.graph.init();
-
 
       if (nodeData === undefined || nodeData === "") {
         this.graph.instance.data(initData);
@@ -91,7 +87,6 @@ export class PipelineRunVisualDialog extends React.Component<Props> {
       }
 
       this.graph.bindClickOnNode((currentNode: any) => {
-
         const group = currentNode.getContainer();
         let shape = group.get("children")[2];
         const name = shape.attrs.text;
@@ -105,13 +100,11 @@ export class PipelineRunVisualDialog extends React.Component<Props> {
       });
 
       this.graph.render();
-
-    }, 100)
+    }, 100);
 
     this.pendingTimeInterval = setInterval(() => {
       const names = this.pipelineRun.getTaskRunName();
       if (names.length > 0) {
-
         const currentTaskRunMap = this.getTaskRun(names);
         nodeData.nodes.map((item: any, index: number) => {
           const currentTaskRun = currentTaskRunMap[item.taskName];
@@ -132,12 +125,10 @@ export class PipelineRunVisualDialog extends React.Component<Props> {
 
     //Interval 1s update status and time in graph
     this.updateTimeInterval = setInterval(() => {
-
       const names = this.pipelineRun.getTaskRunName();
-
-      console.log(names)
+      clearInterval(this.pendingTimeInterval);
+      console.log(names);
       if (names.length > 0) {
-
         const currentTaskRunMap = this.getTaskRun(names);
         console.log(currentTaskRunMap);
         console.log(nodeData);
@@ -148,14 +139,19 @@ export class PipelineRunVisualDialog extends React.Component<Props> {
           console.log("currentTaskRun", currentTaskRun);
           if (currentTaskRun !== undefined) {
             //should get current node itme and update the time.
-            let currentItem = this.graph.instance.findById(nodeData.nodes[index].id);
+            let currentItem = this.graph.instance.findById(
+              nodeData.nodes[index].id
+            );
             //dynimic set the state: missing notreay
             if (currentTaskRun?.status?.conditions[0]?.reason == undefined) {
               return;
             }
 
             this.graph.instance.setItemState(
-              currentItem, currentTaskRun?.status?.conditions[0]?.reason, "");
+              currentItem,
+              currentTaskRun?.status?.conditions[0]?.reason,
+              ""
+            );
 
             //when show pipeline will use current date time  less start time and then self-increment。
             let completionTime = currentTaskRun.status.completionTime;
@@ -178,7 +174,7 @@ export class PipelineRunVisualDialog extends React.Component<Props> {
         });
       }
     }, 1000);
-  }
+  };
 
   static close() {
     PipelineRunVisualDialog.isOpen = false;
@@ -191,11 +187,10 @@ export class PipelineRunVisualDialog extends React.Component<Props> {
 
   reset = () => {
     this.graph = null;
-    clearInterval(this.pendingTimeInterval);
     this.pendingTimeInterval = null;
     clearInterval(this.updateTimeInterval);
     this.updateTimeInterval = null;
-  }
+  };
 
   render() {
     const header = (
@@ -209,14 +204,17 @@ export class PipelineRunVisualDialog extends React.Component<Props> {
         isOpen={PipelineRunVisualDialog.isOpen}
         className="PipelineRunVisualDialog"
         onOpen={this.onOpen}
-        close={this.close}>
+        close={this.close}
+      >
         <Wizard header={header} done={this.close}>
-          <WizardStep contentClass="flex gaps column" nextLabel={<Trans>Save</Trans>}>
+          <WizardStep
+            contentClass="flex gaps column"
+            nextLabel={<Trans>Save</Trans>}
+          >
             <div className="container" id={graphId} />
           </WizardStep>
         </Wizard>
       </Dialog>
-    )
+    );
   }
-
 }
