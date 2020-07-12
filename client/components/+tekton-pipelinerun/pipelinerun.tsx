@@ -44,42 +44,6 @@ export class PipelineRuns extends React.Component<Props> {
   @observable timeIntervalID: any;
   @observable pipelineRun: any;
 
-  getNodeData(pipelineName: string): any {
-    return pipelineStore.getByName(pipelineName).getNodeData();
-  }
-
-  getTaskRun(names: string[]): any {
-    let taskMap: any = new Map<string, any>();
-    names.map((name: string, index: number) => {
-      const currentTask = taskRunStore.getByName(name);
-      if (currentTask?.spec !== undefined) {
-        taskMap[currentTask.spec.taskRef.name] = currentTask
-      }
-    });
-    return taskMap;
-  }
-
-  // componentDidMount() {
-  //   this.graph = new PipelineGraph(0, 0);
-  //   this.graph.bindClickOnNode((currentNode: any) => {
-  //     const group = currentNode.getContainer();
-  //     let shape = group.get("children")[2];
-  //     const name = shape.attrs.text;
-  //
-  //     const names = this.getTaskRunName(this.pipelineRun);
-  //     const currentTaskRunMap = this.getTaskRun(names);
-  //     const currentTaskRun = currentTaskRunMap[name];
-  //     const podName = currentTaskRun.status.podName;
-  //     this.showLogs(podName);
-  //   });
-  // }
-
-  showLogs(podName: string) {
-    let pod: Pod = podsStore.getByName(podName);
-    let container: any = pod.getContainerStatuses();
-    PodLogsDialog.open(pod, container);
-  }
-
   renderTasks(pipelineRun: PipelineRun) {
     // const names: string[] = pipelineRun.getPipelineRefNodeData(
     //   pipelineRun.spec.pipelineRef.name
