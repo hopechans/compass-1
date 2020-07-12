@@ -2,8 +2,8 @@ import { autobind } from "../../utils";
 import { KubeObject } from "../kube-object";
 import { KubeApi } from "../kube-api";
 import { TaskSpec, Params } from "./tekton-task.api";
-import {tektonGraphStore} from "../../components/+tekton-graph/tekton-graph.store";
-import {initData} from "../../components/+tekton-graph/graphs";
+import { tektonGraphStore } from "../../components/+tekton-graph/tekton-graph.store";
+import { initData } from "../../components/+tekton-graph/graphs";
 
 export interface TaskRef {
   name: string;
@@ -127,7 +127,6 @@ export class Pipeline extends KubeObject {
   spec: PipelineSpec;
   status: {};
 
-
   getTasks(): PipelineTask[] {
     return this.spec.tasks || [];
   }
@@ -145,18 +144,22 @@ export class Pipeline extends KubeObject {
     const taskList: PipelineTask[] = this.spec.tasks;
     if (!taskList) return [];
     const taskSet: string[] = [];
-    taskList.map((task) => { taskSet.push(task.taskRef.name) });
+    taskList.map((task) => {
+      taskSet.push(task.taskRef.name);
+    });
     return taskSet;
   }
 
   getNodeData() {
-    let graphName: string = ""
+    let graphName: string = "";
     this.getAnnotations().filter((item) => {
       const R = item.split("=");
-      if (R[0] == "fuxi.nip.io/newtektongraphs") { graphName = R[1] }
+      if (R[0] == "fuxi.nip.io/tektongraphs") {
+        graphName = R[1];
+      }
     });
     if (graphName) {
-      return  JSON.parse(tektonGraphStore.getByName(graphName).spec.data);
+      return JSON.parse(tektonGraphStore.getByName(graphName).spec.data);
     }
     return initData;
   }
