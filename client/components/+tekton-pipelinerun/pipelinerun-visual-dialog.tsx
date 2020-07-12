@@ -95,7 +95,6 @@ export class PipelineRunVisualDialog extends React.Component<Props> {
         const currentTaskRunMap = this.getTaskRun(names);
         const currentTaskRun = currentTaskRunMap[name];
         const podName = currentTaskRun.status.podName;
-
         this.showLogs(podName);
       });
 
@@ -127,16 +126,12 @@ export class PipelineRunVisualDialog extends React.Component<Props> {
     this.updateTimeInterval = setInterval(() => {
       const names = this.pipelineRun.getTaskRunName();
       clearInterval(this.pendingTimeInterval);
-      console.log(names);
       if (names.length > 0) {
         const currentTaskRunMap = this.getTaskRun(names);
-        console.log(currentTaskRunMap);
-        console.log(nodeData);
         nodeData.nodes.map((item: any, index: number) => {
           // //set current node status,just like:Failed Succeed... and so on.
 
           const currentTaskRun = currentTaskRunMap[item.taskName];
-          console.log("currentTaskRun", currentTaskRun);
           if (currentTaskRun !== undefined) {
             //should get current node itme and update the time.
             let currentItem = this.graph.instance.findById(
