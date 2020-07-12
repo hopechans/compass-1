@@ -14,7 +14,7 @@ import { tektonGraphStore } from "../+tekton-graph/tekton-graph.store";
 import { pipelineStore } from "./pipeline.store";
 
 
-interface Props extends Partial<Props> {}
+interface Props extends Partial<Props> { }
 
 @observer
 export class PipelineVisualDialog extends React.Component<Props> {
@@ -43,7 +43,7 @@ export class PipelineVisualDialog extends React.Component<Props> {
       this.graph = new Graphs(width, height);
       this.graph.init();
 
-      this.graph.instance.data(this.pipeline.getNodeData());
+      this.graph.instance.data(pipelineStore.getNodeData(this.pipeline));
       this.graph.bindClickOnNode((currentNode: any) => {
         this.currentNode = currentNode;
         CopyTaskDialog.open(this.graph, this.currentNode);

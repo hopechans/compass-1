@@ -1,31 +1,31 @@
 import "./pipelinerun.scss";
 
-import React, {Fragment} from "react";
-import {observer} from "mobx-react";
-import {RouteComponentProps} from "react-router";
-import {Trans} from "@lingui/macro";
-import {PipelineRun, pipelineRunApi, TaskRun} from "../../api/endpoints";
-import {pipelineRunStore} from "./pipelinerun.store";
-import {pipelineStore} from "../+tekton-pipeline/pipeline.store";
-import {KubeObjectMenu, KubeObjectMenuProps} from "../kube-object";
-import {KubeObjectListLayout} from "../kube-object";
-import {apiManager} from "../../api/api-manager";
-import {observable} from "mobx";
-import {taskRunStore} from "../+tekton-taskrun";
-import {TooltipContent} from "../tooltip";
-import {StatusBrick} from "../status-brick";
-import {cssNames} from "../../utils";
-import {MenuItem} from "../menu";
-import {Icon} from "../icon";
-import {Notifications} from "../notifications";
-import {PipelineRunIcon} from "./pipeline-run-icon";
-import {PodLogsDialog} from "../+workloads-pods/pod-logs-dialog";
-import {podsStore} from "../+workloads-pods/pods.store";
-import {Pod} from "../../api/endpoints";
-import {configStore} from "../../config.store";
+import React, { Fragment } from "react";
+import { observer } from "mobx-react";
+import { RouteComponentProps } from "react-router";
+import { Trans } from "@lingui/macro";
+import { PipelineRun, pipelineRunApi, TaskRun } from "../../api/endpoints";
+import { pipelineRunStore } from "./pipelinerun.store";
+import { pipelineStore } from "../+tekton-pipeline/pipeline.store";
+import { KubeObjectMenu, KubeObjectMenuProps } from "../kube-object";
+import { KubeObjectListLayout } from "../kube-object";
+import { apiManager } from "../../api/api-manager";
+import { observable } from "mobx";
+import { taskRunStore } from "../+tekton-taskrun";
+import { TooltipContent } from "../tooltip";
+import { StatusBrick } from "../status-brick";
+import { cssNames } from "../../utils";
+import { MenuItem } from "../menu";
+import { Icon } from "../icon";
+import { Notifications } from "../notifications";
+import { PipelineRunIcon } from "./pipeline-run-icon";
+import { PodLogsDialog } from "../+workloads-pods/pod-logs-dialog";
+import { podsStore } from "../+workloads-pods/pods.store";
+import { Pod } from "../../api/endpoints";
+import { configStore } from "../../config.store";
 import Tooltip from "@material-ui/core/Tooltip";
-import {PipelineRunVisualDialog} from "./pipelinerun-visual-dialog";
-import {tektonGraphStore} from "../+tekton-graph/tekton-graph.store";
+import { PipelineRunVisualDialog } from "./pipelinerun-visual-dialog";
+import { tektonGraphStore } from "../+tekton-graph/tekton-graph.store";
 
 enum sortBy {
   name = "name",
@@ -43,6 +43,42 @@ export class PipelineRuns extends React.Component<Props> {
   @observable graph: any = null;
   @observable timeIntervalID: any;
   @observable pipelineRun: any;
+
+  getNodeData(pipelineName: string): any {
+    return pipelineStore.getNodeData(pipelineStore.getByName(pipelineName));
+  }
+
+  getTaskRun(names: string[]): any {
+    let taskMap: any = new Map<string, any>();
+    names.map((name: string, index: number) => {
+      const currentTask = taskRunStore.getByName(name);
+      if (currentTask?.spec !== undefined) {
+        taskMap[currentTask.spec.taskRef.name] = currentTask
+      }
+    });
+    return taskMap;
+  }
+
+  // componentDidMount() {
+  //   this.graph = new PipelineGraph(0, 0);
+  //   this.graph.bindClickOnNode((currentNode: any) => {
+  //     const group = currentNode.getContainer();
+  //     let shape = group.get("children")[2];
+  //     const name = shape.attrs.text;
+  //
+  //     const names = this.getTaskRunName(this.pipelineRun);
+  //     const currentTaskRunMap = this.getTaskRun(names);
+  //     const currentTaskRun = currentTaskRunMap[name];
+  //     const podName = currentTaskRun.status.podName;
+  //     this.showLogs(podName);
+  //   });
+  // }
+
+  showLogs(podName: string) {
+    let pod: Pod = podsStore.getByName(podName);
+    let container: any = pod.getContainerStatuses();
+    PodLogsDialog.open(pod, container);
+  }
 
   renderTasks(pipelineRun: PipelineRun) {
     // const names: string[] = pipelineRun.getPipelineRefNodeData(
@@ -101,7 +137,7 @@ export class PipelineRuns extends React.Component<Props> {
         );
         return (
           <Fragment key={name}>
-            <StatusBrick className={cssNames(stat)} tooltip={tooltip}/>
+            <StatusBrick className={cssNames(stat)} tooltip={tooltip} />
           </Fragment>
         );
       });
@@ -166,9 +202,9 @@ export class PipelineRuns extends React.Component<Props> {
               className: "reason",
               sortBy: sortBy.reason,
             },
-            {title: <Trans>Age</Trans>, className: "age", sortBy: sortBy.age},
-            {title: <Trans>Tasks</Trans>, className: "tasks"},
-            {title: <Trans>StartTime</Trans>, className: "startTime"},
+            { title: <Trans>Age</Trans>, className: "age", sortBy: sortBy.age },
+            { title: <Trans>Tasks</Trans>, className: "tasks" },
+            { title: <Trans>StartTime</Trans>, className: "startTime" },
             {
               title: <Trans>CompletionTime</Trans>,
               className: "completionTime",
@@ -178,7 +214,7 @@ export class PipelineRuns extends React.Component<Props> {
             this.renderPipelineName(pipelineRun.getName()),
             pipelineRun.getOwnerNamespace(),
             pipelineRun.hasIssues() && (
-              <PipelineRunIcon object={pipelineRun.status.conditions[0]}/>
+              <PipelineRunIcon object={pipelineRun.status.conditions[0]} />
             ),
             // pipelineRun.getErrorReason(),
             pipelineRun.getAge(),
@@ -195,17 +231,17 @@ export class PipelineRuns extends React.Component<Props> {
             ),
           ]}
           renderItemMenu={(item: PipelineRun) => {
-            return <PipelineRunMenu object={item}/>;
+            return <PipelineRunMenu object={item} />;
           }}
         />
-        <PipelineRunVisualDialog/>
+        <PipelineRunVisualDialog />
       </>
     );
   }
 }
 
 export function PipelineRunMenu(props: KubeObjectMenuProps<PipelineRun>) {
-  const {object, toolbar} = props;
+  const { object, toolbar } = props;
   return (
     <KubeObjectMenu {...props}>
       <MenuItem
@@ -215,7 +251,7 @@ export function PipelineRunMenu(props: KubeObjectMenuProps<PipelineRun>) {
           pipelineRun.spec.status = "PipelineRunCancelled";
           try {
             // //will update pipelineRun
-            pipelineRunStore.update(pipelineRun, {...pipelineRun});
+            pipelineRunStore.update(pipelineRun, { ...pipelineRun });
             Notifications.ok(
               <>pipeline-run {pipelineRun.getName()} cancel successed</>
             );
@@ -224,7 +260,7 @@ export function PipelineRunMenu(props: KubeObjectMenuProps<PipelineRun>) {
           }
         }}
       >
-        <Icon material="cancel" title={"cancel"} interactive={toolbar}/>
+        <Icon material="cancel" title={"cancel"} interactive={toolbar} />
         <span className="title">
           <Trans>Cancel</Trans>
         </span>

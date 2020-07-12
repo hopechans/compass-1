@@ -48,7 +48,7 @@ export interface TerminalSession {
     sessionId: string
 }
 
-export interface IPodMetrics<T = IMetrics> {
+export interface    IPodMetrics<T = IMetrics> {
     [metric: string]: T;
 
     cpuUsage: T;

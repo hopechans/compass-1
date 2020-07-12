@@ -111,7 +111,7 @@ export class PipelineRunDialog extends React.Component<Props> {
       let resources: PipelineDeclaredResource[] = this.value.resources;
       let workspaces = this.value.workspces;
 
-      const runNodeData = this.pipeline.getNodeData();
+      const runNodeData = pipelineStore.getNodeData(this.pipeline);
       const runTektonGraphName = "run-" + this.pipeline.getName() + "-" + new Date().getTime().toString();
       await tektonGraphStore.create({name: runTektonGraphName, namespace: "ops"}, {
         spec: {

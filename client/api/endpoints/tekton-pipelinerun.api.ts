@@ -4,10 +4,10 @@ import {KubeApi} from "../kube-api";
 import {PipelineSpec, Param} from "./tekton-pipeline.api";
 import {Params} from "./tekton-task.api";
 import {PersistentVolumeClaimVolumeSource} from "./persistent-volume-claims.api";
-import {taskRunStore} from "../../components/+tekton-taskrun";
-import {pipelineStore} from "../../components/+tekton-pipeline/pipeline.store";
-import {tektonGraphStore} from "../../components/+tekton-graph/tekton-graph.store";
-import {initData} from "../../components/+tekton-graph/graphs";
+// import {taskRunStore} from "../../components/+tekton-taskrun";
+// import {pipelineStore} from "../../components/+tekton-pipeline/pipeline.store";
+// import {tektonGraphStore} from "../../components/+tekton-graph/tekton-graph.store";
+// import {initData} from "../../components/+tekton-graph/graphs";
 
 export interface PipelineRef {
   name: string;
@@ -149,13 +149,13 @@ export class PipelineRun extends KubeObject {
     return this.spec.pipelineRef.name;
   }
 
-  getPipelineRefNodeData() {
-    const pipeline = pipelineStore.getByName(this.getPipelineRefName());
-    if (pipeline) {
-      return pipeline.getNodeData()
-    }
-    return []
-  }
+  // getPipelineRefNodeData() {
+  //   const pipeline = pipelineStore.getByName(this.getPipelineRefName());
+  //   if (pipeline) {
+  //     return pipeline.getNodeData()
+  //   }
+  //   return []
+  // }
 
   getTasks(): any {
     if (this.status.taskRuns === undefined) return [];
@@ -170,31 +170,31 @@ export class PipelineRun extends KubeObject {
     );
   }
 
-  getTaskRunMap() {
-    let taskMap: any = new Map<string, any>();
-    this.getTaskRunName().map((name: string, index: number) => {
-      const currentTask = taskRunStore.getByName(name);
-      if (currentTask?.spec !== undefined) {
-        taskMap[currentTask.spec.taskRef.name] = currentTask
-      }
-    });
-    return taskMap;
-  }
+  // getTaskRunMap() {
+  //   let taskMap: any = new Map<string, any>();
+  //   this.getTaskRunName().map((name: string, index: number) => {
+  //     const currentTask = taskRunStore.getByName(name);
+  //     if (currentTask?.spec !== undefined) {
+  //       taskMap[currentTask.spec.taskRef.name] = currentTask
+  //     }
+  //   });
+  //   return taskMap;
+  // }
 
-  getNodeData() {
-    let graphName: string = ""
-    this.getAnnotations().filter((item) => {
-      const R = item.split("=");
-      if (R[0] == "fuxi.nip.io/tektongraphs") {
-        graphName = R[1]
-      }
-    });
-    console.log(graphName)
-    if (graphName) {
-      return JSON.parse(tektonGraphStore.getByName(graphName).spec.data);
-    }
-    return initData;
-  }
+  // getNodeData() {
+  //   let graphName: string = ""
+  //   this.getAnnotations().filter((item) => {
+  //     const R = item.split("=");
+  //     if (R[0] == "fuxi.nip.io/tektongraphs") {
+  //       graphName = R[1]
+  //     }
+  //   });
+  //   console.log(graphName)
+  //   if (graphName) {
+  //     return JSON.parse(tektonGraphStore.getByName(graphName).spec.data);
+  //   }
+  //   return initData;
+  // }
 }
 
 export const pipelineRunApi = new KubeApi({
