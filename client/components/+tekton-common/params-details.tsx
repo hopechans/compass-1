@@ -1,15 +1,15 @@
-import {ActionMeta} from "react-select/src/types";
-import {observer} from "mobx-react";
+import { ActionMeta } from "react-select/src/types";
+import { observer } from "mobx-react";
 import React from "react";
-import {SubTitle} from "../layout/sub-title";
-import {Icon} from "../icon";
-import {_i18n} from "../../i18n";
-import {t, Trans} from "@lingui/macro";
-import {Input} from "../input";
-import {observable} from "mobx";
-import {Col, Row} from "../grid";
-import {Divider} from 'antd';
-import {Params} from "./common";
+import { SubTitle } from "../layout/sub-title";
+import { Icon } from "../icon";
+import { _i18n } from "../../i18n";
+import { t, Trans } from "@lingui/macro";
+import { Input } from "../input";
+import { observable } from "mobx";
+import { Col, Row } from "../grid";
+import { Divider } from "antd";
+import { Params } from "./common";
 
 interface Props<T = any> extends Partial<Props> {
   value?: T;
@@ -22,24 +22,23 @@ interface Props<T = any> extends Partial<Props> {
 
 @observer
 export class ParamsDetails extends React.Component<Props> {
-
   static defaultProps = {
     divider: false,
     disable: false,
-  }
+  };
 
   @observable value: Params[] = this.props.value || [];
 
   add = () => {
     this.value.push({
       name: "",
-      value: ""
+      value: "",
     });
-  }
+  };
 
   remove = (index: number) => {
-    this.value.splice(index, 1)
-  }
+    this.value.splice(index, 1);
+  };
 
   renderAdd() {
     return (
@@ -52,17 +51,19 @@ export class ParamsDetails extends React.Component<Props> {
           e.stopPropagation();
         }}
       />
-    )
+    );
   }
 
   render() {
-
-    const {disable} = this.props;
+    const { disable } = this.props;
+    console.log(disable);
 
     return (
       <>
-        {this.props.divider ? <Divider/> : <></>}
-        <SubTitle className="fields-title" title="Params">{!disable ?? this.renderAdd()}</SubTitle>
+        {this.props.divider ? <Divider /> : <></>}
+        <SubTitle className="fields-title" title="Params">
+          {!disable ? this.renderAdd() : <></>}
+        </SubTitle>
         <div className="params">
           {this.value.map((item, index) => {
             return (
@@ -75,8 +76,8 @@ export class ParamsDetails extends React.Component<Props> {
                       placeholder={_i18n._(t`Name`)}
                       title={this.value[index].name}
                       value={this.value[index].name}
-                      onChange={value => {
-                        this.value[index].name = value
+                      onChange={(value) => {
+                        this.value[index].name = value;
                       }}
                     />
                   </Col>
@@ -87,29 +88,33 @@ export class ParamsDetails extends React.Component<Props> {
                       placeholder={_i18n._(t`Value`)}
                       title={this.value[index].value}
                       value={this.value[index].value}
-                      onChange={value => {
-                        this.value[index].value = value
+                      onChange={(value) => {
+                        this.value[index].value = value;
                       }}
                     />
                   </Col>
-                  {!disable ?? <Col span="1" offset={1}>
-                    <Icon
-                      small
-                      tooltip={<Trans>Remove Command</Trans>}
-                      className="remove-icon"
-                      material="remove_circle_outline"
-                      onClick={(e) => {
-                        this.remove(index);
-                        e.stopPropagation()
-                      }}
-                    />
-                  </Col>}
+                  {disable ? (
+                    <Col span="1" offset={1}>
+                      <Icon
+                        small
+                        tooltip={<Trans>Remove Command</Trans>}
+                        className="remove-icon"
+                        material="remove_circle_outline"
+                        onClick={(e) => {
+                          this.remove(index);
+                          e.stopPropagation();
+                        }}
+                      />
+                    </Col>
+                  ) : (
+                    <></>
+                  )}
                 </Row>
               </div>
-            )
+            );
           })}
         </div>
       </>
-    )
+    );
   }
 }
