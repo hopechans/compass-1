@@ -20,7 +20,12 @@ export class PipelineRunStore extends KubeObjectStore<PipelineRun> {
     });
 
     if (graphName) {
-      return JSON.parse(tektonGraphStore.getByName(graphName).spec.data);
+      try {
+        return JSON.parse(tektonGraphStore.getByName(graphName).spec.data);
+      }
+      catch (e) {
+        return initData;
+      }
     }
     return initData;
   }

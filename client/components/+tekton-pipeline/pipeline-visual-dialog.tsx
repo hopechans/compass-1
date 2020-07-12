@@ -7,7 +7,7 @@ import { Dialog } from "../dialog";
 import { Wizard, WizardStep } from "../wizard";
 import { observer } from "mobx-react";
 import { Pipeline, PipelineTask } from "../../api/endpoints";
-import { graphId, Graphs, initData } from "../+tekton-graph/graphs";
+import { graphId, Graphs } from "../+tekton-graph/graphs";
 import { CopyTaskDialog } from "../+tekton-task/copy-task-dialog";
 import { PipelineSaveDialog } from "./pipeline-save-dialog";
 import { tektonGraphStore } from "../+tekton-graph/tekton-graph.store";
@@ -117,7 +117,7 @@ export class PipelineVisualDialog extends React.Component<Props> {
   }
 
   updateTektonGraph = async (data: string, lastGraphName: string = "") => {
-    const graphName = this.pipeline.getName() + new Date().getTime().toString();
+    const graphName = this.pipeline.getName() + '-' + new Date().getTime().toString();
     await tektonGraphStore.create(
       { name: graphName, namespace: "ops" },
       {
@@ -126,10 +126,7 @@ export class PipelineVisualDialog extends React.Component<Props> {
         },
       }
     );
-    this.pipeline.metadata.annotations = {
-      "fuxi.nip.io/tektongraphs": graphName,
-    };
-
+    this.pipeline.metadata.annotations = { "fuxi.nip.io/tektongraphs": graphName };
     await pipelineStore.update(this.pipeline, { ...this.pipeline });
   };
 

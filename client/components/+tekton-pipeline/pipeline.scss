@@ -1,5 +1,11 @@
-.Pipeines {
+.Pipelines {
   .TableCell {
+    &.name {
+      flex-grow: 3;
+    }
+    &.ownernamespace {
+      flex-grow: 3;
+    }
     &.tasknames {
       flex-grow: 3;
     }

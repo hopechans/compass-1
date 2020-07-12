@@ -1,15 +1,12 @@
-// @import "../+workloads/workloads-mixins";
-.PipelineRun {
+.PipelineRuns {
   .TableCell {
     &.name {
-      flex-grow: 4;
+      flex-grow: 2;
     }
     &.ownernamespace {
-      flex-grow: 2;
+      flex-grow: 1;
     }
-    &.age {
-      flex-grow: 2;
-    }
+
     &.tasks {
       .StatusBrick {
         @include taskrun-status-bgs;
