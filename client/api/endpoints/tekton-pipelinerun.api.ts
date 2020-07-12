@@ -1,11 +1,13 @@
-import { autobind } from "../../utils";
-import { KubeObject } from "../kube-object";
-import { KubeApi } from "../kube-api";
-import { PipelineSpec, Param } from "./tekton-pipeline.api";
-import { Params } from "./tekton-task.api";
-import { PersistentVolumeClaimVolumeSource } from "./persistent-volume-claims.api";
+import {autobind} from "../../utils";
+import {KubeObject} from "../kube-object";
+import {KubeApi} from "../kube-api";
+import {PipelineSpec, Param} from "./tekton-pipeline.api";
+import {Params} from "./tekton-task.api";
+import {PersistentVolumeClaimVolumeSource} from "./persistent-volume-claims.api";
 import {taskRunStore} from "../../components/+tekton-taskrun";
 import {pipelineStore} from "../../components/+tekton-pipeline/pipeline.store";
+import {tektonGraphStore} from "../../components/+tekton-graph/tekton-graph.store";
+import {initData} from "../../components/+tekton-graph/graphs";
 
 export interface PipelineRef {
   name: string;
@@ -92,6 +94,9 @@ export interface WorkspaceBinding {
 @autobind()
 export class PipelineRun extends KubeObject {
   static kind = "PipelineRun";
+
+  params: {};
+
   spec: PipelineRunSpec;
   status: {
     observedGeneration: number;
@@ -140,8 +145,12 @@ export class PipelineRun extends KubeObject {
     return this.getErrorReason() != "";
   }
 
+  getPipelineRefName() {
+    return this.spec.pipelineRef.name;
+  }
+
   getPipelineRefNodeData() {
-    const pipeline = pipelineStore.getByName(this.spec.pipelineRef.name)
+    const pipeline = pipelineStore.getByName(this.getPipelineRefName());
     if (pipeline) {
       return pipeline.getNodeData()
     }
@@ -170,6 +179,21 @@ export class PipelineRun extends KubeObject {
       }
     });
     return taskMap;
+  }
+
+  getNodeData() {
+    let graphName: string = ""
+    this.getAnnotations().filter((item) => {
+      const R = item.split("=");
+      if (R[0] == "fuxi.nip.io/tektongraphs") {
+        graphName = R[1]
+      }
+    });
+    console.log(graphName)
+    if (graphName) {
+      return JSON.parse(tektonGraphStore.getByName(graphName).spec.data);
+    }
+    return initData;
   }
 }
 

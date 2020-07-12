@@ -25,6 +25,7 @@ import {Pod} from "../../api/endpoints";
 import {configStore} from "../../config.store";
 import Tooltip from "@material-ui/core/Tooltip";
 import {PipelineRunVisualDialog} from "./pipelinerun-visual-dialog";
+import {tektonGraphStore} from "../+tekton-graph/tekton-graph.store";
 
 enum sortBy {
   name = "name",
@@ -80,7 +81,9 @@ export class PipelineRuns extends React.Component<Props> {
   }
 
   renderTasks(pipelineRun: PipelineRun) {
-    // const names = pipelineRun.getPipelineRefNodeData();
+    // const names: string[] = pipelineRun.getPipelineRefNodeData(
+    //   pipelineRun.spec.pipelineRef.name
+    // );
     const names: string[] = [];
 
     if (names.length > 0) {
@@ -164,7 +167,7 @@ export class PipelineRuns extends React.Component<Props> {
           isClusterScoped
           className="PipelineRuns"
           store={pipelineRunStore}
-          dependentStores={[pipelineStore, taskRunStore, podsStore]}
+          dependentStores={[pipelineStore, taskRunStore, tektonGraphStore, podsStore]}
           sortingCallbacks={{
             [sortBy.name]: (pipelineRun: PipelineRun) => pipelineRun.getName(),
             [sortBy.ownernamespace]: (pipelineRun: PipelineRun) =>
