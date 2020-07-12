@@ -51,16 +51,16 @@ export class PipelineParamsDetails extends React.Component<Props> {
         {this.value.length > 0 ? (
           <div>
             <Row>
-              <Col span={4}>
+              <Col span={7}>
                 <Trans>Name</Trans>
               </Col>
-              <Col span={5} offset={1}>
+              <Col span={7} offset={1}>
                 <Trans>Type</Trans>
               </Col>
-              <Col span={4} offset={2}>
+              {/* <Col span={4} offset={2}>
                 <Trans>Description</Trans>
-              </Col>
-              <Col span={4} offset={1}>
+              </Col> */}
+              <Col span={7} offset={1}>
                 <Trans>Default</Trans>
               </Col>
             </Row>
@@ -73,13 +73,13 @@ export class PipelineParamsDetails extends React.Component<Props> {
           return (
             <div>
               <Row>
-                <Col span={4}>
+                <Col span={7}>
                   <Input
                     value={this.value[index].name}
                     onChange={(value) => (this.value[index].name = value)}
                   />
                 </Col>
-                <Col span={5} offset={1}>
+                <Col span={7} offset={1}>
                   <Select
                     value={this.value[index].type}
                     options={this.Options}
@@ -89,15 +89,15 @@ export class PipelineParamsDetails extends React.Component<Props> {
                     }}
                   />
                 </Col>
-                <Col span={4} offset={2}>
+                {/* <Col span={4} offset={2}>
                   <Input
                     value={this.value[index].description}
                     onChange={(value) =>
                       (this.value[index].description = value)
                     }
                   />
-                </Col>
-                <Col span={4} offset={1}>
+                </Col> */}
+                <Col span={6} offset={1}>
                   <Input
                     value={this.value[index].default}
                     onChange={(value) => (this.value[index].default = value)}
@@ -114,7 +114,7 @@ export class PipelineParamsDetails extends React.Component<Props> {
                   />
                 </Col>
               </Row>
-              <br/>
+              <br />
             </div>
           );
         })}

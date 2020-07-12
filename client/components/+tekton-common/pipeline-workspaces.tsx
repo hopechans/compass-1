@@ -63,7 +63,7 @@ export class PipelineWorkspaces extends React.Component<Props> {
               <>
                 <div key={index}>
                   <Row>
-                    <Col span={10} offset={1}>
+                    <Col span={10}>
                       <Input
                         placeholder={"Name"}
                         value={this.value[index].name}
