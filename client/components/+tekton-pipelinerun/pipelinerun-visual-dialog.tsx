@@ -52,7 +52,7 @@ export class PipelineRunVisualDialog extends React.Component<Props> {
 
   getTaskRun(names: string[]): any {
     let taskMap: any = new Map<string, any>();
-    names.map((name: string, index: number) => {
+    names.map((name: string) => {
       const currentTask = taskRunStore.getByName(name);
       if (currentTask?.spec !== undefined) {
         taskMap[currentTask.spec.taskRef.name] = currentTask;
@@ -73,7 +73,6 @@ export class PipelineRunVisualDialog extends React.Component<Props> {
 
     setTimeout(() => {
       const anchor = document.getElementsByClassName("step-content")[0];
-      // const anchor = document.getElementById("container")
       const width = anchor.scrollWidth - 50;
       const height = anchor.scrollHeight - 60;
 
