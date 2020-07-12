@@ -12,8 +12,7 @@ import { CopyTaskDialog } from "../+tekton-task/copy-task-dialog";
 import { PipelineSaveDialog } from "./pipeline-save-dialog";
 import { tektonGraphStore } from "../+tekton-graph/tekton-graph.store";
 import { pipelineStore } from "./pipeline.store";
-import { pipeline } from "stream";
-import { pipelineTask } from "./pipeline-task";
+
 
 interface Props extends Partial<Props> {}
 

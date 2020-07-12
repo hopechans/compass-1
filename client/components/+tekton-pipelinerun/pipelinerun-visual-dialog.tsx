@@ -31,9 +31,9 @@ export class PipelineRunVisualDialog extends React.Component<Props> {
     return PipelineRunVisualDialog.Data
   }
 
-  static open(obj: PipelineRun) {
+  static open(pipelineRun: PipelineRun) {
     PipelineRunVisualDialog.isOpen = true;
-    PipelineRunVisualDialog.Data = obj;
+    PipelineRunVisualDialog.Data = pipelineRun;
   }
 
   getTaskRunName(pipelinerun: PipelineRun): string[] {
@@ -68,111 +68,29 @@ export class PipelineRunVisualDialog extends React.Component<Props> {
     PodLogsDialog.open(pod, container);
   }
 
-  showCurrentPipelineRunStatus() {
-    //by pipeline ref name get node data
-    let nodeData = this.pipelineRun.getPipelineRefNodeData();
-
-    if (nodeData === undefined || nodeData === "") {
-    } else {
-      this.graph.instance.clear();
-
-      setTimeout(() => { this.graph.instance.changeData(nodeData) }, 200);
-
-      setInterval(() => {
-        const names = this.pipelineRun.getTaskRunName();
-        if (names.length > 0) {
-          const currentTaskRunMap = this.getTaskRun(names);
-          nodeData.nodes.map((item: any, index: number) => {
-            const currentTaskRun = currentTaskRunMap[item.taskName];
-            if (currentTaskRun !== undefined) {
-              //should check when the pipeline-run status
-              nodeData.nodes[index].status =
-                currentTaskRun.status.conditions[0].reason;
-            } else {
-              nodeData.nodes[index].status = "Pendding";
-            }
-            nodeData.nodes[index].showtime = true;
-          });
-          setTimeout(() => {
-            this.graph.instance.clear();
-            this.graph.instance.changeData(nodeData);
-          });
-        }
-      }, 1000);
-
-      //Interval 1s update status and time in graph
-      setInterval(() => {
-
-        const names = this.pipelineRun.getTaskRunName();
-        if (names.length > 0) {
-          const currentTaskRunMap = this.getTaskRun(names);
-
-          nodeData.nodes.map((item: any, index: number) => {
-            // //set current node status,just like:Failed Succeed... and so on.
-
-            const currentTaskRun = currentTaskRunMap[item.taskName];
-            if (currentTaskRun !== undefined) {
-              //should get current node itme and update the time.
-              let currentItem = this.graph.instance.findById(nodeData.nodes[index].id);
-              //dynimic set the state: missing notreay
-              if (currentTaskRun?.status?.conditions[0]?.reason == undefined) {
-                return;
-              }
-
-              this.graph.instance.setItemState(
-                currentItem,
-                currentTaskRun?.status?.conditions[0]?.reason,
-                ""
-              );
-
-              //when show pipeline will use current date time  less start time and then self-increment。
-              let completionTime = currentTaskRun.status.completionTime;
-              let totalTime: string;
-              const currentStartTime = currentTaskRun.metadata.creationTimestamp;
-              const st = new Date(currentStartTime).getTime();
-              if (completionTime !== undefined) {
-                const ct = new Date(completionTime).getTime();
-                let result = Math.floor((ct - st) / 1000);
-                totalTime = secondsToHms(result);
-              } else {
-                const ct = new Date().getTime();
-                let result = Math.floor((ct - st) / 1000);
-                totalTime = secondsToHms(result);
-              }
-
-              //set the time
-              this.graph.instance.setItemState(currentItem, "time", totalTime);
-            }
-          });
-        }
-      }, 1000);
-    }
-  }
-
   onOpen = async () => {
+
+    let nodeData = this.pipelineRun.getNodeData();
+
     setTimeout(() => {
 
-      this.graph = new Graphs();
+      const anchor = document.getElementsByClassName("step-content")[0]
+      // const anchor = document.getElementById("container")
+      const width = anchor.scrollWidth - 50;
+      const height = anchor.scrollHeight - 60;
+
+      this.graph = new Graphs(width, height);
       this.graph.init();
 
-      let nodeData: any = null;
-      this.pipelineRun.getAnnotations().filter((item) => {
-        const tmp = item.split("=");
-        if (tmp[0] == "node_data") {
-          nodeData = tmp[1];
-        }
-      });
 
-      this.graph.instance.clear();
       if (nodeData === undefined || nodeData === "") {
         this.graph.instance.data(initData);
       } else {
-        setTimeout(() => {
-          this.graph.instance.data(JSON.parse(nodeData));
-        }, 10);
+        this.graph.instance.data(nodeData);
       }
 
       this.graph.bindClickOnNode((currentNode: any) => {
+
         const group = currentNode.getContainer();
         let shape = group.get("children")[2];
         const name = shape.attrs.text;
@@ -181,11 +99,81 @@ export class PipelineRunVisualDialog extends React.Component<Props> {
         const currentTaskRunMap = this.getTaskRun(names);
         const currentTaskRun = currentTaskRunMap[name];
         const podName = currentTaskRun.status.podName;
+
         this.showLogs(podName);
       });
+
       this.graph.render();
 
     }, 100)
+
+    setInterval(() => {
+      const names = this.pipelineRun.getTaskRunName();
+      if (names.length > 0) {
+
+        const currentTaskRunMap = this.getTaskRun(names);
+        nodeData.nodes.map((item: any, index: number) => {
+          const currentTaskRun = currentTaskRunMap[item.taskName];
+          if (currentTaskRun !== undefined) {
+            //should check when the pipeline-run status
+            nodeData.nodes[index].status =
+              currentTaskRun.status.conditions[0].reason;
+          } else {
+            nodeData.nodes[index].status = "Pendding";
+          }
+          nodeData.nodes[index].showtime = true;
+        });
+
+        this.graph.instance.clear();
+        this.graph.instance.changeData(nodeData);
+      }
+    }, 500);
+
+    //Interval 1s update status and time in graph
+    setInterval(() => {
+      const names = this.pipelineRun.getTaskRunName();
+      if (names.length > 0) {
+        const currentTaskRunMap = this.getTaskRun(names);
+
+        nodeData.nodes.map((item: any, index: number) => {
+          // //set current node status,just like:Failed Succeed... and so on.
+
+          const currentTaskRun = currentTaskRunMap[item.taskName];
+          if (currentTaskRun !== undefined) {
+            //should get current node itme and update the time.
+            let currentItem = this.graph.instance.findById(nodeData.nodes[index].id);
+            //dynimic set the state: missing notreay
+            if (currentTaskRun?.status?.conditions[0]?.reason == undefined) {
+              return;
+            }
+
+            this.graph.instance.setItemState(
+              currentItem,
+              currentTaskRun?.status?.conditions[0]?.reason,
+              ""
+            );
+
+            //when show pipeline will use current date time  less start time and then self-increment。
+            let completionTime = currentTaskRun.status.completionTime;
+            let totalTime: string;
+            const currentStartTime = currentTaskRun.metadata.creationTimestamp;
+            const st = new Date(currentStartTime).getTime();
+            if (completionTime !== undefined) {
+              const ct = new Date(completionTime).getTime();
+              let result = Math.floor((ct - st) / 1000);
+              totalTime = secondsToHms(result);
+            } else {
+              const ct = new Date().getTime();
+              let result = Math.floor((ct - st) / 1000);
+              totalTime = secondsToHms(result);
+            }
+
+            //set the time
+            this.graph.instance.setItemState(currentItem, "time", totalTime);
+          }
+        });
+      }
+    }, 1000);
   }
 
   static close() {
@@ -193,9 +181,13 @@ export class PipelineRunVisualDialog extends React.Component<Props> {
   }
 
   close = () => {
+    this.reset();
     PipelineRunVisualDialog.close();
   };
 
+  reset = () => {
+    this.graph = null;
+  }
 
   render() {
     const header = (
