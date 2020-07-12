@@ -1,17 +1,18 @@
 import "./pipelinerun-visual-dialog.scss"
 
 import React from "react";
-import {observable} from "mobx";
-import {Trans} from "@lingui/macro";
-import {Dialog} from "../dialog";
-import {Wizard, WizardStep} from "../wizard";
-import {observer} from "mobx-react";
-import {PipelineRun, Pod} from "../../api/endpoints";
-import {graphId, Graphs, initData} from "../+tekton-graph/graphs";
-import {taskRunStore} from "../+tekton-taskrun";
-import {podsStore} from "../+workloads-pods/pods.store";
-import {PodLogsDialog} from "../+workloads-pods/pod-logs-dialog";
-import {secondsToHms} from "../../api/endpoints/tekton-graph.api";
+import { observable } from "mobx";
+import { Trans } from "@lingui/macro";
+import { Dialog } from "../dialog";
+import { Wizard, WizardStep } from "../wizard";
+import { observer } from "mobx-react";
+import { PipelineRun, Pod } from "../../api/endpoints";
+import { graphId, Graphs, initData } from "../+tekton-graph/graphs";
+import { taskRunStore } from "../+tekton-taskrun";
+import { podsStore } from "../+workloads-pods/pods.store";
+import { PodLogsDialog } from "../+workloads-pods/pod-logs-dialog";
+import { secondsToHms } from "../../api/endpoints/tekton-graph.api";
+import { pipelineRunStore } from "./pipelinerun.store";
 
 
 
@@ -70,7 +71,7 @@ export class PipelineRunVisualDialog extends React.Component<Props> {
 
   onOpen = async () => {
 
-    let nodeData = this.pipelineRun.getNodeData();
+    let nodeData = pipelineRunStore.getNodeData(this.pipelineRun);
 
     setTimeout(() => {
 
@@ -204,7 +205,7 @@ export class PipelineRunVisualDialog extends React.Component<Props> {
         close={this.close}>
         <Wizard header={header} done={this.close}>
           <WizardStep contentClass="flex gaps column" nextLabel={<Trans>Save</Trans>}>
-            <div className="container" id={graphId}/>
+            <div className="container" id={graphId} />
           </WizardStep>
         </Wizard>
       </Dialog>
