@@ -76,7 +76,7 @@ export class MultiPipelineTaskStepDetails extends React.Component<Props> {
             return (
               <Collapse
                 panelName={<Trans>Task</Trans>}
-                extraExpand={!disable??genExtra(index)}
+                extraExpand={!disable? genExtra(index) : null}
               >
                 <PipelineTaskDetail
                   disable={disable}

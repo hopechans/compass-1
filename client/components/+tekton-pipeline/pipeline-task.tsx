@@ -166,7 +166,7 @@ export class PipelineTaskDetail extends React.Component<Props> {
         </Grid>
         <br />
         <ParamsDetails
-          disable={true}
+          disable={disable}
           value={this.value?.params}
           onChange={(value) => {
             this.value.params = value;

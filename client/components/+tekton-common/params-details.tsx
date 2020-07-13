@@ -56,7 +56,6 @@ export class ParamsDetails extends React.Component<Props> {
 
   render() {
     const { disable } = this.props;
-    console.log(disable);
 
     return (
       <>
@@ -93,11 +92,11 @@ export class ParamsDetails extends React.Component<Props> {
                       }}
                     />
                   </Col>
-                  {disable ? (
+                  {!disable ?
                     <Col span="1" offset={1}>
                       <Icon
                         small
-                        tooltip={<Trans>Remove Command</Trans>}
+                        tooltip={<Trans>Remove Params</Trans>}
                         className="remove-icon"
                         material="remove_circle_outline"
                         onClick={(e) => {
@@ -105,10 +104,8 @@ export class ParamsDetails extends React.Component<Props> {
                           e.stopPropagation();
                         }}
                       />
-                    </Col>
-                  ) : (
-                    <></>
-                  )}
+                    </Col> :<></>
+                  }
                 </Row>
               </div>
             );
