@@ -36,7 +36,7 @@ export class PipelineVisualDialog extends React.Component<Props> {
   onOpen = async () => {
     setTimeout(() => {
       const anchor = document.getElementsByClassName("step-content")[0];
-      // const anchor = document.getElementById("container")
+
       const width = anchor.scrollWidth - 50;
       const height = anchor.scrollHeight - 60;
 
@@ -51,8 +51,6 @@ export class PipelineVisualDialog extends React.Component<Props> {
 
       this.graph.bindMouseenter();
       this.graph.bindMouseleave();
-      // this.graph.instance.bindMouseleave();
-      // this.graph.instance.bindClickOnNode();
 
       this.graph.render();
     }, 100);
@@ -132,6 +130,7 @@ export class PipelineVisualDialog extends React.Component<Props> {
 
   save = async () => {
     this.data = this.graph.instance.save();
+
     const data = JSON.stringify(this.data);
     let annotations = this.pipeline.metadata
       ? this.pipeline.metadata.annotations

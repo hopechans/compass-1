@@ -48,10 +48,14 @@ export class PipelineRuns extends React.Component<Props> {
     //   pipelineRun.spec.pipelineRef.name
     // );
 
-    console.log(pipelineRunStore.getNodeData(pipelineRun))
+    let names: string[];
+    try {
+      names = pipelineRunStore.getNodeData(pipelineRun).nodes.map((item: any) => item["taskName"])
+    }catch {
+      names = [];
+    }
 
-    const names: string[] = [];
-
+    console.log(names);
     if (names.length > 0) {
       // TODO:
       return names.map((item: string) => {
@@ -183,7 +187,6 @@ export class PipelineRuns extends React.Component<Props> {
               <PipelineRunIcon object={pipelineRun.status.conditions[0]} />
             ),
             // pipelineRun.getErrorReason(),
-
             this.renderTasks(pipelineRun),
             this.renderTime(
               pipelineRun.getStartTime() != ""
