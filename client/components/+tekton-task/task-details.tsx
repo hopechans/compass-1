@@ -115,7 +115,6 @@ export class TaskDetails extends React.Component<Props> {
     return (
       <div className="PipelineResourceDetails">
         <KubeObjectMeta object={task}/>
-        <KubeEventDetails object={task}/>
 
         <DrawerTitle title={<Trans>Pipeline Params</Trans>}/>
         {this.renderPipelineParams(task.spec.params || [])}
@@ -155,6 +154,8 @@ export class TaskDetails extends React.Component<Props> {
             </div>
           );
         })}
+
+        <KubeEventDetails object={task}/>
 
       </div>
     );
