@@ -96,7 +96,7 @@ export class ParamsDetails extends React.Component<Props> {
                     <Col span="1" offset={1}>
                       <Icon
                         small
-                        tooltip={<Trans>Remove Command</Trans>}
+                        tooltip={<Trans>Remove Params</Trans>}
                         className="remove-icon"
                         material="remove_circle_outline"
                         onClick={(e) => {
