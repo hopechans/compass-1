@@ -32,7 +32,6 @@ import { Notifications } from "../notifications";
 import { systemName } from "../input/input.validators";
 import { createMuiTheme } from "@material-ui/core";
 import { ThemeProvider } from "@material-ui/core/styles";
-import { Divider } from "@material-ui/core";
 import { configStore } from "../../config.store";
 import { WorkspaceDeclaration as Workspace } from "../../api/endpoints/tekton-task.api";
 interface Props<T = any> extends Partial<Props> {
@@ -300,7 +299,6 @@ export class CopyTaskDialog extends React.Component<Props> {
                   }}
                 />
                 <br />
-                <Divider />
                 <PipelineParamsDetails
                   value={this.value.pipelineParams}
                   onChange={(value) => {
@@ -308,7 +306,6 @@ export class CopyTaskDialog extends React.Component<Props> {
                   }}
                 />
                 <br />
-                <Divider />
                 <ResourcesDetail
                   value={this.value.resources}
                   onChange={(value) => {
@@ -316,7 +313,6 @@ export class CopyTaskDialog extends React.Component<Props> {
                   }}
                 />
                 <br />
-                <Divider />
                 <MultiTaskStepDetails
                   value={this.value.taskSteps}
                   onChange={(value) => {
