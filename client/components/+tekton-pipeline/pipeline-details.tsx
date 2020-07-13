@@ -11,7 +11,6 @@ import { SubTitle } from "../layout/sub-title";
 import { Input } from "../input";
 import { PipelineSpec } from "../../api/endpoints";
 import { MultiPipelineTaskStepDetails } from "./multi-pipeline-task-ref-details";
-import { Divider } from "@material-ui/core";
 import { pipelineTask } from "./pipeline-task";
 import { systemName } from "../input/input.validators";
 

@@ -110,7 +110,7 @@ export class PipelineRunDialog extends React.Component<Props> {
       // create a pipeline run
 
       const runNodeData = pipelineStore.getNodeData(this.pipeline);
-      const runTektonGraphName = "run" + "-" + this.pipeline.getName() + "-" + new Date().getTime().toString();
+      const runTektonGraphName = "run-" + this.pipeline.getName() + "-" + new Date().getTime().toString();
 
       let resources: PipelineDeclaredResource[] = this.value.resources;
       let workspaces = this.value.workspces;
@@ -120,11 +120,10 @@ export class PipelineRunDialog extends React.Component<Props> {
         },
       })
 
-      console.log("graph name", graph.getName());
       const pipelineRun: Partial<PipelineRun> = {
         metadata: {
           name: this.value.name,
-          annotations: Object.fromEntries(new Map<string, string>().set("fuxi.nip.io/tektongraphs", graph.getName())),
+          annotations: Object.fromEntries(new Map<string, string>().set("fuxi.nip.io/run-tektongraphs", graph.getName())),
           labels: Object.fromEntries(
             new Map<string, string>().set("namespace", configStore.getDefaultNamespace() == ""
               ? "admin"
@@ -139,12 +138,7 @@ export class PipelineRunDialog extends React.Component<Props> {
       }
 
       await pipelineRunStore.create(
-        {
-          name: this.value.name,
-          namespace: "",
-        },
-        {...pipelineRun}
-      );
+        {name: this.value.name, namespace: ""}, {...pipelineRun});
       this.close();
     } catch (err) {
       Notifications.error(err);
