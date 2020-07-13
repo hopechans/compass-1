@@ -10,7 +10,6 @@ import {Col, Row} from "antd";
 import {SubTitle} from "../layout/sub-title";
 import {_i18n} from "../../i18n";
 import {Input} from "../input";
-import {pipelineResourceStore} from "../+tekton-pipelineresource/pipelineresource.store";
 
 interface Props<T = any> extends Partial<Props> {
   value?: T;
@@ -25,6 +24,7 @@ interface Props<T = any> extends Partial<Props> {
 export class PipelineResourceDetails extends React.Component<Props> {
 
   static defaultProps = {
+    divider: false,
     disable: false,
   }
 

@@ -2,10 +2,7 @@ import {observer} from "mobx-react";
 import React from "react";
 import {observable} from "mobx";
 import {ActionMeta} from "react-select/src/types";
-import {resources} from "./common";
 import {TaskResources} from "client/api/endpoints/tekton-task.api";
-import {TaskResourceDetails} from "./task-resource-details";
-import {Divider} from "@material-ui/core";
 import {PipelineTaskInputResourceDetail} from "./pipeline-task-resources-details";
 
 interface Props<T = any> extends Partial<Props> {

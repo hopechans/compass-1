@@ -56,7 +56,6 @@ export class ParamsDetails extends React.Component<Props> {
 
   render() {
     const { disable } = this.props;
-    console.log(disable);
 
     return (
       <>
@@ -93,7 +92,7 @@ export class ParamsDetails extends React.Component<Props> {
                       }}
                     />
                   </Col>
-                  {disable ? (
+                  {!disable ?
                     <Col span="1" offset={1}>
                       <Icon
                         small
@@ -105,10 +104,8 @@ export class ParamsDetails extends React.Component<Props> {
                           e.stopPropagation();
                         }}
                       />
-                    </Col>
-                  ) : (
-                    <></>
-                  )}
+                    </Col> :<></>
+                  }
                 </Row>
               </div>
             );
