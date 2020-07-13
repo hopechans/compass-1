@@ -114,7 +114,7 @@ export class PipelineVisualDialog extends React.Component<Props> {
     return tasks;
   }
 
-  updateTektonGraph = async (data: string, lastGraphName: string = "") => {
+  updateTektonGraph = async (data: string) => {
     const graphName = this.pipeline.getName() + '-' + new Date().getTime().toString();
     await tektonGraphStore.create(
       { name: graphName, namespace: "ops" },
@@ -143,10 +143,10 @@ export class PipelineVisualDialog extends React.Component<Props> {
       try {
         let tektonGraph = tektonGraphStore.getByName(graphName, "ops");
         if (tektonGraph.spec.data !== data) {
-          await this.updateTektonGraph(data, graphName);
+          await this.updateTektonGraph(data);
         }
       } catch (e) {
-        await this.updateTektonGraph(data, graphName);
+        await this.updateTektonGraph(data);
       }
     } else {
       await this.updateTektonGraph(data);

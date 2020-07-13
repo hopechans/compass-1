@@ -14,7 +14,7 @@ export class PipelineRunStore extends KubeObjectStore<PipelineRun> {
     let graphName: string = "";
     pipelineRun.getAnnotations().filter((item) => {
       const R = item.split("=");
-      if (R[0] == "fuxi.nip.io/tektongraphs") {
+      if (R[0] == "fuxi.nip.io/run-tektongraphs") {
         graphName = R[1];
       }
     });
