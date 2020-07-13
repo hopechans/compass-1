@@ -139,6 +139,7 @@ export class PipelineRunDialog extends React.Component<Props> {
 
       await pipelineRunStore.create(
         {name: this.value.name, namespace: ""}, {...pipelineRun});
+      Notifications.ok(<>PipelineRun {this.value.name} Run Success</>);
       this.close();
     } catch (err) {
       Notifications.error(err);
