@@ -25,6 +25,8 @@ import Tooltip from "@material-ui/core/Tooltip";
 import { PipelineRunVisualDialog } from "./pipelinerun-visual-dialog";
 import { tektonGraphStore } from "../+tekton-graph/tekton-graph.store";
 import {PodLogsDialog} from "../+workloads-pods/pod-logs-dialog";
+import {KubeEventIcon} from "../+events/kube-event-icon";
+import {eventStore} from "../+events/event.store";
 
 enum sortBy {
   name = "name",
@@ -40,13 +42,9 @@ interface Props extends RouteComponentProps {
 export class PipelineRuns extends React.Component<Props> {
   @observable isHiddenPipelineGraph: boolean = true;
   @observable graph: any = null;
-  @observable timeIntervalID: any;
   @observable pipelineRun: any;
 
   renderTasks(pipelineRun: PipelineRun) {
-    // const names: string[] = pipelineRun.getPipelineRefNodeData(
-    //   pipelineRun.spec.pipelineRef.name
-    // );
 
     let names: string[];
     try {
@@ -55,7 +53,6 @@ export class PipelineRuns extends React.Component<Props> {
       names = [];
     }
 
-    console.log(names);
     if (names.length > 0) {
       // TODO:
       return names.map((item: string) => {
@@ -76,7 +73,6 @@ export class PipelineRuns extends React.Component<Props> {
           status = "pending";
         }
         status = status.toLowerCase().toString();
-        const stat = status;
         const name = taskRun.getName();
         const tooltip = (
           <TooltipContent tableView>
@@ -107,7 +103,7 @@ export class PipelineRuns extends React.Component<Props> {
         );
         return (
           <Fragment key={name}>
-            <StatusBrick className={cssNames(stat)} tooltip={tooltip} />
+            <StatusBrick className={cssNames(status)} tooltip={tooltip} />
           </Fragment>
         );
       });
@@ -137,7 +133,7 @@ export class PipelineRuns extends React.Component<Props> {
           isClusterScoped
           className="PipelineRuns"
           store={pipelineRunStore}
-          dependentStores={[pipelineStore, taskRunStore, tektonGraphStore, podsStore]}
+          dependentStores={[pipelineStore, taskRunStore, tektonGraphStore, podsStore, eventStore]}
           sortingCallbacks={{
             [sortBy.name]: (pipelineRun: PipelineRun) => pipelineRun.getName(),
             [sortBy.ownernamespace]: (pipelineRun: PipelineRun) =>
@@ -148,8 +144,6 @@ export class PipelineRuns extends React.Component<Props> {
               pipelineRun.getAge(false),
           }}
           onDetails={(pipelineRun: PipelineRun) => {
-            clearInterval(this.timeIntervalID);
-            // this.showCurrentPipelineRunStatus(pipeline);
             PipelineRunVisualDialog.open(pipelineRun);
           }}
           searchFilters={[
@@ -167,26 +161,20 @@ export class PipelineRuns extends React.Component<Props> {
               className: "ownernamespace",
               sortBy: sortBy.ownernamespace,
             },
-            {
-              title: <Trans>ErrorReason</Trans>,
-              className: "reason",
-              sortBy: sortBy.reason,
-            },
+            { title: "", className: "event" },
+            { title: "", className: "reason" },
             { title: <Trans>Tasks</Trans>, className: "tasks" },
             { title: <Trans>StartTime</Trans>, className: "startTime" },
-            {
-              title: <Trans>CompletionTime</Trans>,
-              className: "completionTime",
-            },
+            { title: <Trans>CompletionTime</Trans>, className: "completionTime" },
             { title: <Trans>Age</Trans>, className: "age", sortBy: sortBy.age },
           ]}
           renderTableContents={(pipelineRun: PipelineRun) => [
             this.renderPipelineName(pipelineRun.getName()),
             pipelineRun.getOwnerNamespace(),
+            <KubeEventIcon object={pipelineRun} />,
             pipelineRun.hasIssues() && (
               <PipelineRunIcon object={pipelineRun.status.conditions[0]} />
             ),
-            // pipelineRun.getErrorReason(),
             this.renderTasks(pipelineRun),
             this.renderTime(
               pipelineRun.getStartTime() != ""

@@ -7,6 +7,18 @@
       flex-grow: 1;
     }
 
+    &.event {
+      flex-grow: 0.15;
+
+      .KubeEventIcon.warning {
+        color: $colorError;
+      }
+    }
+
+    &.reason {
+      flex-grow: 0.15;
+    }
+
     &.tasks {
       .StatusBrick {
         @include taskrun-status-bgs;
