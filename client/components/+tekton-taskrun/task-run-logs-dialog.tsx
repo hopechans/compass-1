@@ -19,12 +19,8 @@ interface Props extends Partial<DialogProps> {}
 @observer
 export class TaskRunLogsDialog extends React.Component<Props> {
   @observable static isOpen = false;
-  // @observable static data: ITaskRunLogsDialogData = null;
   @observable static taskRunName: string;
-  // static open(pod: Pod, container?: IPodContainer) {
-  //   TaskRunLogsDialog.isOpen = true;
-  //   TaskRunLogsDialog.data = { pod, container };
-  // }
+
   static open(taskRunName: string) {
     TaskRunLogsDialog.taskRunName = taskRunName || "";
 
@@ -40,7 +36,6 @@ export class TaskRunLogsDialog extends React.Component<Props> {
   private containers: string[] = [];
   private ns: string = "ops";
   private podName: string = "";
-  // private initContainers: IPodContainer[] = [];
   private lastLineIsShown = true; // used for proper auto-scroll content after refresh
 
   @observable logs = ""; // latest downloaded logs for pod
@@ -160,9 +155,9 @@ export class TaskRunLogsDialog extends React.Component<Props> {
   }
 
   onContainerChange = (option: SelectOption) => {
-    this.selectedContainerName = this.containers
-      // .concat(this.initContainers)
-      .find((containerName) => containerName === option.value);
+    this.selectedContainerName = this.containers.find(
+      (containerName) => containerName === option.value
+    );
     this.reload();
   };
 
@@ -196,17 +191,11 @@ export class TaskRunLogsDialog extends React.Component<Props> {
   get containerSelectOptions() {
     return [
       {
-        label: _i18n._(t`Containers`),
+        label: _i18n._(t`Steps`),
         options: this.containers.map((container) => {
           return { value: container };
         }),
       },
-      // {
-      //   label: _i18n._(t`Init Containers`),
-      //   options: this.initContainers.map((container) => {
-      //     return { value: container.name };
-      //   }),
-      // },
     ];
   }
 
@@ -301,7 +290,7 @@ export class TaskRunLogsDialog extends React.Component<Props> {
             <div className="log-controls flex gaps align-center justify-space-between">
               <div className="container flex gaps align-center">
                 <span>
-                  <Trans>Container</Trans>
+                  <Trans>Step</Trans>
                 </span>
                 {selectedContainerName && (
                   <Select
