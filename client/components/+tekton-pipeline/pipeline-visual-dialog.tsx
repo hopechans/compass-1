@@ -12,6 +12,7 @@ import { CopyTaskDialog } from "../+tekton-task/copy-task-dialog";
 import { PipelineSaveDialog } from "./pipeline-save-dialog";
 import { tektonGraphStore } from "../+tekton-graph/tekton-graph.store";
 import { pipelineStore } from "./pipeline.store";
+import { configStore } from "../../../client/config.store";
 
 
 interface Props extends Partial<Props> { }
@@ -117,7 +118,11 @@ export class PipelineVisualDialog extends React.Component<Props> {
   updateTektonGraph = async (data: string) => {
     const graphName = this.pipeline.getName() + '-' + new Date().getTime().toString();
     await tektonGraphStore.create(
-      { name: graphName, namespace: "ops" },
+      {
+        name: graphName,
+        namespace: "ops",
+        labels: new Map<string, string>().set("namespace", configStore.getDefaultNamespace() == "" ? "admin" : configStore.getDefaultNamespace()),
+      },
       {
         spec: {
           data: data,
