@@ -34,33 +34,6 @@ export class PipelineRunVisualDialog extends React.Component<Props> {
     PipelineRunVisualDialog.Data = pipelineRun;
   }
 
-  getTaskRunName(pipelinerun: PipelineRun): string[] {
-    if (pipelinerun?.status == undefined) {
-      return [];
-    }
-    if (pipelinerun?.status?.taskRuns == undefined) {
-      return [];
-    }
-    return (
-      Object.keys(pipelinerun?.status?.taskRuns)
-        .map((item: any) => {
-          return item;
-        })
-        .slice() || []
-    );
-  }
-
-  getTaskRun(names: string[]): any {
-    let taskMap: any = new Map<string, any>();
-    names.map((name: string) => {
-      const currentTask = taskRunStore.getByName(name);
-      if (currentTask?.spec !== undefined) {
-        taskMap[currentTask.spec.taskRef.name] = currentTask;
-      }
-    });
-
-    return taskMap;
-  }
 
   showLogs(podName: string) {
     let pod: Pod = podsStore.getByName(podName);
@@ -88,8 +61,8 @@ export class PipelineRunVisualDialog extends React.Component<Props> {
         let shape = group.get("children")[2];
         const name = shape.attrs.text;
 
-        const names = this.getTaskRunName(this.pipelineRun);
-        const currentTaskRunMap = this.getTaskRun(names);
+        const names = pipelineRunStore.getTaskRunName(this.pipelineRun);
+        const currentTaskRunMap = pipelineRunStore.getTaskRun(names);
         const currentTaskRun = currentTaskRunMap[name];
         const podName = currentTaskRun.status.podName;
         this.showLogs(podName);
@@ -103,7 +76,7 @@ export class PipelineRunVisualDialog extends React.Component<Props> {
     this.pendingTimeInterval = setInterval(() => {
       const names = this.pipelineRun.getTaskRunName();
       if (names.length > 0) {
-        const currentTaskRunMap = this.getTaskRun(names);
+        const currentTaskRunMap = pipelineRunStore.getTaskRun(names);
         nodeData.nodes.map((item: any, index: number) => {
           const currentTaskRun = currentTaskRunMap[item.taskName];
           if (currentTaskRun !== undefined) {
@@ -128,7 +101,7 @@ export class PipelineRunVisualDialog extends React.Component<Props> {
       const names = this.pipelineRun.getTaskRunName();
       clearInterval(this.pendingTimeInterval);
       if (names.length > 0) {
-        const currentTaskRunMap = this.getTaskRun(names);
+        const currentTaskRunMap = pipelineRunStore.getTaskRun(names);
         nodeData.nodes.map((item: any, index: number) => {
           //set current node status,just like:Failed Succeed... and so on.
 
