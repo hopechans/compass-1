@@ -13,6 +13,7 @@ import { PipelineDetails, PipelineResult, pipeline } from "./pipeline-details";
 import { pipelineStore } from "./pipeline.store";
 import { pipelineTaskResource } from "./pipeline-task";
 import { taskStore } from "../+tekton-task/task.store";
+import {PipelineVisualDialog} from "./pipeline-visual-dialog";
 
 interface Props<T = any> extends Partial<Props> {
   value?: T;
@@ -24,17 +25,16 @@ interface Props<T = any> extends Partial<Props> {
 @observer
 export class PipelineSaveDialog extends React.Component<Props> {
   @observable static isOpen = false;
-  @observable static currentPipeline: Pipeline;
+  @observable static Data: Pipeline;
   @observable value: PipelineResult = this.props.value || pipeline;
 
   static open(pipeline: Pipeline) {
-    PipelineSaveDialog.currentPipeline = null;
-    PipelineSaveDialog.currentPipeline = pipeline;
     PipelineSaveDialog.isOpen = true;
+    PipelineSaveDialog.Data = pipeline;
   }
 
-  get CurrentPipeline() {
-    return PipelineSaveDialog.currentPipeline;
+  get currentPipeline() {
+    return PipelineSaveDialog.Data;
   }
 
   static close() {
@@ -51,15 +51,15 @@ export class PipelineSaveDialog extends React.Component<Props> {
 
   onOpen = () => {
     this.value.tasks = [];
-    let currentPipeline = PipelineSaveDialog.currentPipeline;
 
-    currentPipeline.spec.tasks.map((item, index) => {
+    this.currentPipeline.spec.tasks.map((item, index) => {
       let task = taskStore.getByName(item.name);
       if (task !== undefined) {
-        this.value.tasks.push(currentPipeline.spec.tasks[index]);
+        this.value.tasks.push(this.currentPipeline.spec.tasks[index]);
 
         this.value.tasks[index].resources = null;
         this.value.tasks[index].resources = pipelineTaskResource;
+
         if (task.spec.resources.inputs !== undefined) {
           task.spec.resources.inputs.map((task: { name: any }) => {
             this.value.tasks[index].resources.inputs.push({
@@ -101,46 +101,40 @@ export class PipelineSaveDialog extends React.Component<Props> {
       if (item.params === undefined) {
         this.value.tasks[index].params = [];
       }
-      // if (item.retries === undefined) {
-      //   this.value.tasks[index].retries = 0;
-      // }
-      // if (item.timeout === undefined || item.timeout == "") {
-      //   this.value.tasks[index].timeout = "0";
-      // }
     });
 
-    this.value.pipelineName = currentPipeline.metadata.name;
-    const resources = currentPipeline.spec.resources;
-    if (currentPipeline.spec.params !== undefined) {
-      this.value.params = currentPipeline.spec.params;
+    this.value.pipelineName = this.currentPipeline.metadata.name;
+    const resources = this.currentPipeline.spec.resources;
+    if (this.currentPipeline.spec.params !== undefined) {
+      this.value.params = this.currentPipeline.spec.params;
     }
 
     if (resources !== undefined) {
       this.value.resources = resources;
     }
 
-    if (currentPipeline.spec.workspaces !== undefined) {
-      this.value.workspaces = currentPipeline.spec.workspaces;
+    if (this.currentPipeline.spec.workspaces !== undefined) {
+      this.value.workspaces = this.currentPipeline.spec.workspaces;
     }
   };
 
   submit = async () => {
-    let pipeline = PipelineSaveDialog.currentPipeline;
+    let pipeline = this.currentPipeline;
 
     pipeline.metadata.name = this.value.pipelineName;
-
-    // pipeline.metadata.namespace = "ops";
     pipeline.spec.resources = this.value.resources;
 
     //a b[] //a.b.
     pipeline.spec.tasks = this.value.tasks;
     pipeline.spec.params = this.value.params;
     pipeline.spec.workspaces = this.value.workspaces;
+
     try {
       // //will update pipeline
       await pipelineStore.update(pipeline, { ...pipeline });
       Notifications.ok(<>pipeline {this.value.pipelineName} save successed</>);
       this.close();
+      PipelineVisualDialog.close();
     } catch (err) {
       Notifications.error(err);
     }

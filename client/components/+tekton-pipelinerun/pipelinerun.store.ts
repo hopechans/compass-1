@@ -14,13 +14,18 @@ export class PipelineRunStore extends KubeObjectStore<PipelineRun> {
     let graphName: string = "";
     pipelineRun.getAnnotations().filter((item) => {
       const R = item.split("=");
-      if (R[0] == "fuxi.nip.io/tektongraphs") {
+      if (R[0] == "fuxi.nip.io/run-tektongraphs") {
         graphName = R[1];
       }
     });
 
     if (graphName) {
-      return JSON.parse(tektonGraphStore.getByName(graphName).spec.data);
+      try {
+        return JSON.parse(tektonGraphStore.getByName(graphName).spec.data);
+      }
+      catch (e) {
+        return initData;
+      }
     }
     return initData;
   }

@@ -7,7 +7,7 @@ import { Dialog } from "../dialog";
 import { Wizard, WizardStep } from "../wizard";
 import { observer } from "mobx-react";
 import { Pipeline, PipelineTask } from "../../api/endpoints";
-import { graphId, Graphs, initData } from "../+tekton-graph/graphs";
+import { graphId, Graphs } from "../+tekton-graph/graphs";
 import { CopyTaskDialog } from "../+tekton-task/copy-task-dialog";
 import { PipelineSaveDialog } from "./pipeline-save-dialog";
 import { tektonGraphStore } from "../+tekton-graph/tekton-graph.store";
@@ -36,7 +36,7 @@ export class PipelineVisualDialog extends React.Component<Props> {
   onOpen = async () => {
     setTimeout(() => {
       const anchor = document.getElementsByClassName("step-content")[0];
-      // const anchor = document.getElementById("container")
+
       const width = anchor.scrollWidth - 50;
       const height = anchor.scrollHeight - 60;
 
@@ -51,8 +51,6 @@ export class PipelineVisualDialog extends React.Component<Props> {
 
       this.graph.bindMouseenter();
       this.graph.bindMouseleave();
-      // this.graph.instance.bindMouseleave();
-      // this.graph.instance.bindClickOnNode();
 
       this.graph.render();
     }, 100);
@@ -116,8 +114,8 @@ export class PipelineVisualDialog extends React.Component<Props> {
     return tasks;
   }
 
-  updateTektonGraph = async (data: string, lastGraphName: string = "") => {
-    const graphName = this.pipeline.getName() + new Date().getTime().toString();
+  updateTektonGraph = async (data: string) => {
+    const graphName = this.pipeline.getName() + '-' + new Date().getTime().toString();
     await tektonGraphStore.create(
       { name: graphName, namespace: "ops" },
       {
@@ -126,15 +124,13 @@ export class PipelineVisualDialog extends React.Component<Props> {
         },
       }
     );
-    this.pipeline.metadata.annotations = {
-      "fuxi.nip.io/tektongraphs": graphName,
-    };
-
+    this.pipeline.metadata.annotations = { "fuxi.nip.io/tektongraphs": graphName };
     await pipelineStore.update(this.pipeline, { ...this.pipeline });
   };
 
   save = async () => {
     this.data = this.graph.instance.save();
+
     const data = JSON.stringify(this.data);
     let annotations = this.pipeline.metadata
       ? this.pipeline.metadata.annotations
@@ -147,10 +143,10 @@ export class PipelineVisualDialog extends React.Component<Props> {
       try {
         let tektonGraph = tektonGraphStore.getByName(graphName, "ops");
         if (tektonGraph.spec.data !== data) {
-          await this.updateTektonGraph(data, graphName);
+          await this.updateTektonGraph(data);
         }
       } catch (e) {
-        await this.updateTektonGraph(data, graphName);
+        await this.updateTektonGraph(data);
       }
     } else {
       await this.updateTektonGraph(data);

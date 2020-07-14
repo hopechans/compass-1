@@ -108,12 +108,13 @@ export class PipelineRunDialog extends React.Component<Props> {
   submit = async () => {
     try {
       // create a pipeline run
-      let resources: PipelineDeclaredResource[] = this.value.resources;
-      let workspaces = this.value.workspces;
 
       const runNodeData = pipelineStore.getNodeData(this.pipeline);
       const runTektonGraphName = "run-" + this.pipeline.getName() + "-" + new Date().getTime().toString();
-      await tektonGraphStore.create({name: runTektonGraphName, namespace: "ops"}, {
+
+      let resources: PipelineDeclaredResource[] = this.value.resources;
+      let workspaces = this.value.workspces;
+      const graph = await tektonGraphStore.create({name: runTektonGraphName, namespace: "ops"}, {
         spec: {
           data: JSON.stringify(runNodeData),
         },
@@ -122,7 +123,11 @@ export class PipelineRunDialog extends React.Component<Props> {
       const pipelineRun: Partial<PipelineRun> = {
         metadata: {
           name: this.value.name,
-          annotations: {},
+          annotations: Object.fromEntries(new Map<string, string>().set("fuxi.nip.io/run-tektongraphs", graph.getName())),
+          labels: Object.fromEntries(
+            new Map<string, string>().set("namespace", configStore.getDefaultNamespace() == ""
+              ? "admin"
+              : configStore.getDefaultNamespace())),
         } as IKubeObjectMetadata,
         spec: {
           resources: resources,
@@ -131,22 +136,10 @@ export class PipelineRunDialog extends React.Component<Props> {
           workspaces: workspaces,
         },
       }
-      // // setting annotations.
-      pipelineRun.metadata["annotations"] = {"fuxi.nip.io/tektongraphs": runTektonGraphName};
 
       await pipelineRunStore.create(
-        {
-          name: this.value.name,
-          namespace: "",
-          labels: new Map<string, string>().set(
-            "namespace",
-            configStore.getDefaultNamespace() == ""
-              ? "admin"
-              : configStore.getDefaultNamespace()
-          ),
-        },
-        {...pipelineRun}
-      );
+        {name: this.value.name, namespace: ""}, {...pipelineRun});
+      Notifications.ok(<>PipelineRun {this.value.name} Run Success</>);
       this.close();
     } catch (err) {
       Notifications.error(err);

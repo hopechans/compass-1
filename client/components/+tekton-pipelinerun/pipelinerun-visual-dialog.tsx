@@ -11,7 +11,7 @@ import { graphId, Graphs, initData } from "../+tekton-graph/graphs";
 import { taskRunStore } from "../+tekton-taskrun";
 import { podsStore } from "../+workloads-pods/pods.store";
 import { PodLogsDialog } from "../+workloads-pods/pod-logs-dialog";
-import { secondsToHms } from "../../api/endpoints/tekton-graph.api";
+import { secondsToHms } from "../../api/endpoints";
 import { pipelineRunStore } from "./pipelinerun.store";
 
 interface Props extends Partial<Props> {}
@@ -209,10 +209,10 @@ export class PipelineRunVisualDialog extends React.Component<Props> {
         onOpen={this.onOpen}
         close={this.close}
       >
-        <Wizard header={header} done={this.close}>
-          <WizardStep
-            contentClass="flex gaps column"
-            nextLabel={<Trans>Save</Trans>}
+        <Wizard header={header} done={this.close} >
+          <WizardStep contentClass="flex gaps column"
+                      hideNextBtn={true}
+                      prevLabel={<Trans>Close</Trans>}
           >
             <div className="container" id={graphId} />
           </WizardStep>
