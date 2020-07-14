@@ -8,7 +8,7 @@ export class TektonGraphStore extends KubeObjectStore<TektonGraph> {
   api = tektonGraphApi
 
   getDataByName(graphName: string) {
-    return tektonGraphStore.getByName(graphName).spec?.data || ""
+    return tektonGraphStore.getByName(graphName).spec?.data
   }
 }
 
