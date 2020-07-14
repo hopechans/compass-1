@@ -46,9 +46,7 @@ export class PipelineRuns extends React.Component<Props> {
   renderTasks(pipelineRun: PipelineRun) {
     let names: string[];
     try {
-      names = pipelineRunStore
-        .getNodeData(pipelineRun)
-        .nodes.map((item: any) => item["taskName"]);
+      names = pipelineRunStore.getTaskRunName(pipelineRun);
     } catch {
       names = [];
     }

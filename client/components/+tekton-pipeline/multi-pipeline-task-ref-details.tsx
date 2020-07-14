@@ -4,7 +4,6 @@ import { observable } from "mobx";
 import { ActionMeta } from "react-select/src/types";
 import { Popconfirm } from "antd";
 import { Collapse } from "../collapse";
-import { Button } from "../button";
 import { DeleteOutlined } from "@ant-design/icons";
 import { PipelineTask } from "../../api/endpoints";
 import { PipelineTaskDetail, pipelineTask } from "./pipeline-task";
