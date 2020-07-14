@@ -27,6 +27,7 @@ export class TaskRunLogsDialog extends React.Component<Props> {
   // }
   static open(taskRunName: string) {
     TaskRunLogsDialog.taskRunName = taskRunName || "";
+
     TaskRunLogsDialog.isOpen = true;
   }
 
@@ -74,7 +75,10 @@ export class TaskRunLogsDialog extends React.Component<Props> {
     let taskRun = taskRunStore.getByName(TaskRunLogsDialog.taskRunName);
     this.podName = taskRun.getPodName();
     this.containers = taskRun.getContainerName();
-    this.selectedContainerName = this.containers[0] || "";
+    if (this.selectedContainerName == undefined) {
+      this.selectedContainerName = this.containers[0] || "";
+    }
+
     if (!this.podName) return;
     if (!this.containers) return;
     try {
