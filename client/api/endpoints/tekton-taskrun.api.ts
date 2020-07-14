@@ -140,13 +140,45 @@ export class TaskRun extends KubeObject {
   }
 
   getOwnerNamespace(): string {
-    if (this.metadata.labels == undefined) { return "" }
-    return this.metadata.labels.namespace != undefined ? this.metadata.labels.namespace : "";
+    if (this.metadata.labels == undefined) {
+      return "";
+    }
+    return this.metadata.labels.namespace != undefined
+      ? this.metadata.labels.namespace
+      : "";
   }
 
   getSteps() {
-    if (this.status == undefined) { return [] };
+    if (this.status == undefined) {
+      return [];
+    }
     return this.status.steps != undefined ? this.status.steps : [];
+  }
+
+  getContainerName() {
+    if (this?.status == undefined) {
+      return [];
+    }
+    if (this?.status?.steps !== undefined) {
+      let containerNames: string[] = [];
+      this?.status?.steps?.map((item) => {
+        containerNames.push(item.container);
+      });
+      return containerNames;
+    } else {
+      return [];
+    }
+  }
+
+  getPodName() {
+    if (this.status == undefined) {
+      return "";
+    }
+
+    if (this.status.podName == undefined) {
+      return "";
+    }
+    return this.status.podName;
   }
 }
 

@@ -24,9 +24,10 @@ import { configStore } from "../../config.store";
 import Tooltip from "@material-ui/core/Tooltip";
 import { PipelineRunVisualDialog } from "./pipelinerun-visual-dialog";
 import { tektonGraphStore } from "../+tekton-graph/tekton-graph.store";
-import {PodLogsDialog} from "../+workloads-pods/pod-logs-dialog";
-import {KubeEventIcon} from "../+events/kube-event-icon";
-import {eventStore} from "../+events/event.store";
+import { PodLogsDialog } from "../+workloads-pods/pod-logs-dialog";
+import { KubeEventIcon } from "../+events/kube-event-icon";
+import { eventStore } from "../+events/event.store";
+import { TaskRunLogsDialog } from "../+tekton-taskrun/task-run-logs-dialog";
 
 enum sortBy {
   name = "name",
@@ -35,8 +36,7 @@ enum sortBy {
   age = "age",
 }
 
-interface Props extends RouteComponentProps {
-}
+interface Props extends RouteComponentProps {}
 
 @observer
 export class PipelineRuns extends React.Component<Props> {
@@ -45,11 +45,10 @@ export class PipelineRuns extends React.Component<Props> {
   @observable pipelineRun: any;
 
   renderTasks(pipelineRun: PipelineRun) {
-
     let names: string[];
     try {
       names = pipelineRunStore.getTaskRunName(pipelineRun);
-    }catch {
+    } catch {
       names = [];
     }
 
@@ -133,7 +132,13 @@ export class PipelineRuns extends React.Component<Props> {
           isClusterScoped
           className="PipelineRuns"
           store={pipelineRunStore}
-          dependentStores={[pipelineStore, taskRunStore, tektonGraphStore, podsStore, eventStore]}
+          dependentStores={[
+            pipelineStore,
+            taskRunStore,
+            tektonGraphStore,
+            podsStore,
+            eventStore,
+          ]}
           sortingCallbacks={{
             [sortBy.name]: (pipelineRun: PipelineRun) => pipelineRun.getName(),
             [sortBy.ownernamespace]: (pipelineRun: PipelineRun) =>
@@ -165,7 +170,10 @@ export class PipelineRuns extends React.Component<Props> {
             { title: "", className: "reason" },
             { title: <Trans>Tasks</Trans>, className: "tasks" },
             { title: <Trans>StartTime</Trans>, className: "startTime" },
-            { title: <Trans>CompletionTime</Trans>, className: "completionTime" },
+            {
+              title: <Trans>CompletionTime</Trans>,
+              className: "completionTime",
+            },
             { title: <Trans>Age</Trans>, className: "age", sortBy: sortBy.age },
           ]}
           renderTableContents={(pipelineRun: PipelineRun) => [
@@ -193,7 +201,7 @@ export class PipelineRuns extends React.Component<Props> {
           }}
         />
         <PipelineRunVisualDialog />
-        <PodLogsDialog />
+        <TaskRunLogsDialog />
       </>
     );
   }
