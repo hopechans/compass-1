@@ -24,7 +24,6 @@ import { configStore } from "../../config.store";
 import Tooltip from "@material-ui/core/Tooltip";
 import { PipelineRunVisualDialog } from "./pipelinerun-visual-dialog";
 import { tektonGraphStore } from "../+tekton-graph/tekton-graph.store";
-import { PodLogsDialog } from "../+workloads-pods/pod-logs-dialog";
 import { KubeEventIcon } from "../+events/kube-event-icon";
 import { eventStore } from "../+events/event.store";
 import { TaskRunLogsDialog } from "../+tekton-taskrun/task-run-logs-dialog";

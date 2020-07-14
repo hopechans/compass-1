@@ -1,7 +1,7 @@
 import "./pipeline-run-dialog.scss";
 import {observer} from "mobx-react";
 import React from "react";
-import {observable, toJS} from "mobx";
+import {observable} from "mobx";
 import {SubTitle} from "../layout/sub-title";
 import {Input} from "../input";
 import {_i18n} from "../../i18n";
@@ -10,11 +10,10 @@ import {Trans} from "@lingui/macro";
 import {Dialog} from "../dialog";
 import {Wizard, WizardStep} from "../wizard";
 import {
-  pipelineRunApi,
   PipelineResourceBinding,
   PipelineRef,
   PipelineDeclaredResource,
-  WorkspaceBinding, Pipeline, TenantRole, PipelineRun,
+  WorkspaceBinding, Pipeline, PipelineRun,
 } from "../../api/endpoints";
 import {Notifications} from "../notifications";
 import {PipelineRunResourceDetails} from "./pipeline-run-resource-details";
@@ -22,8 +21,7 @@ import {systemName} from "../input/input.validators";
 import {configStore} from "../../config.store";
 import {pipelineStore} from "../+tekton-pipeline/pipeline.store";
 import {pipelineRunStore} from "./pipelinerun.store";
-import {PipelineRunWorkspaces} from "../+tekton-common/pipelinerun-workspaces";
-import {workspaceBinding} from "../+tekton-common";
+import {PipelineRunWorkspaces} from "../+tekton-common";
 import {tektonGraphStore} from "../+tekton-graph/tekton-graph.store";
 import {IKubeObjectMetadata} from "../../api/kube-object";
 

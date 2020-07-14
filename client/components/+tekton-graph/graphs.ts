@@ -31,6 +31,9 @@ export class Graphs {
       renderer: "svg",
       // fitView: true,
       // fitViewPadding: "20",
+      modes: {
+        default: ['drag-canvas', 'zoom-canvas'],
+      },
       autoPaint: true,
       defaultEdge: {
         type: "Line",
