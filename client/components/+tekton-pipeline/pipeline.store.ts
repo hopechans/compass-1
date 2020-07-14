@@ -1,6 +1,6 @@
 import { autobind } from "../../utils";
 import { KubeObjectStore } from "../../kube-object.store";
-import { pipelineApi, Pipeline } from "../../api/endpoints";
+import { pipelineApi, Pipeline, tektonGraphApi } from "../../api/endpoints";
 import { apiManager } from "../../api/api-manager";
 import { tektonGraphStore } from "../+tekton-graph/tekton-graph.store";
 import { initData } from "../+tekton-graph/graphs";
@@ -18,7 +18,7 @@ export class PipelineStore extends KubeObjectStore<Pipeline> {
       }
     });
     if (graphName) {
-      return JSON.parse(tektonGraphStore.getByName(graphName).spec.data);
+      return JSON.parse(tektonGraphStore.getDataByName(graphName));
     }
     return initData;
   }
