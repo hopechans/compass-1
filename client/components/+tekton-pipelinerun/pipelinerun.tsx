@@ -34,8 +34,7 @@ enum sortBy {
   age = "age",
 }
 
-interface Props extends RouteComponentProps {
-}
+interface Props extends RouteComponentProps {}
 
 @observer
 export class PipelineRuns extends React.Component<Props> {
@@ -53,7 +52,7 @@ export class PipelineRuns extends React.Component<Props> {
     names.map((name: string, index: number) => {
       const currentTask = taskRunStore.getByName(name);
       if (currentTask?.spec !== undefined) {
-        taskMap[currentTask.spec.taskRef.name] = currentTask
+        taskMap[currentTask.spec.taskRef.name] = currentTask;
       }
     });
     return taskMap;
@@ -167,7 +166,12 @@ export class PipelineRuns extends React.Component<Props> {
           isClusterScoped
           className="PipelineRuns"
           store={pipelineRunStore}
-          dependentStores={[pipelineStore, taskRunStore, tektonGraphStore, podsStore]}
+          dependentStores={[
+            pipelineStore,
+            taskRunStore,
+            tektonGraphStore,
+            podsStore,
+          ]}
           sortingCallbacks={{
             [sortBy.name]: (pipelineRun: PipelineRun) => pipelineRun.getName(),
             [sortBy.ownernamespace]: (pipelineRun: PipelineRun) =>
