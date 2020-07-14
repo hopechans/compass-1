@@ -13,6 +13,7 @@ import { podsStore } from "../+workloads-pods/pods.store";
 import { PodLogsDialog } from "../+workloads-pods/pod-logs-dialog";
 import { secondsToHms } from "../../api/endpoints";
 import { pipelineRunStore } from "./pipelinerun.store";
+import { TaskRunLogsDialog } from "../+tekton-taskrun/task-run-logs-dialog";
 
 interface Props extends Partial<Props> {}
 
@@ -34,11 +35,11 @@ export class PipelineRunVisualDialog extends React.Component<Props> {
     PipelineRunVisualDialog.Data = pipelineRun;
   }
 
-
-  showLogs(podName: string) {
-    let pod: Pod = podsStore.getByName(podName);
-    let container: any = pod.getContainerStatuses();
-    PodLogsDialog.open(pod, container);
+  showLogs(taskRunName: string) {
+    // let pod: Pod = podsStore.getByName(podName);
+    // let container: any = pod.getContainerStatuses();
+    // PodLogsDialog.open(pod, container);
+    TaskRunLogsDialog.open(taskRunName);
   }
 
   initGraph(nodeData: any) {
@@ -64,8 +65,11 @@ export class PipelineRunVisualDialog extends React.Component<Props> {
         const names = pipelineRunStore.getTaskRunName(this.pipelineRun);
         const currentTaskRunMap = pipelineRunStore.getTaskRun(names);
         const currentTaskRun = currentTaskRunMap[name];
-        const podName = currentTaskRun.status.podName;
-        this.showLogs(podName);
+        console.log(
+          "------------------------------>:aaaa",
+          currentTaskRun.metadata.name
+        );
+        this.showLogs(currentTaskRun.metadata.name);
       });
 
       this.graph.render();
@@ -182,10 +186,11 @@ export class PipelineRunVisualDialog extends React.Component<Props> {
         onOpen={this.onOpen}
         close={this.close}
       >
-        <Wizard header={header} done={this.close} >
-          <WizardStep contentClass="flex gaps column"
-                      hideNextBtn={true}
-                      prevLabel={<Trans>Close</Trans>}
+        <Wizard header={header} done={this.close}>
+          <WizardStep
+            contentClass="flex gaps column"
+            hideNextBtn={true}
+            prevLabel={<Trans>Close</Trans>}
           >
             <div className="container" id={graphId} />
           </WizardStep>

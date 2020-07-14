@@ -5,7 +5,7 @@ import { apiManager } from "../../api/api-manager";
 
 @autobind()
 export class TaskRunStore extends KubeObjectStore<TaskRun> {
-  api = taskRunApi
+  api = taskRunApi;
 
   // getTaskRunsByName(names: string[]):TaskRun[] {
   //   return names.map(name => {

@@ -27,6 +27,7 @@ import { tektonGraphStore } from "../+tekton-graph/tekton-graph.store";
 import { PodLogsDialog } from "../+workloads-pods/pod-logs-dialog";
 import { KubeEventIcon } from "../+events/kube-event-icon";
 import { eventStore } from "../+events/event.store";
+import { TaskRunLogsDialog } from "../+tekton-taskrun/task-run-logs-dialog";
 
 enum sortBy {
   name = "name",
@@ -200,7 +201,7 @@ export class PipelineRuns extends React.Component<Props> {
           }}
         />
         <PipelineRunVisualDialog />
-        <PodLogsDialog />
+        <TaskRunLogsDialog />
       </>
     );
   }
