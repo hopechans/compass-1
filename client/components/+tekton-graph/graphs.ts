@@ -21,19 +21,19 @@ export const initData = {
 export class Graphs {
 
   public instance: any = null;
+  public width: number = 0;
+  public height: number = 0;
   public cfg: any = null;
 
   constructor(width?: number, height?: number) {
+    this.width = width;
+    this.height = height;
+
     this.cfg = {
       container: graphId,
-      width: width,
-      height: height,
+      width: this.width,
+      height: this.height,
       renderer: "svg",
-      // fitView: true,
-      // fitViewPadding: "20",
-      modes: {
-        default: ['drag-canvas', 'zoom-canvas'],
-      },
       autoPaint: true,
       defaultEdge: {
         type: "Line",
@@ -93,6 +93,13 @@ export class Graphs {
         const model = item.getModel();
         const {x, y} = model;
         const point = this.instance.getCanvasByPoint(x, y);
+        const NodeX = Number(point.x) + 300;
+
+        if (this.width - NodeX < 400) {
+          this.width = this.width + 400;
+          this.instance.changeSize(this.width, this.height);
+        }
+
         this.instance.addItem("node", {
           id: tragetId,
           taskName: "",
@@ -122,11 +129,18 @@ export class Graphs {
         const model = item.getModel();
         const {x, y} = model;
         const point = this.instance.getCanvasByPoint(x, y);
+        const NodeY: number = Number(point.y) + 80;
+
+        if (this.height - NodeY < 100){
+          this.height = this.height + 100;
+          this.instance.changeSize(this.width, this.height);
+        }
+
         this.instance.addItem("node", {
           id: tragetId,
           taskName: "",
           x: Number(point.x),
-          y: Number(point.y) + 80,
+          y: NodeY,
           anchorPoints: [
             [0, 0.5],
             [1, 0.5],
