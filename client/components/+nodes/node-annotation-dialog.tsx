@@ -85,7 +85,7 @@ export class NodeAnnotationDialog extends React.Component<Props> {
       
       Notifications.ok(
         <>
-          node annotation geo successed
+          Node annotation geo succeeded
         </>);
     } catch (err) {
       Notifications.error(err);

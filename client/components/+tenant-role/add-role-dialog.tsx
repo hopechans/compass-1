@@ -2,7 +2,7 @@ import React from "react";
 import {observer} from "mobx-react";
 import {Dialog, DialogProps} from "../dialog";
 import {observable} from "mobx";
-import {Namespace, TenantRole, tenantRoleApi} from "../../api/endpoints";
+import {TenantRole} from "../../api/endpoints";
 import {Wizard, WizardStep} from "../wizard";
 import {t, Trans} from "@lingui/macro";
 import {SubTitle} from "../layout/sub-title";
@@ -52,8 +52,11 @@ export class AddRoleDialog extends React.Component<Props> {
         }
         try {
             const newRole = await tenantRoleStore.create({namespace, name}, role);
-            showDetails(newRole.selfLink);
+            // showDetails(newRole.selfLink);
             this.reset();
+            Notifications.ok(
+              <>Role {name} save succeeded</>
+            );
             this.close();
         } catch (err) {
             Notifications.error(err);

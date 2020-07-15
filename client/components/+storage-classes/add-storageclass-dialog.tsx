@@ -6,7 +6,6 @@ import { t, Trans } from "@lingui/macro";
 import { Wizard, WizardStep } from "../wizard";
 import { observable } from "mobx";
 import { observer } from "mobx-react";
-import { storageClassStore } from "./storage-class.store";
 import { Input } from "../input";
 import { _i18n } from "../../i18n";
 import { Select, SelectOption } from "../select";
@@ -18,8 +17,8 @@ import { NamespaceSelect } from "../+namespaces/namespace-select";
 import { Notifications } from "../notifications";
 import { storageClassApi, StorageClass } from "../../api/endpoints";
 import { systemName } from "../input/input.validators";
-import { IKubeObjectMetadata } from "../../../client/api/kube-object";
-import { showDetails } from "../../../client/navigation";
+import { IKubeObjectMetadata } from "../../api/kube-object";
+import { showDetails } from "../../navigation";
 
 interface Props extends DialogProps {
 }
@@ -105,32 +104,36 @@ export class AddStorageClassDialog extends React.Component<Props> {
   }
 
   addStorageClass = async () => {
+    const {name, provisioner, volumeBindingMode, reclaimPolicy, params} = this
 
     try {
       const storageClass: Partial<StorageClass> = {
         metadata: {
-          name: this.name,
+          name: name,
         } as IKubeObjectMetadata,
-        provisioner: this.provisioner,
-        volumeBindingMode: this.volumeBindingMode,
-        reclaimPolicy: this.reclaimPolicy,
+        provisioner: provisioner,
+        volumeBindingMode: volumeBindingMode,
+        reclaimPolicy: reclaimPolicy,
         parameters: {
-          adminSecretNamespace: this.params.adminSecretNamespace,
-          adminSecretName: this.params.adminSecretName,
-          userSecretNamespace: this.params.userSecretNamespace,
-          userSecretName: this.params.userSecretName,
-          monitors: this.params.monitors,
-          adminId: this.params.adminId,
-          pool: this.params.pool,
-          userId: this.params.userId,
-          fsType: this.params.fsType,
-          imageFormat: this.params.imageFormat,
-          imageFeatures: this.params.imageFeatures
+          adminSecretNamespace: params.adminSecretNamespace,
+          adminSecretName: params.adminSecretName,
+          userSecretNamespace: params.userSecretNamespace,
+          userSecretName: params.userSecretName,
+          monitors: params.monitors,
+          adminId: params.adminId,
+          pool: params.pool,
+          userId: params.userId,
+          fsType: params.fsType,
+          imageFormat: params.imageFormat,
+          imageFeatures: params.imageFeatures
         }
       };
       let newStorageClass = await storageClassApi.create({ name: this.name, namespace: '' }, storageClass)
       showDetails(newStorageClass.selfLink)
       this.reset();
+      Notifications.ok(
+        <>StorageClass {name} save succeeded</>
+      );
       this.close();
     } catch (err) {
       Notifications.error(err);

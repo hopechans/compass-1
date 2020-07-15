@@ -2,10 +2,9 @@ import React from "react";
 import { Dialog, DialogProps } from "../dialog";
 import { t, Trans } from "@lingui/macro";
 import { Wizard, WizardStep } from "../wizard";
-import { computed, observable } from "mobx";
+import { observable } from "mobx";
 import { observer } from "mobx-react";
 import { Notifications } from "../notifications";
-import { subNetStore } from "./subnet.store";
 import { SubTitle } from "../layout/sub-title";
 import { Input } from "../input";
 import { _i18n } from "../../i18n";
@@ -15,7 +14,7 @@ import { NamespaceSelect } from "../+namespaces/namespace-select";
 import { Namespace, subNetApi, SubNet } from "../../api/endpoints";
 import { ExcludeIPsDetails } from "./excludeips-details";
 import { AllowSubnets } from "./allow-subnets";
-import { Checkbox } from "../checkbox/checkbox";
+import { Checkbox } from "../checkbox";
 
 interface Props extends DialogProps {
 }
@@ -24,7 +23,7 @@ interface Props extends DialogProps {
 export class ConfigSubNetDialog extends React.Component<Props> {
 
     @observable static isOpen = false;
-    @observable static data: SubNet;
+    @observable static Data: SubNet;
     @observable name: string = "";
     @observable protocol: string = "IPV4";
     @observable cidrBlock: string = "";
@@ -37,7 +36,7 @@ export class ConfigSubNetDialog extends React.Component<Props> {
 
     static open(data: SubNet) {
         ConfigSubNetDialog.isOpen = true;
-        ConfigSubNetDialog.data = data;
+        ConfigSubNetDialog.Data = data;
     }
 
     static close() {
@@ -54,6 +53,11 @@ export class ConfigSubNetDialog extends React.Component<Props> {
         this.gateway = "";
     }
 
+    
+    get subNet() {
+        return ConfigSubNetDialog.Data
+    }
+    
     get protocolOptions() {
         return [
             "IPV4"
@@ -61,16 +65,16 @@ export class ConfigSubNetDialog extends React.Component<Props> {
     }
 
     onOpen = () => {
-        this.name = ConfigSubNetDialog.data.getName();
-        this.cidrBlock = ConfigSubNetDialog.data.spec.cidrBlock;
-        this.gateway = ConfigSubNetDialog.data.spec.gateway;
-        this.namespaces.replace(ConfigSubNetDialog.data.spec.namespaces);
-        this.excludeIps = ConfigSubNetDialog.data.spec.excludeIps;
-        this._private = ConfigSubNetDialog.data.spec.private;
+        this.name = this.subNet.getName();
+        this.cidrBlock = this.subNet.spec.cidrBlock;
+        this.gateway = this.subNet.spec.gateway;
+        this.namespaces.replace(this.subNet.spec.namespaces);
+        this.excludeIps = this.subNet.spec.excludeIps;
+        this._private = this.subNet.spec.private;
         if (!this._private) {
             this.allowSubnets = [];
         } else {
-            this.allowSubnets = ConfigSubNetDialog.data.spec.allowSubnets;
+            this.allowSubnets = this.subNet.spec.allowSubnets;
         }
     }
 
@@ -91,10 +95,13 @@ export class ConfigSubNetDialog extends React.Component<Props> {
         try {
             await subNetApi.create({
                 namespace: '',
-                name: ConfigSubNetDialog.data.metadata.name
+                name: this.subNet.metadata.name
             },
                 { ...subnet });
             this.reset();
+            Notifications.ok(
+              <>SubNet {name} save succeeded</>
+            );
             this.close();
         } catch (err) {
             Notifications.error(err);

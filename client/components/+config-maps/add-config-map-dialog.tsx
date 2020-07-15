@@ -68,6 +68,9 @@ export class AddConfigMapDialog extends React.Component<Props> {
         );
       showDetails(newConfigMap.selfLink);
       this.reset();
+      Notifications.ok(
+        <>ConfigMap {this.name} save succeeded</>
+      );
       this.close();
     } catch (err) {
       Notifications.error(err);

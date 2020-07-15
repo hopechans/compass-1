@@ -6,9 +6,7 @@ import {TenantRole, tenantRoleApi} from "../../api/endpoints";
 import {Wizard, WizardStep} from "../wizard";
 import {t, Trans} from "@lingui/macro";
 import {SubTitle} from "../layout/sub-title";
-import {Input} from "../input";
 import {_i18n} from "../../i18n";
-import {systemName} from "../input/input.validators";
 import {Notifications} from "../notifications";
 import {BasePermissionSelect} from "./permission-select";
 import {apiPermission} from "../../api";
@@ -71,6 +69,9 @@ export class ConfigRoleDialog extends React.Component<Props> {
             const newRole = await tenantRoleApi.create({namespace, name}, role);
             // showDetails(newRole.selfLink);
             this.reset();
+            Notifications.ok(
+              <>Role {name} save succeeded</>
+            );
             this.close();
         } catch (err) {
             Notifications.error(err);

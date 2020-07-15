@@ -88,6 +88,9 @@ export class AddDepartmentDialog extends React.Component<Props> {
       await tenantRoleApi.create({namespace: "kube-system", name: name + '-dept-admin'}, departmentAdminRole);
       await tenantRoleApi.create({namespace: "kube-system", name: name + '-dept-employee'}, departmentEmployeeRole);
       this.reset();
+      Notifications.ok(
+        <>Department {name} save succeeded</>
+      );
       this.close();
     } catch (err) {
       Notifications.error(err);

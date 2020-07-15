@@ -1,4 +1,3 @@
-import { observable } from "mobx";
 import { autobind } from "../../utils";
 import { KubeObjectStore } from "../../kube-object.store";
 import { pipelineRunApi, PipelineRun } from "../../api/endpoints";
