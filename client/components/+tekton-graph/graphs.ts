@@ -97,7 +97,7 @@ export class Graphs {
 
         if (this.width - NodeX < 400) {
           this.width = this.width + 400;
-          this.instance.changeSize(this.width, this.height);
+          this.changeSize(this.width, this.height);
         }
 
         this.instance.addItem("node", {
@@ -133,7 +133,7 @@ export class Graphs {
 
         if (this.height - NodeY < 100){
           this.height = this.height + 100;
-          this.instance.changeSize(this.width, this.height);
+          this.changeSize(this.width, this.height);
         }
 
         this.instance.addItem("node", {
@@ -194,6 +194,12 @@ export class Graphs {
       // 关闭该节点的 hover 状态
       this.instance.setItemState(node, "hover", false);
     });
+  }
+
+  changeSize(width: number, height: number): void {
+    this.width = width;
+    this.height = height;
+    this.instance.changeSize(this.width, this.height);
   }
 
   init() {

@@ -42,11 +42,17 @@ export class PipelineRunVisualDialog extends React.Component<Props> {
   initGraph(nodeData: any) {
     setTimeout(() => {
       const anchor = document.getElementsByClassName("step-content")[0];
+
       const width = anchor.scrollWidth - 50;
       const height = anchor.scrollHeight - 60;
 
       this.graph = new Graphs(width, height);
       this.graph.init();
+
+      let nodeSize = pipelineRunStore.getNodeSize(this.pipelineRun);
+      if (nodeSize != null) {
+        this.graph.changeSize(nodeSize.width, nodeSize.height)
+      }
 
       if (nodeData === undefined || nodeData === "") {
         this.graph.instance.data(initData);

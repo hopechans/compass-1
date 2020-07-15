@@ -12,7 +12,8 @@ import { CopyTaskDialog } from "../+tekton-task/copy-task-dialog";
 import { PipelineSaveDialog } from "./pipeline-save-dialog";
 import { tektonGraphStore } from "../+tekton-graph/tekton-graph.store";
 import { pipelineStore } from "./pipeline.store";
-import { configStore } from "../../../client/config.store";
+import { configStore } from "../../config.store";
+import {pipelineRunStore} from "../+tekton-pipelinerun/pipelinerun.store";
 
 
 interface Props extends Partial<Props> { }
@@ -43,6 +44,11 @@ export class PipelineVisualDialog extends React.Component<Props> {
 
       this.graph = new Graphs(width, height);
       this.graph.init();
+
+      let nodeSize = pipelineStore.getNodeSize(this.pipeline);
+      if (nodeSize != null) {
+        this.graph.changeSize(nodeSize.width, nodeSize.height)
+      }
 
       this.graph.instance.data(pipelineStore.getNodeData(this.pipeline));
       this.graph.bindClickOnNode((currentNode: any) => {
@@ -126,6 +132,8 @@ export class PipelineVisualDialog extends React.Component<Props> {
       {
         spec: {
           data: data,
+          width: this.graph.width,
+          height: this.graph.height,
         },
       }
     );

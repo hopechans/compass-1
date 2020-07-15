@@ -20,7 +20,6 @@ import { Icon } from "../icon";
 import { Notifications } from "../notifications";
 import { PipelineRunIcon } from "./pipeline-run-icon";
 import { podsStore } from "../+workloads-pods/pods.store";
-import { configStore } from "../../config.store";
 import Tooltip from "@material-ui/core/Tooltip";
 import { PipelineRunVisualDialog } from "./pipelinerun-visual-dialog";
 import { tektonGraphStore } from "../+tekton-graph/tekton-graph.store";
