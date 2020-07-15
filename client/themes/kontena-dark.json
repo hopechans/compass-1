@@ -90,7 +90,7 @@
     "drawerItemNameColor": "#87909c",
     "drawerItemValueColor": "#a0a0a0",
     "boxShadow": "#0000003a",
-    "iconActiveColor": "#ffffff",
+    "iconActiveColor": "#777777", 
     "iconActiveBackground": "#ffffff22",
     "filterAreaBackground": "#23272b",
     "chartLiveBarBackgound": "#00000033",
