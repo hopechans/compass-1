@@ -24,7 +24,7 @@
         @include taskrun-status-bgs;
       }
     }
-    
+
     &.warning {
       @include table-cell-warning;
     }
@@ -33,4 +33,8 @@
 
 .pipelineRunWarningIcon {
   color: $golden;
+}
+
+.pipeline-status {
+  color: #20d867;
 }

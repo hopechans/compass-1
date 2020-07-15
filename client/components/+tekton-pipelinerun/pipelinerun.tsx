@@ -135,6 +135,11 @@ export class PipelineRuns extends React.Component<Props> {
     return advanceSecondsToHms(duration);
   }
 
+  renderPipelineStatus(pipelineRun: PipelineRun) {
+    //TODO: should fix all pipeline-staus.
+    return <Icon material="check_circle_outline" className="pipeline-status" />;
+  }
+
   render() {
     return (
       <>
@@ -166,6 +171,7 @@ export class PipelineRuns extends React.Component<Props> {
           ]}
           renderHeaderTitle={<Trans>PipelineRuns</Trans>}
           renderTableHeader={[
+            { title: "Status", className: "" },
             {
               title: <Trans>Name</Trans>,
               className: "name",
@@ -187,6 +193,7 @@ export class PipelineRuns extends React.Component<Props> {
             { title: <Trans>Duration</Trans>, className: "Duration" },
           ]}
           renderTableContents={(pipelineRun: PipelineRun) => [
+            this.renderPipelineStatus(pipelineRun),
             this.renderPipelineName(pipelineRun.getName()),
             pipelineRun.getOwnerNamespace(),
             <KubeEventIcon namespace={"ops"} object={pipelineRun} />,
