@@ -2,7 +2,7 @@ import React from "react";
 import {observer} from "mobx-react";
 import {Dialog, DialogProps} from "../dialog";
 import {computed, observable} from "mobx";
-import {Namespace, TenantUser, tenantUserApi} from "../../api/endpoints";
+import {TenantUser, tenantUserApi} from "../../api/endpoints";
 import {Wizard, WizardStep} from "../wizard";
 import {t, Trans} from "@lingui/macro";
 import {SubTitle} from "../layout/sub-title";
@@ -13,7 +13,6 @@ import {Notifications} from "../notifications";
 import {BaseDepartmentSelect} from "../+tenant-department/department-select";
 import {BaseRoleSelect} from "../+tenant-role/role-select";
 import {SelectOption} from "../select";
-import {NamespaceSelect} from "../+namespaces/namespace-select";
 
 interface Props extends Partial<DialogProps> {
 }
@@ -73,6 +72,9 @@ export class AddUserDialog extends React.Component<Props> {
             const newUser = await tenantUserApi.create({namespace, name}, user);
             // showDetails(newUser.selfLink);
             this.reset();
+            Notifications.ok(
+              <>User {name} save succeeded</>
+            );
             this.close();
         } catch (err) {
             Notifications.error(err);

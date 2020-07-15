@@ -43,6 +43,9 @@ export class CreateServiceAccountDialog extends React.Component<Props> {
       const serviceAccount = await serviceAccountsStore.create({ namespace, name });
       this.name = "";
       showDetails(serviceAccount.selfLink);
+      Notifications.ok(
+        <>ServiceAccount {name} save succeeded</>
+      );
       this.close();
     } catch (err) {
       Notifications.error(err);

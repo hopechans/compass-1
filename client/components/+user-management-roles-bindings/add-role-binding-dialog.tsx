@@ -145,6 +145,9 @@ export class AddRoleBindingDialog extends React.Component<Props> {
         });
       }
       showDetails(roleBinding.selfLink);
+      Notifications.ok(
+        <>Role {name} save succeeded</>
+      );
       this.close();
     } catch (err) {
       Notifications.error(err);

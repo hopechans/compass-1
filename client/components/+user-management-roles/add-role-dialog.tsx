@@ -42,6 +42,9 @@ export class AddRoleDialog extends React.Component<Props> {
       const role = await rolesStore.create({ name: this.roleName });
       showDetails(role.selfLink);
       this.reset();
+      Notifications.ok(
+        <>Role {this.roleName} save succeeded</>
+      );
       this.close();
     } catch (err) {
       Notifications.error(err.toString());

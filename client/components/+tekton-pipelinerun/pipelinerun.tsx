@@ -219,7 +219,7 @@ export function PipelineRunMenu(props: KubeObjectMenuProps<PipelineRun>) {
             // //will update pipelineRun
             pipelineRunStore.update(pipelineRun, { ...pipelineRun });
             Notifications.ok(
-              <>pipeline-run {pipelineRun.getName()} cancel successed</>
+              <>PipelineRun {pipelineRun.getName()} cancel succeeded</>
             );
           } catch (err) {
             Notifications.error(err);
@@ -266,7 +266,7 @@ export function PipelineRunMenu(props: KubeObjectMenuProps<PipelineRun>) {
             );
 
             Notifications.ok(
-              <>pipeline-run: {pipelineRun.getName()} rerun successed</>
+              <>PipelineRun: {pipelineRun.getName()} rerun succeeded</>
             );
           } catch (err) {
             Notifications.error(err);

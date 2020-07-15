@@ -203,8 +203,9 @@ export class CopyTaskDialog extends React.Component<Props> {
           await taskStore.update(task, { ...task });
         }
       }
-
-      Notifications.ok(<>task {this.value.taskName} save successed</>);
+      Notifications.ok(
+        <>Task {this.value.taskName} save succeeded</>
+      );
       this.close();
     } catch (err) {
       this.value.taskName = "";

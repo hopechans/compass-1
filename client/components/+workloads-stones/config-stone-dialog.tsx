@@ -55,6 +55,9 @@ export class ConfigStoneDialog extends React.Component<Props> {
       this.stone.spec.coordinates = this.coordinates;
       this.stone.spec.template.spec.containers = this.containers;
       await stoneStore.update(this.stone, { ...this.stone })
+      Notifications.ok(
+        <>Stone {this.stone.getName()} save succeeded</>
+      );
       this.close();
     } catch (err) {
       Notifications.error(err);

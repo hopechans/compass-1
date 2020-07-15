@@ -19,9 +19,8 @@ import { base64 } from "../../utils";
 import { Notifications } from "../notifications";
 import { showDetails } from "../../navigation";
 import upperFirst from "lodash/upperFirst";
-import { secretsStore } from "./secrets.store";
-import { Checkbox } from "../checkbox/checkbox";
-import { configStore } from "../../../client/config.store";
+import { Checkbox } from "../checkbox";
+import { configStore } from "../../config.store";
 
 interface Props extends Partial<DialogProps> {
 }
@@ -147,6 +146,9 @@ export class AddSecretDialog extends React.Component<Props> {
         secret);
       showDetails(newSecret.selfLink);
       this.reset();
+      Notifications.ok(
+        <>Secret {name} save succeeded</>
+      );
       this.close();
     } catch (err) {
       Notifications.error(err);
@@ -171,7 +173,7 @@ export class AddSecretDialog extends React.Component<Props> {
         <SubTitle compact className="fields-title" title={upperFirst(field.toString())}>
           <Icon
             small
-            tooltip={_i18n._(t`Add field`)}
+            tooltip={_i18n._(t`Add Field`)}
             material="add_circle_outline"
             onClick={() => this.addField(field)}
           />
