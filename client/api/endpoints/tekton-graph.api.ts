@@ -1,11 +1,11 @@
-import {autobind} from "../../utils";
-import {KubeObject} from "../kube-object";
-import {KubeApi} from "../kube-api";
+import { autobind } from "../../utils";
+import { KubeObject } from "../kube-object";
+import { KubeApi } from "../kube-api";
 
 interface TektonGraphSpec {
-  data: string
-  width: number
-  height: number
+  data: string;
+  width: number;
+  height: number;
 }
 
 @autobind()
@@ -30,5 +30,15 @@ export function secondsToHms(seconds: number) {
   let hDisplay = h > 0 ? h + (h == 1 ? "h " : "h") : "";
   let mDisplay = m > 0 ? m + (m == 1 ? "m " : "m") : "";
   let sDisplay = s > 0 ? s + (s == 1 ? "s " : "s") : "";
+  return hDisplay + mDisplay + sDisplay;
+}
+
+export function advanceSecondsToHms(seconds: number) {
+  const h = Math.floor(seconds / 3600);
+  const m = Math.floor((seconds % 3600) / 60);
+  const s = Math.floor((seconds % 3600) % 60);
+  let hDisplay = h > 0 ? h + (h == 1 ? " hours " : " hours") : "";
+  let mDisplay = m > 0 ? m + (m == 1 ? " minutes " : " minutes") : "";
+  let sDisplay = s > 0 ? s + (s == 1 ? " seconds " : " seconds") : "";
   return hDisplay + mDisplay + sDisplay;
 }

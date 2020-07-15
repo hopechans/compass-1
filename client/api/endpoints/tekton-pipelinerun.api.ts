@@ -1,9 +1,11 @@
-import {autobind} from "../../utils";
-import {KubeObject} from "../kube-object";
-import {KubeApi} from "../kube-api";
-import {PipelineSpec, Param} from "./tekton-pipeline.api";
-import {Params} from "./tekton-task.api";
-import {PersistentVolumeClaimVolumeSource} from "./persistent-volume-claims.api";
+import { autobind } from "../../utils";
+import { KubeObject } from "../kube-object";
+import { KubeApi } from "../kube-api";
+import { PipelineSpec, Param } from "./tekton-pipeline.api";
+import { Params } from "./tekton-task.api";
+import { PersistentVolumeClaimVolumeSource } from "./persistent-volume-claims.api";
+import moment from "moment";
+import { advanceFormatDuration } from "../../utils";
 
 export interface PipelineRef {
   name: string;
@@ -129,12 +131,15 @@ export class PipelineRun extends KubeObject {
     if (this.status?.conditions == undefined || this.status?.conditions == {}) {
       return "";
     }
-    return this.status?.conditions.map(
-      (item: { status: string; reason: string; }) => {
-        if (item.status == 'False') {
-          return item.reason;
+    return (
+      this.status?.conditions.map(
+        (item: { status: string; reason: string }) => {
+          if (item.status == "False") {
+            return item.reason;
+          }
         }
-      }) || "";
+      ) || ""
+    );
   }
 
   hasIssues(): boolean {
@@ -148,12 +153,26 @@ export class PipelineRun extends KubeObject {
 
   getTaskRunName(): string[] {
     return (
-      Object.keys(this.getTasks()).map((item: any) => {
-        return item;
-      }).slice() || []
+      Object.keys(this.getTasks())
+        .map((item: any) => {
+          return item;
+        })
+        .slice() || []
     );
   }
 
+  getAge(humanize = true, compact = true, fromNow = false) {
+    if (fromNow) {
+      return moment(this.metadata.creationTimestamp).fromNow();
+    }
+    const diff =
+      new Date().getTime() -
+      new Date(this.metadata.creationTimestamp).getTime();
+    if (humanize) {
+      return advanceFormatDuration(diff, compact);
+    }
+    return diff;
+  }
 }
 
 export const pipelineRunApi = new KubeApi({
@@ -162,4 +181,3 @@ export const pipelineRunApi = new KubeApi({
   isNamespaced: true,
   objectConstructor: PipelineRun,
 });
-

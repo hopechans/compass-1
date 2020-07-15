@@ -27,6 +27,7 @@ import { KubeEventIcon } from "../+events/kube-event-icon";
 import { eventStore } from "../+events/event.store";
 import { TaskRunLogsDialog } from "../+tekton-taskrun/task-run-logs-dialog";
 import { IKubeObjectMetadata } from "../../../client/api/kube-object";
+import { advanceSecondsToHms } from "../../api/endpoints";
 
 enum sortBy {
   name = "name",
@@ -35,7 +36,7 @@ enum sortBy {
   age = "age",
 }
 
-interface Props extends RouteComponentProps { }
+interface Props extends RouteComponentProps {}
 
 @observer
 export class PipelineRuns extends React.Component<Props> {
@@ -124,6 +125,16 @@ export class PipelineRuns extends React.Component<Props> {
     );
   }
 
+  renderPipelineDuration(startTime: string, completionTime: string) {
+    if (completionTime == "" || completionTime == undefined) {
+      return;
+    }
+    const st = new Date(startTime).getTime();
+    const ct = new Date(completionTime).getTime();
+    let duration = Math.floor((ct - st) / 1000);
+    return advanceSecondsToHms(duration);
+  }
+
   render() {
     return (
       <>
@@ -168,12 +179,12 @@ export class PipelineRuns extends React.Component<Props> {
             { title: "", className: "event" },
             { title: "", className: "reason" },
             { title: <Trans>Tasks</Trans>, className: "tasks" },
-            { title: <Trans>StartTime</Trans>, className: "startTime" },
             {
-              title: <Trans>CompletionTime</Trans>,
-              className: "completionTime",
+              title: <Trans>Created</Trans>,
+              className: "age",
+              sortBy: sortBy.age,
             },
-            { title: <Trans>Age</Trans>, className: "age", sortBy: sortBy.age },
+            { title: <Trans>Duration</Trans>, className: "Duration" },
           ]}
           renderTableContents={(pipelineRun: PipelineRun) => [
             this.renderPipelineName(pipelineRun.getName()),
@@ -183,17 +194,11 @@ export class PipelineRuns extends React.Component<Props> {
               <PipelineRunIcon object={pipelineRun.status.conditions[0]} />
             ),
             this.renderTasks(pipelineRun),
-            this.renderTime(
-              pipelineRun.getStartTime() != ""
-                ? new Date(pipelineRun.status.startTime).toLocaleString()
-                : ""
+            `${pipelineRun.getAge()}  ago`,
+            this.renderPipelineDuration(
+              pipelineRun.status?.startTime.toString(),
+              pipelineRun.status?.completionTime.toString()
             ),
-            this.renderTime(
-              pipelineRun.getCompletionTime() != ""
-                ? new Date(pipelineRun.status.startTime).toLocaleString()
-                : ""
-            ),
-            pipelineRun.getAge(),
           ]}
           renderItemMenu={(item: PipelineRun) => {
             return <PipelineRunMenu object={item} />;
@@ -239,20 +244,19 @@ export function PipelineRunMenu(props: KubeObjectMenuProps<PipelineRun>) {
             // will delete pipelineRun
             await pipelineRunStore.remove(pipelineRun);
 
-
             let copyAnnotations = new Map<string, string>();
-            pipelineRun.getAnnotations().map(label => {
-              let labelSlice = label.split("=")
+            pipelineRun.getAnnotations().map((label) => {
+              let labelSlice = label.split("=");
               if (labelSlice.length > 0) {
-                copyAnnotations.set(labelSlice[0], labelSlice[1])
+                copyAnnotations.set(labelSlice[0], labelSlice[1]);
               }
             });
 
             let copyLables = new Map<string, string>();
-            pipelineRun.getLabels().map(label => {
-              let labelSlice = label.split("=")
+            pipelineRun.getLabels().map((label) => {
+              let labelSlice = label.split("=");
               if (labelSlice.length > 0) {
-                copyLables.set(labelSlice[0], labelSlice[1])
+                copyLables.set(labelSlice[0], labelSlice[1]);
               }
             });
 
@@ -296,7 +300,7 @@ export function PipelineRunMenu(props: KubeObjectMenuProps<PipelineRun>) {
           <Trans>Rerun</Trans>
         </span>
       </MenuItem>
-    </KubeObjectMenu >
+    </KubeObjectMenu>
   );
 }
 
