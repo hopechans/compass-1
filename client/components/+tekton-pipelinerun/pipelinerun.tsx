@@ -27,6 +27,7 @@ import { tektonGraphStore } from "../+tekton-graph/tekton-graph.store";
 import { KubeEventIcon } from "../+events/kube-event-icon";
 import { eventStore } from "../+events/event.store";
 import { TaskRunLogsDialog } from "../+tekton-taskrun/task-run-logs-dialog";
+import { IKubeObjectMetadata } from "../../../client/api/kube-object";
 
 enum sortBy {
   name = "name",
@@ -35,7 +36,7 @@ enum sortBy {
   age = "age",
 }
 
-interface Props extends RouteComponentProps {}
+interface Props extends RouteComponentProps { }
 
 @observer
 export class PipelineRuns extends React.Component<Props> {
@@ -239,30 +240,48 @@ export function PipelineRunMenu(props: KubeObjectMenuProps<PipelineRun>) {
             // will delete pipelineRun
             await pipelineRunStore.remove(pipelineRun);
 
+
+            let copyAnnotations = new Map<string, string>();
+            pipelineRun.getAnnotations().map(label => {
+              let labelSlice = label.split("=")
+              if (labelSlice.length > 0) {
+                copyAnnotations.set(labelSlice[0], labelSlice[1])
+              }
+            });
+
+            let copyLables = new Map<string, string>();
+            pipelineRun.getLabels().map(label => {
+              let labelSlice = label.split("=")
+              if (labelSlice.length > 0) {
+                copyLables.set(labelSlice[0], labelSlice[1])
+              }
+            });
+
+            let newPipelineRun: Partial<PipelineRun> = {
+              metadata: {
+                name: pipelineRun.getName(),
+                namespace: "",
+                annotations: Object.fromEntries(copyAnnotations),
+                labels: Object.fromEntries(copyLables),
+              } as IKubeObjectMetadata,
+              spec: {
+                pipelineRef: pipelineRun.spec.pipelineRef,
+                pipelineSpec: pipelineRun.spec.pipelineSpec,
+                resources: pipelineRun.spec.resources,
+                params: pipelineRun.spec.params,
+                serviceAccountName: pipelineRun.spec.serviceAccountName,
+                serviceAccountNames: pipelineRun.spec.serviceAccountNames,
+                timeout: pipelineRun.spec.timeout,
+                podTemplate: pipelineRun.spec.podTemplate,
+              },
+            };
             //create it. will re-run
             await pipelineRunStore.create(
               {
                 name: pipelineRun.getName(),
                 namespace: "",
-                labels: new Map<string, string>().set(
-                  "namespace",
-                  configStore.getDefaultNamespace() == ""
-                    ? "admin"
-                    : configStore.getDefaultNamespace()
-                ),
               },
-              {
-                spec: {
-                  pipelineRef: pipelineRun.spec.pipelineRef,
-                  pipelineSpec: pipelineRun.spec.pipelineSpec,
-                  resources: pipelineRun.spec.resources,
-                  params: pipelineRun.spec.params,
-                  serviceAccountName: pipelineRun.spec.serviceAccountName,
-                  serviceAccountNames: pipelineRun.spec.serviceAccountNames,
-                  timeout: pipelineRun.spec.timeout,
-                  podTemplate: pipelineRun.spec.podTemplate,
-                },
-              }
+              { ...newPipelineRun }
             );
 
             Notifications.ok(
@@ -278,7 +297,7 @@ export function PipelineRunMenu(props: KubeObjectMenuProps<PipelineRun>) {
           <Trans>Rerun</Trans>
         </span>
       </MenuItem>
-    </KubeObjectMenu>
+    </KubeObjectMenu >
   );
 }
 
