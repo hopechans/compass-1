@@ -40,6 +40,9 @@ export class AddNamespaceDialog extends React.Component<Props> {
     const { onSuccess, onError } = this.props;
     try {
       await namespaceStore.create({ name: namespace }).then(onSuccess);
+      Notifications.ok(
+        <>Namespace {namespace} save succeeded</>
+      );
       this.close();
     } catch (err) {
       Notifications.error(err);

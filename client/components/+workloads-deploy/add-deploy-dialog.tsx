@@ -49,23 +49,30 @@ export class AddDeployDialog extends React.Component<Props> {
   }
 
   addDeployDialog = async () => {
+
+    const {app, containers, service, volumeClaims} = this;
+    const name = app.name + '-' + Math.floor(Date.now() / 1000)
+
     try {
       await deployStore.create(
         {
-          name: this.app.name + '-' + Math.floor(Date.now() / 1000),
+          name: name,
           namespace: '',
           labels: new Map<string, string>().set("namespace", configStore.getDefaultNamespace() == "" ? "admin" : configStore.getDefaultNamespace())
         },
         {
           spec: {
-            appName: this.app.name,
-            resourceType: this.app.type,
-            metadata: JSON.stringify(this.containers),
-            service: JSON.stringify(this.service),
-            volumeClaims: JSON.stringify(this.volumeClaims),
+            appName: app.name,
+            resourceType: app.type,
+            metadata: JSON.stringify(containers),
+            service: JSON.stringify(service),
+            volumeClaims: JSON.stringify(volumeClaims),
           },
         });
       this.reset();
+      Notifications.ok(
+        <>Deploy {name} succeeded</>
+      );
       this.close();
     } catch (err) {
       Notifications.error(err);

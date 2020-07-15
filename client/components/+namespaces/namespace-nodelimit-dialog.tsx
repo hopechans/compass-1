@@ -79,9 +79,8 @@ export class NamespaceNodeRangeLimitDialog extends React.Component<Props> {
                     this.close();
                 })
             Notifications.ok(
-                <>
-                    {NamespaceNodeRangeLimitDialog.namespace.getName()} annotation successed
-                </>);
+                <>{NamespaceNodeRangeLimitDialog.namespace.getName()} annotation succeeded</>)
+            ;
         } catch (err) {
             Notifications.error(err);
         }

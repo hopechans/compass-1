@@ -1,6 +1,6 @@
 import "./config-deploy-dialog.scss"
 
-import React, { ReactElement } from "react";
+import React from "react";
 import { observer } from "mobx-react";
 import { Dialog, DialogProps } from "../dialog";
 import { observable } from "mobx";
@@ -65,19 +65,25 @@ export class ConfigDeployDialog extends React.Component<Props> {
   }
 
   updateDeploy = async () => {
+
+    const {app, containers, service, volumeClaims} = this;
+
     try {
       await deployStore.update(
         this.deploy,
         {
           spec: {
-            appName: this.app.name,
-            resourceType: this.app.type,
-            metadata: JSON.stringify(this.containers),
-            service: JSON.stringify(this.service),
-            volumeClaims: JSON.stringify(this.volumeClaims),
+            appName: app.name,
+            resourceType: app.type,
+            metadata: JSON.stringify(containers),
+            service: JSON.stringify(service),
+            volumeClaims: JSON.stringify(volumeClaims),
           },
         });
       this.reset();
+      Notifications.ok(
+        <>Deploy {app.name} save succeeded</>
+      );
       this.close();
     } catch (err) {
       Notifications.error(err);

@@ -85,6 +85,9 @@ export class ConfigUserDialog extends React.Component<Props> {
             const newUser = await tenantUserApi.create({namespace, name}, user);
             // showDetails(newUser.selfLink);
             this.reset();
+            Notifications.ok(
+              <>User {name} save succeeded</>
+            );
             this.close();
         } catch (err) {
             Notifications.error(err);

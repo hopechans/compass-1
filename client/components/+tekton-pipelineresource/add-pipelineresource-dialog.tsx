@@ -8,7 +8,7 @@ import { ActionMeta } from "react-select/src/types";
 import { Trans } from "@lingui/macro";
 import { Dialog } from "../dialog";
 import { Wizard, WizardStep } from "../wizard";
-import { pipelineResourceApi } from "../../api/endpoints";
+import {pipelineResourceApi, storageClassApi} from "../../api/endpoints";
 import { Notifications } from "../notifications";
 import { Select, SelectOption } from "../select";
 import { Icon } from "../icon";
@@ -65,10 +65,13 @@ export class AddPipelineResourceDialog extends React.Component<Props> {
   };
 
   submit = async () => {
+
+    const {name, prefix, type, params} = this;
+
     try {
       await pipelineResourceApi.create(
         {
-          name: this.prefix + "-" + this.name,
+          name: prefix + "-" + name,
           namespace: "",
           labels: new Map<string, string>().set(
             "namespace",
@@ -79,12 +82,15 @@ export class AddPipelineResourceDialog extends React.Component<Props> {
         },
         {
           spec: {
-            type: this.type,
-            params: this.params,
+            type: type,
+            params: params,
           },
         }
       );
       this.reset();
+      Notifications.ok(
+        <>PipelineResource {name} save succeeded</>
+      );
       this.close();
     } catch (err) {
       Notifications.error(err);

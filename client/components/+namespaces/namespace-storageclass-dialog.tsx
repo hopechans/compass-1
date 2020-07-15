@@ -55,9 +55,6 @@ export class NamespaceStorageClasslimit extends React.Component<Props> {
             namespace: NamespaceStorageClasslimit.namespace.getName(),
             storageClasses: new Array<string>()
         };
-        // this.storageClasses.map(storageClass => {
-        //     data.storageClasses.push(storageClass);
-        // })
         data.storageClasses.push(this.storageClasses);
 
         try {
@@ -66,9 +63,8 @@ export class NamespaceStorageClasslimit extends React.Component<Props> {
                     this.close();
                 })
             Notifications.ok(
-                <>
-                    {NamespaceStorageClasslimit.namespace.getName()} annotation successed
-                </>);
+              <> {NamespaceStorageClasslimit.namespace.getName()} annotation succeeded </>
+            );
         } catch (err) {
             Notifications.error(err);
         }

@@ -77,6 +77,9 @@ export class ConfigDepartmentDialog extends React.Component<Props> {
 
     try {
       await tenantDepartmentApi.create({namespace: "kube-system", name: name}, department);
+      Notifications.ok(
+        <>Department {name} save succeeded</>
+      );
       this.close();
     } catch (err) {
       Notifications.error(err);

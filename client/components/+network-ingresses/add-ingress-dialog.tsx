@@ -41,19 +41,23 @@ export class AddIngressDialog extends React.Component<Props> {
   }
 
   createIngress = () => {
+    const {name, namespace, tls, rules, backend} = this;
     let data: Partial<Ingress> = {
       spec: {
-        tls: this.tls.map(item => {
+        tls: tls.map(item => {
           return {hosts: item.hosts, secretName: item.secretName};
         }).slice(),
-        rules: JSON.parse(JSON.stringify(this.rules)),
+        rules: JSON.parse(JSON.stringify(rules)),
       }
     }
-    if (this.backend.serviceName != "" && this.backend.servicePort != 0) {
-      data.spec.backend = JSON.parse(JSON.stringify(this.backend))
+    if (backend.serviceName != "" && backend.servicePort != 0) {
+      data.spec.backend = JSON.parse(JSON.stringify(backend))
     }
     try {
-      ingressStore.create({name: this.name, namespace: this.namespace}, {...data})
+      ingressStore.create({name: name, namespace: namespace}, {...data})
+      Notifications.ok(
+        <>Ingress {name} save succeeded</>
+      );
       this.close();
     } catch (err) {
       Notifications.error(err);
