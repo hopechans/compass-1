@@ -1,4 +1,4 @@
-import "../+workloads-pods/pod-logs-dialog.scss";
+import "./task-run-logs-dialog.scss";
 
 import * as React from "react";
 import { observable } from "mobx";
@@ -253,7 +253,8 @@ export class TaskRunLogsDialog extends React.Component<Props> {
     }
     return (
       <>
-        {logs}
+        <p className="taskrun-log-contant">{logs}</p>
+
         {newLogs && (
           <>
             <p
@@ -316,7 +317,7 @@ export class TaskRunLogsDialog extends React.Component<Props> {
               {this.renderControlsPanel()}
             </div>
             <div
-              className="logs-area"
+              className="taskrun-logs-area"
               onScroll={this.onScroll}
               ref={(e) => (this.logsArea = e)}
             >
