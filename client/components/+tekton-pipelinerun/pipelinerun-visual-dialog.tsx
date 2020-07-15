@@ -62,10 +62,6 @@ export class PipelineRunVisualDialog extends React.Component<Props> {
         const names = pipelineRunStore.getTaskRunName(this.pipelineRun);
         const currentTaskRunMap = pipelineRunStore.getTaskRun(names);
         const currentTaskRun = currentTaskRunMap[name];
-        console.log(
-          "------------------------------>:aaaa",
-          currentTaskRun.metadata.name
-        );
         this.showLogs(currentTaskRun.metadata.name);
       });
 
@@ -164,6 +160,7 @@ export class PipelineRunVisualDialog extends React.Component<Props> {
 
   reset = () => {
     this.graph = null;
+    clearInterval(this.pendingTimeInterval);
     this.pendingTimeInterval = null;
     clearInterval(this.updateTimeInterval);
     this.updateTimeInterval = null;
