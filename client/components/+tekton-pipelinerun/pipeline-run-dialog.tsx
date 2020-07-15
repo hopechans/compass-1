@@ -22,8 +22,7 @@ import { systemName } from "../input/input.validators";
 import { configStore } from "../../config.store";
 import { pipelineStore } from "../+tekton-pipeline/pipeline.store";
 import { pipelineRunStore } from "./pipelinerun.store";
-import { PipelineRunWorkspaces } from "../+tekton-common/pipelinerun-workspaces";
-import { workspaceBinding } from "../+tekton-common";
+import { PipelineRunWorkspaces } from "../+tekton-common";
 import { tektonGraphStore } from "../+tekton-graph/tekton-graph.store";
 import { IKubeObjectMetadata } from "../../api/kube-object";
 
@@ -110,6 +109,14 @@ export class PipelineRunDialog extends React.Component<Props> {
       // create a pipeline run
 
       const runNodeData = pipelineStore.getNodeData(this.pipeline);
+      let width = 1000;
+      let height = 1000;
+      const nodeSize = pipelineStore.getNodeSize(this.pipeline);
+      if (nodeSize != null) {
+        width = nodeSize.width;
+        height = nodeSize.height;
+      }
+
       const runTektonGraphName = "run-" + this.pipeline.getName() + "-" + new Date().getTime().toString();
 
       let resources: PipelineDeclaredResource[] = this.value.resources;
@@ -129,6 +136,8 @@ export class PipelineRunDialog extends React.Component<Props> {
       }, {
         spec: {
           data: JSON.stringify(runNodeData),
+          width:width,
+          height: height
         },
       })
 

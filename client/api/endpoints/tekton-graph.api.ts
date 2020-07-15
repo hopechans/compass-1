@@ -4,6 +4,8 @@ import {KubeApi} from "../kube-api";
 
 interface TektonGraphSpec {
   data: string
+  width: number
+  height: number
 }
 
 @autobind()
@@ -11,9 +13,6 @@ export class TektonGraph extends KubeObject {
   static kind = "TektonGraph";
 
   spec: TektonGraphSpec;
-
-  
-
 }
 
 export const tektonGraphApi = new KubeApi({
