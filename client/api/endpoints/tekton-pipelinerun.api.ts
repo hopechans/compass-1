@@ -173,6 +173,19 @@ export class PipelineRun extends KubeObject {
     }
     return diff;
   }
+
+  getDuration(humanize = true, compact = true) {
+    if (this?.status?.completionTime !== undefined) {
+      const diff =
+        new Date(this.status.completionTime).getTime() -
+        new Date(this.metadata.creationTimestamp).getTime();
+      if (humanize) {
+        return advanceFormatDuration(diff, compact);
+      }
+    }
+
+    return "";
+  }
 }
 
 export const pipelineRunApi = new KubeApi({

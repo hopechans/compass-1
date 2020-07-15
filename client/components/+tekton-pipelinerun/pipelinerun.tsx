@@ -144,19 +144,32 @@ export class PipelineRuns extends React.Component<Props> {
       if (status === "Succeeded" || status === "Completed") {
         return (
           <Icon
+            small={true}
             material="check_circle_outline"
             className="pipelineRun-Succeeded"
           />
         );
       }
       if (status === "Running" || status == "Started") {
-        return <Icon material="loop" className="pipelineRun-Running" />;
+        return (
+          <Icon material="loop" small={true} className="pipelineRun-Running" />
+        );
       }
       if (status === "PipelineRunCancelled") {
-        return <Icon material="cancel" className="pipelineRun-Cancelled" />;
+        return (
+          <Icon
+            material="cancel"
+            small={true}
+            className="pipelineRun-Cancelled"
+          />
+        );
       } else {
         return (
-          <Icon material="report_problem" className="pipelineRun-Failed" />
+          <Icon
+            material="report_problem"
+            small={true}
+            className="pipelineRun-Failed"
+          />
         );
       }
     }
@@ -224,10 +237,7 @@ export class PipelineRuns extends React.Component<Props> {
             ),
             this.renderTasks(pipelineRun),
             `${pipelineRun.getAge()}  ago`,
-            this.renderPipelineDuration(
-              pipelineRun.status?.startTime,
-              pipelineRun.status?.completionTime
-            ),
+            pipelineRun.getDuration(),
           ]}
           renderItemMenu={(item: PipelineRun) => {
             return <PipelineRunMenu object={item} />;
