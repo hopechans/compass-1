@@ -29,6 +29,12 @@ export class EventStore extends KubeObjectStore<KubeEvent> {
     });
   }
 
+  getEventsByNamespaceObject(namespace: string, obj: KubeObject): KubeEvent[] {
+    return this.items.filter(evt => {
+      return obj.getId() == evt.involvedObject.uid && obj.getNs() == namespace;
+    });
+  }
+
   getWarnings() {
     const warnings = this.items.filter(event => event.type == "Warning");
     const groupsByInvolvedObject = groupBy(warnings, warning => warning.involvedObject.uid);

@@ -178,7 +178,7 @@ export class PipelineRuns extends React.Component<Props> {
           renderTableContents={(pipelineRun: PipelineRun) => [
             this.renderPipelineName(pipelineRun.getName()),
             pipelineRun.getOwnerNamespace(),
-            <KubeEventIcon object={pipelineRun} />,
+            <KubeEventIcon namespace={"ops"} object={pipelineRun} />,
             pipelineRun.hasIssues() && (
               <PipelineRunIcon object={pipelineRun.status.conditions[0]} />
             ),

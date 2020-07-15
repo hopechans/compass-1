@@ -11,6 +11,8 @@ import { KubeEvent } from "../../api/endpoints/events.api";
 interface Props {
   object: KubeObject;
   showWarningsOnly?: boolean;
+
+  namespace?: string;
   filterEvents?: (events: KubeEvent[]) => KubeEvent[];
 }
 
@@ -22,8 +24,12 @@ export class KubeEventIcon extends React.Component<Props> {
   static defaultProps = defaultProps as object;
 
   render() {
-    const { object, showWarningsOnly, filterEvents } = this.props;
-    const events = eventStore.getEventsByObject(object);
+    const { object, showWarningsOnly, namespace, filterEvents } = this.props;
+    let events: KubeEvent[];
+    namespace == ""
+      ? events = eventStore.getEventsByObject(object)
+      : events = eventStore.getEventsByNamespaceObject(namespace, object)
+      
     let warnings = events.filter(evt => evt.isWarning());
     if (filterEvents) warnings = filterEvents(warnings);
     if (!events.length || (showWarningsOnly && !warnings.length)) {
@@ -38,7 +44,7 @@ export class KubeEventIcon extends React.Component<Props> {
           <TooltipContent className="KubeEventTooltip">
             {event.message}
             <div className="age">
-              <Icon material="access_time"/>
+              <Icon material="access_time" />
               {event.getAge(undefined, undefined, true)}
             </div>
           </TooltipContent>
