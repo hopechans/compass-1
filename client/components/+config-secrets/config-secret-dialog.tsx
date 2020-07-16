@@ -135,7 +135,6 @@ export class ConfigSecretDialog extends React.Component<Props> {
     this.name = ConfigSecretDialog.secret.getName();
     this.namespace = ConfigSecretDialog.secret.getNs();
 
-
     if (this.props.className == "OpsSecrets") {
       this.isOpsSecret = true;
       this.secret = this.opsSecretTemplate;
