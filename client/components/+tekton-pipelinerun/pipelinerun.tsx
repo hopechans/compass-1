@@ -28,6 +28,7 @@ import { eventStore } from "../+events/event.store";
 import { TaskRunLogsDialog } from "../+tekton-taskrun/task-run-logs-dialog";
 import { IKubeObjectMetadata } from "../../../client/api/kube-object";
 import { advanceSecondsToHms } from "../../api/endpoints";
+import { configStore } from "../../../client/config.store";
 
 enum sortBy {
   name = "name",
@@ -230,7 +231,7 @@ export class PipelineRuns extends React.Component<Props> {
           renderTableContents={(pipelineRun: PipelineRun) => [
             this.renderPipelineName(pipelineRun.getName()),
             pipelineRun.getOwnerNamespace(),
-            <KubeEventIcon namespace={"ops"} object={pipelineRun} />,
+            <KubeEventIcon namespace={configStore.getOpsNamespace()} object={pipelineRun} />,
             pipelineRun.hasIssues() && (
               <PipelineRunIcon object={pipelineRun.status.conditions[0]} />
             ),

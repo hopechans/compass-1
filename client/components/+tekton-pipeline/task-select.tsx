@@ -11,6 +11,7 @@ import { taskStore } from "../+tekton-task/task.store";
 import { _i18n } from "../../i18n";
 import { FilterIcon } from "../item-object-list/filter-icon";
 import { FilterType } from "../item-object-list/page-filters.store";
+import { configStore } from "../../../client/config.store";
 
 interface Props extends SelectProps {
   showIcons?: boolean;
@@ -35,7 +36,7 @@ export class TaskSelect extends React.Component<Props> {
   async componentDidMount() {
     // if (true) await namespaceStore.loadAll();
     // this.unsubscribe = namespaceStore.subscribe();
-    if (true) await taskStore.getAllByNs("ops");
+    if (true) await taskStore.getAllByNs(configStore.getOpsNamespace());
     this.unsubscribe = taskStore.subscribe();
   }
 
@@ -50,7 +51,7 @@ export class TaskSelect extends React.Component<Props> {
       clusterOptionLabel,
     } = this.props;
     //maybe fliter  ops ns
-    let options: SelectOption[] = taskStore.getAllByNs("ops").map((task) => ({
+    let options: SelectOption[] = taskStore.getAllByNs(configStore.getOpsNamespace()).map((task) => ({
       value: task.getName(),
     }));
 

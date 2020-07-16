@@ -8,7 +8,7 @@ import { ActionMeta } from "react-select/src/types";
 import { Trans } from "@lingui/macro";
 import { Dialog } from "../dialog";
 import { Wizard, WizardStep } from "../wizard";
-import {pipelineResourceApi, storageClassApi} from "../../api/endpoints";
+import { pipelineResourceApi, storageClassApi } from "../../api/endpoints";
 import { Notifications } from "../notifications";
 import { Select, SelectOption } from "../select";
 import { Icon } from "../icon";
@@ -26,7 +26,7 @@ interface Props<T = any> extends Partial<Props> {
 @observer
 export class AddPipelineResourceDialog extends React.Component<Props> {
   @observable static isOpen = false;
-  @observable prefix: string = configStore.getDefaultNamespace() || "admin";
+  @observable prefix: string = configStore.getDefaultNamespace();
   @observable name: string = "";
   @observable type: string = "git";
   @observable params: Params[] = [];
@@ -66,19 +66,14 @@ export class AddPipelineResourceDialog extends React.Component<Props> {
 
   submit = async () => {
 
-    const {name, prefix, type, params} = this;
+    const { name, prefix, type, params } = this;
 
     try {
       await pipelineResourceApi.create(
         {
           name: prefix + "-" + name,
-          namespace: "",
-          labels: new Map<string, string>().set(
-            "namespace",
-            configStore.getDefaultNamespace() == ""
-              ? "admin"
-              : configStore.getDefaultNamespace()
-          ),
+          namespace: configStore.getOpsNamespace(),
+          labels: new Map<string, string>().set("namespace", configStore.getDefaultNamespace()),
         },
         {
           spec: {
