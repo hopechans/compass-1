@@ -87,9 +87,7 @@ export class PipelineRunDialog extends React.Component<Props> {
     this.value.name =
       pipelineName +
       "-" +
-      (configStore.getDefaultNamespace() == ""
-        ? "admin"
-        : configStore.getDefaultNamespace()) +
+      configStore.getDefaultNamespace() +
       "-" +
       timeStamp;
     //fill the  resources
@@ -136,7 +134,7 @@ export class PipelineRunDialog extends React.Component<Props> {
       }, {
         spec: {
           data: JSON.stringify(runNodeData),
-          width:width,
+          width: width,
           height: height
         },
       })
@@ -145,10 +143,7 @@ export class PipelineRunDialog extends React.Component<Props> {
         metadata: {
           name: this.value.name,
           annotations: Object.fromEntries(new Map<string, string>().set("fuxi.nip.io/run-tektongraphs", graph.getName())),
-          labels: Object.fromEntries(
-            new Map<string, string>().set("namespace", configStore.getDefaultNamespace() == ""
-              ? "admin"
-              : configStore.getDefaultNamespace())),
+          labels: Object.fromEntries(new Map<string, string>().set("namespace", configStore.getDefaultNamespace())),
         } as IKubeObjectMetadata,
         spec: {
           resources: resources,

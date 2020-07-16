@@ -82,7 +82,7 @@ export const task: TaskResult = {
 
 @observer
 export class CopyTaskDialog extends React.Component<Props> {
-  @observable prefix: string = configStore.getDefaultNamespace() || "admin";
+  @observable prefix: string = configStore.getDefaultNamespace();
   @observable value: TaskResult = this.props.value || task;
   @observable static isOpen = false;
   @observable static graph: any;
@@ -175,12 +175,7 @@ export class CopyTaskDialog extends React.Component<Props> {
           {
             name: this.value.taskName,
             namespace: "",
-            labels: new Map<string, string>().set(
-              "namespace",
-              configStore.getDefaultNamespace() == ""
-                ? "admin"
-                : configStore.getDefaultNamespace()
-            ),
+            labels: new Map<string, string>().set("namespace", configStore.getDefaultNamespace()),
           },
           {
             spec: {
@@ -277,8 +272,8 @@ export class CopyTaskDialog extends React.Component<Props> {
                     this.ifSwitch ? (
                       <SubTitle title={<Trans>Select module</Trans>} />
                     ) : (
-                      <SubTitle title={<Trans>Template configuration</Trans>} />
-                    )
+                        <SubTitle title={<Trans>Template configuration</Trans>} />
+                      )
                   }
                 />
               </FormGroup>

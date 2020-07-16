@@ -13,7 +13,7 @@ import { PipelineSaveDialog } from "./pipeline-save-dialog";
 import { tektonGraphStore } from "../+tekton-graph/tekton-graph.store";
 import { pipelineStore } from "./pipeline.store";
 import { configStore } from "../../config.store";
-import {pipelineRunStore} from "../+tekton-pipelinerun/pipelinerun.store";
+import { pipelineRunStore } from "../+tekton-pipelinerun/pipelinerun.store";
 
 
 interface Props extends Partial<Props> { }
@@ -127,7 +127,7 @@ export class PipelineVisualDialog extends React.Component<Props> {
       {
         name: graphName,
         namespace: "ops",
-        labels: new Map<string, string>().set("namespace", configStore.getDefaultNamespace() == "" ? "admin" : configStore.getDefaultNamespace()),
+        labels: new Map<string, string>().set("namespace", configStore.getDefaultNamespace()),
       },
       {
         spec: {

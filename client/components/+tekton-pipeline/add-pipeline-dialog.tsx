@@ -11,11 +11,11 @@ import { Notifications } from "../notifications";
 import { configStore } from "../../config.store";
 import { pipelineStore } from "./pipeline.store";
 
-interface Props<T = any> extends Partial<Props> {}
+interface Props<T = any> extends Partial<Props> { }
 
 @observer
 export class AddPipelineDialog extends React.Component<Props> {
-  @observable prefix: string = configStore.getDefaultNamespace() || "admin";
+  @observable prefix: string = configStore.getDefaultNamespace();
   @observable static isOpen = false;
   @observable value: string = "";
 
@@ -37,12 +37,7 @@ export class AddPipelineDialog extends React.Component<Props> {
         {
           name: this.prefix + "-" + this.value,
           namespace: "",
-          labels: new Map<string, string>().set(
-            "namespace",
-            configStore.getDefaultNamespace() == ""
-              ? "admin"
-              : configStore.getDefaultNamespace()
-          ),
+          labels: new Map<string, string>().set("namespace", configStore.getDefaultNamespace()),
         },
         {
           spec: {
