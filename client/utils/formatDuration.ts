@@ -22,3 +22,25 @@ export function formatDuration(timeValue: number, compact: boolean) {
   }
   return result;
 }
+
+export function advanceFormatDuration(timeValue: number, compact: boolean) {
+  let result = "";
+  const duration = moment.duration(timeValue);
+  const suffixes = [" days", " hours", " minutes", " seconds"];
+  const durationValues = [
+    Math.round(duration.asDays()),
+    duration.hours(),
+    duration.minutes(),
+    duration.seconds(),
+  ];
+  durationValues.forEach((value, index) => {
+    if (value) result += value + suffixes[index] + " ";
+  });
+  if (compact) {
+    result = result.split(" ")[0] + " " + result.split(" ")[1];
+  }
+  if (!result) {
+    return "<1 minutes";
+  }
+  return result;
+}
