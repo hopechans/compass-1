@@ -130,6 +130,7 @@ export class ConfigSecretDialog extends React.Component<Props> {
   onOpen = () => {
     Object.assign(this, ConfigSecretDialog.secret);
     this.name = ConfigSecretDialog.secret.getName();
+    this.namespace = ConfigSecretDialog.secret.getNs();
 
     if (this.props.className == "OpsSecrets") {
       this.isOpsSecret = true;
@@ -138,13 +139,20 @@ export class ConfigSecretDialog extends React.Component<Props> {
       this.namespace = configStore.getOpsNamespace();
 
       Object.keys(ConfigSecretDialog.secret.data).map(key => {
-        this.secret[this.type]["data"].map(item => {
+        this.secret[this.type].data.map(item => {
           if (item.key == key) {
             item.value = base64.decode(ConfigSecretDialog.secret.data[key])
           }
         })
       });
 
+    } else {
+      if (this.secret[this.type].data == undefined) {
+        this.secret[this.type].data = [];
+      }
+      Object.keys(ConfigSecretDialog.secret.data).map(key => {
+        this.secret[this.type].data.push({key: key, value: base64.decode(ConfigSecretDialog.secret.data[key]), required: true})
+      });
     }
   }
 
