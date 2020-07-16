@@ -32,8 +32,7 @@ import {
   statefulSetsURL,
   workloadsURL,
   deployRoute,
-  deployURL,
-  configSecretURL, configSecretRoute
+  deployURL
 } from "./workloads.route";
 import {namespaceStore} from "../+namespaces/namespace.store";
 import {Pods} from "../+workloads-pods";
@@ -47,7 +46,6 @@ import {Deploys} from "../+workloads-deploy";
 import {StatefulSets} from "../+workloads-statefulsets";
 import {Injectors} from "../+workloads-injectors";
 import {Waters} from "../+workloads-waters"
-import {ConfigSecrets} from "../+workload-config-secret";
 
 interface Props extends RouteComponentProps {
 }
@@ -56,8 +54,8 @@ interface Props extends RouteComponentProps {
 export class Workloads extends React.Component<Props> {
   static get tabRoutes(): TabRoute[] {
     const query = namespaceStore.getContextParams();
-    const userConifg = JSON.parse(localStorage.getItem('u_config'))
-    const isClusterAdmin = userConifg ? userConifg.isClusterAdmin : false
+    const userConfig = JSON.parse(localStorage.getItem('u_config'))
+    const isClusterAdmin = userConfig ? userConfig.isClusterAdmin : false
     let items = [
       {
         title: <Trans>Overview</Trans>,
@@ -89,12 +87,6 @@ export class Workloads extends React.Component<Props> {
         url: podsURL({query}),
         path: podsRoute.path
       },
-      {
-        title: <Trans>ConfigSecret</Trans>,
-        component: ConfigSecrets,
-        url: configSecretURL({query}),
-        path: configSecretRoute.path,
-      }
     ]
 
     if (isClusterAdmin) {
