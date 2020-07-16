@@ -100,7 +100,7 @@ export class CopyTaskDialog extends React.Component<Props> {
 
   loadData = async (name: string) => {
     try {
-      const defaultNameSpace = "ops";
+      const defaultNameSpace = configStore.getOpsNamespace();
       if (name.split("-")[0] !== this.prefix) {
         name = `${this.prefix}-${name}`;
       }
