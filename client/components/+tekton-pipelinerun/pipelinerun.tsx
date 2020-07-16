@@ -29,6 +29,7 @@ import { TaskRunLogsDialog } from "../+tekton-taskrun/task-run-logs-dialog";
 import { IKubeObjectMetadata } from "../../../client/api/kube-object";
 import { advanceSecondsToHms } from "../../api/endpoints";
 import { configStore } from "../../../client/config.store";
+import { pipeline } from "stream";
 
 enum sortBy {
   name = "name",
@@ -303,7 +304,7 @@ export function PipelineRunMenu(props: KubeObjectMenuProps<PipelineRun>) {
             let newPipelineRun: Partial<PipelineRun> = {
               metadata: {
                 name: pipelineRun.getName(),
-                namespace: "",
+                namespace: pipelineRun.getNs(),
                 annotations: Object.fromEntries(copyAnnotations),
                 labels: Object.fromEntries(copyLables),
               } as IKubeObjectMetadata,
@@ -322,7 +323,7 @@ export function PipelineRunMenu(props: KubeObjectMenuProps<PipelineRun>) {
             await pipelineRunStore.create(
               {
                 name: pipelineRun.getName(),
-                namespace: "",
+                namespace: pipelineRun.getNs(),
               },
               { ...newPipelineRun }
             );
