@@ -132,6 +132,7 @@ export class ConfigSecretDialog extends React.Component<Props> {
     this.name = ConfigSecretDialog.secret.getName();
     this.namespace = ConfigSecretDialog.secret.getNs();
 
+    // reset data
     if (this.props.className == "OpsSecrets") {
       this.isOpsSecret = true;
       this.secret = this.opsSecretTemplate;
@@ -151,9 +152,54 @@ export class ConfigSecretDialog extends React.Component<Props> {
         this.secret[this.type].data = [];
       }
       Object.keys(ConfigSecretDialog.secret.data).map(key => {
-        this.secret[this.type].data.push({key: key, value: base64.decode(ConfigSecretDialog.secret.data[key]), required: true})
+        this.secret[this.type].data.push(
+          {key: key, value: base64.decode(ConfigSecretDialog.secret.data[key]), required: true}
+          )
       });
     }
+
+    // reset annotations
+    if (this.secret[this.type].annotations == undefined) {
+      this.secret[this.type].annotations = [];
+    }
+
+    ConfigSecretDialog.secret.getAnnotations().map(item => {
+      const splitR = item.split("=", 2)
+      let setSuccess: boolean = false;
+      this.secret[this.type].annotations.map(item => {
+        if (item.key == splitR[0]) {
+          item.value = splitR[1]
+        }
+        setSuccess = true;
+      })
+      if (!setSuccess){
+        this.secret[this.type].annotations.push(
+          {key: splitR[0], value: splitR[1], required: true}
+        )
+      }
+    })
+
+
+    // reset labels
+    if (this.secret[this.type].labels == undefined) {
+      this.secret[this.type].labels = [];
+    }
+
+    ConfigSecretDialog.secret.getLabels().map(item => {
+      const splitR = item.split("=", 2)
+      let setSuccess: boolean = false;
+      this.secret[this.type].labels.map(item => {
+        if (item.key == splitR[0]) {
+          item.value = splitR[1]
+        }
+        setSuccess = true;
+      })
+      if (!setSuccess){
+        this.secret[this.type].labels.push(
+          {key: splitR[0], value: splitR[1], required: true}
+        )
+      }
+    })
   }
 
   private getDataFromFields = (fields: ISecretTemplateField[] = [], processValue?: (val: string) => string) => {
