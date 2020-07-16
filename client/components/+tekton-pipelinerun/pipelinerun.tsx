@@ -206,7 +206,6 @@ export class PipelineRuns extends React.Component<Props> {
           ]}
           renderHeaderTitle={<Trans>PipelineRuns</Trans>}
           renderTableHeader={[
-            { title: "Status", className: "" },
             {
               title: <Trans>Name</Trans>,
               className: "name",
@@ -226,9 +225,9 @@ export class PipelineRuns extends React.Component<Props> {
               sortBy: sortBy.age,
             },
             { title: <Trans>Duration</Trans>, className: "Duration" },
+            { title: "Status", className: "status" },
           ]}
           renderTableContents={(pipelineRun: PipelineRun) => [
-            this.renderPipelineStatus(pipelineRun),
             this.renderPipelineName(pipelineRun.getName()),
             pipelineRun.getOwnerNamespace(),
             <KubeEventIcon namespace={"ops"} object={pipelineRun} />,
@@ -238,6 +237,7 @@ export class PipelineRuns extends React.Component<Props> {
             this.renderTasks(pipelineRun),
             `${pipelineRun.getAge()}  ago`,
             pipelineRun.getDuration(),
+            this.renderPipelineStatus(pipelineRun),
           ]}
           renderItemMenu={(item: PipelineRun) => {
             return <PipelineRunMenu object={item} />;

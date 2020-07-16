@@ -28,6 +28,10 @@
     &.warning {
       @include table-cell-warning;
     }
+
+    &.status{
+      flex-grow: 0.25;
+    }
   }
 }
 
