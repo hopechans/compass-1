@@ -317,6 +317,7 @@ export function PipelineRunMenu(props: KubeObjectMenuProps<PipelineRun>) {
                 serviceAccountNames: pipelineRun.spec.serviceAccountNames,
                 timeout: pipelineRun.spec.timeout,
                 podTemplate: pipelineRun.spec.podTemplate,
+                workspaces: pipelineRun.spec.workspaces,
               },
             };
             //create it. will re-run
