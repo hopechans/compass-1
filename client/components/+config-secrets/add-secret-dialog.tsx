@@ -56,17 +56,11 @@ type ISecretField = keyof ISecretTemplate;
 @observer
 export class AddSecretDialog extends React.Component<Props> {
 
-  static defaultProps = {
-    className: "Secrets"
-  }
+  static defaultProps = {className: "Secrets"}
 
   @observable static isOpen = false;
   @observable dockerConfigAddress: string = "";
-  @observable dockerConfig: DockerConfig = {
-    username: "",
-    password: "",
-    email: "",
-  };
+  @observable dockerConfig: DockerConfig = {username: "", password: "", email: ""};
   @observable isOpsSecret = false;
 
   static open() {
@@ -92,8 +86,18 @@ export class AddSecretDialog extends React.Component<Props> {
   }
 
   private opsSecretTemplate: { [p: string]: ISecretTemplate } = {
-    [SecretType.BasicAuth]: {},
-    [SecretType.SSHAuth]: {},
+    [SecretType.BasicAuth]: {
+      data: [
+        {key: "username", required: true},
+        {key: "password", required: true}
+      ]
+    },
+    [SecretType.SSHAuth]: {
+      data: [
+        {key: "username", value: "", required: true},
+        {key: "password", value: "",  required: true}
+      ]
+    },
   }
 
   get types() {
@@ -122,6 +126,7 @@ export class AddSecretDialog extends React.Component<Props> {
     if (this.props.className == "OpsSecrets") {
       this.isOpsSecret = true;
       this.type = SecretType.BasicAuth;
+      this.secret = this.opsSecretTemplate;
       this.namespace = configStore.getOpsNamespace();
     }
   }
@@ -224,7 +229,7 @@ export class AddSecretDialog extends React.Component<Props> {
                 <Icon
                   small
                   disabled={required}
-                  tooltip={required ? <Trans>Required field</Trans> : <Trans>Remove field</Trans>}
+                  tooltip={required ? <Trans>Required Field</Trans> : <Trans>Remove Field</Trans>}
                   className="remove-icon"
                   material="remove_circle_outline"
                   onClick={() => this.removeField(field, index)}
@@ -274,17 +279,19 @@ export class AddSecretDialog extends React.Component<Props> {
   }
 
   renderData = (field: ISecretField) => {
-    const fields = this.secret[this.type][field] || [{key: "username", value: ""}, {key: "password", value: ""}];
+    const fields = this.secret[this.type][field] || [];
     return (
       <div className="secret-fields">
-        <SubTitle compact className="fields-title" title={upperFirst(field.toString())}/>
+
+        <SubTitle compact className="fields-title" title={upperFirst(field.toString())} />
+
         {fields.map((item, index) => {
           const {key = "", value = "", required} = item;
           return (
             <div key={index} className="secret-field flex gaps auto align-center">
               <Input
-                className="key"
                 disabled={true}
+                className="key"
                 placeholder={_i18n._(t`Name`)}
                 title={key}
                 tabIndex={required ? -1 : 0}
@@ -296,7 +303,7 @@ export class AddSecretDialog extends React.Component<Props> {
                 required={required}
                 className="value"
                 placeholder={_i18n._(t`Value`)}
-                value={value} onChange={v => item.value = v}
+                value={item.value} onChange={v => item.value = v}
               />
             </div>
           )
@@ -322,10 +329,10 @@ export class AddSecretDialog extends React.Component<Props> {
           <WizardStep contentClass="flow column" nextLabel={<Trans>Create</Trans>} next={this.createSecret}>
             {
               !this.isOpsSecret ?
-                <div className="secret-userNotVisiable">
+                <div className="secret-userNotVisible">
                   {isClusterAdmin ?
                     <>
-                      <SubTitle title={"UserNotVisiable"}/>
+                      <SubTitle title={"UserNotVisible"}/>
                       <Checkbox
                         theme="light"
                         value={this.userNotVisible}
@@ -369,7 +376,7 @@ export class AddSecretDialog extends React.Component<Props> {
             {this.renderFields("labels")}
             {!this.isOpsSecret ?
               this.type == SecretType.DockerConfigJson ? this.renderDockerConfigFields() : this.renderFields("data") : null}
-            {this.isOpsSecret ? this.renderData("data") : <></>}
+            {this.isOpsSecret ? this.renderData("data") : null}
           </WizardStep>
         </Wizard>
       </Dialog>
