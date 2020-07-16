@@ -174,7 +174,7 @@ export class CopyTaskDialog extends React.Component<Props> {
         await taskStore.create(
           {
             name: this.value.taskName,
-            namespace: "",
+            namespace: configStore.getOpsNamespace(),
             labels: new Map<string, string>().set("namespace", configStore.getDefaultNamespace()),
           },
           {
@@ -235,7 +235,7 @@ export class CopyTaskDialog extends React.Component<Props> {
 
   get taskOptions() {
     const options = taskStore
-      .getAllByNs("ops")
+      .getAllByNs(configStore.getOpsNamespace())
       .map((item) => ({ value: item.getName() }))
       .slice();
     return [...options];

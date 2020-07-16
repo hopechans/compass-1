@@ -36,7 +36,7 @@ export class AddPipelineDialog extends React.Component<Props> {
       await pipelineStore.create(
         {
           name: this.prefix + "-" + this.value,
-          namespace: "",
+          namespace: configStore.getOpsNamespace(),
           labels: new Map<string, string>().set("namespace", configStore.getDefaultNamespace()),
         },
         {

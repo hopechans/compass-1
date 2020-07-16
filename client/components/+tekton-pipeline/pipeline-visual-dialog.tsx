@@ -126,7 +126,7 @@ export class PipelineVisualDialog extends React.Component<Props> {
     await tektonGraphStore.create(
       {
         name: graphName,
-        namespace: "ops",
+        namespace: configStore.getOpsNamespace(),
         labels: new Map<string, string>().set("namespace", configStore.getDefaultNamespace()),
       },
       {
@@ -154,7 +154,7 @@ export class PipelineVisualDialog extends React.Component<Props> {
 
     if (graphName != "") {
       try {
-        let tektonGraph = tektonGraphStore.getByName(graphName, "ops");
+        let tektonGraph = tektonGraphStore.getByName(graphName, configStore.getOpsNamespace());
         if (tektonGraph.spec.data !== data) {
           await this.updateTektonGraph(data);
         }

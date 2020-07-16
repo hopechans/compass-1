@@ -13,8 +13,9 @@ import { Select, SelectOption } from "../select";
 import { Spinner } from "../spinner";
 import { cssNames, downloadFile, interval } from "../../utils";
 import { taskRunStore } from "./taskrun.store";
+import { configStore } from "../../../client/config.store";
 
-interface Props extends Partial<DialogProps> {}
+interface Props extends Partial<DialogProps> { }
 
 @observer
 export class TaskRunLogsDialog extends React.Component<Props> {
@@ -34,7 +35,7 @@ export class TaskRunLogsDialog extends React.Component<Props> {
   private logsArea: HTMLDivElement;
   private refresher = interval(5, () => this.load());
   private containers: string[] = [];
-  private ns: string = "ops";
+  private ns: string = configStore.getOpsNamespace();
   private podName: string = "";
   private lastLineIsShown = true; // used for proper auto-scroll content after refresh
 

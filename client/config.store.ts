@@ -66,6 +66,10 @@ export class ConfigStore {
     return this.config.defaultNamespace != "" ? this.config.defaultNamespace : 'admin';
   }
 
+  public getOpsNamespace(): string {
+    return this.getDefaultNamespace() + "-" + "ops"
+  }
+
   public getAllowedNamespaces() {
     return this.config.allowedNamespaces;
   }

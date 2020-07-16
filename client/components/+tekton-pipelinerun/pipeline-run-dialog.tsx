@@ -129,7 +129,7 @@ export class PipelineRunDialog extends React.Component<Props> {
 
       const graph = await tektonGraphStore.create({
         name: runTektonGraphName,
-        namespace: "ops",
+        namespace: configStore.getOpsNamespace(),
         labels: copyLables,
       }, {
         spec: {
@@ -154,7 +154,7 @@ export class PipelineRunDialog extends React.Component<Props> {
       }
 
       await pipelineRunStore.create(
-        { name: this.value.name, namespace: "" }, { ...pipelineRun });
+        { name: this.value.name, namespace: configStore.getOpsNamespace() }, { ...pipelineRun });
       Notifications.ok(<>PipelineRun {this.value.name} Run Success</>);
       this.close();
     } catch (err) {

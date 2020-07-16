@@ -72,7 +72,7 @@ export class AddPipelineResourceDialog extends React.Component<Props> {
       await pipelineResourceApi.create(
         {
           name: prefix + "-" + name,
-          namespace: "",
+          namespace: configStore.getOpsNamespace(),
           labels: new Map<string, string>().set("namespace", configStore.getDefaultNamespace()),
         },
         {
