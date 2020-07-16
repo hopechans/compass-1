@@ -1,21 +1,22 @@
 import "./secrets.scss"
 
 import * as React from "react";
-import { observer } from "mobx-react";
-import { Trans, t } from "@lingui/macro";
-import { RouteComponentProps } from "react-router";
-import { Secret, secretsApi } from "../../api/endpoints";
-import { KubeObjectMenu, KubeObjectMenuProps } from "../kube-object";
-import { AddSecretDialog } from "./add-secret-dialog";
-import { ISecretsRouteParams } from "./secrets.route";
-import { KubeObjectListLayout } from "../kube-object";
-import { Badge } from "../badge";
-import { secretsStore } from "./secrets.store";
-import { apiManager } from "../../api/api-manager";
-import { ConfigSecretDialog } from "./config-secret-dialog";
-import { MenuItem } from "../menu";
-import { Icon } from "../icon";
-import { _i18n } from "../../i18n";
+import {observer} from "mobx-react";
+import {Trans, t} from "@lingui/macro";
+import {RouteComponentProps} from "react-router";
+import {Secret, secretsApi} from "../../api/endpoints";
+import {KubeObjectMenu, KubeObjectMenuProps} from "../kube-object";
+import {AddSecretDialog} from "./add-secret-dialog";
+import {ISecretsRouteParams} from "./secrets.route";
+import {KubeObjectListLayout} from "../kube-object";
+import {Badge} from "../badge";
+import {secretsStore} from "./secrets.store";
+import {apiManager} from "../../api/api-manager";
+import {ConfigSecretDialog} from "./config-secret-dialog";
+import {MenuItem} from "../menu";
+import {Icon} from "../icon";
+import {_i18n} from "../../i18n";
+import {observable} from "mobx";
 
 enum sortBy {
   name = "name",
@@ -31,11 +32,16 @@ interface Props extends RouteComponentProps<ISecretsRouteParams> {
 
 @observer
 export class Secrets extends React.Component<Props> {
+
+  @observable className: string = "Secrets"
+
+  @observable addRemoveButtons = {}
+
   render() {
     return (
       <>
         <KubeObjectListLayout
-          className="Secrets"
+          className={this.className}
           store={secretsStore}
           sortingCallbacks={{
             [sortBy.name]: (item: Secret) => item.getName(),
@@ -49,14 +55,14 @@ export class Secrets extends React.Component<Props> {
             (item: Secret) => item.getSearchFields(),
             (item: Secret) => item.getKeys(),
           ]}
-          renderHeaderTitle={<Trans>Secrets</Trans>}
+          renderHeaderTitle={_i18n._(this.className)}
           renderTableHeader={[
-            { title: <Trans>Name</Trans>, className: "name", sortBy: sortBy.name },
-            { title: <Trans>Namespace</Trans>, className: "namespace", sortBy: sortBy.namespace },
-            { title: <Trans>Labels</Trans>, className: "labels", sortBy: sortBy.labels },
-            { title: <Trans>Keys</Trans>, className: "keys", sortBy: sortBy.keys },
-            { title: <Trans>Type</Trans>, className: "type", sortBy: sortBy.type },
-            { title: <Trans>Age</Trans>, className: "age", sortBy: sortBy.age },
+            {title: <Trans>Name</Trans>, className: "name", sortBy: sortBy.name},
+            {title: <Trans>Namespace</Trans>, className: "namespace", sortBy: sortBy.namespace},
+            {title: <Trans>Labels</Trans>, className: "labels", sortBy: sortBy.labels},
+            {title: <Trans>Keys</Trans>, className: "keys", sortBy: sortBy.keys},
+            {title: <Trans>Type</Trans>, className: "type", sortBy: sortBy.type},
+            {title: <Trans>Age</Trans>, className: "age", sortBy: sortBy.age},
           ]}
           renderTableContents={(secret: Secret) => [
             secret.getName(),
@@ -74,26 +80,25 @@ export class Secrets extends React.Component<Props> {
             addTooltip: <Trans>Create new Secret</Trans>
           }}
         />
-        <AddSecretDialog/>
-        <ConfigSecretDialog/>
+        <AddSecretDialog className={this.className}/>
+        <ConfigSecretDialog className={this.className}/>
       </>
     );
   }
 }
 
 export function SecretMenu(props: KubeObjectMenuProps<Secret>) {
-  const { object, toolbar } = props;
+
+  const {object, toolbar} = props;
   return (
     <>
-    <KubeObjectMenu {...props} >
-      <MenuItem onClick={() => {
-        ConfigSecretDialog.open(object)
-      }}>
-        <Icon material="sync_alt" title={_i18n._(t`Secret`)} interactive={toolbar} />
-        <span className="title"><Trans>Config</Trans></span>
-      </MenuItem>
-    </KubeObjectMenu>
-  </>
+      <KubeObjectMenu {...props} >
+        <MenuItem onClick={() => ConfigSecretDialog.open(object)}>
+          <Icon material="sync_alt" title={_i18n._(t`Secret`)} interactive={toolbar}/>
+          <span className="title"><Trans>Config</Trans></span>
+        </MenuItem>
+      </KubeObjectMenu>
+    </>
   )
 }
 

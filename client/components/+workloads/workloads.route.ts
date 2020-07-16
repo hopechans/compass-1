@@ -1,10 +1,10 @@
-import { RouteProps } from "react-router"
-import { Workloads } from "./workloads";
-import { buildURL, IURLParams } from "../../navigation";
+import {RouteProps} from "react-router"
+import {Workloads} from "./workloads";
+import {buildURL, IURLParams} from "../../navigation";
 
 export const workloadsRoute: RouteProps = {
   get path() {
-    return Workloads.tabRoutes.map(({ path }) => path).flat()
+    return Workloads.tabRoutes.map(({path}) => path).flat()
   }
 }
 
@@ -51,10 +51,6 @@ export const deployRoute: RouteProps = {
   path: "/deploy"
 }
 
-export const configSecretRoute: RouteProps = {
-  path: "/config-secret"
-}
-
 // Route params
 export interface IDeployWorkloadsParams {
 }
@@ -74,8 +70,10 @@ export interface IDaemonSetsRouteParams {
 
 export interface IStatefulSetsRouteParams {
 }
+
 export interface InjectorsRouteParams {
 }
+
 export interface IWatersRouteParams {
 }
 
@@ -89,10 +87,6 @@ export interface ICronJobsRouteParams {
 }
 
 export interface IStonesRouteParams {
-}
-
-export interface IConfigSecretRouteParams {
-
 }
 
 // URL-builders
@@ -109,4 +103,3 @@ export const enhanceStatefulSetsURL = buildURL<IEnhanceStatefulSetsRouteParams>(
 export const injectorURL = buildURL<InjectorsRouteParams>(injectorsRoute.path)
 export const watersURL = buildURL<IWatersRouteParams>(watersRoute.path)
 export const deployURL = buildURL<IDeployWorkloadsParams>(deployRoute.path)
-export const configSecretURL = buildURL<IConfigSecretRouteParams>(configSecretRoute.path)

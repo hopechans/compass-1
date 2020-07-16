@@ -1,10 +1,10 @@
-import { RouteProps } from "react-router";
-import { buildURL } from "../../navigation";
-import { Tekton } from './tekton'
+import {RouteProps} from "react-router";
+import {buildURL} from "../../navigation";
+import {Tekton} from './tekton'
 
 export const tektonRoute: RouteProps = {
   get path() {
-    return Tekton.tabRoutes.map(({ path }) => path).flat()
+    return Tekton.tabRoutes.map(({path}) => path).flat()
   }
 }
 
@@ -28,6 +28,9 @@ export const taskRunRoute: RouteProps = {
   path: "/tekton-taskrun",
 };
 
+export const opsSecretRoute: RouteProps = {
+  path: "/ops-secret"
+}
 
 export const tektonURL = buildURL(pipelineRoute.path);
 export const pipelineURL = buildURL(pipelineRoute.path);
@@ -35,3 +38,4 @@ export const pipelineRunURL = buildURL(pipelineRunRoute.path);
 export const pipelineResourceURL = buildURL(pipelineResourceRoute.path);
 export const taskURL = buildURL(taskRoute.path);
 export const taskRunURL = buildURL(taskRunRoute.path);
+export const opsSecretURL = buildURL(opsSecretRoute.path)
