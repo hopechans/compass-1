@@ -119,12 +119,15 @@ export class ConfigSecretDialog extends React.Component<Props> {
   @observable isOpsSecret = false;
 
   reset = () => {
+    this.secret = null;
     this.name = "";
-    this.secret = this.secretTemplate;
+    this.namespace = "default";
+    this.isOpsSecret = false;
   }
 
   close = () => {
     ConfigSecretDialog.close();
+    // this.reset();
   }
 
   onOpen = () => {
@@ -132,31 +135,33 @@ export class ConfigSecretDialog extends React.Component<Props> {
     this.name = ConfigSecretDialog.secret.getName();
     this.namespace = ConfigSecretDialog.secret.getNs();
 
-    // reset data
+
     if (this.props.className == "OpsSecrets") {
       this.isOpsSecret = true;
       this.secret = this.opsSecretTemplate;
       this.type = ConfigSecretDialog.secret.type;
       this.namespace = configStore.getOpsNamespace();
 
-      Object.keys(ConfigSecretDialog.secret.data).map(key => {
-        this.secret[this.type].data.map(item => {
-          if (item.key == key) {
-            item.value = base64.decode(ConfigSecretDialog.secret.data[key])
-          }
-        })
-      });
+    }
 
-    } else {
-      if (this.secret[this.type].data == undefined) {
-        this.secret[this.type].data = [];
-      }
-      Object.keys(ConfigSecretDialog.secret.data).map(key => {
+    // reset data
+    if (this.secret[this.type].data == undefined) {
+      this.secret[this.type].data = [];
+    }
+    Object.keys(ConfigSecretDialog.secret.data).map(key => {
+      let setSuccess: boolean = false;
+      this.secret[this.type].data.map(item => {
+        if (item.key == key) {
+          item.value = base64.decode(ConfigSecretDialog.secret.data[key])
+        }
+        setSuccess = true;
+      })
+      if (!setSuccess) {
         this.secret[this.type].data.push(
           {key: key, value: base64.decode(ConfigSecretDialog.secret.data[key]), required: true}
-          )
-      });
-    }
+        )
+      }
+    })
 
     // reset annotations
     if (this.secret[this.type].annotations == undefined) {
@@ -172,13 +177,12 @@ export class ConfigSecretDialog extends React.Component<Props> {
         }
         setSuccess = true;
       })
-      if (!setSuccess){
+      if (!setSuccess) {
         this.secret[this.type].annotations.push(
           {key: splitR[0], value: splitR[1], required: true}
         )
       }
     })
-
 
     // reset labels
     if (this.secret[this.type].labels == undefined) {
@@ -194,7 +198,7 @@ export class ConfigSecretDialog extends React.Component<Props> {
         }
         setSuccess = true;
       })
-      if (!setSuccess){
+      if (!setSuccess) {
         this.secret[this.type].labels.push(
           {key: splitR[0], value: splitR[1], required: true}
         )
