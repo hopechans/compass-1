@@ -2,7 +2,7 @@ import "./secrets.scss"
 
 import * as React from "react";
 import { observer } from "mobx-react";
-import { Trans } from "@lingui/macro";
+import { Trans, t } from "@lingui/macro";
 import { RouteComponentProps } from "react-router";
 import { Secret, secretsApi } from "../../api/endpoints";
 import { KubeObjectMenu, KubeObjectMenuProps } from "../kube-object/kube-object-menu";
@@ -12,6 +12,10 @@ import { KubeObjectListLayout } from "../kube-object";
 import { Badge } from "../badge";
 import { secretsStore } from "./secrets.store";
 import { apiManager } from "../../api/api-manager";
+import { ConfigSecretDialog } from "./config-secret-dialog";
+import { MenuItem } from "../menu";
+import { Icon } from "../icon/icon";
+import { _i18n } from "../../../client/i18n";
 
 enum sortBy {
   name = "name",
@@ -70,14 +74,25 @@ export class Secrets extends React.Component<Props> {
           }}
         />
         <AddSecretDialog/>
+        <ConfigSecretDialog/>
       </>
     );
   }
 }
 
 export function SecretMenu(props: KubeObjectMenuProps<Secret>) {
+  const { object, toolbar } = props;
   return (
-    <KubeObjectMenu {...props}/>
+    <>
+    <KubeObjectMenu {...props} >
+      <MenuItem onClick={() => {
+        ConfigSecretDialog.open(object)
+      }}>
+        <Icon material="sync_alt" title={_i18n._(t`Secret`)} interactive={toolbar} />
+        <span className="title"><Trans>Config</Trans></span>
+      </MenuItem>
+    </KubeObjectMenu>
+  </>
   )
 }
 

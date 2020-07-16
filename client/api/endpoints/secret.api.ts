@@ -42,6 +42,10 @@ export class Secret extends KubeObject {
   getToken() {
     return this.data.token;
   }
+
+  getHide() {
+    return this.getLabels().map(label => { if (label.split("=")[0] == "hide") return true }) || false
+  }
 }
 
 export const secretsApi = new KubeApi({

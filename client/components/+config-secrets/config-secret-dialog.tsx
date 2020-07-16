@@ -1,4 +1,4 @@
-import "./add-secret-dialog.scss"
+import "./config-secret-dialog.scss"
 
 import React from "react";
 import { observable } from "mobx";
@@ -53,9 +53,10 @@ interface ISecretTemplate {
 type ISecretField = keyof ISecretTemplate;
 
 @observer
-export class AddSecretDialog extends React.Component<Props> {
+export class ConfigSecretDialog extends React.Component<Props> {
   @observable static isOpen = false;
-
+  @observable static secret: Secret;
+  @observable iSecretTemplate: ISecretTemplate;
   @observable dockerConfigAddress: string = "";
   @observable dockerConfig: DockerConfig = {
     username: "",
@@ -63,12 +64,13 @@ export class AddSecretDialog extends React.Component<Props> {
     email: "",
   };
 
-  static open() {
-    AddSecretDialog.isOpen = true;
+  static open(secret: Secret) {
+    ConfigSecretDialog.isOpen = true;
+    ConfigSecretDialog.secret = secret;
   }
 
   static close() {
-    AddSecretDialog.isOpen = false;
+    ConfigSecretDialog.isOpen = false;
   }
 
   private secretTemplate: { [p: string]: ISecretTemplate } = {
@@ -101,7 +103,13 @@ export class AddSecretDialog extends React.Component<Props> {
   }
 
   close = () => {
-    AddSecretDialog.close();
+    ConfigSecretDialog.close();
+  }
+
+  onOpen = () => {
+    Object.assign(this, ConfigSecretDialog.secret)
+    this.name = ConfigSecretDialog.secret.getName();
+
   }
 
   private getDataFromFields = (fields: ISecretTemplateField[] = [], processValue?: (val: string) => string) => {
@@ -125,7 +133,7 @@ export class AddSecretDialog extends React.Component<Props> {
     }, {});
   }
 
-  createSecret = async () => {
+  updateSecret = async () => {
     const { name, namespace, type } = this;
     const { data = [], labels = [], annotations = [] } = this.secret[type];
     const secret: Partial<Secret> = {
@@ -260,12 +268,13 @@ export class AddSecretDialog extends React.Component<Props> {
     return (
       <Dialog
         {...dialogProps}
-        className="AddSecretDialog"
-        isOpen={AddSecretDialog.isOpen}
+        className="UpdateSecretDialog"
+        onOpen={this.onOpen}
+        isOpen={ConfigSecretDialog.isOpen}
         close={this.close}
       >
         <Wizard header={header} done={this.close}>
-          <WizardStep contentClass="flow column" nextLabel={<Trans>Create</Trans>} next={this.createSecret}>
+          <WizardStep contentClass="flow column" nextLabel={<Trans>Update</Trans>} next={this.updateSecret}>
             <div className="secret-userNotVisiable">
               {isClusterAdmin ?
                 <>
