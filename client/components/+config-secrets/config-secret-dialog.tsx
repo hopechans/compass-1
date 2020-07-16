@@ -268,7 +268,7 @@ export class ConfigSecretDialog extends React.Component<Props> {
     return (
       <Dialog
         {...dialogProps}
-        className="UpdateSecretDialog"
+        className="ConfigSecretDialog"
         onOpen={this.onOpen}
         isOpen={ConfigSecretDialog.isOpen}
         close={this.close}

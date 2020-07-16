@@ -50,6 +50,11 @@ export const watersRoute: RouteProps = {
 export const deployRoute: RouteProps = {
   path: "/deploy"
 }
+
+export const configSecretRoute: RouteProps = {
+  path: "/config-secret"
+}
+
 // Route params
 export interface IDeployWorkloadsParams {
 }
@@ -86,6 +91,9 @@ export interface ICronJobsRouteParams {
 export interface IStonesRouteParams {
 }
 
+export interface IConfigSecretRouteParams {
+
+}
 
 // URL-builders
 export const workloadsURL = (params?: IURLParams) => overviewURL(params);
@@ -101,3 +109,4 @@ export const enhanceStatefulSetsURL = buildURL<IEnhanceStatefulSetsRouteParams>(
 export const injectorURL = buildURL<InjectorsRouteParams>(injectorsRoute.path)
 export const watersURL = buildURL<IWatersRouteParams>(watersRoute.path)
 export const deployURL = buildURL<IDeployWorkloadsParams>(deployRoute.path)
+export const configSecretURL = buildURL<IConfigSecretRouteParams>(configSecretRoute.path)

@@ -5,7 +5,7 @@ import { observer } from "mobx-react";
 import { Trans, t } from "@lingui/macro";
 import { RouteComponentProps } from "react-router";
 import { Secret, secretsApi } from "../../api/endpoints";
-import { KubeObjectMenu, KubeObjectMenuProps } from "../kube-object/kube-object-menu";
+import { KubeObjectMenu, KubeObjectMenuProps } from "../kube-object";
 import { AddSecretDialog } from "./add-secret-dialog";
 import { ISecretsRouteParams } from "./secrets.route";
 import { KubeObjectListLayout } from "../kube-object";
@@ -14,8 +14,8 @@ import { secretsStore } from "./secrets.store";
 import { apiManager } from "../../api/api-manager";
 import { ConfigSecretDialog } from "./config-secret-dialog";
 import { MenuItem } from "../menu";
-import { Icon } from "../icon/icon";
-import { _i18n } from "../../../client/i18n";
+import { Icon } from "../icon";
+import { _i18n } from "../../i18n";
 
 enum sortBy {
   name = "name",
@@ -35,7 +35,8 @@ export class Secrets extends React.Component<Props> {
     return (
       <>
         <KubeObjectListLayout
-          className="Secrets" store={secretsStore}
+          className="Secrets"
+          store={secretsStore}
           sortingCallbacks={{
             [sortBy.name]: (item: Secret) => item.getName(),
             [sortBy.namespace]: (item: Secret) => item.getNs(),
