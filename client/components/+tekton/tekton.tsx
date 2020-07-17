@@ -61,7 +61,7 @@ export class Tekton extends React.Component<Props> {
         path: taskRunRoute.path,
       },
       {
-        title: <Trans>OpsSecret</Trans>,
+        title: <Trans>Config</Trans>,
         component: OpsSecrets,
         url: opsSecretURL({query}),
         path: opsSecretRoute.path,
