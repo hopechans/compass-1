@@ -128,7 +128,6 @@ export class ConfigSecretDialog extends React.Component<Props> {
 
   close = () => {
     ConfigSecretDialog.close();
-    // this.reset();
   }
 
   onOpen = async () => {
@@ -149,23 +148,41 @@ export class ConfigSecretDialog extends React.Component<Props> {
     }
 
     // reset data
-    if (this.secret[this.type].data == undefined) {
+    if (this.secret[this.type].data == undefined && this.type != SecretType.DockerConfigJson) {
       this.secret[this.type].data = [];
     }
-    Object.keys(ConfigSecretDialog.secret.data).map(key => {
-      let setSuccess: boolean = false;
-      this.secret[this.type].data.map(item => {
-        if (item.key == key) {
-          item.value = base64.decode(ConfigSecretDialog.secret.data[key])
-        }
-        setSuccess = true;
-      })
-      if (!setSuccess) {
-        this.secret[this.type].data.push(
-          {key: key, value: base64.decode(ConfigSecretDialog.secret.data[key]), required: true}
+
+    if (this.type == SecretType.DockerConfigJson) {
+
+      const obj = JSON.parse(
+        base64.decode(
+          Object.assign(ConfigSecretDialog.secret.data)[".dockerconfigjson"]
         )
-      }
-    })
+      )
+      const auth = obj["auths"]
+
+      Object.keys(auth).map(key => {
+        this.dockerConfigAddress = key
+        this.dockerConfig.username = auth[key]["username"] || "";
+        this.dockerConfig.password = auth[key]["password"] || "";
+        this.dockerConfig.email = auth[key]["email"] || "";
+      })
+    } else {
+      Object.keys(ConfigSecretDialog.secret.data).map(key => {
+        let setSuccess: boolean = false;
+        this.secret[this.type].data.map(item => {
+          if (item.key == key) {
+            item.value = base64.decode(ConfigSecretDialog.secret.data[key])
+          }
+          setSuccess = true;
+        })
+        if (!setSuccess) {
+          this.secret[this.type].data.push(
+            {key: key, value: base64.decode(ConfigSecretDialog.secret.data[key]), required: true}
+          )
+        }
+      })
+    }
 
     // reset annotations
     if (this.secret[this.type].annotations == undefined) {
@@ -329,6 +346,7 @@ export class ConfigSecretDialog extends React.Component<Props> {
   renderDockerConfigFields() {
     return (
       <div>
+        <br/>
         <SubTitle title={<Trans>Address</Trans>}/>
         <Input
           required={true}
@@ -363,7 +381,6 @@ export class ConfigSecretDialog extends React.Component<Props> {
   }
 
   renderData = (field: ISecretField) => {
-
     const fields = this.secret[this.type][field] || [];
 
     return (
