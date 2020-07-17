@@ -249,17 +249,6 @@ export class TaskRunLogsDialog extends React.Component<Props> {
     }
     const { logs, newLogs } = this.getLogs();
 
-    logs.split("\n").map((lineLog) => {
-      let t = lineLog.split(" ")[0];
-      const endContent = lineLog.replace(t, "");
-      if (t != "") {
-        var time = new Date(moment(t).utc().toString()).toLocaleString();
-        this.finalLog = this.finalLog + time + endContent + "\n";
-      }
-
-      console.log(this.finalLog);
-    });
-
     if (!logs && !newLogs) {
       return (
         <p className="no-logs">
@@ -269,7 +258,7 @@ export class TaskRunLogsDialog extends React.Component<Props> {
     }
     return (
       <>
-        <p className="taskrun-log-contant">{this.finalLog.toString()}</p>
+        <p className="taskrun-log-contant">{logs}</p>
 
         {newLogs && (
           <>

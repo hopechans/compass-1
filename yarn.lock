@@ -2051,6 +2051,13 @@
   dependencies:
     "@types/react" "*"
 
+"@types/react-treeview@^0.4.2":
+  version "0.4.2"
+  resolved "https://registry.npm.taobao.org/@types/react-treeview/download/@types/react-treeview-0.4.2.tgz#080a89fdfba18cc589de96f9c51625b7a2ae5a1f"
+  integrity sha1-CAqJ/fuhjMWJ3pb5xRYlt6KuWh8=
+  dependencies:
+    "@types/react" "*"
+
 "@types/react-window@^1.8.1":
   version "1.8.1"
   resolved "https://registry.yarnpkg.com/@types/react-window/-/react-window-1.8.1.tgz#6e1ceab2e6f2f78dbf1f774ee0e00f1bb0364bb3"
@@ -8838,6 +8845,13 @@ react-transition-group@^4.3.0:
     dom-helpers "^5.0.1"
     loose-envify "^1.4.0"
     prop-types "^15.6.2"
+
+react-treeview@^0.4.7:
+  version "0.4.7"
+  resolved "https://registry.npm.taobao.org/react-treeview/download/react-treeview-0.4.7.tgz#f647e04f70496eb11fb0912c35187e80eb60d458"
+  integrity sha1-9kfgT3BJbrEfsJEsNRh+gOtg1Fg=
+  dependencies:
+    prop-types "^15.5.8"
 
 react-window@^1.8.5:
   version "1.8.5"

@@ -17,6 +17,7 @@
     "@antv/g6": "^3.5.0",
     "@material-ui/icons": "^4.9.1",
     "@sentry/browser": "^5.17.0",
+    "@types/react-treeview": "^0.4.2",
     "antd": "^4.3.4",
     "axios": "^0.19.0",
     "chalk": "^2.4.2",
@@ -34,6 +35,7 @@
     "morgan": "^1.9.1",
     "react-dnd": "^10.0.2",
     "react-dnd-html5-backend": "^10.0.2",
+    "react-treeview": "^0.4.7",
     "sockjs-client": "^1.4.0",
     "strip-ansi": "^6.0.0"
   },
