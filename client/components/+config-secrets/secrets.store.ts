@@ -1,6 +1,6 @@
 import { KubeObjectStore } from "../../kube-object.store";
 import { autobind } from "../../utils";
-import { Secret, secretsApi } from "../../api/endpoints";
+import { Secret, opsSecretsApi,secretsApi } from "../../api/endpoints";
 import { apiManager } from "../../api/api-manager";
 
 @autobind()
@@ -10,3 +10,14 @@ export class SecretsStore extends KubeObjectStore<Secret> {
 
 export const secretsStore = new SecretsStore();
 apiManager.registerStore(secretsApi, secretsStore);
+
+
+
+@autobind()
+export class OpsSecretsStore extends KubeObjectStore<Secret> {
+  api = opsSecretsApi
+}
+
+export const opsSecretsStore = new SecretsStore();
+apiManager.registerStore(opsSecretsApi, secretsStore);
+
