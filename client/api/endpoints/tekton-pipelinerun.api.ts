@@ -6,6 +6,7 @@ import { Params } from "./tekton-task.api";
 import { PersistentVolumeClaimVolumeSource } from "./persistent-volume-claims.api";
 import moment from "moment";
 import { advanceFormatDuration } from "../../utils";
+import { TaskRun } from "./tekton-taskrun.api";
 
 export interface PipelineRef {
   name: string;
@@ -89,6 +90,12 @@ export interface WorkspaceBinding {
   secret?: any;
 }
 
+export interface TaskRunsReport {
+  status: {
+    conditions: { status: string, reason: string, message: string }[];
+  }
+}
+
 @autobind()
 export class PipelineRun extends KubeObject {
   static kind = "PipelineRun";
@@ -146,14 +153,19 @@ export class PipelineRun extends KubeObject {
     return this.getErrorReason() != "";
   }
 
-  getTasks(): any {
+
+  getFailedTaskRunMessage(): string {
+    return "wocao"
+  }
+
+  getTaskRuns(): any {
     if (this.status.taskRuns === undefined) return [];
     return this.status.taskRuns;
   }
 
   getTaskRunName(): string[] {
     return (
-      Object.keys(this.getTasks())
+      Object.keys(this.getTaskRuns())
         .map((item: any) => {
           return item;
         })

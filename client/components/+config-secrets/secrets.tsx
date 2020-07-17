@@ -17,7 +17,7 @@ import { MenuItem } from "../menu";
 import { Icon } from "../icon";
 import { _i18n } from "../../i18n";
 import { observable } from "mobx";
-import {namespaceStore} from "../+namespaces/namespace.store";
+import { namespaceStore } from "../+namespaces/namespace.store";
 
 enum sortBy {
   name = "name",
@@ -39,13 +39,13 @@ export class Secrets extends React.Component<Props> {
   @observable addRemoveButtons = {}
 
   render() {
-    const store = this.className == "Secrets" ? secretsStore : opsSecretsStore ;
+    const store = this.className == "Secrets" ? secretsStore : opsSecretsStore;
     return (
       <>
         <KubeObjectListLayout
           className={this.className}
           store={store}
-          dependentStores={[namespaceStore,]}
+          dependentStores={[namespaceStore]}
           sortingCallbacks={{
             [sortBy.name]: (item: Secret) => item.getName(),
             [sortBy.namespace]: (item: Secret) => item.getNs(),
@@ -105,6 +105,5 @@ export function SecretMenu(props: KubeObjectMenuProps<Secret>) {
   )
 }
 
-apiManager.registerViews(secretsApi, {
-  Menu: SecretMenu,
-})
+apiManager.registerViews(secretsApi, {Menu: SecretMenu,})
+
