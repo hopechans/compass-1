@@ -22,7 +22,6 @@ import upperFirst from "lodash/upperFirst";
 import { Checkbox } from "../checkbox";
 import { configStore } from "../../config.store";
 import { namespaceStore } from "../+namespaces/namespace.store";
-import { classNames } from "react-select/src/utils";
 
 interface Props extends Partial<DialogProps> {
   className: string

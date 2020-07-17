@@ -45,7 +45,7 @@ export class Secrets extends React.Component<Props> {
         <KubeObjectListLayout
           className={this.className}
           store={store}
-          dependentStores={[namespaceStore, secretsStore, opsSecretsStore]}
+          dependentStores={[namespaceStore]}
           sortingCallbacks={{
             [sortBy.name]: (item: Secret) => item.getName(),
             [sortBy.namespace]: (item: Secret) => item.getNs(),
@@ -105,6 +105,5 @@ export function SecretMenu(props: KubeObjectMenuProps<Secret>) {
   )
 }
 
-apiManager.registerViews(secretsApi, {
-  Menu: SecretMenu,
-})
+apiManager.registerViews(secretsApi, {Menu: SecretMenu,})
+
