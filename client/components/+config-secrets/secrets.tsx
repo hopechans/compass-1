@@ -101,7 +101,7 @@ export function SecretMenu(props: KubeObjectMenuProps<Secret>) {
           <span className="title"><Trans>Config</Trans></span>
         </MenuItem>
       </KubeObjectMenu>
-    </>
+    </> 
   )
 }
 
