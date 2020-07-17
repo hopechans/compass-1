@@ -1,10 +1,10 @@
-import {autobind} from "../../utils";
-import {KubeObjectStore} from "../../kube-object.store";
-import {pipelineRunApi, PipelineRun} from "../../api/endpoints";
-import {apiManager} from "../../api/api-manager";
-import {tektonGraphStore} from "../+tekton-graph/tekton-graph.store";
-import {initData} from "../+tekton-graph/graphs";
-import {taskRunStore} from "../+tekton-taskrun";
+import { autobind } from "../../utils";
+import { KubeObjectStore } from "../../kube-object.store";
+import { pipelineRunApi, PipelineRun } from "../../api/endpoints";
+import { apiManager } from "../../api/api-manager";
+import { tektonGraphStore } from "../+tekton-graph/tekton-graph.store";
+import { initData } from "../+tekton-graph/graphs";
+import { taskRunStore } from "../+tekton-taskrun";
 
 @autobind()
 export class PipelineRunStore extends KubeObjectStore<PipelineRun> {
@@ -69,7 +69,7 @@ export class PipelineRunStore extends KubeObjectStore<PipelineRun> {
     if (graphName) {
       try {
         const tektonGraph = tektonGraphStore.getByName(graphName)
-        return {width: tektonGraph.spec.width, height: tektonGraph.spec.height}
+        return { width: tektonGraph.spec?.width, height: tektonGraph.spec?.height }
       } catch (e) {
         return null;
       }

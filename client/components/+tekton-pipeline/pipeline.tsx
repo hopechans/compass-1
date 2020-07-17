@@ -5,7 +5,7 @@ import { observer } from "mobx-react";
 import { observable } from "mobx";
 import { RouteComponentProps } from "react-router";
 import { Trans } from "@lingui/macro";
-import { Pipeline, pipelineApi } from "../../api/endpoints";
+import {Pipeline, pipelineApi, PipelineRun} from "../../api/endpoints";
 import { pipelineStore } from "./pipeline.store";
 import { KubeObjectMenu, KubeObjectMenuProps } from "../kube-object";
 import { KubeObjectListLayout } from "../kube-object";
@@ -25,6 +25,9 @@ import {pipelineResourceStore} from "../+tekton-pipelineresource/pipelineresourc
 import {PipelineRunDialog} from "../+tekton-pipelinerun/pipeline-run-dialog";
 import {PipelineVisualDialog} from "./pipeline-visual-dialog";
 import {tektonGraphStore} from "../+tekton-graph/tekton-graph.store";
+import {Link} from "react-router-dom";
+import {PipelineRunVisualDialog} from "../+tekton-pipelinerun/pipelinerun-visual-dialog";
+import Tooltip from "@material-ui/core/Tooltip";
 
 enum sortBy {
   name = "name",
@@ -45,6 +48,18 @@ export class Pipelines extends React.Component<Props> {
   @observable pipelineResources: [];
   @observable pipeResult: PipelineResult = pipelineResult;
 
+  renderPipelineName(pipeline: Pipeline) {
+    const name = pipeline.getName();
+    return (
+      <Link onClick={(event) => {
+        event.stopPropagation(); PipelineVisualDialog.open(pipeline)}
+      } to={null}>
+        <Tooltip title={name} placement="top-start">
+          <span>{name}</span>
+        </Tooltip>
+      </Link>
+    );
+  }
 
   render() {
 
@@ -91,7 +106,7 @@ export class Pipelines extends React.Component<Props> {
             },
           ]}
           renderTableContents={(pipeline: Pipeline) => [
-            pipeline.getName(),
+            this.renderPipelineName(pipeline),
             pipeline.getOwnerNamespace(),
             pipeline.getTasks().length,
             pipeline.getTaskSet().map((task) => <p key={task}>{task}</p>),
@@ -112,9 +127,9 @@ export class Pipelines extends React.Component<Props> {
               AddPipelineDialog.open();
             },
           }}
-          onDetails={
-            (pipeline: Pipeline) => PipelineVisualDialog.open(pipeline)
-          }
+          // onDetails={
+          //   (pipeline: Pipeline) => PipelineVisualDialog.open(pipeline)
+          // }
         />
         <PipelineVisualDialog />
         <CopyTaskDialog />

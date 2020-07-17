@@ -1,10 +1,10 @@
-import { RouteProps } from "react-router"
-import { Workloads } from "./workloads";
-import { buildURL, IURLParams } from "../../navigation";
+import {RouteProps} from "react-router"
+import {Workloads} from "./workloads";
+import {buildURL, IURLParams} from "../../navigation";
 
 export const workloadsRoute: RouteProps = {
   get path() {
-    return Workloads.tabRoutes.map(({ path }) => path).flat()
+    return Workloads.tabRoutes.map(({path}) => path).flat()
   }
 }
 
@@ -50,6 +50,7 @@ export const watersRoute: RouteProps = {
 export const deployRoute: RouteProps = {
   path: "/deploy"
 }
+
 // Route params
 export interface IDeployWorkloadsParams {
 }
@@ -69,8 +70,10 @@ export interface IDaemonSetsRouteParams {
 
 export interface IStatefulSetsRouteParams {
 }
+
 export interface InjectorsRouteParams {
 }
+
 export interface IWatersRouteParams {
 }
 
@@ -85,7 +88,6 @@ export interface ICronJobsRouteParams {
 
 export interface IStonesRouteParams {
 }
-
 
 // URL-builders
 export const workloadsURL = (params?: IURLParams) => overviewURL(params);

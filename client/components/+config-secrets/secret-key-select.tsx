@@ -76,8 +76,8 @@ export class SecretKeySelect extends React.Component<Props> {
     const { className, showIcons, showClusterOption, clusterOptionLabel, customizeOptions, ...selectProps } = this.props;
     return (
       <Select
-        className={cssNames("ConfigMapsKeySelect", className)}
-        menuClass="ConfigMapsKeySelect"
+        className={cssNames("SecretKeySelect", className)}
+        menuClass="SecretKeySelect"
         formatOptionLabel={this.formatOptionLabel}
         options={this.options}
         {...selectProps}

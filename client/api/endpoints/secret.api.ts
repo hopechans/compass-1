@@ -42,11 +42,23 @@ export class Secret extends KubeObject {
   getToken() {
     return this.data.token;
   }
+
+  getHide() {
+    return this.getLabels().map(label => { if (label.split("=")[0] == "hide") return true }) || false
+  }
 }
 
 export const secretsApi = new KubeApi({
   kind: Secret.kind,
   apiBase: "/api/v1/secrets",
+  isNamespaced: true,
+  objectConstructor: Secret,
+});
+
+
+export const opsSecretsApi = new KubeApi({
+  kind: Secret.kind,
+  apiBase: "/api/v1/ops-secrets",
   isNamespaced: true,
   objectConstructor: Secret,
 });

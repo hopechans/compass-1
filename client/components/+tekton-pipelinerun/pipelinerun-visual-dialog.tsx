@@ -68,7 +68,7 @@ export class PipelineRunVisualDialog extends React.Component<Props> {
         const names = pipelineRunStore.getTaskRunName(this.pipelineRun);
         const currentTaskRunMap = pipelineRunStore.getTaskRun(names);
         const currentTaskRun = currentTaskRunMap[name];
-        this.showLogs(currentTaskRun.metadata.name);
+        this.showLogs(currentTaskRun.metadata?.name);
       });
 
       this.graph.render();

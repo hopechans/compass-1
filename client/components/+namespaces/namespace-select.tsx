@@ -16,10 +16,12 @@ interface Props extends SelectProps {
   showIcons?: boolean;
   showClusterOption?: boolean; // show cluster option on the top (default: false)
   clusterOptionLabel?: React.ReactNode; // label for cluster option (default: "Cluster")
+  required?: boolean;
   customizeOptions?(nsOptions: SelectOption[]): SelectOption[];
 }
 
 const defaultProps: Partial<Props> = {
+  required: false,
   showIcons: true,
   showClusterOption: false,
   get clusterOptionLabel() {
@@ -56,18 +58,19 @@ export class NamespaceSelect extends React.Component<Props> {
     const { value, label } = option;
     return label || (
       <>
-        {showIcons && <Icon small material="layers"/>}
+        {showIcons && <Icon small material="layers" />}
         {value}
       </>
     );
   }
 
   render() {
-    const { className, showIcons, showClusterOption, clusterOptionLabel, customizeOptions, ...selectProps } = this.props;
+    const { className, showIcons, showClusterOption, clusterOptionLabel, customizeOptions, required, ...selectProps } = this.props;
     return (
       <Select
         className={cssNames("NamespaceSelect", className)}
         menuClass="NamespaceSelectMenu"
+        required={required}
         formatOptionLabel={this.formatOptionLabel}
         options={this.options}
         {...selectProps}
@@ -93,9 +96,9 @@ export class NamespaceSelectFilter extends React.Component {
           const isSelected = hasContext(namespace);
           return (
             <div className="flex gaps align-center">
-              <FilterIcon type={FilterType.NAMESPACE}/>
+              <FilterIcon type={FilterType.NAMESPACE} />
               <span>{namespace}</span>
-              {isSelected && <Icon small material="check" className="box right"/>}
+              {isSelected && <Icon small material="check" className="box right" />}
             </div>
           )
         }}

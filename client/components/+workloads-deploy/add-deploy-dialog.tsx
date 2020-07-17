@@ -50,7 +50,7 @@ export class AddDeployDialog extends React.Component<Props> {
 
   addDeployDialog = async () => {
 
-    const {app, containers, service, volumeClaims} = this;
+    const { app, containers, service, volumeClaims } = this;
     const name = app.name + '-' + Math.floor(Date.now() / 1000)
 
     try {
@@ -58,7 +58,7 @@ export class AddDeployDialog extends React.Component<Props> {
         {
           name: name,
           namespace: '',
-          labels: new Map<string, string>().set("namespace", configStore.getDefaultNamespace() == "" ? "admin" : configStore.getDefaultNamespace())
+          labels: new Map<string, string>().set("namespace", configStore.getDefaultNamespace())
         },
         {
           spec: {

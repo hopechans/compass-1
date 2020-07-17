@@ -82,7 +82,7 @@ export const task: TaskResult = {
 
 @observer
 export class CopyTaskDialog extends React.Component<Props> {
-  @observable prefix: string = configStore.getDefaultNamespace() || "admin";
+  @observable prefix: string = configStore.getDefaultNamespace();
   @observable value: TaskResult = this.props.value || task;
   @observable static isOpen = false;
   @observable static graph: any;
@@ -100,7 +100,7 @@ export class CopyTaskDialog extends React.Component<Props> {
 
   loadData = async (name: string) => {
     try {
-      const defaultNameSpace = "ops";
+      const defaultNameSpace = configStore.getOpsNamespace();
       if (name.split("-")[0] !== this.prefix) {
         name = `${this.prefix}-${name}`;
       }
@@ -174,13 +174,8 @@ export class CopyTaskDialog extends React.Component<Props> {
         await taskStore.create(
           {
             name: this.value.taskName,
-            namespace: "",
-            labels: new Map<string, string>().set(
-              "namespace",
-              configStore.getDefaultNamespace() == ""
-                ? "admin"
-                : configStore.getDefaultNamespace()
-            ),
+            namespace: configStore.getOpsNamespace(),
+            labels: new Map<string, string>().set("namespace", configStore.getDefaultNamespace()),
           },
           {
             spec: {
@@ -240,7 +235,7 @@ export class CopyTaskDialog extends React.Component<Props> {
 
   get taskOptions() {
     const options = taskStore
-      .getAllByNs("ops")
+      .getAllByNs(configStore.getOpsNamespace())
       .map((item) => ({ value: item.getName() }))
       .slice();
     return [...options];
@@ -277,8 +272,8 @@ export class CopyTaskDialog extends React.Component<Props> {
                     this.ifSwitch ? (
                       <SubTitle title={<Trans>Select module</Trans>} />
                     ) : (
-                      <SubTitle title={<Trans>Template configuration</Trans>} />
-                    )
+                        <SubTitle title={<Trans>Template configuration</Trans>} />
+                      )
                   }
                 />
               </FormGroup>
