@@ -21,6 +21,7 @@ import {showDetails} from "../../navigation";
 import upperFirst from "lodash/upperFirst";
 import {Checkbox} from "../checkbox";
 import {configStore} from "../../config.store";
+import {namespaceStore} from "../+namespaces/namespace.store";
 
 interface Props extends Partial<DialogProps> {
   className: string
@@ -130,7 +131,7 @@ export class ConfigSecretDialog extends React.Component<Props> {
     // this.reset();
   }
 
-  onOpen = () => {
+  onOpen = async () => {
     Object.assign(this, ConfigSecretDialog.secret);
     this.name = ConfigSecretDialog.secret.getName();
     this.namespace = ConfigSecretDialog.secret.getNs();
@@ -139,8 +140,12 @@ export class ConfigSecretDialog extends React.Component<Props> {
       this.isOpsSecret = true;
       this.secret = this.opsSecretTemplate;
       this.type = ConfigSecretDialog.secret.type;
-      this.namespace = configStore.getOpsNamespace();
 
+      let iNamespace = namespaceStore.getByName(configStore.getOpsNamespace());
+      if (iNamespace == undefined) {
+        iNamespace = await namespaceStore.create({name: configStore.getOpsNamespace()});
+      }
+      this.namespace = iNamespace.getName();
     }
 
     // reset data
@@ -227,7 +232,8 @@ export class ConfigSecretDialog extends React.Component<Props> {
   }
 
   updateSecret = async () => {
-    const {name, namespace, type} = this;
+    let {name, namespace, type} = this;
+    const {className} = this.props;
     const {data = [], labels = [], annotations = []} = this.secret[type];
     const secret: Partial<Secret> = {
       type: type,
@@ -240,15 +246,18 @@ export class ConfigSecretDialog extends React.Component<Props> {
       } as IKubeObjectMetadata
     }
     try {
+      let labels = this.userNotVisible ? new Map<string, string>().set("hide", "1") : new Map<string, string>()
+      if (className == "OpsSecrets") {
+        labels.set("tektonConfig", "1")
+      }
       const newSecret = await secretsApi.create(
         {
           namespace,
           name,
-          labels: this.userNotVisible ? new Map<string, string>().set("hide", "1") : new Map<string, string>()
+          labels: labels
         },
         secret);
       showDetails(newSecret.selfLink);
-      this.reset();
       Notifications.ok(
         <>Secret {name} save succeeded</>
       );
@@ -303,7 +312,7 @@ export class ConfigSecretDialog extends React.Component<Props> {
                 />
                 <Icon
                   small
-                  disabled={required}
+                  // disabled={required}
                   tooltip={required ? <Trans>Required Field</Trans> : <Trans>Remove Field</Trans>}
                   className="remove-icon"
                   material="remove_circle_outline"

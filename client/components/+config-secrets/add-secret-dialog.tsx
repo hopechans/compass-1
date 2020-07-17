@@ -21,6 +21,8 @@ import {showDetails} from "../../navigation";
 import upperFirst from "lodash/upperFirst";
 import {Checkbox} from "../checkbox";
 import {configStore} from "../../config.store";
+import {namespaceStore} from "../+namespaces/namespace.store";
+import {classNames} from "react-select/src/utils";
 
 interface Props extends Partial<DialogProps> {
   className: string
@@ -123,11 +125,24 @@ export class AddSecretDialog extends React.Component<Props> {
   }
 
   onOpen = async () => {
+
+    const {className} = this.props;
+
     if (this.props.className == "OpsSecrets") {
       this.isOpsSecret = true;
       this.type = SecretType.BasicAuth;
       this.secret = this.opsSecretTemplate;
-      this.namespace = configStore.getOpsNamespace();
+
+      let ns = configStore.getDefaultNamespace();
+      if (className == "OpsSecrets") {
+        ns = configStore.getOpsNamespace();
+      }
+
+      let iNamespace = namespaceStore.getByName(ns);
+      if (iNamespace == undefined) {
+        iNamespace = await namespaceStore.create({name: configStore.getOpsNamespace()});
+      }
+      this.namespace = iNamespace.getName();
     }
   }
 
@@ -153,6 +168,7 @@ export class AddSecretDialog extends React.Component<Props> {
 
   createSecret = async () => {
     const {name, namespace, type} = this;
+    const {className} = this.props;
     const {data = [], labels = [], annotations = []} = this.secret[type];
     const secret: Partial<Secret> = {
       type: type,
@@ -165,15 +181,18 @@ export class AddSecretDialog extends React.Component<Props> {
       } as IKubeObjectMetadata
     }
     try {
+      let labels = this.userNotVisible ? new Map<string, string>().set("hide", "1") : new Map<string, string>()
+      if (className == "OpsSecrets") {
+        labels.set("tektonConfig", "1")
+      }
       const newSecret = await secretsApi.create(
         {
           namespace,
           name,
-          labels: this.userNotVisible ? new Map<string, string>().set("hide", "1") : new Map<string, string>()
+          labels: labels
         },
         secret);
       showDetails(newSecret.selfLink);
-      this.reset();
       Notifications.ok(
         <>Secret {name} save succeeded</>
       );
@@ -228,7 +247,7 @@ export class AddSecretDialog extends React.Component<Props> {
                 />
                 <Icon
                   small
-                  disabled={required}
+                  // disabled={required}
                   tooltip={required ? <Trans>Required Field</Trans> : <Trans>Remove Field</Trans>}
                   className="remove-icon"
                   material="remove_circle_outline"
