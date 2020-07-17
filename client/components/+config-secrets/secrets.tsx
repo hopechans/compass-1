@@ -17,6 +17,7 @@ import { MenuItem } from "../menu";
 import { Icon } from "../icon";
 import { _i18n } from "../../i18n";
 import { observable } from "mobx";
+import {namespaceStore} from "../+namespaces/namespace.store";
 
 enum sortBy {
   name = "name",
@@ -44,6 +45,7 @@ export class Secrets extends React.Component<Props> {
         <KubeObjectListLayout
           className={this.className}
           store={store}
+          dependentStores={[namespaceStore,]}
           sortingCallbacks={{
             [sortBy.name]: (item: Secret) => item.getName(),
             [sortBy.namespace]: (item: Secret) => item.getNs(),
