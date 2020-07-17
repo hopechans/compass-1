@@ -1,9 +1,9 @@
 import {observer} from "mobx-react";
-import React from "react";
 import {Secrets} from "../+config-secrets";
+import { observable } from "mobx";
 
 @observer
 export class OpsSecrets extends Secrets  {
-  className = "OpsSecrets"
+  @observable className = "OpsSecrets"
 }
 

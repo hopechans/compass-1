@@ -54,3 +54,11 @@ export const secretsApi = new KubeApi({
   isNamespaced: true,
   objectConstructor: Secret,
 });
+
+
+export const opsSecretsApi = new KubeApi({
+  kind: Secret.kind,
+  apiBase: "/api/v1/secrets/ops",
+  isNamespaced: true,
+  objectConstructor: Secret,
+});
