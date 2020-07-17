@@ -9,9 +9,7 @@ import { cssNames, noop } from "../../utils";
 import { Icon } from "../icon";
 import { taskStore } from "../+tekton-task/task.store";
 import { _i18n } from "../../i18n";
-import { FilterIcon } from "../item-object-list/filter-icon";
-import { FilterType } from "../item-object-list/page-filters.store";
-import { configStore } from "../../../client/config.store";
+import { configStore } from "../../config.store";
 
 interface Props extends SelectProps {
   showIcons?: boolean;

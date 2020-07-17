@@ -9,7 +9,7 @@ import { Dialog } from "../dialog";
 import { Wizard, WizardStep } from "../wizard";
 import { Pipeline } from "../../api/endpoints";
 import { Notifications } from "../notifications";
-import { PipelineDetails, PipelineResult, pipeline } from "./pipeline-details";
+import { PipelineSaveDetails, PipelineResult, pipeline } from "./pipeline-save-details";
 import { pipelineStore } from "./pipeline.store";
 import { pipelineTaskResource } from "./pipeline-task";
 import { taskStore } from "../+tekton-task/task.store";
@@ -165,7 +165,7 @@ export class PipelineSaveDialog extends React.Component<Props> {
       >
         <Wizard header={header} done={this.close}>
           <WizardStep contentClass="flex gaps column" next={this.submit}>
-            <PipelineDetails
+            <PipelineSaveDetails
               value={this.value}
               onChange={(value) => {
                 this.value = value.value;
