@@ -177,6 +177,14 @@ export class Task extends KubeObject {
     if (this.spec.resources === undefined) {
       return taskResource;
     }
+
+    if (this.spec.resources.inputs === undefined) {
+      this.spec.resources.inputs = [];
+    }
+    if (this.spec.resources.outputs === undefined) {
+      this.spec.resources.outputs = [];
+    }
+
     return this.spec.resources;
   }
 

@@ -1,4 +1,4 @@
-import "./task-run-logs-dialog.scss";
+import "./pipeline-run-log-dialog.scss";
 
 import * as React from "react";
 import { observable } from "mobx";
@@ -12,30 +12,40 @@ import { Icon } from "../icon";
 import { Select, SelectOption } from "../select";
 import { Spinner } from "../spinner";
 import { cssNames, downloadFile, interval } from "../../utils";
-import { taskRunStore } from "./taskrun.store";
-import { configStore } from "../../../client/config.store";
+// import { taskRunStore } from "./taskrun.store";
+import moment from "moment";
+
+import ListSubheader from "@material-ui/core/ListSubheader";
+import List from "@material-ui/core/List";
+import ListItem from "@material-ui/core/ListItem";
+import ListItemIcon from "@material-ui/core/ListItemIcon";
+import ListItemText from "@material-ui/core/ListItemText";
+import Grid from "@material-ui/core/Grid";
+import Paper from "@material-ui/core/Paper";
+// import TreeView from "react-treeview";
 
 interface Props extends Partial<DialogProps> {}
 
 @observer
-export class TaskRunLogsDialog extends React.Component<Props> {
+export class PipelineRunLogDialog extends React.Component<Props> {
   @observable static isOpen = false;
-  @observable static taskRunName: string;
+  @observable static pipelineRunName: string;
+  @observable tabVal: number;
 
-  static open(taskRunName: string) {
-    TaskRunLogsDialog.taskRunName = taskRunName || "";
+  static open(pipelineRunName: string) {
+    PipelineRunLogDialog.pipelineRunName = pipelineRunName || "";
 
-    TaskRunLogsDialog.isOpen = true;
+    PipelineRunLogDialog.isOpen = true;
   }
 
   static close() {
-    TaskRunLogsDialog.isOpen = false;
+    PipelineRunLogDialog.isOpen = false;
   }
 
   private logsArea: HTMLDivElement;
   private refresher = interval(5, () => this.load());
   private containers: string[] = [];
-  private ns: string = configStore.getOpsNamespace();
+  private ns: string = "ops";
   private podName: string = "";
   private lastLineIsShown = true; // used for proper auto-scroll content after refresh
 
@@ -66,11 +76,11 @@ export class TaskRunLogsDialog extends React.Component<Props> {
 
   close = () => {
     this.finalLog = "";
-    TaskRunLogsDialog.close();
+    PipelineRunLogDialog.close();
   };
 
   load = async () => {
-    let taskRun = taskRunStore.getByName(TaskRunLogsDialog.taskRunName);
+    let taskRun: any;
     this.podName = taskRun.getPodName();
     this.containers = taskRun.getContainerName();
     if (this.selectedContainerName == undefined) {
@@ -256,6 +266,7 @@ export class TaskRunLogsDialog extends React.Component<Props> {
         </p>
       );
     }
+
     return (
       <>
         <p className="taskrun-log-contant">{logs}</p>
@@ -273,6 +284,125 @@ export class TaskRunLogsDialog extends React.Component<Props> {
     );
   }
 
+  renderPipelineLog() {
+    return (
+      <List component="nav" aria-labelledby="" className={"pipeline-run-steps"}>
+        <ListSubheader>
+          <Icon
+            small={true}
+            material="check_circle_outline"
+            className="pipelineRun-Succeeded"
+          />
+          {"Task1"}
+        </ListSubheader>
+        <ListItem button>
+          <Icon
+            small={true}
+            material="check_circle_outline"
+            className="pipelineRun-Succeeded"
+          />
+          <ListItemText primary="container1" />
+        </ListItem>
+        <ListSubheader>
+          <Icon
+            small={true}
+            material="check_circle_outline"
+            className="pipelineRun-Succeeded"
+          />
+          {"Task2"}
+        </ListSubheader>
+        <ListItem button>
+          <Icon
+            small={true}
+            material="check_circle_outline"
+            className="pipelineRun-Succeeded"
+          />
+          <ListItemText primary="container1" />
+        </ListItem>
+        <ListSubheader>
+          <Icon
+            small={true}
+            material="check_circle_outline"
+            className="pipelineRun-Succeeded"
+          />
+          {"Task3"}
+        </ListSubheader>
+        <ListItem button>
+          <Icon
+            small={true}
+            material="check_circle_outline"
+            className="pipelineRun-Succeeded"
+          />
+          <ListItemText primary="container1" />
+        </ListItem>
+        <ListSubheader>
+          <Icon
+            small={true}
+            material="check_circle_outline"
+            className="pipelineRun-Succeeded"
+          />
+          {"Task3"}
+        </ListSubheader>
+        <ListItem button>
+          <Icon
+            small={true}
+            material="check_circle_outline"
+            className="pipelineRun-Succeeded"
+          />
+          <ListItemText primary="container1" />
+        </ListItem>
+        <ListSubheader>
+          <Icon
+            small={true}
+            material="check_circle_outline"
+            className="pipelineRun-Succeeded"
+          />
+          {"Task3"}
+        </ListSubheader>
+        <ListItem button>
+          <Icon
+            small={true}
+            material="check_circle_outline"
+            className="pipelineRun-Succeeded"
+          />
+          <ListItemText primary="container1" />
+        </ListItem>
+        <ListSubheader>
+          <Icon
+            small={true}
+            material="check_circle_outline"
+            className="pipelineRun-Succeeded"
+          />
+          {"Task3"}
+        </ListSubheader>
+        <ListItem button>
+          <Icon
+            small={true}
+            material="check_circle_outline"
+            className="pipelineRun-Succeeded"
+          />
+          <ListItemText primary="container1" />
+        </ListItem>
+        <ListSubheader>
+          <Icon
+            small={true}
+            material="check_circle_outline"
+            className="pipelineRun-Succeeded"
+          />
+          {"Task3"}
+        </ListSubheader>
+        <ListItem button>
+          <Icon
+            small={true}
+            material="check_circle_outline"
+            className="pipelineRun-Succeeded"
+          />
+          <ListItemText primary="container1" />
+        </ListItem>
+      </List>
+    );
+  }
+
   render() {
     const { ...dialogProps } = this.props;
     const { selectedContainerName, tailLines } = this;
@@ -285,7 +415,7 @@ export class TaskRunLogsDialog extends React.Component<Props> {
     return (
       <Dialog
         {...dialogProps}
-        isOpen={TaskRunLogsDialog.isOpen}
+        isOpen={PipelineRunLogDialog.isOpen}
         className="PodLogsDialog"
         onOpen={this.onOpen}
         onClose={this.onClose}
@@ -321,13 +451,28 @@ export class TaskRunLogsDialog extends React.Component<Props> {
               </div>
               {this.renderControlsPanel()}
             </div>
-            <div
-              className="taskrun-logs-area"
-              onScroll={this.onScroll}
-              ref={(e) => (this.logsArea = e)}
+            <br />
+            <Grid
+              container
+              // direction="row"
+              justify="space-around"
+              // alignItems="stretch"
+              spacing={2}
             >
-              {this.renderLogs()}
-            </div>
+              <Grid xs={2}>
+                <Paper>{this.renderPipelineLog()}</Paper>
+              </Grid>
+
+              <Grid xs={10}>
+                <div
+                  className="pipeline-run-logs-area"
+                  onScroll={this.onScroll}
+                  ref={(e) => (this.logsArea = e)}
+                >
+                  {this.renderLogs()}
+                </div>
+              </Grid>
+            </Grid>
           </WizardStep>
         </Wizard>
       </Dialog>

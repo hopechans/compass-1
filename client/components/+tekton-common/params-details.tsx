@@ -83,7 +83,7 @@ export class ParamsDetails extends React.Component<Props> {
                   <Col span="10" offset={2}>
                     <Input
                       className="item"
-                      disabled={disable}
+                      // disabled={disable}
                       placeholder={_i18n._(t`Value`)}
                       title={this.value[index].value}
                       value={this.value[index].value}
@@ -92,7 +92,7 @@ export class ParamsDetails extends React.Component<Props> {
                       }}
                     />
                   </Col>
-                  {!disable ?
+                  {!disable ? (
                     <Col span="1" offset={1}>
                       <Icon
                         small
@@ -104,8 +104,10 @@ export class ParamsDetails extends React.Component<Props> {
                           e.stopPropagation();
                         }}
                       />
-                    </Col> :<></>
-                  }
+                    </Col>
+                  ) : (
+                    <></>
+                  )}
                 </Row>
               </div>
             );
