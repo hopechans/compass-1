@@ -168,7 +168,7 @@ export class PipelineRuns extends React.Component<Props> {
       } else {
         return (
           <Icon
-            material="report_problem"
+            material="error_outline"
             small={true}
             className="pipelineRun-Failed"
           />
@@ -193,12 +193,9 @@ export class PipelineRuns extends React.Component<Props> {
           ]}
           sortingCallbacks={{
             [sortBy.name]: (pipelineRun: PipelineRun) => pipelineRun.getName(),
-            [sortBy.ownernamespace]: (pipelineRun: PipelineRun) =>
-              pipelineRun.getOwnerNamespace(),
-            [sortBy.reason]: (pipelineRun: PipelineRun) =>
-              pipelineRun.getErrorReason(),
-            [sortBy.age]: (pipelineRun: PipelineRun) =>
-              pipelineRun.getAge(false),
+            [sortBy.ownernamespace]: (pipelineRun: PipelineRun) =>pipelineRun.getOwnerNamespace(),
+            [sortBy.reason]: (pipelineRun: PipelineRun) =>pipelineRun.getErrorReason(),
+            [sortBy.age]: (pipelineRun: PipelineRun) =>pipelineRun.getAge(false),
           }}
           onDetails={(pipelineRun: PipelineRun) => {
             PipelineRunVisualDialog.open(pipelineRun);
