@@ -175,7 +175,10 @@ export class CopyTaskDialog extends React.Component<Props> {
           {
             name: this.value.taskName,
             namespace: configStore.getOpsNamespace(),
-            labels: new Map<string, string>().set("namespace", configStore.getDefaultNamespace()),
+            labels: new Map<string, string>().set(
+              "namespace",
+              configStore.getDefaultNamespace()
+            ),
           },
           {
             spec: {
@@ -198,9 +201,7 @@ export class CopyTaskDialog extends React.Component<Props> {
           await taskStore.update(task, { ...task });
         }
       }
-      Notifications.ok(
-        <>Task {this.value.taskName} save succeeded</>
-      );
+      Notifications.ok(<>Task {this.value.taskName} save succeeded</>);
       this.close();
     } catch (err) {
       this.value.taskName = "";
@@ -272,8 +273,8 @@ export class CopyTaskDialog extends React.Component<Props> {
                     this.ifSwitch ? (
                       <SubTitle title={<Trans>Select module</Trans>} />
                     ) : (
-                        <SubTitle title={<Trans>Template configuration</Trans>} />
-                      )
+                      <SubTitle title={<Trans>Template configuration</Trans>} />
+                    )
                   }
                 />
               </FormGroup>

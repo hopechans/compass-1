@@ -13,7 +13,7 @@ import { PipelineDetails, PipelineResult, pipeline } from "./pipeline-details";
 import { pipelineStore } from "./pipeline.store";
 import { pipelineTaskResource } from "./pipeline-task";
 import { taskStore } from "../+tekton-task/task.store";
-import {PipelineVisualDialog} from "./pipeline-visual-dialog";
+import { PipelineVisualDialog } from "./pipeline-visual-dialog";
 
 interface Props<T = any> extends Partial<Props> {
   value?: T;
@@ -90,6 +90,15 @@ export class PipelineSaveDialog extends React.Component<Props> {
             });
           });
         }
+
+        if (task.spec.params !== undefined) {
+          task.spec.params.map((param: any) => {
+            this.value.tasks[index].params.push({
+              name: param.name,
+              value: "",
+            });
+          });
+        }
       }
     });
 
@@ -132,9 +141,7 @@ export class PipelineSaveDialog extends React.Component<Props> {
     try {
       // //will update pipeline
       await pipelineStore.update(pipeline, { ...pipeline });
-      Notifications.ok(
-        <>Pipeline {this.value.pipelineName} save succeeded</>
-      );
+      Notifications.ok(<>Pipeline {this.value.pipelineName} save succeeded</>);
       this.close();
       PipelineVisualDialog.close();
     } catch (err) {
