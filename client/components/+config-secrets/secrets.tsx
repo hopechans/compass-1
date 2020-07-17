@@ -38,7 +38,7 @@ export class Secrets extends React.Component<Props> {
   @observable addRemoveButtons = {}
 
   render() {
-    const store = this.className == "Secrets" ? secretsStore : opsSecretsStore;
+    const store = this.className == "Secrets" ? secretsStore : opsSecretsStore ;
     return (
       <>
         <KubeObjectListLayout

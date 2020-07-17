@@ -18,6 +18,6 @@ export class OpsSecretsStore extends KubeObjectStore<Secret> {
   api = opsSecretsApi
 }
 
-export const opsSecretsStore = new SecretsStore();
-apiManager.registerStore(opsSecretsApi, secretsStore);
+export const opsSecretsStore = new OpsSecretsStore();
+apiManager.registerStore(opsSecretsApi, opsSecretsStore);
 
