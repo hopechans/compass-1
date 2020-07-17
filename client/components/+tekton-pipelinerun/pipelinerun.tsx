@@ -28,6 +28,7 @@ import { eventStore } from "../+events/event.store";
 import { TaskRunLogsDialog } from "../+tekton-taskrun/task-run-logs-dialog";
 import { IKubeObjectMetadata } from "../../../client/api/kube-object";
 import { advanceSecondsToHms } from "../../api/endpoints";
+import { PipelineRunLogDialog } from "./pipeline-run-log-dialog";
 
 enum sortBy {
   name = "name",
@@ -245,6 +246,7 @@ export class PipelineRuns extends React.Component<Props> {
         />
         <PipelineRunVisualDialog />
         <TaskRunLogsDialog />
+        <PipelineRunLogDialog />
       </>
     );
   }
@@ -337,6 +339,18 @@ export function PipelineRunMenu(props: KubeObjectMenuProps<PipelineRun>) {
         <Icon material="autorenew" title={"rerun"} interactive={toolbar} />
         <span className="title">
           <Trans>Rerun</Trans>
+        </span>
+      </MenuItem>
+
+      <MenuItem
+        onClick={async () => {
+          let pipelineRun = object;
+          PipelineRunLogDialog.open(pipelineRun.getName());
+        }}
+      >
+        <Icon material="toc" title={"logs"} interactive={toolbar} />
+        <span className="title">
+          <Trans>Logs</Trans>
         </span>
       </MenuItem>
     </KubeObjectMenu>
