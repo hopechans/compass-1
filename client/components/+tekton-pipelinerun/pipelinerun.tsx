@@ -329,7 +329,7 @@ export function PipelineRunMenu(props: KubeObjectMenuProps<PipelineRun>) {
               },
             };
             //create it. will re-run
-            await pipelineRunStore.create(
+            await pipelineRunApi.create(
               {
                 name: pipelineRun.getName(),
                 namespace: pipelineRun.getNs(),

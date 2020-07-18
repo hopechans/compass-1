@@ -44,6 +44,7 @@ export class PipelineSaveDetails extends React.Component<Props> {
         <SubTitle title={"Pipeline Name"} />
         <Input
           value={this.value.pipelineName}
+          disabled={true}
           validators={systemName}
           onChange={(value) => (this.value.pipelineName = value)}
         />

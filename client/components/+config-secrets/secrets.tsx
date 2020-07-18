@@ -35,8 +35,8 @@ interface Props extends RouteComponentProps<ISecretsRouteParams> {
 export class Secrets extends React.Component<Props> {
 
   @observable className: string = "Secrets"
-
   @observable addRemoveButtons = {}
+
 
   render() {
     const store = this.className == "Secrets" ? secretsStore : opsSecretsStore;
@@ -91,7 +91,6 @@ export class Secrets extends React.Component<Props> {
 }
 
 export function SecretMenu(props: KubeObjectMenuProps<Secret>) {
-
   const { object, toolbar } = props;
   return (
     <>
@@ -101,9 +100,9 @@ export function SecretMenu(props: KubeObjectMenuProps<Secret>) {
           <span className="title"><Trans>Config</Trans></span>
         </MenuItem>
       </KubeObjectMenu>
-    </> 
+    </>
   )
 }
 
-apiManager.registerViews(secretsApi, {Menu: SecretMenu,})
+apiManager.registerViews(secretsApi, { Menu: SecretMenu, })
 

@@ -153,8 +153,7 @@ export class PipelineRunDialog extends React.Component<Props> {
         },
       }
 
-      await pipelineRunStore.create(
-        { name: this.value.name, namespace: configStore.getOpsNamespace() }, { ...pipelineRun });
+      await pipelineRunApi.create({ name: this.value.name, namespace: configStore.getOpsNamespace() }, { ...pipelineRun });
       Notifications.ok(<>PipelineRun {this.value.name} Run Success</>);
       this.close();
     } catch (err) {
