@@ -22,6 +22,7 @@ enum sortBy {
   cpu = "cpu",
   memory = "memory",
   node = "node",
+  restart = "restart",
 }
 
 interface Props extends OptionalProps {
@@ -51,6 +52,7 @@ export class PodDetailsList extends React.Component<Props> {
     [sortBy.cpu]: (pod: Pod) => podsStore.getPodKubeMetrics(pod).cpu,
     [sortBy.memory]: (pod: Pod) => podsStore.getPodKubeMetrics(pod).memory,
     [sortBy.node]: (pod: Pod) => pod.getNodeName(),
+    [sortBy.restart]: (pod: Pod) => pod.getRestartsCount(),
   }
 
   componentDidMount() {
@@ -114,6 +116,7 @@ export class PodDetailsList extends React.Component<Props> {
         <TableCell className="cpu">{this.renderCpuUsage(`cpu-${pod.getId()}`, metrics.cpu)}</TableCell>
         <TableCell className="memory">{this.renderMemoryUsage(`memory-${pod.getId()}`, metrics.memory)}</TableCell>
         <TableCell className="node">{pod.getNodeName()}</TableCell>
+        <TableCell className="restart">{pod.getRestartsCount()}</TableCell>
         <TableCell className={cssNames("status", kebabCase(pod.getStatusMessage()))}>{pod.getStatusMessage()}</TableCell>
       </TableRow>
     );
@@ -147,6 +150,7 @@ export class PodDetailsList extends React.Component<Props> {
             <TableCell className="cpu" sortBy={sortBy.cpu}><Trans>CPU</Trans></TableCell>
             <TableCell className="memory" sortBy={sortBy.memory}><Trans>Memory</Trans></TableCell>
             <TableCell className="node" sortBy={sortBy.node}><Trans>Node</Trans></TableCell>
+            <TableCell className="restart" sortBy={sortBy.node}><Trans>restart</Trans></TableCell>
             <TableCell className="status"><Trans>Status</Trans></TableCell>
           </TableHead>
           {
