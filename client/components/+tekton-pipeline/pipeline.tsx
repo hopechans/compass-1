@@ -16,16 +16,16 @@ import {
   task,
   TaskResult,
 } from "../+tekton-task/copy-task-dialog";
-import {MenuItem} from "../menu";
-import {Icon} from "../icon";
-import {AddPipelineDialog} from "./add-pipeline-dialog";
-import {taskStore} from "../+tekton-task/task.store";
-import {PipelineSaveDialog} from "./pipeline-save-dialog";
-import {pipelineResourceStore} from "../+tekton-pipelineresource/pipelineresource.store";
-import {PipelineRunDialog} from "../+tekton-pipelinerun/pipeline-run-dialog";
-import {PipelineVisualDialog} from "./pipeline-visual-dialog";
-import {tektonGraphStore} from "../+tekton-graph/tekton-graph.store";
-import {Link} from "react-router-dom";
+import { MenuItem } from "../menu";
+import { Icon } from "../icon";
+import { AddPipelineDialog } from "./add-pipeline-dialog";
+import { taskStore } from "../+tekton-task/task.store";
+import { PipelineSaveDialog } from "./pipeline-save-dialog";
+import { pipelineResourceStore } from "../+tekton-pipelineresource/pipelineresource.store";
+import { PipelineRunDialog } from "../+tekton-pipelinerun/pipeline-run-dialog";
+import { PipelineVisualDialog } from "./pipeline-visual-dialog";
+import { tektonGraphStore } from "../+tekton-graph/tekton-graph.store";
+import { Link } from "react-router-dom";
 import Tooltip from "@material-ui/core/Tooltip";
 
 enum sortBy {
@@ -36,12 +36,10 @@ enum sortBy {
   age = "age",
 }
 
-interface Props extends RouteComponentProps {
-}
+interface Props extends RouteComponentProps {}
 
 @observer
 export class Pipelines extends React.Component<Props> {
-
   @observable pipeline: Pipeline;
   @observable task: TaskResult = task;
   @observable pipelineResources: [];
@@ -50,9 +48,13 @@ export class Pipelines extends React.Component<Props> {
   renderPipelineName(pipeline: Pipeline) {
     const name = pipeline.getName();
     return (
-      <Link onClick={(event) => {
-        event.stopPropagation(); PipelineVisualDialog.open(pipeline)}
-      } to={null}>
+      <Link
+        onClick={(event) => {
+          event.stopPropagation();
+          PipelineVisualDialog.open(pipeline);
+        }}
+        to={null}
+      >
         <Tooltip title={name} placement="top-start">
           <span>{name}</span>
         </Tooltip>
@@ -61,7 +63,6 @@ export class Pipelines extends React.Component<Props> {
   }
 
   render() {
-
     return (
       <>
         <KubeObjectListLayout
@@ -94,21 +95,18 @@ export class Pipelines extends React.Component<Props> {
               className: "tasks",
               sortBy: sortBy.tasks,
             },
-            {
-              title: <Trans>TaskNames</Trans>,
-              className: "tasknames",
-              sortBy: sortBy.tasknames,
-            },
-            { title: <Trans>Age</Trans>,
-              className: "age",
-              sortBy: sortBy.age
-            },
+            // {
+            //   title: <Trans>TaskNames</Trans>,
+            //   className: "tasknames",
+            //   sortBy: sortBy.tasknames,
+            // },
+            { title: <Trans>Age</Trans>, className: "age", sortBy: sortBy.age },
           ]}
           renderTableContents={(pipeline: Pipeline) => [
             this.renderPipelineName(pipeline),
             pipeline.getOwnerNamespace(),
             pipeline.getTasks().length,
-            pipeline.getTaskSet().map((task) => <p key={task}>{task}</p>),
+            // pipeline.getTaskSet().map((task) => <p key={task}>{task}</p>),
             pipeline.getAge(),
           ]}
           renderItemMenu={(item: Pipeline) => {
@@ -142,9 +140,16 @@ export function PipelineMenu(props: KubeObjectMenuProps<Pipeline>) {
 
   return (
     <KubeObjectMenu {...props}>
-      <MenuItem onClick={() => { PipelineRunDialog.open(object) }}>
+      <MenuItem
+        onClick={() => {
+          PipelineRunDialog.open(object);
+        }}
+      >
         <Icon
-          material="play_circle_outline" title={"Pipeline"} interactive={toolbar} />
+          material="play_circle_outline"
+          title={"Pipeline"}
+          interactive={toolbar}
+        />
         <span className="title">
           <Trans>Run</Trans>
         </span>
