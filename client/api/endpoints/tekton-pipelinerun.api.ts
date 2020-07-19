@@ -6,7 +6,6 @@ import { Params } from "./tekton-task.api";
 import { PersistentVolumeClaimVolumeSource } from "./persistent-volume-claims.api";
 import moment from "moment";
 import { advanceFormatDuration } from "../../utils";
-import { TaskRun } from "./tekton-taskrun.api";
 
 export interface PipelineRef {
   name: string;
