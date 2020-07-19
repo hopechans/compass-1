@@ -1,14 +1,17 @@
 import "./task.scss";
 
 import React from "react";
-import { observer } from "mobx-react";
-import { RouteComponentProps } from "react-router";
-import { Trans } from "@lingui/macro";
-import { taskApi, Task } from "../../api/endpoints";
-import { taskStore } from "./task.store";
-import { KubeObjectMenu, KubeObjectMenuProps } from "../kube-object";
-import { KubeObjectListLayout } from "../kube-object";
-import { apiManager } from "../../api/api-manager";
+import {observer} from "mobx-react";
+import {RouteComponentProps} from "react-router";
+import {Trans} from "@lingui/macro";
+import {taskApi, Task} from "../../api/endpoints";
+import {taskStore} from "./task.store";
+import {KubeObjectMenu, KubeObjectMenuProps} from "../kube-object";
+import {KubeObjectListLayout} from "../kube-object";
+import {apiManager} from "../../api/api-manager";
+import {Link} from "react-router-dom";
+import Tooltip from "@material-ui/core/Tooltip";
+import {ConfigTaskDialog} from "./config-task-dialog";
 
 enum sortBy {
   name = "name",
@@ -17,10 +20,28 @@ enum sortBy {
   age = "age",
 }
 
-interface Props extends RouteComponentProps { }
+interface Props extends RouteComponentProps {
+
+}
 
 @observer
 export class Tasks extends React.Component<Props> {
+
+  renderTaskName(task: Task) {
+    const name = task.getName();
+    return (
+      <Link onClick={(event) => {
+        event.stopPropagation();
+        ConfigTaskDialog.open(task);
+      }
+      } to={null}>
+        <Tooltip title={name} placement="top-start">
+          <span>{name}</span>
+        </Tooltip>
+      </Link>
+    );
+  }
+
   render() {
     return (
       <>
@@ -46,23 +67,18 @@ export class Tasks extends React.Component<Props> {
               className: "ownernamespace",
               sortBy: sortBy.ownernamespace,
             },
-            {
-              title: <Trans>Pods</Trans>,
-              className: "pods",
-              sortBy: sortBy.pods,
-            },
-            { className: "warning" },
-            { title: <Trans>Age</Trans>, className: "age", sortBy: sortBy.age },
+            {title: <Trans>Age</Trans>, className: "age", sortBy: sortBy.age},
           ]}
           renderTableContents={(task: Task) => [
-            task.getName(),
+            this.renderTaskName(task),
             task.getOwnerNamespace(),
             task.getAge(),
           ]}
           renderItemMenu={(item: Task) => {
-            return <TaskMenu object={item} />;
+            return <TaskMenu object={item}/>;
           }}
         />
+        <ConfigTaskDialog />
       </>
     );
   }
@@ -72,4 +88,4 @@ export function TaskMenu(props: KubeObjectMenuProps<Task>) {
   return <KubeObjectMenu {...props} />;
 }
 
-apiManager.registerViews(taskApi, { Menu: TaskMenu });
+apiManager.registerViews(taskApi, {Menu: TaskMenu});
