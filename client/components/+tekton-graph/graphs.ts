@@ -45,7 +45,7 @@ export class Graphs {
       },
       defaultNode: {
         type: "card-node",
-        size: [120, 40],
+        size: [140, 60],
         linkPoints: {
           left: true,
           right: true,
@@ -149,7 +149,7 @@ export class Graphs {
 
         let edgeTarget = model.id.toString();
         let splitEdgeTarget = edgeTarget.split('-');
-        splitEdgeTarget[0] = Number(splitEdgeTarget[0]) - 1;
+        splitEdgeTarget[0] = Number(splitEdgeTarget[0]);
         splitEdgeTarget[1] = '1';
         let edgeTargetId = splitEdgeTarget.join("-");
 

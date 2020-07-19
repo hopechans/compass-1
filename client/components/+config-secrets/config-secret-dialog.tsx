@@ -22,6 +22,7 @@ import upperFirst from "lodash/upperFirst";
 import { Checkbox } from "../checkbox";
 import { configStore } from "../../config.store";
 import { namespaceStore } from "../+namespaces/namespace.store";
+import { opsSecretsStore, secretsStore } from "./secrets.store";
 
 interface Props extends Partial<DialogProps> {
   className: string
@@ -266,9 +267,9 @@ export class ConfigSecretDialog extends React.Component<Props> {
     }
 
     try {
-      const api = className == "OpsSecrets" ? opsSecretsApi : secretsApi;
-      const newSecret = await api.update({ namespace, name }, secret);
-      
+      const api = className == "OpsSecrets" ? opsSecretsStore : secretsStore;
+      const newSecret = await api.update(ConfigSecretDialog.secret, { ...secret });
+
       showDetails(newSecret.selfLink);
 
       Notifications.ok(

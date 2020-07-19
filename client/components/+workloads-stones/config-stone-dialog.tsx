@@ -124,7 +124,7 @@ export class ConfigStoneDialog extends React.Component<Props> {
                 <>
                   <Row>
                     <Col span={6}>
-                      <SubTitle title={<Trans>ImageIndex - </Trans>} children={index} />
+                      <SubTitle title={<Trans>ImageID - </Trans>} children={index} />
                     </Col>
                     <Col span={16}>
                       <Input
@@ -142,7 +142,7 @@ export class ConfigStoneDialog extends React.Component<Props> {
             {this.coordinates.map((item, index) => {
               return (
                 <>
-                  <SubTitle title={<Trans>Replicas - </Trans>} children={this.coordinates[index].group} />
+                  <SubTitle title={<Trans>Group - </Trans>} children={this.coordinates[index].group} />
                   <Input
                     required={true}
                     placeholder={_i18n._(t`Request Replicas`)}

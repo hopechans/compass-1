@@ -91,13 +91,13 @@ export class StoneDetails extends React.Component<Props> {
 
         {statefulsets.length > 0 &&
           <>
-            {statefulsets.map(statefulset => <KubeEventDetails object={statefulset} />)}
+            {statefulsets.map(statefulset => <KubeEventDetails object={statefulset} title={"Event:statefulset-" + statefulset.getName()} />)}
           </>
         }
 
         {childPods.length > 0 &&
           <>
-            {childPods.map(pod => <KubeEventDetails object={pod} />)}
+            {childPods.map(pod => <KubeEventDetails object={pod} title={"Event:pod-" + pod.getName()} />)}
           </>
         }
       </div>

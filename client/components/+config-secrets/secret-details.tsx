@@ -44,9 +44,9 @@ export class SecretDetails extends React.Component<Props> {
   saveSecret = async () => {
     const { object: secret } = this.props;
     this.isSaving = true;
-    const store = this.isSecret ? secretsStore : opsSecretsStore;
+    const api = this.isSecret ? secretsApi : opsSecretsApi;
     try {
-      await store.update(secret, { ...secret, data: this.data });
+      await api.update({ namespace: secret.getNs(), name: secret.getName() }, { ...secret, data: this.data });
       if (this.isSecret) {
         Notifications.ok(<Trans>secret successfully updated.</Trans>);
       } else {
