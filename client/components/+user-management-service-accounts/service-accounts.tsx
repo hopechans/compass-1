@@ -14,6 +14,7 @@ import { IServiceAccountsRouteParams } from "../+user-management";
 import { serviceAccountsStore } from "./service-accounts.store";
 import { CreateServiceAccountDialog } from "./create-service-account-dialog";
 import { apiManager } from "../../api/api-manager";
+import { secretsStore, opsSecretsStore } from "../+config-secrets/secrets.store";
 
 enum sortBy {
   name = "name",
@@ -31,6 +32,7 @@ export class ServiceAccounts extends React.Component<Props> {
       <>
         <KubeObjectListLayout
           className="ServiceAccounts" store={serviceAccountsStore}
+          dependentStores={[opsSecretsStore, secretsStore]}
           sortingCallbacks={{
             [sortBy.name]: (account: ServiceAccount) => account.getName(),
             [sortBy.namespace]: (account: ServiceAccount) => account.getNs(),
@@ -51,14 +53,14 @@ export class ServiceAccounts extends React.Component<Props> {
             account.getAge(),
           ]}
           renderItemMenu={(item: ServiceAccount) => {
-            return <ServiceAccountMenu object={item}/>
+            return <ServiceAccountMenu object={item} />
           }}
           addRemoveButtons={{
             onAdd: () => CreateServiceAccountDialog.open(),
             addTooltip: <Trans>Create new Service Account</Trans>,
           }}
         />
-        <CreateServiceAccountDialog/>
+        <CreateServiceAccountDialog />
       </>
     )
   }

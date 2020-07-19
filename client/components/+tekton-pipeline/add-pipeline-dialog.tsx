@@ -10,6 +10,7 @@ import { Wizard, WizardStep } from "../wizard";
 import { Notifications } from "../notifications";
 import { configStore } from "../../config.store";
 import { pipelineStore } from "./pipeline.store";
+import { pipelineApi } from "../../../client/api/endpoints";
 
 interface Props<T = any> extends Partial<Props> { }
 
@@ -33,7 +34,7 @@ export class AddPipelineDialog extends React.Component<Props> {
 
   submit = async () => {
     try {
-      await pipelineStore.create(
+      await pipelineApi.create(
         {
           name: this.prefix + "-" + this.value,
           namespace: configStore.getOpsNamespace(),
@@ -41,7 +42,7 @@ export class AddPipelineDialog extends React.Component<Props> {
         },
         {
           spec: {
-            resources: [{ name: "", type: "" }],
+            resources: [{ name: "you-git-addr", type: "git" }],
             tasks: [],
             params: [],
           },

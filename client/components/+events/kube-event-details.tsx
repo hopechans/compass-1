@@ -11,28 +11,32 @@ import { eventStore } from "./event.store";
 
 interface Props {
   object: KubeObject;
+  title?: React.ReactNode;
 }
 
 @observer
 export class KubeEventDetails extends React.Component<Props> {
+
+  static defaultProps = {
+    title: <Trans>Events</Trans>
+  }
+
   async componentDidMount() {
     eventStore.loadAll();
   }
 
   render() {
-    const { object } = this.props;
+    const { object, title } = this.props;
     const events = eventStore.getEventsByObject(object);
     if (!events.length) {
       return (
-        <DrawerTitle className="flex gaps align-center">
-          <span><Trans>Events</Trans></span>
-        </DrawerTitle>
+        <></>
       )
     }
     return (
       <>
         <DrawerTitle className="flex gaps align-center">
-          <span><Trans>Events</Trans></span>
+          <span>{title}</span>
         </DrawerTitle>
         <div className="KubeEventDetails">
           {events.map(evt => {

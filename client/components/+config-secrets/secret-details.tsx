@@ -11,7 +11,7 @@ import { Button } from "../button";
 import { Notifications } from "../notifications";
 import { base64 } from "../../utils";
 import { Icon } from "../icon";
-import { secretsStore } from "./secrets.store";
+import { secretsStore, opsSecretsStore } from "./secrets.store";
 import { KubeObjectDetailsProps } from "../kube-object";
 import { Secret, secretsApi, opsSecretsApi } from "../../api/endpoints";
 import { _i18n } from "../../i18n";
@@ -26,6 +26,7 @@ export class SecretDetails extends React.Component<Props> {
   @observable isSaving = false;
   @observable data: { [name: string]: string } = {};
   @observable revealSecret: { [name: string]: boolean } = {};
+  @observable isSecret: boolean = true;
 
   async componentDidMount() {
     disposeOnUnmount(this, [
@@ -35,6 +36,7 @@ export class SecretDetails extends React.Component<Props> {
           this.data = secret.data;
           this.revealSecret = {};
         }
+        this.isSecret = secret.selfLink.indexOf("ops-secrets") != -1;
       })
     ])
   }
@@ -42,9 +44,14 @@ export class SecretDetails extends React.Component<Props> {
   saveSecret = async () => {
     const { object: secret } = this.props;
     this.isSaving = true;
+    const api = this.isSecret ? secretsApi : opsSecretsApi;
     try {
-      await secretsStore.update(secret, { ...secret, data: this.data });
-      Notifications.ok(<Trans>Secret successfully updated.</Trans>);
+      await api.update({ namespace: secret.getNs(), name: secret.getName() }, { ...secret, data: this.data });
+      if (this.isSecret) {
+        Notifications.ok(<Trans>secret successfully updated.</Trans>);
+      } else {
+        Notifications.ok(<Trans>opsSecret successfully updated.</Trans>);
+      }
     } catch (err) {
       Notifications.error(err);
     }
@@ -60,13 +67,13 @@ export class SecretDetails extends React.Component<Props> {
     if (!secret) return null;
     return (
       <div className="SecretDetails">
-        <KubeObjectMeta object={secret}/>
+        <KubeObjectMeta object={secret} />
         <DrawerItem name={<Trans>Type</Trans>}>
           {secret.type}
         </DrawerItem>
         {!isEmpty(this.data) && (
           <>
-            <DrawerTitle title={_i18n._(t`Data`)}/>
+            <DrawerTitle title={_i18n._(t`Data`)} />
             {
               Object.entries(this.data).map(([name, value]) => {
                 const revealSecret = this.revealSecret[name];
@@ -114,11 +121,5 @@ export class SecretDetails extends React.Component<Props> {
   }
 }
 
-apiManager.registerViews(secretsApi, {
-  Details: SecretDetails,
-})
-
-
-apiManager.registerViews(opsSecretsApi, {
-  Details: SecretDetails,
-})
+apiManager.registerViews(secretsApi, { Details: SecretDetails, })
+apiManager.registerViews(opsSecretsApi, { Details: SecretDetails, })

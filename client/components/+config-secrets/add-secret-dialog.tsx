@@ -9,7 +9,7 @@ import { Dialog, DialogProps } from "../dialog";
 import { Wizard, WizardStep } from "../wizard";
 import { Input } from "../input";
 import { isUrl, systemName } from "../input/input.validators";
-import { Secret, secretsApi, SecretType } from "../../api/endpoints";
+import { Secret, secretsApi, SecretType, opsSecretsApi } from "../../api/endpoints";
 import { SubTitle } from "../layout/sub-title";
 import { NamespaceSelect } from "../+namespaces/namespace-select";
 import { Select, SelectOption } from "../select";
@@ -143,6 +143,7 @@ export class AddSecretDialog extends React.Component<Props> {
       }
       this.namespace = iNamespace.getName();
     }
+
   }
 
   private getDataFromFields = (fields: ISecretTemplateField[] = [], processValue?: (val: string) => string) => {
@@ -168,7 +169,13 @@ export class AddSecretDialog extends React.Component<Props> {
   createSecret = async () => {
     const { name, namespace, type } = this;
     const { className } = this.props;
-    const { data = [], labels = [], annotations = [] } = this.secret[type];
+    const { data = [], annotations = [] } = this.secret[type];
+
+    let labels = this.userNotVisible ? new Map<string, string>().set("hide", "1") : new Map<string, string>()
+    if (className == "OpsSecrets") {
+      labels.set("tekton", "1")
+    }
+
     const secret: Partial<Secret> = {
       type: type,
       data: this.getDataFromFields(data, val => val ? base64.encode(val) : ""),
@@ -176,25 +183,15 @@ export class AddSecretDialog extends React.Component<Props> {
         name: name,
         namespace: namespace,
         annotations: this.getDataFromFields(annotations),
-        labels: this.getDataFromFields(labels),
+        labels: Object.fromEntries(labels),
       } as IKubeObjectMetadata
     }
+
     try {
-      let labels = this.userNotVisible ? new Map<string, string>().set("hide", "1") : new Map<string, string>()
-      if (className == "OpsSecrets") {
-        labels.set("tektonConfig", "1")
-      }
-      const newSecret = await secretsApi.create(
-        {
-          namespace,
-          name,
-          labels: labels
-        },
-        secret);
-      showDetails(newSecret.selfLink);
-      Notifications.ok(
-        <>Secret {name} save succeeded</>
-      );
+      const api = className == "OpsSecrets" ? opsSecretsApi : secretsApi;
+      await api.create({ namespace, name }, secret);
+
+      Notifications.ok(<>Secret {name} save succeeded</>);
       this.close();
     } catch (err) {
       Notifications.error(err);

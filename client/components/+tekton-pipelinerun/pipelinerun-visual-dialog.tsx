@@ -12,7 +12,7 @@ import { secondsToHms } from "../../api/endpoints";
 import { pipelineRunStore } from "./pipelinerun.store";
 import { TaskRunLogsDialog } from "../+tekton-taskrun/task-run-logs-dialog";
 
-interface Props extends Partial<Props> {}
+interface Props extends Partial<Props> { }
 
 @observer
 export class PipelineRunVisualDialog extends React.Component<Props> {
@@ -32,11 +32,11 @@ export class PipelineRunVisualDialog extends React.Component<Props> {
     PipelineRunVisualDialog.Data = pipelineRun;
   }
 
-  showLogs(taskRunName: string) {
+  showLogs(taskRunName: string, namespace: string) {
     // let pod: Pod = podsStore.getByName(podName);
     // let container: any = pod.getContainerStatuses();
     // PodLogsDialog.open(pod, container);
-    TaskRunLogsDialog.open(taskRunName);
+    TaskRunLogsDialog.open(taskRunName, namespace);
   }
 
   initGraph(nodeData: any) {
@@ -68,7 +68,7 @@ export class PipelineRunVisualDialog extends React.Component<Props> {
         const names = pipelineRunStore.getTaskRunName(this.pipelineRun);
         const currentTaskRunMap = pipelineRunStore.getTaskRun(names);
         const currentTaskRun = currentTaskRunMap[name];
-        this.showLogs(currentTaskRun.metadata?.name);
+        this.showLogs(currentTaskRun.getName(), currentTaskRun.getNs());
       });
 
       this.graph.render();
