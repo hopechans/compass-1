@@ -109,13 +109,7 @@ export class CopyTaskDialog extends React.Component<Props> {
         this.value.workspace = task.getWorkspaces();
         this.value.volumes = task.getVolumes();
         this.value.pipelineParams = task.getParams();
-        if (!this.ifSwitch) {
-          const names = task.metadata.name.split("-");
-          names.shift();
-          this.value.taskName = names.join("-");
-        } else {
-          this.value.taskName = task.getName();
-        }
+        this.value.taskName = task.getName();
       }
     } catch (err) {
       return err;
