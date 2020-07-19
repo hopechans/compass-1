@@ -31,12 +31,12 @@ export class SecretDetails extends React.Component<Props> {
   async componentDidMount() {
     disposeOnUnmount(this, [
       autorun(() => {
-        const { object: secret } = this.props;
+        const { object: secret, className } = this.props;
         if (secret) {
           this.data = secret.data;
           this.revealSecret = {};
         }
-        this.isSecret = secret.selfLink.indexOf("ops-secrets") != -1;
+        this.isSecret = className == "OpsSecrets" ? false : true;
       })
     ])
   }

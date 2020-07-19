@@ -34,6 +34,7 @@ import { createMuiTheme } from "@material-ui/core";
 import { ThemeProvider } from "@material-ui/core/styles";
 import { configStore } from "../../config.store";
 import { WorkspaceDeclaration as Workspace } from "../../api/endpoints/tekton-task.api";
+import { IKubeObjectMetadata } from "../../../client/api/kube-object";
 interface Props<T = any> extends Partial<Props> {
   value?: T;
 
@@ -151,11 +152,13 @@ export class CopyTaskDialog extends React.Component<Props> {
     CopyTaskDialog.graph.setTaskName(this.value.taskName, CopyTaskDialog.node);
   };
 
-  saveTask = async () => {
+  saveTask = () => {
     const parms = toJS(this.value.pipelineParams);
     const resources = toJS(this.value.resources);
     const steps = toJS(this.value.taskSteps);
     const workspaces = toJS(this.value.workspace);
+
+    console.log("-------i coming here")
 
     const volumes = [
       {
@@ -171,7 +174,7 @@ export class CopyTaskDialog extends React.Component<Props> {
 
       const task = taskStore.getByName(this.value.taskName);
       if (task === undefined) {
-        await taskStore.create(
+        taskStore.create(
           {
             name: this.value.taskName,
             namespace: configStore.getOpsNamespace(),
@@ -196,9 +199,8 @@ export class CopyTaskDialog extends React.Component<Props> {
           task.spec.params = parms;
           task.spec.resources = resources;
           task.spec.workspaces = workspaces;
-
           task.spec.steps = steps;
-          await taskStore.update(task, { ...task });
+          taskStore.apply(task, { ...task });
         }
       }
       Notifications.ok(<>Task {this.value.taskName} save succeeded</>);
@@ -273,8 +275,8 @@ export class CopyTaskDialog extends React.Component<Props> {
                     this.ifSwitch ? (
                       <SubTitle title={<Trans>Select module</Trans>} />
                     ) : (
-                      <SubTitle title={<Trans>Template configuration</Trans>} />
-                    )
+                        <SubTitle title={<Trans>Template configuration</Trans>} />
+                      )
                   }
                 />
               </FormGroup>
