@@ -16,7 +16,7 @@ interface Props<T = any> extends Partial<Props> { }
 
 @observer
 export class AddPipelineDialog extends React.Component<Props> {
-  @observable prefix: string = configStore.getDefaultNamespace();
+  // @observable prefix: string = configStore.getDefaultNamespace();
   @observable static isOpen = false;
   @observable value: string = "";
 
@@ -36,7 +36,7 @@ export class AddPipelineDialog extends React.Component<Props> {
     try {
       await pipelineApi.create(
         {
-          name: this.prefix + "-" + this.value,
+          name: this.value,
           namespace: configStore.getOpsNamespace(),
           labels: new Map<string, string>().set("namespace", configStore.getDefaultNamespace()),
         },
@@ -67,7 +67,6 @@ export class AddPipelineDialog extends React.Component<Props> {
           <WizardStep contentClass="flex gaps column" next={this.submit}>
             <SubTitle title={"Pipeline Name"} />
             <Input
-              iconLeft={<b>{this.prefix}</b>}
               required={true}
               placeholder={_i18n._("Pipeline Name")}
               value={this.value}

@@ -351,7 +351,7 @@ export function PipelineRunMenu(props: KubeObjectMenuProps<PipelineRun>) {
         </span>
       </MenuItem>
 
-      <MenuItem
+      {/* <MenuItem
         onClick={async () => {
           let pipelineRun = object;
           PipelineRunLogDialog.open(pipelineRun.getName());
@@ -361,7 +361,7 @@ export function PipelineRunMenu(props: KubeObjectMenuProps<PipelineRun>) {
         <span className="title">
           <Trans>Logs</Trans>
         </span>
-      </MenuItem>
+      </MenuItem> */}
     </KubeObjectMenu>
   );
 }

@@ -65,6 +65,10 @@ export class NamespaceStore extends KubeObjectStore<Namespace> {
     else this.contextNs.push(namespace);
   }
 
+  getAllOpsNamespace(): string[] {
+    return this.items.map(item => { if (item.getName().indexOf("-ops") > 0) { return item.getName() } }).slice();
+  }
+
   @action
   reset() {
     super.reset();

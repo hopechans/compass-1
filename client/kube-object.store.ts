@@ -138,6 +138,13 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
     return newItem;
   }
 
+  async apply(item: T, data?: Partial<T>): Promise<T> {
+    if (this.items.findIndex(item => { item.getName() == item.getName() && item.getNs() == item.getNs(); }) > 0) {
+      return this.update(item, data)
+    }
+    return this.create({ name: item.getName(), namespace: item.getNs() }, data)
+  }
+
   async update(item: T, data: Partial<T>): Promise<T> {
     const newItem = await item.update<T>(data);
     const index = this.items.findIndex(item => item.getId() === newItem.getId());

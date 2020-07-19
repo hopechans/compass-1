@@ -270,7 +270,7 @@ export class ConfigSecretDialog extends React.Component<Props> {
       const api = className == "OpsSecrets" ? opsSecretsStore : secretsStore;
       const newSecret = await api.update(ConfigSecretDialog.secret, { ...secret });
 
-      showDetails(newSecret.selfLink);
+      // showDetails(newSecret.selfLink);
 
       Notifications.ok(
         <>Secret {name} save succeeded</>

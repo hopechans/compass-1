@@ -125,11 +125,8 @@ export class PipelineVisualDialog extends React.Component<Props> {
     await tektonGraphStore.create(
       {
         name: graphName,
-        namespace: configStore.getOpsNamespace(),
-        labels: new Map<string, string>().set(
-          "namespace",
-          configStore.getDefaultNamespace()
-        ),
+        namespace: this.pipeline.getNs(),
+        labels: new Map<string, string>().set("namespace", this.pipeline.getNs().split("-")[0]),
       },
       {
         spec: {
@@ -158,10 +155,7 @@ export class PipelineVisualDialog extends React.Component<Props> {
 
     if (graphName != "") {
       try {
-        let tektonGraph = tektonGraphStore.getByName(
-          graphName,
-          configStore.getOpsNamespace()
-        );
+        let tektonGraph = tektonGraphStore.getByName(graphName, this.pipeline.getNs());
         if (tektonGraph.spec.data !== data) {
           await this.updateTektonGraph(data);
         }

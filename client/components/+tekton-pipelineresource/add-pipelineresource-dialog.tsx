@@ -26,7 +26,7 @@ interface Props<T = any> extends Partial<Props> {
 @observer
 export class AddPipelineResourceDialog extends React.Component<Props> {
   @observable static isOpen = false;
-  @observable prefix: string = configStore.getDefaultNamespace();
+  // @observable prefix: string = configStore.getDefaultNamespace();
   @observable name: string = "";
   @observable type: string = "git";
   @observable params: Params[] = [];
@@ -66,12 +66,11 @@ export class AddPipelineResourceDialog extends React.Component<Props> {
 
   submit = async () => {
 
-    const { name, prefix, type, params } = this;
-
+    const { name, type, params } = this;
     try {
       await pipelineResourceApi.create(
         {
-          name: prefix + "-" + name,
+          name: name,
           namespace: configStore.getOpsNamespace(),
           labels: new Map<string, string>().set("namespace", configStore.getDefaultNamespace()),
         },
@@ -109,7 +108,6 @@ export class AddPipelineResourceDialog extends React.Component<Props> {
           <WizardStep contentClass="flex gaps column" next={this.submit}>
             <SubTitle title={"Pipeline Resource Name"} />
             <Input
-              iconLeft={<b>{this.prefix}</b>}
               required={true}
               placeholder={_i18n._("Pipeline Resource Name")}
               value={this.name}

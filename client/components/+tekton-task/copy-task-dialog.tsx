@@ -34,6 +34,8 @@ import { createMuiTheme } from "@material-ui/core";
 import { ThemeProvider } from "@material-ui/core/styles";
 import { configStore } from "../../config.store";
 import { WorkspaceDeclaration as Workspace } from "../../api/endpoints/tekton-task.api";
+import { IKubeObjectMetadata } from "../../../client/api/kube-object";
+import { namespaceStore } from "../+namespaces/namespace.store";
 interface Props<T = any> extends Partial<Props> {
   value?: T;
 
@@ -82,7 +84,6 @@ export const task: TaskResult = {
 
 @observer
 export class CopyTaskDialog extends React.Component<Props> {
-  @observable prefix: string = configStore.getDefaultNamespace();
   @observable value: TaskResult = this.props.value || task;
   @observable static isOpen = false;
   @observable static graph: any;
@@ -101,9 +102,6 @@ export class CopyTaskDialog extends React.Component<Props> {
   loadData = async (name: string) => {
     try {
       const defaultNameSpace = configStore.getOpsNamespace();
-      if (name.split("-")[0] !== this.prefix) {
-        name = `${this.prefix}-${name}`;
-      }
       const task = taskStore.getByName(name, defaultNameSpace);
       if (task !== undefined) {
         this.value.resources = task.getResources();
@@ -151,7 +149,7 @@ export class CopyTaskDialog extends React.Component<Props> {
     CopyTaskDialog.graph.setTaskName(this.value.taskName, CopyTaskDialog.node);
   };
 
-  saveTask = async () => {
+  saveTask = () => {
     const parms = toJS(this.value.pipelineParams);
     const resources = toJS(this.value.resources);
     const steps = toJS(this.value.taskSteps);
@@ -166,12 +164,12 @@ export class CopyTaskDialog extends React.Component<Props> {
 
     try {
       if (!this.ifSwitch) {
-        this.value.taskName = `${this.prefix}-${this.value.taskName}`;
+        this.value.taskName = this.value.taskName;
       }
 
       const task = taskStore.getByName(this.value.taskName);
       if (task === undefined) {
-        await taskStore.create(
+        taskStore.create(
           {
             name: this.value.taskName,
             namespace: configStore.getOpsNamespace(),
@@ -196,9 +194,8 @@ export class CopyTaskDialog extends React.Component<Props> {
           task.spec.params = parms;
           task.spec.resources = resources;
           task.spec.workspaces = workspaces;
-
           task.spec.steps = steps;
-          await taskStore.update(task, { ...task });
+          taskStore.apply(task, { ...task });
         }
       }
       Notifications.ok(<>Task {this.value.taskName} save succeeded</>);
@@ -210,15 +207,6 @@ export class CopyTaskDialog extends React.Component<Props> {
   };
 
   handleChange = async (event: any) => {
-    if (!event.target.checked) {
-      // await this.loadData(this.value.taskName);
-      if (this.value.taskName.split("-")[0] === this.prefix) {
-        const names = this.value.taskName.split("-");
-        names.shift();
-        this.value.taskName = names.join("-");
-      }
-    }
-    console.log(this.value.taskName);
     this.ifSwitch = event.target.checked;
   };
 
@@ -236,7 +224,7 @@ export class CopyTaskDialog extends React.Component<Props> {
 
   get taskOptions() {
     const options = taskStore
-      .getAllByNs(configStore.getOpsNamespace())
+      .getAllByNs(namespaceStore.getAllOpsNamespace())
       .map((item) => ({ value: item.getName() }))
       .slice();
     return [...options];
@@ -273,15 +261,14 @@ export class CopyTaskDialog extends React.Component<Props> {
                     this.ifSwitch ? (
                       <SubTitle title={<Trans>Select module</Trans>} />
                     ) : (
-                      <SubTitle title={<Trans>Template configuration</Trans>} />
-                    )
+                        <SubTitle title={<Trans>Template configuration</Trans>} />
+                      )
                   }
                 />
               </FormGroup>
               <div hidden={this.ifSwitch}>
                 <SubTitle title={<Trans>Task Name</Trans>} />
                 <Input
-                  iconLeft={<b>{this.prefix}</b>}
                   required={true}
                   validators={systemName}
                   placeholder={_i18n._("Task Name")}
