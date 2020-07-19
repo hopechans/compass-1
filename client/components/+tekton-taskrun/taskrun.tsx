@@ -15,6 +15,7 @@ import { cssNames } from "../../utils";
 
 enum sortBy {
   name = "name",
+  namespace = "namespace",
   ownernamespace = "ownernamespace",
   pods = "pods",
   age = "age",
@@ -134,8 +135,8 @@ export class TaskRuns extends React.Component<Props> {
         store={taskRunStore}
         sortingCallbacks={{
           [sortBy.name]: (taskRun: TaskRun) => taskRun.getName(),
-          [sortBy.ownernamespace]: (taskRun: TaskRun) =>
-            taskRun.getOwnerNamespace(),
+          [sortBy.namespace]: (taskRun: TaskRun) => taskRun.getNs(),
+          [sortBy.ownernamespace]: (taskRun: TaskRun) => taskRun.getOwnerNamespace(),
           [sortBy.age]: (taskRun: TaskRun) => taskRun.getAge(false),
         }}
         searchFilters={[(taskRun: TaskRun) => taskRun.getSearchFields()]}
@@ -145,6 +146,11 @@ export class TaskRuns extends React.Component<Props> {
             title: <Trans>Name</Trans>,
             className: "name",
             sortBy: sortBy.name,
+          },
+          {
+            title: <Trans>Namespace</Trans>,
+            className: "namespace",
+            sortBy: sortBy.namespace,
           },
           {
             title: <Trans>OwnerNamespace</Trans>,
@@ -157,6 +163,7 @@ export class TaskRuns extends React.Component<Props> {
         ]}
         renderTableContents={(taskRun: TaskRun) => [
           taskRun.getName(),
+          taskRun.getNs(),
           taskRun.getOwnerNamespace(),
           this.renderSteps(taskRun),
           taskRun.spec.timeout,

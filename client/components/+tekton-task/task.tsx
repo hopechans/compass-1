@@ -15,6 +15,7 @@ import {ConfigTaskDialog} from "./config-task-dialog";
 
 enum sortBy {
   name = "name",
+  namespace = "namespace",
   ownernamespace = "ownernamespace",
   pods = "pods",
   age = "age",
@@ -51,6 +52,7 @@ export class Tasks extends React.Component<Props> {
           store={taskStore}
           sortingCallbacks={{
             [sortBy.name]: (task: Task) => task.getName(),
+            [sortBy.namespace]: (task: Task) => task.getNs(),
             [sortBy.ownernamespace]: (task: Task) => task.getOwnerNamespace(),
             [sortBy.age]: (task: Task) => task.getAge(false),
           }}
@@ -63,6 +65,11 @@ export class Tasks extends React.Component<Props> {
               sortBy: sortBy.name,
             },
             {
+              title: <Trans>Namespace</Trans>,
+              className: "namespace",
+              sortBy: sortBy.namespace,
+            },
+            {
               title: <Trans>OwnerNamespace</Trans>,
               className: "ownernamespace",
               sortBy: sortBy.ownernamespace,
@@ -71,6 +78,7 @@ export class Tasks extends React.Component<Props> {
           ]}
           renderTableContents={(task: Task) => [
             this.renderTaskName(task),
+            task.getNs(),
             task.getOwnerNamespace(),
             task.getAge(),
           ]}

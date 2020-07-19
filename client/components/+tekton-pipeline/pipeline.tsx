@@ -30,13 +30,14 @@ import Tooltip from "@material-ui/core/Tooltip";
 
 enum sortBy {
   name = "name",
+  namespace = "namespace",
   ownernamespace = "ownernamespace",
   tasks = "tasks",
   tasknames = "tasknames",
   age = "age",
 }
 
-interface Props extends RouteComponentProps {}
+interface Props extends RouteComponentProps { }
 
 @observer
 export class Pipelines extends React.Component<Props> {
@@ -72,8 +73,8 @@ export class Pipelines extends React.Component<Props> {
           dependentStores={[taskStore, pipelineResourceStore, tektonGraphStore]} // other
           sortingCallbacks={{
             [sortBy.name]: (pipeline: Pipeline) => pipeline.getName(),
-            [sortBy.ownernamespace]: (pipeline: Pipeline) =>
-              pipeline.getOwnerNamespace(),
+            [sortBy.namespace]: (pipeline: Pipeline) => pipeline.getNs(),
+            [sortBy.ownernamespace]: (pipeline: Pipeline) => pipeline.getOwnerNamespace(),
             [sortBy.age]: (pipeline: Pipeline) => pipeline.getAge(false),
             [sortBy.tasks]: (pipeline: Pipeline) => pipeline.getTasks().length,
           }}
@@ -86,6 +87,11 @@ export class Pipelines extends React.Component<Props> {
               sortBy: sortBy.name,
             },
             {
+              title: <Trans>Namespace</Trans>,
+              className: "namespace",
+              sortBy: sortBy.namespace,
+            },
+            {
               title: <Trans>OwnerNamespace</Trans>,
               className: "ownernamespace",
               sortBy: sortBy.ownernamespace,
@@ -95,28 +101,18 @@ export class Pipelines extends React.Component<Props> {
               className: "tasks",
               sortBy: sortBy.tasks,
             },
-            // {
-            //   title: <Trans>TaskNames</Trans>,
-            //   className: "tasknames",
-            //   sortBy: sortBy.tasknames,
-            // },
+
             { title: <Trans>Age</Trans>, className: "age", sortBy: sortBy.age },
           ]}
           renderTableContents={(pipeline: Pipeline) => [
             this.renderPipelineName(pipeline),
+            pipeline.getNs(),
             pipeline.getOwnerNamespace(),
             pipeline.getTasks().length,
-            // pipeline.getTaskSet().map((task) => <p key={task}>{task}</p>),
             pipeline.getAge(),
           ]}
           renderItemMenu={(item: Pipeline) => {
             return <PipelineMenu object={item} />;
-          }}
-          tableProps={{
-            customRowHeights: (item: Pipeline, lineHeight, paddings) => {
-              const lines = item.getTaskSet().length || 1;
-              return lines * lineHeight + paddings;
-            },
           }}
           addRemoveButtons={{
             addTooltip: <Trans>Pipeline</Trans>,
