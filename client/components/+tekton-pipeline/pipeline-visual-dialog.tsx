@@ -14,7 +14,7 @@ import { tektonGraphStore } from "../+tekton-graph/tekton-graph.store";
 import { pipelineStore } from "./pipeline.store";
 import { configStore } from "../../config.store";
 
-interface Props extends Partial<Props> { }
+interface Props extends Partial<Props> {}
 
 @observer
 export class PipelineVisualDialog extends React.Component<Props> {
@@ -45,7 +45,7 @@ export class PipelineVisualDialog extends React.Component<Props> {
 
       let nodeSize = pipelineStore.getNodeSize(this.pipeline);
       if (nodeSize != null) {
-        this.graph.changeSize(nodeSize.width, nodeSize.height)
+        this.graph.changeSize(nodeSize.width, nodeSize.height);
       }
 
       this.graph.instance.data(pipelineStore.getNodeData(this.pipeline));
@@ -92,10 +92,10 @@ export class PipelineVisualDialog extends React.Component<Props> {
         array.map((item: any) => {
           task.name = item.taskName;
           task.taskRef = { name: item.taskName };
+          task.params = [];
+          task.resources = [];
+          tasks.push(task);
         });
-        task.params = [];
-        task.resources = [];
-        tasks.push(task);
       } else {
         let result = tmp - 1;
         array.map((item: any) => {
@@ -120,7 +120,8 @@ export class PipelineVisualDialog extends React.Component<Props> {
   }
 
   updateTektonGraph = async (data: string) => {
-    const graphName = this.pipeline.getName() + '-' + new Date().getTime().toString();
+    const graphName =
+      this.pipeline.getName() + "-" + new Date().getTime().toString();
     await tektonGraphStore.create(
       {
         name: graphName,
@@ -135,7 +136,9 @@ export class PipelineVisualDialog extends React.Component<Props> {
         },
       }
     );
-    this.pipeline.metadata.annotations = { "fuxi.nip.io/tektongraphs": graphName };
+    this.pipeline.metadata.annotations = {
+      "fuxi.nip.io/tektongraphs": graphName,
+    };
     await pipelineStore.update(this.pipeline, { ...this.pipeline });
   };
 
