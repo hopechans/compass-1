@@ -87,9 +87,9 @@ export class PipelineVisualDialog extends React.Component<Props> {
       let array = dataMap.get(item);
 
       if (tmp === 1) {
-        let task: any = {};
-        task.runAfter = [];
         array.map((item: any) => {
+          let task: any = {};
+          task.runAfter = [];
           task.name = item.taskName;
           task.taskRef = { name: item.taskName };
           task.params = [];
