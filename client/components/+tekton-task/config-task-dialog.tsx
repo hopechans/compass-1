@@ -88,6 +88,14 @@ export class ConfigTaskDialog extends React.Component<Props> {
   }
 
   onOpen = () => {
+    this.value.taskName = this.task.metadata.name;
+
+    this.value.resources = this.task.getResources();
+    this.value.taskSteps = this.task.getSteps();
+    this.value.workspace = this.task.getWorkspaces();
+    this.value.volumes = this.task.getVolumes();
+    this.value.pipelineParams = this.task.getParams();
+
   };
 
   static close() {
@@ -151,7 +159,6 @@ export class ConfigTaskDialog extends React.Component<Props> {
 
               <SubTitle title={<Trans>Task Name</Trans>}/>
               <Input
-                iconLeft={<b>{this.prefix}</b>}
                 required={true}
                 validators={systemName}
                 placeholder={_i18n._("Task Name")}
