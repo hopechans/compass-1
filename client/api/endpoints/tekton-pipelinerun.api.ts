@@ -91,8 +91,8 @@ export interface WorkspaceBinding {
 
 export interface TaskRunsReport {
   status: {
-    conditions: { status: string, reason: string, message: string }[];
-  }
+    conditions: { status: string; reason: string; message: string }[];
+  };
 }
 
 @autobind()
@@ -152,9 +152,8 @@ export class PipelineRun extends KubeObject {
     return this.getErrorReason() != "";
   }
 
-
   getFailedTaskRunMessage(): string {
-    return "wocao"
+    return "wocao";
   }
 
   getTaskRuns(): any {
@@ -191,7 +190,8 @@ export class PipelineRun extends KubeObject {
         new Date(this.status.completionTime).getTime() -
         new Date(this.metadata.creationTimestamp).getTime();
       if (humanize) {
-        return advanceFormatDuration(diff, compact);
+        const result = advanceFormatDuration(diff, compact);
+        return result == undefined ? "" : result;
       }
     }
 
