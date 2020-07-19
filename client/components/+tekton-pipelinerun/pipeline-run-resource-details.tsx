@@ -12,6 +12,7 @@ import { Input } from "../input";
 import { pipelineResourceStore } from "../+tekton-pipelineresource/pipelineresource.store";
 import { Grid } from "@material-ui/core";
 import { configStore } from "../../../client/config.store";
+import { namespaceStore } from "../+namespaces/namespace.store";
 
 interface Props<T = any> extends Partial<Props> {
   value?: T;
@@ -44,7 +45,7 @@ export class PipelineRunResourceDetails extends React.Component<Props> {
 
   get pipelineResouceOptions() {
     const options = pipelineResourceStore
-      .getAllByNs(configStore.getOpsNamespace())
+      .getAllByNs(namespaceStore.getAllOpsNamespace())
       .map((item) => ({ value: item.getName() }))
       .slice();
     return [...options];
