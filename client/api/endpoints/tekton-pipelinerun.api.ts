@@ -193,7 +193,7 @@ export class PipelineRun extends KubeObject {
       }
     }
 
-    return "0 seconds";
+    return defaultResult;
   }
 }
 
