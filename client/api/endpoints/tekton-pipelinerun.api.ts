@@ -152,10 +152,6 @@ export class PipelineRun extends KubeObject {
     return this.getErrorReason() != "";
   }
 
-  getFailedTaskRunMessage(): string {
-    return "wocao";
-  }
-
   getTaskRuns(): any {
     if (this.status.taskRuns === undefined) return [];
     return this.status.taskRuns;
@@ -185,17 +181,19 @@ export class PipelineRun extends KubeObject {
   }
 
   getDuration(humanize = true, compact = true) {
+    const defaultResult = "0 seconds";
+    if (this.hasIssues()) return defaultResult;
     if (this?.status?.completionTime !== undefined) {
       const diff =
         new Date(this.status.completionTime).getTime() -
         new Date(this.metadata.creationTimestamp).getTime();
       if (humanize) {
         const result = advanceFormatDuration(diff, compact);
-        return result == undefined ? "" : result;
+        return result;
       }
     }
 
-    return "";
+    return defaultResult;
   }
 }
 
