@@ -246,7 +246,7 @@ export class PipelineRuns extends React.Component<Props> {
             ),
             this.renderTasks(pipelineRun),
             `${pipelineRun.getAge()}  ago`,
-            pipelineRun.getDuration(),
+            pipelineRun.getDuration() ?? "",
             this.renderPipelineStatus(pipelineRun),
           ]}
           renderItemMenu={(item: PipelineRun) => {
