@@ -1,24 +1,26 @@
 import "./secrets.scss"
 
 import * as React from "react";
-import {observer} from "mobx-react";
-import {Trans, t} from "@lingui/macro";
-import {RouteComponentProps} from "react-router";
-import {Secret, secretsApi} from "../../api/endpoints";
-import {KubeObjectMenu, KubeObjectMenuProps} from "../kube-object";
-import {AddSecretDialog} from "./add-secret-dialog";
-import {ISecretsRouteParams} from "./secrets.route";
-import {KubeObjectListLayout} from "../kube-object";
-import {Badge} from "../badge";
-import {secretsStore, opsSecretsStore} from "./secrets.store";
-import {apiManager} from "../../api/api-manager";
-import {ConfigSecretDialog} from "./config-secret-dialog";
-import {MenuItem} from "../menu";
-import {Icon} from "../icon";
-import {_i18n} from "../../i18n";
-import {observable} from "mobx";
-import {namespaceStore} from "../+namespaces/namespace.store";
-import {useEffect, useState} from "react";
+import { observer } from "mobx-react";
+import { Trans, t } from "@lingui/macro";
+import { RouteComponentProps } from "react-router";
+import { Secret, secretsApi } from "../../api/endpoints";
+import { KubeObjectMenu, KubeObjectMenuProps } from "../kube-object";
+import { AddSecretDialog } from "./add-secret-dialog";
+import { ISecretsRouteParams } from "./secrets.route";
+import { KubeObjectListLayout } from "../kube-object";
+import { Badge } from "../badge";
+import { secretsStore, opsSecretsStore } from "./secrets.store";
+import { apiManager } from "../../api/api-manager";
+import { ConfigSecretDialog } from "./config-secret-dialog";
+import { MenuItem } from "../menu";
+import { Icon } from "../icon";
+import { _i18n } from "../../i18n";
+import { observable, toJS } from "mobx";
+import { namespaceStore } from "../+namespaces/namespace.store";
+import { useEffect, useState } from "react";
+import { Notifications } from "../notifications/notifications";
+import { apiBase } from "../../../client/api";
 
 enum sortBy {
   name = "name",
@@ -60,60 +62,107 @@ export class Secrets extends React.Component<Props> {
           ]}
           renderHeaderTitle={_i18n._(this.className)}
           renderTableHeader={[
-            {title: <Trans>Name</Trans>, className: "name", sortBy: sortBy.name},
-            {title: <Trans>Namespace</Trans>, className: "namespace", sortBy: sortBy.namespace},
-            {title: <Trans>Labels</Trans>, className: "labels", sortBy: sortBy.labels},
-            {title: <Trans>Keys</Trans>, className: "keys", sortBy: sortBy.keys},
-            {title: <Trans>Type</Trans>, className: "type", sortBy: sortBy.type},
-            {title: <Trans>Age</Trans>, className: "age", sortBy: sortBy.age},
+            { title: <Trans>Name</Trans>, className: "name", sortBy: sortBy.name },
+            { title: <Trans>Namespace</Trans>, className: "namespace", sortBy: sortBy.namespace },
+            { title: <Trans>Labels</Trans>, className: "labels", sortBy: sortBy.labels },
+            { title: <Trans>Keys</Trans>, className: "keys", sortBy: sortBy.keys },
+            { title: <Trans>Type</Trans>, className: "type", sortBy: sortBy.type },
+            { title: <Trans>Age</Trans>, className: "age", sortBy: sortBy.age },
           ]}
           renderTableContents={(secret: Secret) => [
             secret.getName(),
             secret.getNs(),
-            secret.getLabels().map(label => <Badge key={label} label={label}/>),
+            secret.getLabels().map(label => <Badge key={label} label={label} />),
             secret.getKeys().join(", "),
             secret.type,
             secret.getAge(),
           ]}
           renderItemMenu={(item: Secret) => {
-            return <SecretMenu object={item} className={this.className}/>
+            return <SecretMenu object={item} className={this.className} />
           }}
           addRemoveButtons={{
             onAdd: () => AddSecretDialog.open(),
             addTooltip: <Trans>Create new Secret</Trans>
           }}
         />
-        <AddSecretDialog className={this.className}/>
-        <ConfigSecretDialog className={this.className}/>
+        <AddSecretDialog className={this.className} />
+        <ConfigSecretDialog className={this.className} />
       </>
     );
   }
 }
 
 export function SecretMenu(props: KubeObjectMenuProps<Secret>) {
-  const {object, toolbar, className} = props;
+  const { object, toolbar, className } = props;
 
-  const [mount, setMount] = useState("Unmount");
-  const [mountIcon, setMountIcon] = useState("remove");
+  const [mount, setMount] = useState("Mount");
+  const [mountIcon, setMountIcon] = useState("add");
 
   useEffect(() => {
-    object.getLabels().map(item => {
-      const splitGroup = item.split("=")
-      if (splitGroup[0] == "hide" && splitGroup[1] == "1") {
-        setMount("Mount");
-        setMountIcon("add");
-      }
+    const labels = object.getLabels().find(label => {
+      return label.split("=")[0] == "mount"
     })
-  });
-
-  const mountAction = () => {
-    if (mount == "Unmount") {
+    if (labels == undefined) {
       setMount("Mount");
       setMountIcon("add");
     } else {
       setMount("Unmount");
       setMountIcon("remove");
     }
+  });
+
+  const patchAddToServiceAccount = async () => {
+    const data = {
+      namespace: object.getNs(),
+      name: object.getName(),
+    };
+    try {
+      await apiBase.post("/serviceaccount/patch/add", { data })
+      Notifications.ok(<> patch add to serviceAccount succeeded</>);
+    } catch (err) {
+      Notifications.error(err);
+    }
+  }
+
+
+  const patchRemoveFromServiceAccount = async () => {
+    const data = {
+      namespace: object.getNs(),
+      name: object.getName(),
+    };
+    try {
+      await apiBase.post("/serviceaccount/patch/remove", { data })
+      Notifications.ok(<> patch remove to serviceAccount succeeded</>);
+    } catch (err) {
+      Notifications.error(err);
+    }
+  }
+
+  const mountAction = () => {
+    let newLabels = new Map<string, string>();
+    if (mount == "Unmount") {
+      try {
+        object.removeLable("mount")
+        opsSecretsStore.update(object, { ...object })
+        patchRemoveFromServiceAccount()
+        setMount("Mount");
+        setMountIcon("add");
+      } catch (err) {
+        Notifications.error(err);
+      }
+    } else {
+      try {
+        object.addLabel("mount", "1");
+        opsSecretsStore.update(object, { ...object })
+        patchAddToServiceAccount()
+        setMount("Unmount");
+        setMountIcon("remove");
+      } catch (err) {
+        Notifications.error(err);
+      }
+
+    }
+    Notifications.ok("operation completed");
   }
 
   return (
@@ -122,12 +171,12 @@ export function SecretMenu(props: KubeObjectMenuProps<Secret>) {
         {
           className == "OpsSecrets" ?
             <MenuItem onClick={mountAction}>
-              <Icon material={mountIcon} title={_i18n._(t`Mount`)} interactive={toolbar}/>
+              <Icon material={mountIcon} title={_i18n._(t`Mount`)} interactive={toolbar} />
               <span className="title">{_i18n._(mount)}</span>
             </MenuItem> : null
         }
         <MenuItem onClick={() => ConfigSecretDialog.open(object)}>
-          <Icon material="sync_alt" title={_i18n._(t`Secret`)} interactive={toolbar}/>
+          <Icon material="sync_alt" title={_i18n._(t`Secret`)} interactive={toolbar} />
           <span className="title"><Trans>Config</Trans></span>
         </MenuItem>
       </KubeObjectMenu>
@@ -135,5 +184,5 @@ export function SecretMenu(props: KubeObjectMenuProps<Secret>) {
   )
 }
 
-apiManager.registerViews(secretsApi, {Menu: SecretMenu,})
+apiManager.registerViews(secretsApi, { Menu: SecretMenu, })
 
