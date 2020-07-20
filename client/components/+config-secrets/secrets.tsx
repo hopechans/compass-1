@@ -110,7 +110,7 @@ export function SecretMenu(props: KubeObjectMenuProps<Secret>) {
     if (mount == "Unmount") {
       setMount("Mount");
       setMountIcon("add");
-    }else {
+    } else {
       setMount("Unmount");
       setMountIcon("remove");
     }
@@ -119,11 +119,12 @@ export function SecretMenu(props: KubeObjectMenuProps<Secret>) {
   return (
     <>
       <KubeObjectMenu {...props} >
-        {className == "OpsSecrets" ?
-          <MenuItem onClick={mountAction}>
-            <Icon material={mountIcon} title={_i18n._(t`Mount`)} interactive={toolbar}/>
-            <span className="title">{_i18n._(mount)}</span>
-          </MenuItem>: null
+        {
+          className == "OpsSecrets" ?
+            <MenuItem onClick={mountAction}>
+              <Icon material={mountIcon} title={_i18n._(t`Mount`)} interactive={toolbar}/>
+              <span className="title">{_i18n._(mount)}</span>
+            </MenuItem> : null
         }
         <MenuItem onClick={() => ConfigSecretDialog.open(object)}>
           <Icon material="sync_alt" title={_i18n._(t`Secret`)} interactive={toolbar}/>
