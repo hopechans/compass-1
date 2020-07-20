@@ -19,7 +19,6 @@ import {_i18n} from "../../i18n";
 import {observable} from "mobx";
 import {namespaceStore} from "../+namespaces/namespace.store";
 import {useEffect, useState} from "react";
-import construct = Reflect.construct;
 
 enum sortBy {
   name = "name",
@@ -77,7 +76,7 @@ export class Secrets extends React.Component<Props> {
             secret.getAge(),
           ]}
           renderItemMenu={(item: Secret) => {
-            return <SecretMenu object={item}/>
+            return <SecretMenu object={item} className={this.className}/>
           }}
           addRemoveButtons={{
             onAdd: () => AddSecretDialog.open(),
@@ -92,7 +91,7 @@ export class Secrets extends React.Component<Props> {
 }
 
 export function SecretMenu(props: KubeObjectMenuProps<Secret>) {
-  const {object, toolbar} = props;
+  const {object, toolbar, className} = props;
 
   const [mount, setMount] = useState("Unmount");
   const [mountIcon, setMountIcon] = useState("remove");
@@ -111,7 +110,7 @@ export function SecretMenu(props: KubeObjectMenuProps<Secret>) {
     if (mount == "Unmount") {
       setMount("Mount");
       setMountIcon("add");
-    }else {
+    } else {
       setMount("Unmount");
       setMountIcon("remove");
     }
@@ -120,10 +119,13 @@ export function SecretMenu(props: KubeObjectMenuProps<Secret>) {
   return (
     <>
       <KubeObjectMenu {...props} >
-        <MenuItem onClick={mountAction}>
-          <Icon material={mountIcon} title={_i18n._(t`Mount`)} interactive={toolbar}/>
-          <span className="title">{_i18n._(mount)}</span>
-        </MenuItem>
+        {
+          className == "OpsSecrets" ?
+            <MenuItem onClick={mountAction}>
+              <Icon material={mountIcon} title={_i18n._(t`Mount`)} interactive={toolbar}/>
+              <span className="title">{_i18n._(mount)}</span>
+            </MenuItem> : null
+        }
         <MenuItem onClick={() => ConfigSecretDialog.open(object)}>
           <Icon material="sync_alt" title={_i18n._(t`Secret`)} interactive={toolbar}/>
           <span className="title"><Trans>Config</Trans></span>
