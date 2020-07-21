@@ -121,28 +121,20 @@ export class ConfigStoneDialog extends React.Component<Props> {
             <br/>
             {this.containers.map((item, index) => {
               return (
-                <>
-                  <Row>
-                    <Col span={6}>
-                      <SubTitle title={<Trans>ImageID - </Trans>} children={index} />
-                    </Col>
-                    <Col span={16}>
-                      <Input
-                        required={true}
-                        placeholder={_i18n._(t`Request Images`)}
-                        value={this.containers[index].image}
-                        onChange={value => this.containers[index].image = value}
-                      />
-                    </Col>
-                  </Row>
-                </>
+                <SubTitle title={_i18n._(t`Image`) + '-' + index} children={
+                  <Input
+                    required={true}
+                    placeholder={_i18n._(t`Request Images`)}
+                    value={this.containers[index].image}
+                    onChange={value => this.containers[index].image = value}
+                  />
+                } compact={true}/>
               )
             })}
             <br/>
             {this.coordinates.map((item, index) => {
               return (
-                <>
-                  <SubTitle title={<Trans>Group - </Trans>} children={this.coordinates[index].group} />
+                <SubTitle title={_i18n._(t`Group`) + '-' + this.coordinates[index].group} children={
                   <Input
                     required={true}
                     placeholder={_i18n._(t`Request Replicas`)}
@@ -152,7 +144,7 @@ export class ConfigStoneDialog extends React.Component<Props> {
                     value={String(this.coordinates[index].replicas)}
                     onChange={value => this.coordinates[index].replicas = Number(value)}
                   />
-                </>
+                } />
               )
             })}
           </WizardStep>
