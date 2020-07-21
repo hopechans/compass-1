@@ -58,6 +58,16 @@ export class KubeObject implements ItemObject {
     return Object.entries(labels).map(([name, value]) => `${name}=${value}`);
   }
 
+  static mapperLables(labels: string[]): Map<string, string> {
+    let result = new Map<string, string>();
+    if (labels.length == 0) return result;
+    labels.map((label) => {
+      const slice = label.split("=");
+      result.set(slice[0], slice[1]);
+    })
+    return result;
+  }
+
   constructor(data: KubeJsonApiData) {
     Object.assign(this, data);
   }
@@ -107,6 +117,16 @@ export class KubeObject implements ItemObject {
 
   getLabels(): string[] {
     return KubeObject.stringifyLabels(this.metadata.labels);
+  }
+
+  addLabel(key: string, value: string) {
+    this.metadata.labels = Object.fromEntries(KubeObject.mapperLables(this.getLabels()).set(key, value))
+  }
+
+  removeLable(key: string) {
+    let result = KubeObject.mapperLables(this.getLabels());
+    result.delete(key);
+    this.metadata.labels = Object.fromEntries(result);
   }
 
   getAnnotations(): string[] {
