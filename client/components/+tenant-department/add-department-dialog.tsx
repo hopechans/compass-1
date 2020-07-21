@@ -106,9 +106,10 @@ export class AddDepartmentDialog extends React.Component<Props> {
       <Dialog
         {...dialogProps}
         isOpen={AddDepartmentDialog.isOpen}
+        className="AddDepartmentDialog"
         close={this.close}
       >
-        <Wizard className="AddDepartmentDialog" header={header} done={this.close}>
+        <Wizard header={header} done={this.close}>
           <WizardStep contentClass="flow column" nextLabel={<Trans>Create</Trans>}
                       next={this.createDepartment}>
             <div className="department-name">
@@ -145,10 +146,11 @@ export class AddDepartmentDialog extends React.Component<Props> {
                 onChange={value => this.defaultNamespace = value.value}
               />
             </div>
+            <br/>
             <div className="git">
               <StackDetails name={"Git"} value={this.gits} onChange={value => this.gits = value}/>
             </div>
-            <Divider />
+            <br/>
             <div className="register">
               <StackDetails name={"Register"} value={this.registers} onChange={value => this.registers = value}/>
             </div>

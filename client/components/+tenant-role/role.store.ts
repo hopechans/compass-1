@@ -5,7 +5,7 @@ import {apiManager} from "../../api/api-manager";
 
 @autobind()
 export class TenantRoleStore extends KubeObjectStore<TenantRole> {
-    api = tenantRoleApi
+  api = tenantRoleApi
 }
 
 export const tenantRoleStore = new TenantRoleStore();

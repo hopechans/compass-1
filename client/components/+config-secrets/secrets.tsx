@@ -19,8 +19,11 @@ import { _i18n } from "../../i18n";
 import { observable, toJS } from "mobx";
 import { namespaceStore } from "../+namespaces/namespace.store";
 import { useEffect, useState } from "react";
-import { Notifications } from "../notifications/notifications";
-import { apiBase } from "../../../client/api";
+import { Notifications } from "../notifications";
+import { apiBase } from "../../api";
+import {Link} from "react-router-dom";
+import {stopPropagation} from "../../utils";
+import Tooltip from "@material-ui/core/Tooltip";
 
 enum sortBy {
   name = "name",
@@ -39,6 +42,23 @@ export class Secrets extends React.Component<Props> {
 
   @observable className: string = "Secrets"
   @observable addRemoveButtons = {}
+
+  renderSecretName(secret: Secret) {
+    const name = secret.getName();
+    return (
+      <Link
+        onClick={(event) => {
+          stopPropagation(event);
+          ConfigSecretDialog.open(secret);
+        }}
+        to={null}
+      >
+        <Tooltip title={name} placement="top-start">
+          <span>{name}</span>
+        </Tooltip>
+      </Link>
+    );
+  }
 
   render() {
     const store = this.className == "Secrets" ? secretsStore : opsSecretsStore;
@@ -70,7 +90,7 @@ export class Secrets extends React.Component<Props> {
             { title: <Trans>Age</Trans>, className: "age", sortBy: sortBy.age },
           ]}
           renderTableContents={(secret: Secret) => [
-            secret.getName(),
+            this.renderSecretName(secret),
             secret.getNs(),
             secret.getLabels().map(label => <Badge key={label} label={label} />),
             secret.getKeys().join(", "),
@@ -122,8 +142,7 @@ export function SecretMenu(props: KubeObjectMenuProps<Secret>) {
     } catch (err) {
       Notifications.error(err);
     }
-  }
-
+  };
 
   const patchRemoveFromServiceAccount = async () => {
     const data = {

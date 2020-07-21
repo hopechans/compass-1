@@ -1,10 +1,10 @@
 import "./stones.scss";
 
-import React, {Fragment} from "react";
+import React from "react";
 import {observer} from "mobx-react";
 import {RouteComponentProps} from "react-router";
 import {t, Trans} from "@lingui/macro";
-import {Ingress, Pod, Stone, stoneApi} from "../../api/endpoints";
+import {Stone, stoneApi} from "../../api/endpoints";
 import {podsStore} from "../+workloads-pods/pods.store";
 import {stoneStore} from "./stones.store";
 import {nodesStore} from "../+nodes/nodes.store";
@@ -12,13 +12,15 @@ import {eventStore} from "../+events/event.store";
 import {KubeObjectMenu, KubeObjectMenuProps} from "../kube-object";
 import {KubeObjectListLayout} from "../kube-object";
 import {IStatefulSetsRouteParams} from "../+workloads";
-import {KubeEventIcon} from "../+events/kube-event-icon";
 import {apiManager} from "../../api/api-manager";
 import {enhanceStatefulSetStore} from "../+workloads-enhancestatefulsets/enhancestatefulset.store";
 import {MenuItem} from "../menu";
 import {Icon} from "../icon";
 import {_i18n} from "../../i18n";
 import {ConfigStoneDialog} from "./config-stone-dialog";
+import {Link} from "react-router-dom";
+import Tooltip from "@material-ui/core/Tooltip";
+import {stopPropagation} from "../../utils";
 
 enum sortBy {
   name = "name",
@@ -34,6 +36,24 @@ interface Props extends RouteComponentProps<IStatefulSetsRouteParams> {
 
 @observer
 export class Stones extends React.Component<Props> {
+
+  renderStoneName(stone: Stone) {
+    const name = stone.getName();
+    return (
+      <Link
+        onClick={(event) => {
+          stopPropagation(event);
+          ConfigStoneDialog.open(stone);
+        }}
+        to={null}
+      >
+        <Tooltip title={name} placement="top-start">
+          <span>{name}</span>
+        </Tooltip>
+      </Link>
+    );
+  }
+
   getPodsLength(stone: Stone) {
     return stoneStore.getChildPods(stone).length;
   }
@@ -76,7 +96,7 @@ export class Stones extends React.Component<Props> {
             {title: <Trans>Age</Trans>, className: "age", sortBy: sortBy.age},
           ]}
           renderTableContents={(stone: Stone) => [
-            stone.getName(),
+            this.renderStoneName(stone),
             this.hasPodIssues(stone) && <Icon material="warning" className={"StoneWarningIcon"}/>,
             stone.getNs(),
             this.getPodsLength(stone),

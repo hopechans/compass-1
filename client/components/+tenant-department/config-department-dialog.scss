@@ -1,3 +1,17 @@
 .ConfigDepartmentDialog {
-  width: 700px;
+  .Wizard {
+    --wizard-width: 45vw;
+    --wizard-content-height: 50vh;
+    --wizard-content-max-height: 70vh;
+  }
+
+  .WizardStep {
+    .step-content {
+      padding: var(--wizard-spacing);
+    }
+
+    code {
+      max-height: 100vh;
+    }
+  }
 }

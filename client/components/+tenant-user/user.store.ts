@@ -5,7 +5,7 @@ import {apiManager} from "../../api/api-manager";
 
 @autobind()
 export class TenantUserStore extends KubeObjectStore<TenantUser> {
-    api = tenantUserApi
+  api = tenantUserApi
 }
 
 export const tenantUserStore = new TenantUserStore();
