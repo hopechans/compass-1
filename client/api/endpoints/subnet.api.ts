@@ -13,6 +13,8 @@ export class SubNet extends KubeObject {
         excludeIps: string[],
         private?: boolean,
         allowSubnets?: string[],
+        natOutgoing?: boolean,
+        gatewayType?: string,
     }
 }
 

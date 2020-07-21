@@ -53,11 +53,11 @@ export class ConfigSubNetDialog extends React.Component<Props> {
         this.gateway = "";
     }
 
-    
+
     get subNet() {
         return ConfigSubNetDialog.Data
     }
-    
+
     get protocolOptions() {
         return [
             "IPV4"
@@ -90,6 +90,8 @@ export class ConfigSubNetDialog extends React.Component<Props> {
                 excludeIps: excludeIps,
                 private: _private,
                 allowSubnets: allowSubnets,
+                natOutgoing: true,
+                gatewayType: "distributed",
             }
         }
         try {
@@ -100,7 +102,7 @@ export class ConfigSubNetDialog extends React.Component<Props> {
                 { ...subnet });
             this.reset();
             Notifications.ok(
-              <>SubNet {name} save succeeded</>
+                <>SubNet {name} save succeeded</>
             );
             this.close();
         } catch (err) {

@@ -12,8 +12,6 @@ import { Select } from "../select";
 import { stoneStore } from "./stones.store";
 import { Input } from "../input";
 import { isNumber } from "../input/input.validators";
-import Row from "../grid/row";
-import Col from "../grid/col";
 
 interface Props extends Partial<DialogProps> {
 }
@@ -118,20 +116,22 @@ export class ConfigStoneDialog extends React.Component<Props> {
               className="box grow"
               onChange={value => this.strategy = value.value}
             />
-            <br/>
+            <br />
             {this.containers.map((item, index) => {
               return (
-                <SubTitle title={_i18n._(t`Image`) + '-' + index} children={
+                <>
+                  <SubTitle title={_i18n._(t`Image`) + '-' + index} />
                   <Input
                     required={true}
                     placeholder={_i18n._(t`Request Images`)}
                     value={this.containers[index].image}
                     onChange={value => this.containers[index].image = value}
                   />
-                } compact={true}/>
+                </>
               )
             })}
-            <br/>
+
+            <br />
             {this.coordinates.map((item, index) => {
               return (
                 <SubTitle title={_i18n._(t`Group`) + '-' + this.coordinates[index].group} children={
