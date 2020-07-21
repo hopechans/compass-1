@@ -14,7 +14,11 @@ import {
   PipelineResourceBinding,
   PipelineRef,
   PipelineDeclaredResource,
-  WorkspaceBinding, Pipeline, TenantRole, PipelineRun, TektonGraph,
+  WorkspaceBinding,
+  Pipeline,
+  Param,
+  PipelineRun,
+  TektonGraph,
 } from "../../api/endpoints";
 import { Notifications } from "../notifications";
 import { PipelineRunResourceDetails } from "./pipeline-run-resource-details";
@@ -22,7 +26,11 @@ import { systemName } from "../input/input.validators";
 import { configStore } from "../../config.store";
 import { pipelineStore } from "../+tekton-pipeline/pipeline.store";
 import { pipelineRunStore } from "./pipelinerun.store";
-import { PipelineRunWorkspaces } from "../+tekton-common";
+import {
+  PipelineRunWorkspaces,
+  ParamsDetails,
+  params,
+} from "../+tekton-common";
 import { tektonGraphStore } from "../+tekton-graph/tekton-graph.store";
 import { IKubeObjectMetadata } from "../../api/kube-object";
 
@@ -39,6 +47,7 @@ export interface PipelineRunResult {
   resources?: PipelineResourceBinding[];
   serviceAccountName?: string;
   workspces: WorkspaceBinding[];
+  params?: Param[];
 }
 
 export const ref: PipelineRef = {
@@ -51,6 +60,7 @@ export const pipelineRunResult: PipelineRunResult = {
   pipelineRef: ref,
   resources: [],
   workspces: [],
+  params: [],
 };
 
 @observer
@@ -76,7 +86,7 @@ export class PipelineRunDialog extends React.Component<Props> {
   };
 
   get pipeline() {
-    return PipelineRunDialog.pipelineData
+    return PipelineRunDialog.pipelineData;
   }
 
   onOpen = () => {
@@ -85,11 +95,7 @@ export class PipelineRunDialog extends React.Component<Props> {
 
     this.value.pipelineRef.name = pipelineName;
     this.value.name =
-      pipelineName +
-      "-" +
-      configStore.getDefaultNamespace() +
-      "-" +
-      timeStamp;
+      pipelineName + "-" + configStore.getDefaultNamespace() + "-" + timeStamp;
     //fill the  resources
     this.pipeline.spec.resources.map((item: any, index: number) => {
       let resources: PipelineResourceBinding = {
@@ -115,45 +121,66 @@ export class PipelineRunDialog extends React.Component<Props> {
         height = nodeSize.height;
       }
 
-      const runTektonGraphName = "run-" + this.pipeline.getName() + "-" + new Date().getTime().toString();
+      const runTektonGraphName =
+        "run-" +
+        this.pipeline.getName() +
+        "-" +
+        new Date().getTime().toString();
 
       let resources: PipelineDeclaredResource[] = this.value.resources;
       let workspaces = this.value.workspces;
       let copyLables = new Map<string, string>();
-      this.pipeline.getLabels().map(label => {
-        let labelSlice = label.split("=")
+      this.pipeline.getLabels().map((label) => {
+        let labelSlice = label.split("=");
         if (labelSlice.length > 0 && labelSlice[0] == "namespace") {
-          copyLables.set("namespace", labelSlice[1])
+          copyLables.set("namespace", labelSlice[1]);
         }
       });
 
-      const graph = await tektonGraphStore.create({
-        name: runTektonGraphName,
-        namespace: configStore.getOpsNamespace(),
-        labels: copyLables,
-      }, {
-        spec: {
-          data: JSON.stringify(runNodeData),
-          width: width,
-          height: height
+      const graph = await tektonGraphStore.create(
+        {
+          name: runTektonGraphName,
+          namespace: configStore.getOpsNamespace(),
+          labels: copyLables,
         },
-      })
+        {
+          spec: {
+            data: JSON.stringify(runNodeData),
+            width: width,
+            height: height,
+          },
+        }
+      );
 
       const pipelineRun: Partial<PipelineRun> = {
         metadata: {
           name: this.value.name,
-          annotations: Object.fromEntries(new Map<string, string>().set("fuxi.nip.io/run-tektongraphs", graph.getName())),
-          labels: Object.fromEntries(new Map<string, string>().set("namespace", configStore.getDefaultNamespace())),
+          annotations: Object.fromEntries(
+            new Map<string, string>().set(
+              "fuxi.nip.io/run-tektongraphs",
+              graph.getName()
+            )
+          ),
+          labels: Object.fromEntries(
+            new Map<string, string>().set(
+              "namespace",
+              configStore.getDefaultNamespace()
+            )
+          ),
         } as IKubeObjectMetadata,
         spec: {
           resources: resources,
           pipelineRef: this.value.pipelineRef,
           serviceAccountName: this.value.serviceAccountName,
           workspaces: workspaces,
+          params: this.value.params,
         },
-      }
+      };
 
-      await pipelineRunApi.create({ name: this.value.name, namespace: configStore.getOpsNamespace() }, { ...pipelineRun });
+      await pipelineRunApi.create(
+        { name: this.value.name, namespace: configStore.getOpsNamespace() },
+        { ...pipelineRun }
+      );
       Notifications.ok(<>PipelineRun {this.value.name} Run Success</>);
       this.close();
     } catch (err) {
@@ -163,7 +190,7 @@ export class PipelineRunDialog extends React.Component<Props> {
 
   reset = () => {
     this.graph = null;
-  }
+  };
 
   render() {
     const header = (
@@ -202,6 +229,14 @@ export class PipelineRunDialog extends React.Component<Props> {
               value={this.value?.serviceAccountName}
               onChange={(value) => (this.value.serviceAccountName = value)}
             />
+            <br />
+            <ParamsDetails
+              value={this.value?.params}
+              onChange={(value) => {
+                this.value.params = value;
+              }}
+            />
+
             <br />
             <PipelineRunResourceDetails
               value={this.value?.resources}
