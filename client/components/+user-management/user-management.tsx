@@ -12,7 +12,7 @@ import { ServiceAccounts } from "../+user-management-service-accounts";
 import { roleBindingsRoute, roleBindingsURL, rolesRoute, rolesURL, serviceAccountsRoute, serviceAccountsURL, usersManagementURL } from "./user-management.routes";
 import { namespaceStore } from "../+namespaces/namespace.store";
 import { PodSecurityPolicies, podSecurityPoliciesRoute, podSecurityPoliciesURL } from "../+pod-security-policies";
-import store from 'store'
+
 interface Props extends RouteComponentProps<{}> {
 }
 
@@ -21,8 +21,8 @@ export class UserManagement extends React.Component<Props> {
   static get tabRoutes() {
     const tabRoutes: TabRoute[] = [];
     let isClusterAdmin = false
-    const userConfig = store.get('u_config')
-    if(userConfig){
+    const userConfig = JSON.parse(localStorage.getItem('u_config'))
+    if (userConfig) {
       isClusterAdmin = userConfig.isClusterAdmin
     }
     const query = namespaceStore.getContextParams()

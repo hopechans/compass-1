@@ -13,7 +13,7 @@ import { nodesStore } from "../+nodes/nodes.store";
 import { podsStore } from "../+workloads-pods/pods.store";
 import { clusterStore } from "./cluster.store";
 import { eventStore } from "../+events/event.store";
-import store from 'store'
+
 @observer
 export class Cluster extends React.Component {
   private watchers = [
@@ -43,8 +43,8 @@ export class Cluster extends React.Component {
   }
 
   @computed get isLoaded() {
-    const userConfig= store.get('u_config')
-    if(!userConfig) return false
+    const userConfig = JSON.parse(localStorage.getItem('u_config'))
+    if (!userConfig) return false
     if(!clusterStore.metrics) return false
     return (
       nodesStore.isLoaded && podsStore.isLoaded
