@@ -10,7 +10,7 @@
     "test": "jest --config './test/jest.config.js'",
     "add-locale": "lingui add-locale",
     "lingui-extract": "lingui extract --clean",
-    "lingui-compile": "lingui compile",
+    "lingui-compile": "lingui compile"
   },
   "dependencies": {
     "@ant-design/icons": "^4.1.0",
@@ -107,7 +107,7 @@
     "flex.box": "^3.4.4",
     "fs-extra": "^9.0.1",
     "hoist-non-react-statics": "^3.3.0",
-    "html-webpack-plugin": "4.3.0",
+    "html-webpack-plugin": "^4.3.0",
     "identity-obj-proxy": "^3.0.0",
     "include-media": "^1.4.9",
     "jest": "^26.1.0",
@@ -119,7 +119,7 @@
     "moment": "^2.24.0",
     "node-sass": "^4.13.0",
     "nodemon": "^2.0.4",
-    "path-to-regexp": "^6.1.0",
+    "path-to-regexp": "^3.2.0",
     "pkg": "^4.4.4",
     "raw-loader": "^4.0.1",
     "react": "^16.11.0",
