@@ -30,16 +30,16 @@ import { IKubeObjectMetadata } from "../../api/kube-object";
 import { advanceSecondsToHms } from "../../api/endpoints";
 import { configStore } from "../../config.store";
 import { Link } from "react-router-dom";
-import { PipelineRunLogDialog } from "./pipeline-run-log-dialog";
 
 enum sortBy {
   name = "name",
+  namespace = "namespace",
   ownernamespace = "ownernamespace",
   reason = "reason",
   age = "age",
 }
 
-interface Props extends RouteComponentProps {}
+interface Props extends RouteComponentProps { }
 
 @observer
 export class PipelineRuns extends React.Component<Props> {
@@ -135,10 +135,7 @@ export class PipelineRuns extends React.Component<Props> {
     );
   }
 
-  renderPipelineDuration(
-    startTime: string | number,
-    completionTime: string | number
-  ) {
+  renderPipelineDuration(startTime: string | number, completionTime: string | number) {
     if (completionTime == "" || completionTime == undefined) {
       return;
     }
@@ -192,58 +189,35 @@ export class PipelineRuns extends React.Component<Props> {
           isClusterScoped
           className="PipelineRuns"
           store={pipelineRunStore}
-          dependentStores={[
-            pipelineStore,
-            taskRunStore,
-            tektonGraphStore,
-            podsStore,
-            eventStore,
-          ]}
+          dependentStores={[pipelineStore, taskRunStore, tektonGraphStore, podsStore, eventStore]}
           sortingCallbacks={{
             [sortBy.name]: (pipelineRun: PipelineRun) => pipelineRun.getName(),
-            [sortBy.ownernamespace]: (pipelineRun: PipelineRun) =>
-              pipelineRun.getOwnerNamespace(),
-            [sortBy.reason]: (pipelineRun: PipelineRun) =>
-              pipelineRun.getErrorReason(),
-            [sortBy.age]: (pipelineRun: PipelineRun) =>
-              pipelineRun.getAge(false),
+            [sortBy.namespace]: (pipelineRun: PipelineRun) => pipelineRun.getNs(),
+            [sortBy.ownernamespace]: (pipelineRun: PipelineRun) => pipelineRun.getOwnerNamespace(),
+            [sortBy.reason]: (pipelineRun: PipelineRun) => pipelineRun.getErrorReason(),
+            [sortBy.age]: (pipelineRun: PipelineRun) => pipelineRun.getAge(false),
           }}
           searchFilters={[
             (pipelineRun: PipelineRun) => pipelineRun.getSearchFields(),
           ]}
           renderHeaderTitle={<Trans>PipelineRuns</Trans>}
           renderTableHeader={[
-            {
-              title: <Trans>Name</Trans>,
-              className: "name",
-              sortBy: sortBy.name,
-            },
-            {
-              title: <Trans>OwnerNamespace</Trans>,
-              className: "ownernamespace",
-              sortBy: sortBy.ownernamespace,
-            },
+            { title: <Trans>Name</Trans>, className: "name", sortBy: sortBy.name },
+            { title: <Trans>Namespace</Trans>, className: "namespace", sortBy: sortBy.namespace },
+            { title: <Trans>OwnerNamespace</Trans>, className: "ownernamespace", sortBy: sortBy.ownernamespace },
             { title: "", className: "event" },
             { title: "", className: "reason" },
             { title: <Trans>Tasks</Trans>, className: "tasks" },
-            {
-              title: <Trans>Created</Trans>,
-              className: "age",
-              sortBy: sortBy.age,
-            },
+            { title: <Trans>Created</Trans>, className: "age", sortBy: sortBy.age },
             { title: <Trans>Duration</Trans>, className: "Duration" },
             { title: "Status", className: "status" },
           ]}
           renderTableContents={(pipelineRun: PipelineRun) => [
             this.renderPipelineName(pipelineRun),
+            pipelineRun.getNs(),
             pipelineRun.getOwnerNamespace(),
-            <KubeEventIcon
-              namespace={configStore.getOpsNamespace()}
-              object={pipelineRun}
-            />,
-            pipelineRun.hasIssues() && (
-              <PipelineRunIcon object={pipelineRun.status.conditions[0]} />
-            ),
+            <KubeEventIcon namespace={configStore.getOpsNamespace()} object={pipelineRun} />,
+            pipelineRun.hasIssues() && (<PipelineRunIcon object={pipelineRun.status.conditions[0]} />),
             this.renderTasks(pipelineRun),
             `${pipelineRun.getAge()}  ago`,
             pipelineRun.getDuration() ?? "",
@@ -267,14 +241,10 @@ export function PipelineRunMenu(props: KubeObjectMenuProps<PipelineRun>) {
       <MenuItem
         onClick={() => {
           //Cancel
-          let pipelineRun = object;
-          pipelineRun.spec.status = "PipelineRunCancelled";
+          object.spec.status = "PipelineRunCancelled";
           try {
-            // //will update pipelineRun
-            pipelineRunStore.update(pipelineRun, { ...pipelineRun });
-            Notifications.ok(
-              <>PipelineRun {pipelineRun.getName()} cancel succeeded</>
-            );
+            pipelineRunStore.update(object, { ...object });
+            Notifications.ok(<>PipelineRun {object.getName()} cancel succeeded</>);
           } catch (err) {
             Notifications.error(err);
           }
@@ -285,36 +255,20 @@ export function PipelineRunMenu(props: KubeObjectMenuProps<PipelineRun>) {
           <Trans>Cancel</Trans>
         </span>
       </MenuItem>
+
       <MenuItem
         onClick={async () => {
-          //Cancel
           const pipelineRun = object;
           try {
             // will delete pipelineRun
             await pipelineRunStore.remove(pipelineRun);
 
-            let copyAnnotations = new Map<string, string>();
-            pipelineRun.getAnnotations().map((label) => {
-              let labelSlice = label.split("=");
-              if (labelSlice.length > 0) {
-                copyAnnotations.set(labelSlice[0], labelSlice[1]);
-              }
-            });
-
-            let copyLables = new Map<string, string>();
-            pipelineRun.getLabels().map((label) => {
-              let labelSlice = label.split("=");
-              if (labelSlice.length > 0) {
-                copyLables.set(labelSlice[0], labelSlice[1]);
-              }
-            });
-
-            let newPipelineRun: Partial<PipelineRun> = {
+            const newPipelineRun: Partial<PipelineRun> = {
               metadata: {
                 name: pipelineRun.getName(),
                 namespace: pipelineRun.getNs(),
-                annotations: Object.fromEntries(copyAnnotations),
-                labels: Object.fromEntries(copyLables),
+                annotations: pipelineRun.copyAnnotations(),
+                labels: pipelineRun.copyLabels(),
               } as IKubeObjectMetadata,
               spec: {
                 pipelineRef: pipelineRun.spec.pipelineRef,
@@ -330,16 +284,11 @@ export function PipelineRunMenu(props: KubeObjectMenuProps<PipelineRun>) {
             };
             //create it. will re-run
             await pipelineRunApi.create(
-              {
-                name: pipelineRun.getName(),
-                namespace: pipelineRun.getNs(),
-              },
+              { name: pipelineRun.getName(), namespace: pipelineRun.getNs() },
               { ...newPipelineRun }
             );
 
-            Notifications.ok(
-              <>PipelineRun: {pipelineRun.getName()} rerun succeeded</>
-            );
+            Notifications.ok(<>PipelineRun: {pipelineRun.getName()} rerun succeeded</>);
           } catch (err) {
             Notifications.error(err);
           }

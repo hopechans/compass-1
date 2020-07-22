@@ -58,11 +58,11 @@ export class KubeObject implements ItemObject {
     return Object.entries(labels).map(([name, value]) => `${name}=${value}`);
   }
 
-  static mapperLables(labels: string[]): Map<string, string> {
+  static mapperLablesOrAnnotations(data: string[]): Map<string, string> {
     let result = new Map<string, string>();
-    if (labels.length == 0) return result;
-    labels.map((label) => {
-      const slice = label.split("=");
+    if (data.length == 0) return result;
+    data.map((item) => {
+      const slice = item.split("=");
       result.set(slice[0], slice[1]);
     })
     return result;
@@ -93,7 +93,6 @@ export class KubeObject implements ItemObject {
   }
 
   getNs() {
-    // avoid "null" serialization via JSON.stringify when post data
     return this.metadata.namespace || undefined;
   }
 
@@ -119,14 +118,26 @@ export class KubeObject implements ItemObject {
     return KubeObject.stringifyLabels(this.metadata.labels);
   }
 
+  copyLabels(): { [k: string]: string } {
+    return Object.fromEntries(KubeObject.mapperLablesOrAnnotations(this.getLabels()))
+  }
+
+  copyAnnotations(): { [k: string]: string } {
+    return Object.fromEntries(KubeObject.mapperLablesOrAnnotations(this.getAnnotations()))
+  }
+
   addLabel(key: string, value: string) {
-    this.metadata.labels = Object.fromEntries(KubeObject.mapperLables(this.getLabels()).set(key, value))
+    this.metadata.labels = Object.fromEntries(KubeObject.mapperLablesOrAnnotations(this.getLabels()).set(key, value))
   }
 
   removeLable(key: string) {
-    let result = KubeObject.mapperLables(this.getLabels());
+    let result = KubeObject.mapperLablesOrAnnotations(this.getLabels());
     result.delete(key);
     this.metadata.labels = Object.fromEntries(result);
+  }
+
+  getValueFromLabels(key: string): string {
+    return KubeObject.mapperLablesOrAnnotations(this.getLabels()).get(key) || ""
   }
 
   getAnnotations(): string[] {
@@ -137,6 +148,20 @@ export class KubeObject implements ItemObject {
       );
       return !skip;
     });
+  }
+
+  addAnnotation(key: string, value: string) {
+    this.metadata.annotations = Object.fromEntries(KubeObject.mapperLablesOrAnnotations(this.getLabels()).set(key, value))
+  }
+
+  removeAnnotation(key: string) {
+    let result = KubeObject.mapperLablesOrAnnotations(this.getAnnotations());
+    result.delete(key);
+    this.metadata.annotations = Object.fromEntries(result);
+  }
+
+  getValueFromAnnotations(key: string): string {
+    return KubeObject.mapperLablesOrAnnotations(this.getAnnotations()).get(key) || ""
   }
 
   getSearchFields() {

@@ -1,6 +1,6 @@
 import { observer } from "mobx-react";
 import React from "react";
-import { observable, toJS } from "mobx";
+import { observable, toJS, ObservableSet } from "mobx";
 import { ActionMeta } from "react-select/src/types";
 import { Select, SelectOption } from "../select";
 import { Icon } from "../icon";
@@ -19,6 +19,7 @@ interface Props<T = any> extends Partial<Props> {
   themeName?: "dark" | "light" | "outlined";
   divider?: true;
 
+  namespace?: string;
   onChange?(option: T, meta?: ActionMeta): void;
 }
 
@@ -34,6 +35,7 @@ export const pipelineRunResource: PipelineResourceBinding = {
 @observer
 export class PipelineRunResourceDetails extends React.Component<Props> {
   @observable value: PipelineResourceBinding[] = this.props.value || [];
+  @observable namespace: string = this.props.namespace;
 
   add = () => {
     this.value.push(pipelineRunResource);
@@ -44,11 +46,12 @@ export class PipelineRunResourceDetails extends React.Component<Props> {
   };
 
   get pipelineResouceOptions() {
-    const options = pipelineResourceStore
-      .getAllByNs(namespaceStore.getAllOpsNamespace())
-      .map((item) => ({ value: item.getName() }))
-      .slice();
-    return [...options];
+    return [
+      ...pipelineResourceStore
+        .getAllByNs(this.namespace)
+        .map((item) => ({ value: item.getName() }))
+        .slice()
+    ];
   }
 
   formatOptionLabel = (option: SelectOption) => {

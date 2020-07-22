@@ -6,15 +6,16 @@ import { Trans } from "@lingui/macro";
 import { Dialog } from "../dialog";
 import { Wizard, WizardStep } from "../wizard";
 import { observer } from "mobx-react";
-import { Pipeline, PipelineTask } from "../../api/endpoints";
+import { Pipeline, PipelineTask, TektonGraph } from "../../api/endpoints";
 import { graphId, Graphs } from "../+tekton-graph/graphs";
 import { CopyTaskDialog } from "../+tekton-task/copy-task-dialog";
 import { PipelineSaveDialog } from "./pipeline-save-dialog";
 import { tektonGraphStore } from "../+tekton-graph/tekton-graph.store";
 import { pipelineStore } from "./pipeline.store";
 import { configStore } from "../../config.store";
+import { IKubeObjectMetadata } from "../../../client/api/kube-object";
 
-interface Props extends Partial<Props> {}
+interface Props extends Partial<Props> { }
 
 @observer
 export class PipelineVisualDialog extends React.Component<Props> {
@@ -51,12 +52,11 @@ export class PipelineVisualDialog extends React.Component<Props> {
       this.graph.instance.data(pipelineStore.getNodeData(this.pipeline));
       this.graph.bindClickOnNode((currentNode: any) => {
         this.currentNode = currentNode;
-        CopyTaskDialog.open(this.graph, this.currentNode);
+        CopyTaskDialog.open(this.graph, this.currentNode, PipelineVisualDialog.Data.getNs());
       });
 
       this.graph.bindMouseenter();
       this.graph.bindMouseleave();
-
       this.graph.render();
     }, 100);
   };
@@ -120,25 +120,26 @@ export class PipelineVisualDialog extends React.Component<Props> {
   }
 
   updateTektonGraph = async (data: string) => {
-    const graphName =
-      this.pipeline.getName() + "-" + new Date().getTime().toString();
-    await tektonGraphStore.create(
-      {
+
+
+    const graphName = this.pipeline.getName() + "-" + new Date().getTime().toString();
+    const tektonGraph: Partial<TektonGraph> = {
+      metadata: {
         name: graphName,
         namespace: this.pipeline.getNs(),
-        labels: new Map<string, string>().set("namespace", this.pipeline.getNs().split("-")[0]),
-      },
-      {
-        spec: {
-          data: data,
-          width: this.graph.width,
-          height: this.graph.height,
-        },
+        labels: Object.fromEntries(new Map<string, string>().set("namespace", this.pipeline.getNs().split("-")[0])),
+      } as IKubeObjectMetadata,
+      spec: {
+        data: data,
+        width: this.graph.width,
+        height: this.graph.height,
       }
-    );
-    this.pipeline.metadata.annotations = {
-      "fuxi.nip.io/tektongraphs": graphName,
     };
+
+    const newTektonGraph = await tektonGraphStore.create({ namespace: this.pipeline.getNs(), name: graphName }, { ...tektonGraph });
+
+    this.pipeline.addAnnotation("fuxi.nip.io/tektongraphs", newTektonGraph.getName());
+
     await pipelineStore.update(this.pipeline, { ...this.pipeline });
   };
 
@@ -200,11 +201,7 @@ export class PipelineVisualDialog extends React.Component<Props> {
   };
 
   render() {
-    const header = (
-      <h5>
-        <Trans>Pipeline Visualization</Trans>
-      </h5>
-    );
+    const header = (<h5><Trans>Pipeline Visualization</Trans></h5>);
 
     return (
       <Dialog

@@ -12,18 +12,18 @@ import { Trans } from "@lingui/macro";
 interface Props<T = any> extends Partial<Props> {
   value?: T;
   themeName?: "dark" | "light" | "outlined";
+  namespace?: string;
   divider?: boolean;
   disable?: boolean;
-
   onChange?(option: T, meta?: ActionMeta): void;
 }
 
 @observer
 export class MultiPipelineTaskStepDetails extends React.Component<Props> {
-
   static defaultProps = {
     divider: false,
     disable: false,
+    namespace: "",
   }
 
   @observable value: PipelineTask[] = this.props.value || [];
@@ -37,8 +37,7 @@ export class MultiPipelineTaskStepDetails extends React.Component<Props> {
   };
 
   render() {
-
-    const {disable} = this.props;
+    const { disable, namespace } = this.props;
 
     const genExtra = (index: number) => {
       if (this.value.length > 1) {
@@ -75,19 +74,20 @@ export class MultiPipelineTaskStepDetails extends React.Component<Props> {
             return (
               <Collapse
                 panelName={<Trans>Task</Trans>}
-                extraExpand={!disable? genExtra(index) : null}
+                extraExpand={!disable ? genExtra(index) : null}
               >
                 <PipelineTaskDetail
                   disable={disable}
                   value={this.value[index]}
+                  namespace={namespace}
                   onChange={(value) => (this.value[index] = value)}
                 />
               </Collapse>
             );
           })
         ) : (
-          <></>
-        )}
+            <></>
+          )}
       </div>
     );
   }

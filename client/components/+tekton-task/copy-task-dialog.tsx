@@ -39,8 +39,8 @@ import { namespaceStore } from "../+namespaces/namespace.store";
 interface Props<T = any> extends Partial<Props> {
   value?: T;
 
+  namespace?: string;
   onChange?(option: T, meta?: ActionMeta): void;
-
   themeName?: "dark" | "light" | "outlined";
 }
 
@@ -66,6 +66,7 @@ class Volume {
 
 export interface TaskResult {
   taskName: string;
+  namespace: string;
   pipelineParams: PipelineParams[];
   resources: TaskResources;
   taskSteps: TaskStep[];
@@ -75,6 +76,7 @@ export interface TaskResult {
 
 export const task: TaskResult = {
   taskName: "",
+  namespace: "",
   pipelineParams: [],
   resources: resources,
   taskSteps: [taskStep],
@@ -89,20 +91,22 @@ export class CopyTaskDialog extends React.Component<Props> {
   @observable static graph: any;
   @observable static node: any;
   @observable static data: any;
+  @observable static namespace: string;
   @observable ifSwitch: boolean = false;
   @observable name: string;
   @observable change: boolean;
 
-  static open(graph: any, node: any) {
+
+  static open(graph: any, node: any, namespace: string) {
     CopyTaskDialog.isOpen = true;
+    CopyTaskDialog.namespace = namespace;
     this.graph = graph;
     this.node = node;
   }
 
-  loadData = async (name: string) => {
+  loadData = async (name: string, namespace: string) => {
     try {
-      const defaultNameSpace = configStore.getOpsNamespace();
-      const task = taskStore.getByName(name, defaultNameSpace);
+      const task = taskStore.getByName(name, namespace);
       if (task !== undefined) {
         this.value.resources = task.getResources();
         this.value.taskSteps = task.getSteps();
@@ -110,6 +114,7 @@ export class CopyTaskDialog extends React.Component<Props> {
         this.value.volumes = task.getVolumes();
         this.value.pipelineParams = task.getParams();
         this.value.taskName = task.getName();
+        this.value.namespace = task.getNs();
       }
     } catch (err) {
       return err;
@@ -118,13 +123,10 @@ export class CopyTaskDialog extends React.Component<Props> {
 
   onOpen = () => {
     try {
-      if (this.ifSwitch) {
-      }
-
       const group = CopyTaskDialog.node.getContainer();
       let shape = group.get("children")[2];
       const name = shape.attrs.text;
-      this.loadData(name);
+      this.loadData(name, CopyTaskDialog.namespace);
     } catch (err) {
       Notifications.error(err);
     }
@@ -157,20 +159,15 @@ export class CopyTaskDialog extends React.Component<Props> {
     ];
 
     try {
-      if (!this.ifSwitch) {
-        this.value.taskName = this.value.taskName;
-      }
+      if (!this.ifSwitch) { this.value.taskName = this.value.taskName; }
 
-      const task = taskStore.getByName(this.value.taskName);
+      const task = taskStore.getByName(this.value.taskName, CopyTaskDialog.namespace);
       if (task === undefined) {
         taskStore.create(
           {
             name: this.value.taskName,
             namespace: configStore.getOpsNamespace(),
-            labels: new Map<string, string>().set(
-              "namespace",
-              configStore.getDefaultNamespace()
-            ),
+            labels: new Map<string, string>().set("namespace", configStore.getDefaultNamespace()),
           },
           {
             spec: {
@@ -206,30 +203,19 @@ export class CopyTaskDialog extends React.Component<Props> {
 
   formatOptionLabel = (option: SelectOption) => {
     const { value, label } = option;
-    return (
-      label || (
-        <>
-          <Icon small material="layers" />
-          {value}
-        </>
-      )
-    );
+    return (label || (<><Icon small material="layers" />{value}</>));
   };
 
   get taskOptions() {
     const options = taskStore
-      .getAllByNs(namespaceStore.getAllOpsNamespace())
+      .getAllByNs(CopyTaskDialog.namespace)
       .map((item) => ({ value: item.getName() }))
       .slice();
     return [...options];
   }
 
   render() {
-    const header = (
-      <h5>
-        <Trans>Apply Task</Trans>
-      </h5>
-    );
+    const header = (<h5><Trans>Apply Task</Trans></h5>);
 
     return (
       <ThemeProvider theme={theme}>
@@ -252,14 +238,13 @@ export class CopyTaskDialog extends React.Component<Props> {
                     />
                   }
                   label={
-                    this.ifSwitch ? (
-                      <SubTitle title={<Trans>Select module</Trans>} />
-                    ) : (
-                        <SubTitle title={<Trans>Template configuration</Trans>} />
-                      )
+                    this.ifSwitch
+                      ? (<SubTitle title={<Trans>Select module</Trans>} />)
+                      : (<SubTitle title={<Trans>Template configuration</Trans>} />)
                   }
                 />
               </FormGroup>
+              
               <div hidden={this.ifSwitch}>
                 <SubTitle title={<Trans>Task Name</Trans>} />
                 <Input
@@ -269,35 +254,31 @@ export class CopyTaskDialog extends React.Component<Props> {
                   value={this.value.taskName}
                   onChange={(value) => (this.value.taskName = value)}
                 />
+
                 <br />
                 <TaskSpecWorkSpaces
                   value={this.value.workspace}
-                  onChange={(vaule) => {
-                    this.value.workspace = vaule;
-                  }}
+                  onChange={(vaule) => { this.value.workspace = vaule }}
                 />
+
                 <br />
                 <PipelineParamsDetails
                   value={this.value.pipelineParams}
-                  onChange={(value) => {
-                    this.value.pipelineParams = value;
-                  }}
+                  onChange={(value) => { this.value.pipelineParams = value }}
                 />
+
                 <br />
                 <ResourcesDetail
                   value={this.value.resources}
-                  onChange={(value) => {
-                    this.value.resources = value;
-                  }}
+                  onChange={(value) => { this.value.resources = value }}
                 />
                 <br />
                 <MultiTaskStepDetails
                   value={this.value.taskSteps}
-                  onChange={(value) => {
-                    this.value.taskSteps = value;
-                  }}
+                  onChange={(value) => { this.value.taskSteps = value }}
                 />
               </div>
+
               <div hidden={!this.ifSwitch}>
                 <Select
                   value={this.value.taskName}
@@ -310,6 +291,7 @@ export class CopyTaskDialog extends React.Component<Props> {
                   }}
                 />
               </div>
+
             </WizardStep>
           </Wizard>
         </Dialog>
