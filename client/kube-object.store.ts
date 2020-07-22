@@ -7,7 +7,7 @@ import { configStore } from "./config.store";
 import { apiManager } from "./api/api-manager";
 import { IKubeApiQueryParams, KubeApi } from "./api/kube-api";
 import { KubeJsonApiData } from "./api/kube-json-api";
-
+import store from 'store'
 @autobind()
 export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemStore<T> {
   abstract api: KubeApi<T>;
@@ -58,9 +58,9 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
   }
   protected async loadItems(namespaces?: string[]): Promise<T[]> {
     let isClusterAdmin = false
-    const userConifg = JSON.parse(localStorage.getItem('u_config'))
-    if (userConifg) {
-      isClusterAdmin = userConifg.isClusterAdmin
+    const userConfig = store.get('u_config')
+    if (userConfig) {
+      isClusterAdmin = userConfig.isClusterAdmin
     }
     if (isClusterAdmin != true && !this.api.isNamespaced) {
       return []

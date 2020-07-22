@@ -1,5 +1,6 @@
 import "./app.scss";
 import React from "react";
+import store from 'store'
 import { render } from "react-dom";
 import { Redirect, Route, Router, Switch } from "react-router";
 import { observer } from "mobx-react";
@@ -52,10 +53,10 @@ class App extends React.Component {
 
   render() {
     let homeUrl = ''
-    const userConifg = JSON.parse(localStorage.getItem('u_config'))
-    if(userConifg){
-      configStore.setConfig(userConifg)
-      let admin = userConifg.isClusterAdmin
+    const userConfig = store.get('u_config')
+    if(userConfig){
+      configStore.setConfig(userConfig)
+      let admin = userConfig.isClusterAdmin
       homeUrl = admin == 'true' ? clusterURL() : workloadsURL();
     }
     else {

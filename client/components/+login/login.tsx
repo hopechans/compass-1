@@ -1,5 +1,6 @@
 import React from 'react'
 import axios from 'axios'
+import store from 'store'
 import { computed, observable } from "mobx";
 import { observer } from "mobx-react";
 import { t,Trans } from "@lingui/macro";
@@ -14,8 +15,10 @@ import { withRouter, RouteComponentProps } from 'react-router';
 import { crdStore } from '../+custom-resources'
 import { _i18n } from "../../i18n";
 import { Input } from '../input'
+import { createStorage } from "../../utils";
 import { Button } from '../button'
 import './login.scss'
+
 interface Props extends RouteComponentProps {
   history: any
 }
@@ -42,7 +45,7 @@ class LoginComponet extends React.Component<Props>{
       .then((res: any) => {
         configStore.isLoaded = true
         configStore.setConfig(res.data)
-        window.localStorage.setItem('u_config',JSON.stringify(res.data))
+        store.set('u_config',res.data)
         crdStore.loadAll()
         Notifications.ok('Login Success')
         const hide = message.loading('Loading..', 1500);
