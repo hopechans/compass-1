@@ -11,16 +11,13 @@ import { _i18n } from "../../i18n";
 import { Input } from "../input";
 import { pipelineResourceStore } from "../+tekton-pipelineresource/pipelineresource.store";
 import { Grid } from "@material-ui/core";
-import { configStore } from "../../../client/config.store";
-import { namespaceStore } from "../+namespaces/namespace.store";
 
 interface Props<T = any> extends Partial<Props> {
   value?: T;
   themeName?: "dark" | "light" | "outlined";
   divider?: true;
-
   namespace?: string;
-  onChange?(option: T, meta?: ActionMeta): void;
+  onChange?(option: T, meta?: ActionMeta<any>): void;
 }
 
 export const pipelineRef: PipelineRef = {

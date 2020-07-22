@@ -37,7 +37,8 @@ import { IKubeObjectMetadata } from "../../api/kube-object";
 interface Props<T = any> extends Partial<Props> {
   value?: T;
   themeName?: "dark" | "light" | "outlined";
-  onChange?(option: T, meta?: ActionMeta): void;
+  namespace?: string;
+  onChange?(option: T, meta?: ActionMeta<any>): void;
 }
 
 export interface PipelineRunResult {

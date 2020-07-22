@@ -3,29 +3,54 @@ import React, { createRef, PureComponent } from "react";
 import isEqual from "lodash/isEqual";
 import remove from "lodash/remove";
 import * as ChartJS from "chart.js";
-import { ChartData as ChartDataOrig, ChartDataSets, ChartOptions } from "chart.js";
+// import { ChartData as ChartDataOrig, ChartDataSets, ChartOptions } from "chart.js";
 import { StatusBrick } from "../status-brick";
 import { cssNames } from "../../utils";
 import { Badge } from "../badge";
 
-export interface ChartData extends ChartDataOrig {
-  datasets?: ChartDataSet[];
+// export interface ChartData extends ChartDataOrig {
+//   datasets?: ChartDataSet[];
+// }
+//
+// export interface ChartDataSet extends ChartDataSets {
+//   id?: string;
+//   borderWidth?: { top: number } | any;
+//   tooltip?: string;
+// }
+
+// export interface ChartProps {
+//   data: {
+//     labels?: Array<string | string[]>;
+//     datasets?: ChartDataSet[];
+//   };
+//   width?: number | string;
+//   height?: number | string;
+//   options?: ChartOptions;  // Passed to ChartJS instance
+//   type?: ChartKind;
+//   showChart?: boolean;  // Possible to show legend only if false
+//   showLegend?: boolean;
+//   legendPosition?: "bottom";
+//   legendColors?: string[];  // Hex colors for each of the labels in data object
+//   plugins?: any[];
+//   redraw?: boolean;  // If true - recreate chart instance with no animation
+//   title?: string;
+//   className?: string;
+// }
+
+export interface ChartData extends ChartJS.ChartData {
+  datasets?: ChartDataSets[];
 }
 
-export interface ChartDataSet extends ChartDataSets {
+export interface ChartDataSets extends ChartJS.ChartDataSets {
   id?: string;
-  borderWidth?: { top: number } | any;
   tooltip?: string;
 }
 
 export interface ChartProps {
-  data: {
-    labels?: Array<string | string[]>;
-    datasets?: ChartDataSet[];
-  };
+  data: ChartData;
+  options?: ChartJS.ChartOptions;  // Passed to ChartJS instance
   width?: number | string;
   height?: number | string;
-  options?: ChartOptions;  // Passed to ChartJS instance
   type?: ChartKind;
   showChart?: boolean;  // Possible to show legend only if false
   showLegend?: boolean;
@@ -103,8 +128,11 @@ export class Chart extends PureComponent<ChartProps> {
 
     this.memoizeDataProps()
 
-    const datasets: ChartDataSet[] = this.chart.config.data.datasets
-    const nextDatasets: ChartDataSet[] = this.currentChartData.datasets || []
+    // const datasets: ChartDataSet[] = this.chart.config.data.datasets
+    // const nextDatasets: ChartDataSet[] = this.currentChartData.datasets || []
+
+    const datasets: ChartDataSets[] = this.chart.config.data.datasets
+    const nextDatasets: ChartDataSets[] = this.currentChartData.datasets || []
 
     // Remove stale datasets if they're not available in nextDatasets
     if (datasets.length > nextDatasets.length) {

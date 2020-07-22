@@ -37,14 +37,16 @@ export interface IReleaseCreatePayload {
   chart: string;
   namespace: string;
   version: string;
-  values: string;
+  // values: string;
+  values: any;
 }
 
 export interface IReleaseUpdatePayload {
   repo: string;
   chart: string;
   version: string;
-  values: string;
+  // values: string;
+  values: any;
 }
 
 export interface IReleaseUpdateDetails {

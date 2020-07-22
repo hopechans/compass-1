@@ -15,7 +15,8 @@ interface Props<T = any> extends Partial<Props> {
   namespace?: string;
   divider?: boolean;
   disable?: boolean;
-  onChange?(option: T, meta?: ActionMeta): void;
+
+  onChange?(option: T, meta?: ActionMeta<any>): void;
 }
 
 @observer
@@ -55,7 +56,7 @@ export class MultiPipelineTaskStepDetails extends React.Component<Props> {
             cancelText="No"
           >
             <DeleteOutlined
-              translate
+              translate={"yes"}
               style={{ color: "#ff4d4f" }}
               onClick={(event: any) => {
                 event.stopPropagation();

@@ -76,8 +76,8 @@ export class Terminal {
         this.xterm = new XTerm({
             cursorBlink: true,
             cursorStyle: "bar",
-            fontSize: 13,
-            fontFamily: "RobotoMono"
+            fontSize: 14.5,
+            fontFamily: "Monospace"
         });
 
         // enable terminal addons

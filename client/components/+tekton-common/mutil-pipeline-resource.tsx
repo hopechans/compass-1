@@ -11,7 +11,7 @@ interface Props<T = any> extends Partial<Props> {
   divider?: boolean;
   disable?: boolean;
 
-  onChange?(option: T, meta?: ActionMeta): void;
+  onChange?(option: T, meta?: ActionMeta<any>): void;
 }
 
 export const defaultTaskResources: TaskResources = {

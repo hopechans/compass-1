@@ -17,7 +17,7 @@ interface Props<T = any> extends Partial<Props> {
   themeName?: "dark" | "light" | "outlined";
   divider?: true;
 
-  onChange?(option: T, meta?: ActionMeta): void;
+  onChange?(option: T, meta?: ActionMeta<any>): void;
 }
 
 export const pvc: PersistentVolumeClaimVolumeSource = {

@@ -4,7 +4,7 @@ import { useEffect, useRef } from "react";
 import merge from "lodash/merge";
 import moment from "moment";
 import Color from "color";
-import { Chart, ChartDataSet, ChartKind, ChartProps } from "./chart";
+import { Chart, ChartDataSets, ChartKind, ChartProps } from "./chart";
 import { ChartData, ChartOptions, ChartPoint } from "chart.js";
 import { cssNames } from "../../utils";
 import { bytesToUnits } from "../../utils";
@@ -21,7 +21,7 @@ interface Props extends ChartProps {
 interface IChartContext {
   chart: ChartJS;
   dataIndex?: number;
-  dataset?: ChartDataSet;
+  dataset?: ChartDataSets;
 }
 
 const defaultProps: Partial<Props> = {
@@ -170,9 +170,15 @@ export const memoryOptions: ChartOptions = {
   scales: {
     yAxes: [{
       ticks: {
-        callback: value => {
-          if (!value) return 0;
-          return parseFloat(value) < 1 ? value.toFixed(3) : bytesToUnits(parseInt(value));
+        callback: (value: number | string): string => {
+          if (typeof value == "string") {
+            const float = parseFloat(value);
+            if (float < 1) {
+              return float.toFixed(3);
+            }
+            return bytesToUnits(parseInt(value));
+          }
+          return `${value}`;
         },
         stepSize: 1
       }
@@ -194,11 +200,12 @@ export const cpuOptions: ChartOptions = {
   scales: {
     yAxes: [{
       ticks: {
-        callback: value => {
-          if (value == 0) return 0;
-          if (value < 10) return value.toFixed(3);
-          if (value < 100) return value.toFixed(2);
-          return value.toFixed(1);
+        callback: (value: number | string): string => {
+          const float = parseFloat(`${value}`);
+          if (float == 0) return "0";
+          if (float < 10) return float.toFixed(3);
+          if (float < 100) return float.toFixed(2);
+          return float.toFixed(1);
         }
       }
     }]

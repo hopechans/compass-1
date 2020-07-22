@@ -18,7 +18,7 @@ export interface Props<T = any> extends Partial<Props> {
   showIcons?: boolean;
   themeName?: "dark" | "light" | "outlined";
 
-  onChange?(option: T, meta?: ActionMeta): void;
+  onChange?(option: T, meta?: ActionMeta<any>): void;
 }
 
 @observer

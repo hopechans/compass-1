@@ -16,7 +16,7 @@ interface Props<T = any> extends Partial<Props> {
   value?: T;
   themeName?: "dark" | "light" | "outlined";
 
-  onChange?(option: T, meta?: ActionMeta): void;
+  onChange?(option: T, meta?: ActionMeta<any>): void;
 
   base?: boolean;
   commands?: boolean;
@@ -72,7 +72,8 @@ export class MultiContainerDetails extends React.Component<Props> {
             okText={_i18n._(`Yes`)}
             cancelText={_i18n._(`No`)}>
             <DeleteOutlined
-              translate style={{color: '#ff4d4f'}}
+              translate={"yes"}
+              style={{color: '#ff4d4f'}}
               onClick={(event) => {
                 event.preventDefault();
                 event.stopPropagation();
