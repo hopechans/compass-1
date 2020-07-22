@@ -140,7 +140,7 @@
     "webpack-cli": "^3.3.10",
     "webpack-dev-server": "^3.9.0",
     "webpackbar": "^4.0.0",
-    "xterm": "^4.4.0-vscode1",
+    "xterm": "^4.6",
     "xterm-addon-fit": "^0.4.0",
     "yargs": "^15.4.1"
   }
