@@ -18,6 +18,7 @@
     "@material-ui/icons": "^4.9.1",
     "@sentry/browser": "^5.17.0",
     "@types/react-treeview": "^0.4.2",
+    "@types/store": "^2.0.2",
     "antd": "^4.3.4",
     "axios": "^0.19.0",
     "chalk": "^4.1.0",
@@ -37,6 +38,7 @@
     "react-dnd-html5-backend": "^11.1.3",
     "react-treeview": "^0.4.7",
     "sockjs-client": "^1.4.0",
+    "store": "^2.0.12",
     "strip-ansi": "^6.0.0"
   },
   "devDependencies": {

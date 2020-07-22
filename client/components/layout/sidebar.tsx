@@ -34,7 +34,7 @@ import { crdStore } from "../+custom-resources/crd.store";
 import { CrdList, crdResourcesRoute, crdRoute, crdURL } from "../+custom-resources";
 import { CustomResources } from "../+custom-resources/custom-resources";
 import { navigation } from "../../navigation";
-
+import store from 'store'
 
 const SidebarContext = React.createContext<SidebarContextValue>({ pinned: false });
 type SidebarContextValue = {
@@ -75,8 +75,8 @@ export class Sidebar extends React.Component<Props> {
 
     render() {
         const { toggle, isPinned, className } = this.props;
-        const userConifg = JSON.parse(localStorage.getItem('u_config'))
-        const isClusterAdmin = userConifg ? userConifg.isClusterAdmin : false
+        const userConfig = store.get('u_config')
+        const isClusterAdmin = userConfig ? userConfig.isClusterAdmin : false
         const query = namespaceStore.getContextParams();
         return (
             <SidebarContext.Provider value={{ pinned: isPinned }}>

@@ -12,8 +12,7 @@ import { Ingresses, ingressRoute, ingressURL } from "../+network-ingresses";
 import { NetworkPolicies, networkPoliciesRoute, networkPoliciesURL } from "../+network-policies";
 import { namespaceStore } from "../+namespaces/namespace.store";
 import { networkURL } from "./network.route";
-import { configStore } from "../../../client/config.store";
-
+import store from 'store'
 interface Props extends RouteComponentProps<{}> {
 }
 
@@ -21,8 +20,8 @@ interface Props extends RouteComponentProps<{}> {
 export class Network extends React.Component<Props> {
   static get tabRoutes(): TabRoute[] {
     const query = namespaceStore.getContextParams()
-    const userConifg = JSON.parse(localStorage.getItem('u_config'))
-    const isClusterAdmin = userConifg ? userConifg.isClusterAdmin : false
+    const userConfig = store.get('u_config')
+    const isClusterAdmin = userConfig ? userConfig.isClusterAdmin : false
     let items = [
       {
         title: <Trans>Services</Trans>,

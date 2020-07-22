@@ -46,7 +46,7 @@ import {Deploys} from "../+workloads-deploy";
 import {StatefulSets} from "../+workloads-statefulsets";
 import {Injectors} from "../+workloads-injectors";
 import {Waters} from "../+workloads-waters"
-
+import store from 'store'
 interface Props extends RouteComponentProps {
 }
 
@@ -54,7 +54,7 @@ interface Props extends RouteComponentProps {
 export class Workloads extends React.Component<Props> {
   static get tabRoutes(): TabRoute[] {
     const query = namespaceStore.getContextParams();
-    const userConfig = JSON.parse(localStorage.getItem('u_config'))
+    const userConfig = store.get('u_config')
     const isClusterAdmin = userConfig ? userConfig.isClusterAdmin : false
     let items = [
       {
