@@ -16,7 +16,7 @@ interface ArgsProps<T = any> extends Partial<ArgsProps> {
   themeName?: "dark" | "light" | "outlined";
   divider?: true;
 
-  onChange?(option: T, meta?: ActionMeta): void;
+  onChange?(option: T, meta?: ActionMeta<any>): void;
 }
 
 @observer

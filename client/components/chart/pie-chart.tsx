@@ -7,8 +7,8 @@ import { cssNames } from "../../utils";
 import { themeStore } from "../../theme.store";
 
 interface Props extends ChartProps {
-  data: ChartData;
-  title?: string;
+  // data: ChartData;
+  // title?: string;
 }
 
 export class PieChart extends React.Component<Props> {

@@ -16,7 +16,7 @@ interface Props<T = any> extends Partial<Props> {
   title?: string;
   disable?: boolean;
 
-  onChange?(option: T, meta?: ActionMeta): void;
+  onChange?(option: T, meta?: ActionMeta<any>): void;
 }
 
 export const pipelineTaskInputResource: PipelineTaskInputResource = {
