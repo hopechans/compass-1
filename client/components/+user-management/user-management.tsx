@@ -1,6 +1,7 @@
 import "./user-management.scss"
 
 import React from "react";
+import store from "store";
 import { observer } from "mobx-react";
 import { Redirect, Route, Switch } from "react-router";
 import { RouteComponentProps } from "react-router-dom";
@@ -21,7 +22,7 @@ export class UserManagement extends React.Component<Props> {
   static get tabRoutes() {
     const tabRoutes: TabRoute[] = [];
     let isClusterAdmin = false
-    const userConfig = JSON.parse(localStorage.getItem('u_config'))
+    const userConfig = store.get('u_config')
     if (userConfig) {
       isClusterAdmin = userConfig.isClusterAdmin
     }
@@ -62,8 +63,8 @@ export class UserManagement extends React.Component<Props> {
     return (
       <MainLayout className="UserManagement" tabs={tabRoutes}>
         <Switch>
-          {tabRoutes.map((route, index) => <Route key={index} {...route}/>)}
-          <Redirect to={usersManagementURL({ query: namespaceStore.getContextParams() })}/>
+          {tabRoutes.map((route, index) => <Route key={index} {...route} />)}
+          <Redirect to={usersManagementURL({ query: namespaceStore.getContextParams() })} />
         </Switch>
       </MainLayout>
     )

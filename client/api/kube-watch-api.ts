@@ -1,4 +1,5 @@
 // Kubernetes watch-api consumer
+import store from 'store'
 import { computed, observable, reaction } from "mobx";
 import { stringify } from "querystring"
 import { autobind, EventEmitter, interval } from "../utils";
@@ -71,7 +72,7 @@ export class KubeWatchApi {
     }
     const query = this.getQuery();
     const apiUrl = this.apiUrl + "?" + stringify(query);
-    const userConfig = JSON.parse(localStorage.getItem('u_config'))
+    const userConfig = store.get('u_config')
     this.evtSource = new EventSource(apiUrl,{
       headers: {
         "Authorization": userConfig.token

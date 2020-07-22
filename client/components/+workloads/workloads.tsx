@@ -1,6 +1,7 @@
 import "./workloads.scss"
 
 import * as React from "react";
+import store from "store";
 import { observer } from "mobx-react";
 import { Redirect, Route, Switch } from "react-router";
 import { RouteComponentProps } from "react-router-dom";
@@ -46,7 +47,6 @@ import { Deploys } from "../+workloads-deploy";
 import { StatefulSets } from "../+workloads-statefulsets";
 import { Injectors } from "../+workloads-injectors";
 import { Waters } from "../+workloads-waters"
-import { configStore } from "../../../client/config.store";
 
 interface Props extends RouteComponentProps {
 }
@@ -55,7 +55,8 @@ interface Props extends RouteComponentProps {
 export class Workloads extends React.Component<Props> {
   static get tabRoutes(): TabRoute[] {
     const query = namespaceStore.getContextParams();
-    const isClusterAdmin = configStore.isClusterAdmin;
+    const userConfig = store.get('u_config')
+    const isClusterAdmin = userConfig ? userConfig.isClusterAdmin : false
     let items = [
       {
         title: <Trans>Overview</Trans>,

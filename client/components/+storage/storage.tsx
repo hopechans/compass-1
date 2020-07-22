@@ -1,6 +1,7 @@
 import "./storage.scss"
 
 import * as React from "react";
+import store from "store";
 import { observer } from "mobx-react";
 import { Redirect, Route, Switch } from "react-router";
 import { RouteComponentProps } from "react-router-dom";
@@ -11,7 +12,6 @@ import { StorageClasses, storageClassesRoute, storageClassesURL } from "../+stor
 import { PersistentVolumeClaims, volumeClaimsRoute, volumeClaimsURL } from "../+storage-volume-claims";
 import { namespaceStore } from "../+namespaces/namespace.store";
 import { storageURL } from "./storage.route";
-import { configStore } from "../../../client/config.store";
 
 interface Props extends RouteComponentProps<{}> {
 }
@@ -21,8 +21,8 @@ export class Storage extends React.Component<Props> {
   static get tabRoutes() {
     const tabRoutes: TabRoute[] = [];
     const query = namespaceStore.getContextParams()
-    // const userConfig = store.get('u_config')
-    // const isClusterAdmin = userConfig ? userConfig.isClusterAdmin : false
+    const userConfig = store.get('u_config')
+    const isClusterAdmin = userConfig ? userConfig.isClusterAdmin : false
     tabRoutes.push({
       title: <Trans>Persistent Volume Claims</Trans>,
       component: PersistentVolumeClaims,
@@ -30,7 +30,7 @@ export class Storage extends React.Component<Props> {
       path: volumeClaimsRoute.path,
     })
 
-    if (configStore.isClusterAdmin) {
+    if (isClusterAdmin) {
       tabRoutes.push({
         title: <Trans>Persistent Volumes</Trans>,
         component: PersistentVolumes,
@@ -39,7 +39,7 @@ export class Storage extends React.Component<Props> {
       });
     }
 
-    if (configStore.isClusterAdmin) {
+    if (isClusterAdmin) {
       tabRoutes.push({
         title: <Trans>Storage Classes</Trans>,
         component: StorageClasses,

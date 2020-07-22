@@ -1,6 +1,7 @@
 import "./network.scss"
 
 import * as React from "react";
+import store from "store";
 import { observer } from "mobx-react";
 import { Redirect, Route, Switch } from "react-router";
 import { RouteComponentProps } from "react-router-dom";
@@ -20,7 +21,7 @@ interface Props extends RouteComponentProps<{}> {
 export class Network extends React.Component<Props> {
   static get tabRoutes(): TabRoute[] {
     const query = namespaceStore.getContextParams()
-    const userConfig = JSON.parse(localStorage.getItem('u_config'))
+    const userConfig = store.get('u_config')
     const isClusterAdmin = userConfig ? userConfig.isClusterAdmin : false
     let items = [
       {
