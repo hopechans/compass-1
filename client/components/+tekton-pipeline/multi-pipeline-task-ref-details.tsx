@@ -85,9 +85,8 @@ export class MultiPipelineTaskStepDetails extends React.Component<Props> {
               </Collapse>
             );
           })
-        ) : (
-            <></>
-          )}
+        ) : <></>
+        }
       </div>
     );
   }
