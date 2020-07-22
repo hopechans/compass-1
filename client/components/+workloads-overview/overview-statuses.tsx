@@ -34,8 +34,8 @@ export class OverviewStatuses extends React.Component {
     const enhanceStatefulSets = enhanceStatefulSetStore.getAllByNs(contextNs);
     const stones = stoneStore.getAllByNs(contextNs);
     const waters = waterStore.getAllByNs(contextNs);
-    const userConifg = JSON.parse(localStorage.getItem('u_config'))
-    const isClusterAdmin = userConifg ? userConifg.isClusterAdmin : false
+    const userConfig = JSON.parse(localStorage.getItem('u_config'))
+    const isClusterAdmin = userConfig ? userConfig.isClusterAdmin : false
 
     return (
       <div className="OverviewStatuses">
