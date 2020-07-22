@@ -25,10 +25,11 @@ import {
 interface Props<T = any> extends Partial<Props> {
   value?: T;
   themeName?: "dark" | "light" | "outlined";
+  namespace?: string;
   divider?: true;
   disable?: boolean;
 
-  onChange?(option: T, meta?: ActionMeta): void;
+  onChange?(option: T, meta?: ActionMeta<any>): void;
 }
 
 export const taskRef: TaskRef = {
@@ -52,8 +53,6 @@ export const pipelineTask: PipelineTask = {
   runAfter: [],
   retries: 0,
   workspaces: [],
-  //conditions not support now.
-  //conditions?: PipelineTaskCondition;
 };
 
 @observer
@@ -61,42 +60,34 @@ export class PipelineTaskDetail extends React.Component<Props> {
   static defaultProps = {
     divider: false,
     disable: false,
+    namespace: "",
   };
-
   @observable value: PipelineTask = this.props.value || pipelineTask;
   @observable tasks = observable.array<String>([], { deep: false });
 
   get taskOptions() {
-    const options = taskStore
-      .getAllByNs("ops")
-      .map((item) => ({ value: item.getName() }))
-      .slice();
-    return [...options];
+    return [
+      ...taskStore
+        .getAllByNs(this.props.namespace)
+        .map((item) => ({ value: item.getName() }))
+        .slice()
+    ];
   }
 
   formatOptionLabel = (option: SelectOption) => {
     const { value, label } = option;
-    return (
-      label || (
-        <>
-          <Icon small material="layers" />
-          {value}
-        </>
-      )
-    );
+    return (label || (<><Icon small material="layers" /> {value} </>));
   };
 
   render() {
     const { disable } = this.props;
-    const unwrapTasks = (options: SelectOption[]) =>
-      options.map((option) => option.value);
+    const unwrapTasks = (options: SelectOption[]) => options.map((option) => option.value);
 
     return (
       <div>
         <Grid container spacing={1}>
-          <Grid xs={2}>
-            <SubTitle title={"Name:"} />
-          </Grid>
+          <Grid xs={2}><SubTitle title={"Name:"} /></Grid>
+
           <Grid xs={10}>
             <Input
               disabled={disable}
@@ -104,8 +95,9 @@ export class PipelineTaskDetail extends React.Component<Props> {
               value={this.value.name}
               onChange={(value) => (this.value.name = value)}
             />
-            <br />
           </Grid>
+          <br />
+
           <Grid xs={2}>
             <SubTitle title={"Reference:"} />
           </Grid>
@@ -115,12 +107,11 @@ export class PipelineTaskDetail extends React.Component<Props> {
               isDisabled={disable}
               options={this.taskOptions}
               formatOptionLabel={this.formatOptionLabel}
-              onChange={(value: string) => {
-                this.value.taskRef.name = value;
-              }}
+              onChange={(value: string) => { this.value.taskRef.name = value }}
             />
-            <br />
           </Grid>
+          <br />
+
           <Grid xs={2}>
             <SubTitle title={"RunAfter:"} />
           </Grid>

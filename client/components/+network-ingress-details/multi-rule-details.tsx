@@ -16,7 +16,7 @@ interface Props<T = any> extends Partial<Props> {
   themeName?: "dark" | "light" | "outlined";
   divider?: true;
 
-  onChange?(option: T, meta?: ActionMeta): void;
+  onChange?(option: T, meta?: ActionMeta<any>): void;
 }
 
 @observer
@@ -49,7 +49,7 @@ export class MultiRuleDetails extends React.Component<Props> {
           cancelText={_i18n._("No")}
         >
           <DeleteOutlined
-            translate
+            translate={"yes"}
             style={{color: "#ff4d4f"}}
             onClick={(event: any) => {
               event.stopPropagation();

@@ -70,7 +70,7 @@ export class EditResource extends React.Component<Props> {
     }
     const { resource, draft } = this.tabData;
     const store = apiManager.getStore(resource);
-    const updatedResource = await store.update(this.resource, jsYaml.safeLoad(draft));
+    const updatedResource = await store.update(this.resource, jsYaml.safeLoad(draft) as any);
     this.saveDraft(updatedResource); // update with new resourceVersion to avoid further errors on save
     const resourceType = updatedResource.kind;
     const resourceName = updatedResource.getName();

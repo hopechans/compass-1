@@ -13,7 +13,7 @@ interface Props<T = any> extends Partial<Props> {
     value?: T;
     themeName?: "dark" | "light" | "outlined";
     divider?:true;
-    onChange?(option: T, meta?: ActionMeta): void;
+    onChange?(option: T, meta?: ActionMeta<any>): void;
 }
 
 @observer

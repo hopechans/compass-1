@@ -37,12 +37,13 @@ import { IKubeObjectMetadata } from "../../api/kube-object";
 interface Props<T = any> extends Partial<Props> {
   value?: T;
   themeName?: "dark" | "light" | "outlined";
-
-  onChange?(option: T, meta?: ActionMeta): void;
+  namespace?: string;
+  onChange?(option: T, meta?: ActionMeta<any>): void;
 }
 
 export interface PipelineRunResult {
   name: string;
+  namespace?: string;
   pipelineRef: PipelineRef;
   resources?: PipelineResourceBinding[];
   serviceAccountName?: string;
@@ -90,12 +91,10 @@ export class PipelineRunDialog extends React.Component<Props> {
   }
 
   onOpen = () => {
-    const pipelineName = this.pipeline.getName();
-    const timeStamp = Math.round(new Date().getTime() / 1000);
+    this.value.pipelineRef.name = this.pipeline.getName();
+    this.value.name = this.pipeline.getName() + "-" + this.pipeline.getNs() + "-" + Math.round(new Date().getTime() / 1000);
+    this.value.namespace = this.pipeline.getNs();
 
-    this.value.pipelineRef.name = pipelineName;
-    this.value.name =
-      pipelineName + "-" + configStore.getDefaultNamespace() + "-" + timeStamp;
     //fill the  resources
     this.pipeline.spec.resources.map((item: any, index: number) => {
       let resources: PipelineResourceBinding = {
@@ -104,14 +103,11 @@ export class PipelineRunDialog extends React.Component<Props> {
       };
       this.value.resources.push(resources);
     });
-    //TODO:need callback workspace.but pipeline-run name problem.  and operater it.
-    // this.value.workspces;
   };
 
   submit = async () => {
     try {
       // create a pipeline run
-
       const runNodeData = pipelineStore.getNodeData(this.pipeline);
       let width = 1000;
       let height = 1000;
@@ -121,27 +117,13 @@ export class PipelineRunDialog extends React.Component<Props> {
         height = nodeSize.height;
       }
 
-      const runTektonGraphName =
-        "run-" +
-        this.pipeline.getName() +
-        "-" +
-        new Date().getTime().toString();
 
-      let resources: PipelineDeclaredResource[] = this.value.resources;
-      let workspaces = this.value.workspces;
-      let copyLables = new Map<string, string>();
-      this.pipeline.getLabels().map((label) => {
-        let labelSlice = label.split("=");
-        if (labelSlice.length > 0 && labelSlice[0] == "namespace") {
-          copyLables.set("namespace", labelSlice[1]);
-        }
-      });
 
       const graph = await tektonGraphStore.create(
         {
-          name: runTektonGraphName,
+          name: "run-" + this.pipeline.getName() + "-" + new Date().getTime().toString(),
           namespace: configStore.getOpsNamespace(),
-          labels: copyLables,
+          labels: new Map<string, string>().set("namespace", this.pipeline.getValueFromLabels("namespace")),
         },
         {
           spec: {
@@ -155,30 +137,19 @@ export class PipelineRunDialog extends React.Component<Props> {
       const pipelineRun: Partial<PipelineRun> = {
         metadata: {
           name: this.value.name,
-          annotations: Object.fromEntries(
-            new Map<string, string>().set(
-              "fuxi.nip.io/run-tektongraphs",
-              graph.getName()
-            )
-          ),
-          labels: Object.fromEntries(
-            new Map<string, string>().set(
-              "namespace",
-              configStore.getDefaultNamespace()
-            )
-          ),
+          annotations: Object.fromEntries(new Map<string, string>().set("fuxi.nip.io/run-tektongraphs", graph.getName())),
         } as IKubeObjectMetadata,
         spec: {
-          resources: resources,
+          resources: this.value.resources,
           pipelineRef: this.value.pipelineRef,
           serviceAccountName: this.value.serviceAccountName,
-          workspaces: workspaces,
+          workspaces: this.value.workspces,
           params: this.value.params,
         },
       };
 
       await pipelineRunApi.create(
-        { name: this.value.name, namespace: configStore.getOpsNamespace() },
+        { name: this.value.name, namespace: this.pipeline.getNs() },
         { ...pipelineRun }
       );
       Notifications.ok(<>PipelineRun {this.value.name} Run Success</>);
@@ -193,11 +164,7 @@ export class PipelineRunDialog extends React.Component<Props> {
   };
 
   render() {
-    const header = (
-      <h5>
-        <Trans>Pipeline Run</Trans>
-      </h5>
-    );
+    const header = (<h5><Trans>Pipeline Run</Trans></h5>);
 
     return (
       <Dialog
@@ -215,6 +182,7 @@ export class PipelineRunDialog extends React.Component<Props> {
               value={this.value.name}
               onChange={(value) => (this.value.name = value)}
             />
+
             <SubTitle title={<Trans>Pipeline Ref</Trans>} />
             <Input
               placeholder={_i18n._("Pipeline Ref")}
@@ -222,6 +190,7 @@ export class PipelineRunDialog extends React.Component<Props> {
               value={this.value?.pipelineRef?.name}
               onChange={(value) => (this.value.pipelineRef.name = value)}
             />
+
             <SubTitle title={<Trans>Service Account Name</Trans>} />
             <Input
               disabled={true}
@@ -229,28 +198,26 @@ export class PipelineRunDialog extends React.Component<Props> {
               value={this.value?.serviceAccountName}
               onChange={(value) => (this.value.serviceAccountName = value)}
             />
+
             <br />
             <ParamsDetails
               value={this.value?.params}
-              onChange={(value) => {
-                this.value.params = value;
-              }}
+              onChange={(value) => { this.value.params = value }}
             />
 
             <br />
             <PipelineRunResourceDetails
               value={this.value?.resources}
-              onChange={(value) => {
-                this.value.resources = value;
-              }}
+              namespace={this.value?.namespace}
+              onChange={(value) => { this.value.resources = value; }}
             />
+
             <br />
             <PipelineRunWorkspaces
               value={this.value?.workspces}
-              onChange={(value) => {
-                this.value.workspces = value;
-              }}
+              onChange={(value) => { this.value.workspces = value; }}
             />
+
           </WizardStep>
         </Wizard>
       </Dialog>

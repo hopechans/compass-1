@@ -17,7 +17,7 @@ import { systemName } from "../input/input.validators";
 interface Props<T = any> extends Partial<Props> {
   value?: T;
 
-  onChange?(option: T, meta?: ActionMeta): void;
+  onChange?(option: T, meta?: ActionMeta<any>): void;
 
   themeName?: "dark" | "light" | "outlined";
 }
