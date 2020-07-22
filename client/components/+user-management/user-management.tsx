@@ -1,6 +1,7 @@
 import "./user-management.scss"
 
 import React from "react";
+import store from "store";
 import { observer } from "mobx-react";
 import { Redirect, Route, Switch } from "react-router";
 import { RouteComponentProps } from "react-router-dom";
@@ -12,7 +13,7 @@ import { ServiceAccounts } from "../+user-management-service-accounts";
 import { roleBindingsRoute, roleBindingsURL, rolesRoute, rolesURL, serviceAccountsRoute, serviceAccountsURL, usersManagementURL } from "./user-management.routes";
 import { namespaceStore } from "../+namespaces/namespace.store";
 import { PodSecurityPolicies, podSecurityPoliciesRoute, podSecurityPoliciesURL } from "../+pod-security-policies";
-import store from 'store'
+
 interface Props extends RouteComponentProps<{}> {
 }
 
@@ -21,8 +22,8 @@ export class UserManagement extends React.Component<Props> {
   static get tabRoutes() {
     const tabRoutes: TabRoute[] = [];
     let isClusterAdmin = false
-    const userConfig = store.get('u_config')
-    if(userConfig){
+    const userConfig = store.get('u_config')
+    if (userConfig) {
       isClusterAdmin = userConfig.isClusterAdmin
     }
     const query = namespaceStore.getContextParams()
@@ -62,8 +63,8 @@ export class UserManagement extends React.Component<Props> {
     return (
       <MainLayout className="UserManagement" tabs={tabRoutes}>
         <Switch>
-          {tabRoutes.map((route, index) => <Route key={index} {...route}/>)}
-          <Redirect to={usersManagementURL({ query: namespaceStore.getContextParams() })}/>
+          {tabRoutes.map((route, index) => <Route key={index} {...route} />)}
+          <Redirect to={usersManagementURL({ query: namespaceStore.getContextParams() })} />
         </Switch>
       </MainLayout>
     )

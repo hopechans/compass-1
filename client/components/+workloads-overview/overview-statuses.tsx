@@ -1,6 +1,7 @@
 import "./overview-statuses.scss"
 
 import React from "react";
+import store from "store";
 import { observer } from "mobx-react";
 import { Trans } from "@lingui/macro";
 import { OverviewWorkloadStatus } from "./overview-workload-status";
@@ -18,7 +19,6 @@ import { stoneStore } from "../+workloads-stones/stones.store"
 import { PageFiltersList } from "../item-object-list/page-filters-list";
 import { NamespaceSelectFilter } from "../+namespaces/namespace-select";
 import { waterStore } from "../+workloads-waters/waters.store";
-import { configStore } from "../../../client/config.store";
 
 
 @observer
@@ -34,8 +34,8 @@ export class OverviewStatuses extends React.Component {
     const enhanceStatefulSets = enhanceStatefulSetStore.getAllByNs(contextNs);
     const stones = stoneStore.getAllByNs(contextNs);
     const waters = waterStore.getAllByNs(contextNs);
-    const userConfig = JSON.parse(localStorage.getItem('u_config'))
-    const isClusterAdmin = userConfig ? userConfig.isClusterAdmin : false
+    const userConifg = store.get('u_config');
+    const isClusterAdmin = userConifg ? userConifg.isClusterAdmin : false
 
     return (
       <div className="OverviewStatuses">

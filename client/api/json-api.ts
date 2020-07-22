@@ -3,7 +3,7 @@ import store from 'store'
 import { stringify } from "querystring";
 import { EventEmitter } from "../utils/eventEmitter";
 import { cancelableFetch } from "../utils/cancelableFetch";
-import { configStore } from '../config.store'
+
 export interface JsonApiData {
 }
 

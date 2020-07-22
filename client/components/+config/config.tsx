@@ -1,4 +1,5 @@
 import React from "react";
+import store from "store";
 import { observer } from "mobx-react";
 import { Redirect, Route, Switch } from "react-router";
 import { Trans } from "@lingui/macro";
@@ -9,10 +10,8 @@ import { namespaceStore } from "../+namespaces/namespace.store";
 import { resourceQuotaRoute, ResourceQuotas, resourceQuotaURL } from "../+config-resource-quotas";
 import { configURL } from "./config.route";
 import { HorizontalPodAutoscalers, hpaRoute, hpaURL } from "../+config-autoscalers";
-import { Certificates, ClusterIssuers, Issuers } from "../+custom-resources/certmanager.k8s.io";
 import { buildURL } from "../../navigation";
-import { configStore } from "../../../client/config.store";
-import store from 'store'
+
 // Keep
 export const certificatesURL = buildURL("/certificates");
 export const issuersURL = buildURL("/issuers");
@@ -22,7 +21,7 @@ export const clusterIssuersURL = buildURL("/clusterissuers");
 export class Config extends React.Component {
     static get tabRoutes(): TabRoute[] {
         const query = namespaceStore.getContextParams()
-        const userConfig = store.get('u_config')
+        const userConfig = store.get('u_config')
         const isClusterAdmin = userConfig ? userConfig.isClusterAdmin : false
         let items = [
             {

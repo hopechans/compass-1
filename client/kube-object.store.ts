@@ -8,6 +8,7 @@ import { apiManager } from "./api/api-manager";
 import { IKubeApiQueryParams, KubeApi } from "./api/kube-api";
 import { KubeJsonApiData } from "./api/kube-json-api";
 import store from 'store'
+
 @autobind()
 export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemStore<T> {
   abstract api: KubeApi<T>;

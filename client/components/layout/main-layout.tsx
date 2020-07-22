@@ -25,6 +25,7 @@ import { Notifications } from "../notifications";
 import { message } from 'antd';
 import {kubeWatchApi } from '../../api/kube-watch-api'
 import store from 'store'
+
 export interface TabRoute extends RouteProps {
   title: React.ReactNode;
   url: string;

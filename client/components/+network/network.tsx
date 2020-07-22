@@ -1,6 +1,7 @@
 import "./network.scss"
 
 import * as React from "react";
+import store from "store";
 import { observer } from "mobx-react";
 import { Redirect, Route, Switch } from "react-router";
 import { RouteComponentProps } from "react-router-dom";
@@ -12,7 +13,7 @@ import { Ingresses, ingressRoute, ingressURL } from "../+network-ingresses";
 import { NetworkPolicies, networkPoliciesRoute, networkPoliciesURL } from "../+network-policies";
 import { namespaceStore } from "../+namespaces/namespace.store";
 import { networkURL } from "./network.route";
-import store from 'store'
+
 interface Props extends RouteComponentProps<{}> {
 }
 
@@ -43,7 +44,7 @@ export class Network extends React.Component<Props> {
       },
 
     ]
-    
+
     if (isClusterAdmin) {
       items.push({
         title: <Trans>Network Policies</Trans>,
