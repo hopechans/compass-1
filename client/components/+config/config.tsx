@@ -12,7 +12,7 @@ import { HorizontalPodAutoscalers, hpaRoute, hpaURL } from "../+config-autoscale
 import { Certificates, ClusterIssuers, Issuers } from "../+custom-resources/certmanager.k8s.io";
 import { buildURL } from "../../navigation";
 import { configStore } from "../../../client/config.store";
-
+import store from 'store'
 // Keep
 export const certificatesURL = buildURL("/certificates");
 export const issuersURL = buildURL("/issuers");
@@ -22,8 +22,8 @@ export const clusterIssuersURL = buildURL("/clusterissuers");
 export class Config extends React.Component {
     static get tabRoutes(): TabRoute[] {
         const query = namespaceStore.getContextParams()
-        const userConifg = JSON.parse(localStorage.getItem('u_config'))
-        const isClusterAdmin = userConifg ? userConifg.isClusterAdmin : false
+        const userConfig = store.get('u_config')
+        const isClusterAdmin = userConfig ? userConfig.isClusterAdmin : false
         let items = [
             {
                 title: <Trans>ConfigMaps</Trans>,

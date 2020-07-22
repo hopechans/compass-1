@@ -24,7 +24,7 @@ import {withRouter,RouteComponentProps } from 'react-router';
 import { Notifications } from "../notifications";
 import { message } from 'antd';
 import {kubeWatchApi } from '../../api/kube-watch-api'
-
+import store from 'store'
 export interface TabRoute extends RouteProps {
   title: React.ReactNode;
   url: string;
@@ -89,8 +89,8 @@ export class Layout extends React.Component<Props,State> {
   }
 
   ifLogin():any{
-    const userConifg = JSON.parse(localStorage.getItem('u_config'))
-    if(!userConifg){
+    const userConfig = store.get('u_config')
+    if(!userConfig){
       message.error('Token Expired')
       setTimeout(()=>{
           this.loginout()
@@ -100,8 +100,8 @@ export class Layout extends React.Component<Props,State> {
   }
 
   renderUserMenu(){
-    const userConifg = JSON.parse(localStorage.getItem('u_config'))
-    let userName = userConifg?userConifg.userName:''
+    const userConfig = store.get('u_config')
+    let userName = userConfig?userConfig.userName:''
     return (
       <div className="header-right">
           <span>{userName}</span>

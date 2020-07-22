@@ -8,6 +8,7 @@ import { KubeObjectStore } from "../kube-object.store";
 import { KubeApi } from "./kube-api";
 import { configStore } from "../config.store";
 import { apiManager } from "./api-manager";
+import store from 'store'
 const obj = require('event-source-polyfill/src/eventsource.min.js');
 let EventSource = obj.EventSourcePolyfill
 export {
@@ -70,8 +71,8 @@ export class KubeWatchApi {
     }
     const query = this.getQuery();
     const apiUrl = this.apiUrl + "?" + stringify(query);
-    const userConifg = JSON.parse(localStorage.getItem('u_config'))
-    let token = userConifg.token
+    const userConfig = store.get('u_config')
+    let token = userConfig.token
     this.evtSource = new EventSource(apiUrl,{
       headers: {
         "Authorization": token
