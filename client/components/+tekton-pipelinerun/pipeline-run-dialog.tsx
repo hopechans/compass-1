@@ -82,6 +82,7 @@ export class PipelineRunDialog extends React.Component<Props> {
 
   close = () => {
     this.value.resources = [];
+    this.value.params =[];
     this.reset();
     PipelineRunDialog.close();
   };
@@ -94,7 +95,6 @@ export class PipelineRunDialog extends React.Component<Props> {
     this.value.pipelineRef.name = this.pipeline.getName();
     this.value.name = this.pipeline.getName() + "-" + this.pipeline.getNs() + "-" + Math.round(new Date().getTime() / 1000);
     this.value.namespace = this.pipeline.getNs();
-
     //fill the  resources
     this.pipeline.spec.resources.map((item: any, index: number) => {
       let resources: PipelineResourceBinding = {
@@ -103,6 +103,15 @@ export class PipelineRunDialog extends React.Component<Props> {
       };
       this.value.resources.push(resources);
     });
+
+    this.pipeline.spec.params.map((item: any, index: number) => {
+      let params: Param = {
+        name: item.name,
+        value:''
+      };
+      this.value.params.push(params);
+    });
+
   };
 
   submit = async () => {
