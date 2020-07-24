@@ -22,7 +22,7 @@ import { createResourceTab, isCreateResourceTab } from "./create-resource.store"
 import { isEditResourceTab } from "./edit-resource.store";
 import { isInstallChartTab } from "./install-chart.store";
 import { isUpgradeChartTab } from "./upgrade-chart.store";
-
+import store from 'store'
 interface Props {
   className?: string;
 }
@@ -98,6 +98,11 @@ export class Dock extends React.Component<Props> {
   render() {
     const { className } = this.props;
     const { isOpen, toggle, tabs, toggleFillSize, selectedTab, hasTabs, fullSize } = dockStore;
+    let isClusterAdmin = false
+    const userConfig = store.get('u_config')
+    if(userConfig){
+      isClusterAdmin = userConfig.isClusterAdmin
+    }
     return (
       <div
         className={cssNames("Dock", className, { isOpen, fullSize })}
@@ -118,17 +123,19 @@ export class Dock extends React.Component<Props> {
             children={tabs.map(tab => <Fragment key={tab.id}>{this.renderTab(tab)}</Fragment>)}
           />
           <div className="toolbar flex gaps align-center box grow">
-            <div className="dock-menu box grow">
-              <MenuActions usePortal triggerIcon={{ material: "add", tooltip: <Trans>New tab</Trans> }} closeOnScroll={false}>
-                {/*<MenuItem onClick={() => createTerminalTab()}>*/}
-                {/*  <Icon small svg="terminal" size={15}/>*/}
-                {/*  <Trans>Terminal session</Trans>*/}
-                {/*</MenuItem>*/}
-                <MenuItem onClick={() => createResourceTab()}>
-                  <Icon small material="create"/>
-                  <Trans>Create resource</Trans>
-                </MenuItem>
-              </MenuActions>
+            <div className="dock-menu box grow" >
+              <div hidden={!isClusterAdmin}>
+                <MenuActions usePortal triggerIcon={{ material: "add", tooltip: <Trans>New tab</Trans> }} closeOnScroll={false}>
+                  {/*<MenuItem onClick={() => createTerminalTab()}>*/}
+                  {/*  <Icon small svg="terminal" size={15}/>*/}
+                  {/*  <Trans>Terminal session</Trans>*/}
+                  {/*</MenuItem>*/}
+                  <MenuItem onClick={() => createResourceTab()}>
+                    <Icon small material="create"/>
+                    <Trans>Create resource</Trans>
+                  </MenuItem>
+                </MenuActions>
+              </div>
             </div>
             {hasTabs() && (
               <>
