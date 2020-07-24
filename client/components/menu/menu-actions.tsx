@@ -11,7 +11,7 @@ import { Menu, MenuItem, MenuProps } from "../menu";
 import uniqueId from "lodash/uniqueId";
 import isString from "lodash/isString";
 import { _i18n } from "../../i18n";
-
+import store from 'store'
 export interface MenuActionsProps extends Partial<MenuProps> {
   className?: string;
   toolbar?: boolean; // display menu as toolbar with icons
@@ -85,6 +85,11 @@ export class MenuActions extends React.Component<MenuActionsProps> {
       gaps: toolbar, // add spacing for .flex
     });
     const autoClose = !toolbar;
+    let isClusterAdmin = false
+    const userConfig = store.get('u_config')
+    if(userConfig){
+      isClusterAdmin = userConfig.isClusterAdmin
+    }
     return (
       <>
         {this.renderTriggerIcon()}
@@ -99,7 +104,7 @@ export class MenuActions extends React.Component<MenuActionsProps> {
           {...menuProps}
         >
           {children}
-          {updateAction && (
+          {updateAction && isClusterAdmin && (
             <MenuItem onClick={updateAction}>
               <Icon material="edit" interactive={toolbar} title={_i18n._(t`Edit`)}/>
               <span className="title"><Trans>Edit</Trans></span>
