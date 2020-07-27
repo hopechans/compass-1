@@ -6,105 +6,15 @@ import {KubeObjectMeta} from "../kube-object/kube-object-meta";
 import {apiManager} from "../../api/api-manager";
 import {Trans} from "@lingui/macro";
 import {DrawerItem, DrawerTitle} from "../drawer";
-import {Col, Row} from "../grid";
-import {Input} from "../input";
 import {KubeEventDetails} from "../+events/kube-event-details";
+import {PipelineParamsDetails} from "./pipeline-params-details";
+import {TaskResourcesDetails} from "./task-resource-details";
 
 interface Props extends KubeObjectDetailsProps<Task> {
 }
 
 @observer
 export class TaskDetails extends React.Component<Props> {
-
-  renderPipelineParams(data: any) {
-    return (
-      <>
-        <Row>
-          <Col span={7}>
-            <Trans>Name</Trans>
-          </Col>
-          <Col span={7} offset={1}>
-            <Trans>Type</Trans>
-          </Col>
-          <Col span={7} offset={1}>
-            <Trans>Default</Trans>
-          </Col>
-        </Row>
-        <br/>
-        {data.map((item: any, index: string | number) => {
-          return (
-            <Row>
-              <Col span={7}>
-                <Input
-                  disabled={true}
-                  value={data[index].name}
-                />
-              </Col>
-              <Col span={7} offset={1}>
-                <Input
-                  disabled={true}
-                  value={data[index].type}
-                />
-              </Col>
-              <Col span={6} offset={1}>
-                <Input
-                  disabled={true}
-                  value={data[index].default}
-                />
-              </Col>
-            </Row>
-          );
-        })}
-      </>
-    )
-  }
-
-  renderTaskResource(data: any) {
-    return (
-      <>
-        <Row>
-          <Col span={6}>
-            <Trans>Name</Trans>
-          </Col>
-          <Col span={6} offset={2}>
-            <Trans>ResourceType</Trans>
-          </Col>
-          <Col span={6} offset={2}>
-            <Trans>TargetPath</Trans>
-          </Col>
-        </Row>
-        <br/>
-        {data.map((item: any, index: string | number) => {
-          return (
-            <>
-              <Row>
-                <Col span={6}>
-                  <Input
-                    placeholder={"Name"}
-                    value={data[index].name}
-                  />
-                </Col>
-
-                <Col span={6} offset={2}>
-                  <Input
-                    placeholder={"Name"}
-                    value={data[index].type}
-                  />
-                </Col>
-                <Col span={6} offset={2}>
-                  <Input
-                    placeholder={"TargetPath"}
-                    value={data[index].targetPath}
-                  />
-                </Col>
-              </Row>
-              <br/>
-            </>
-          );
-        })}
-      </>
-    )
-  }
 
   render() {
     const {object: task} = this.props;
@@ -116,14 +26,9 @@ export class TaskDetails extends React.Component<Props> {
       <div className="PipelineResourceDetails">
         <KubeObjectMeta object={task}/>
 
-        <DrawerTitle title={<Trans>Pipeline Params</Trans>}/>
-        {this.renderPipelineParams(task.spec.params || [])}
-
-        <DrawerTitle title={<Trans>Resource Inputs</Trans>}/>
-        {this.renderTaskResource(task.spec.inputs || [])}
-
-        <DrawerTitle title={<Trans>Resource Outputs</Trans>}/>
-        {this.renderTaskResource(task.spec.outputs || [])}
+        <PipelineParamsDetails pipelineParamsSets={task.spec.params || []} />
+        <TaskResourcesDetails taskResourceSets={task.spec.resources?.inputs || []} name={"Task Resource Inputs"} />
+        <TaskResourcesDetails taskResourceSets={task.spec.resources?.outputs || []} name={"Task Resource Outputs"} />
 
         <DrawerTitle title={<Trans>Steps</Trans>}/>
         {task.spec.steps?.map((item: any) => {
@@ -134,7 +39,6 @@ export class TaskDetails extends React.Component<Props> {
                   {JSON.stringify(value)}
                 </DrawerItem>
               ))}
-              <br/>
               <br/>
             </div>
           );
@@ -150,13 +54,11 @@ export class TaskDetails extends React.Component<Props> {
                 </DrawerItem>
               ))}
               <br/>
-              <br/>
             </div>
           );
         })}
 
         <KubeEventDetails object={task}/>
-
       </div>
     );
   }
