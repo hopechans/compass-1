@@ -120,9 +120,9 @@ a {
     text-decoration: underline;
   }
 
-  &:focus {
-    color: white!important;
-  }
+  //&:focus {
+  //  color: white!important;
+  //}
 
   &:not([href]) {
     border-bottom: 1px dotted;
