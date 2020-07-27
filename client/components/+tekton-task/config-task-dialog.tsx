@@ -17,7 +17,6 @@ import { taskStore } from "./task.store";
 import { TaskResources, Task } from "../../api/endpoints";
 import { Notifications } from "../notifications";
 import { createMuiTheme } from "@material-ui/core";
-import { configStore } from "../../config.store";
 import { WorkspaceDeclaration as Workspace } from "../../api/endpoints/tekton-task.api";
 import { ThemeProvider } from "@material-ui/core/styles";
 import { SubTitle } from "../layout/sub-title";
@@ -176,7 +175,6 @@ export class ConfigTaskDialog extends React.Component<Props> {
                 value={this.value.taskSteps}
                 onChange={(value) => { this.value.taskSteps = value }}
               />
-
             </WizardStep>
           </Wizard>
         </Dialog>
