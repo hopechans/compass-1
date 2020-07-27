@@ -1,7 +1,0 @@
-@import "page.mixins";
-
-.PageDetails {
-  .Badge {
-    @include page-status-bgc;
-  }
-}

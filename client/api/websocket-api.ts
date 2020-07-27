@@ -175,7 +175,6 @@ export class WebSocketApi {
     }
 
     protected _onMessage(evt: MessageEvent) {
-        console.log(evt);
         const data = JSON.parse(evt.data);
         this.writeLog('%cMESSAGE', 'color:black;font-weight:bold;', data);
         this.onData.emit(data.Data);
