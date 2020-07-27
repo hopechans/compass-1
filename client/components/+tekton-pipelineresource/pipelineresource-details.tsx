@@ -7,7 +7,6 @@ import {apiManager} from "../../api/api-manager";
 import {Trans} from "@lingui/macro";
 import {DrawerItem, DrawerTitle} from "../drawer";
 import {KubeEventDetails} from "../+events/kube-event-details";
-import {Divider} from "@material-ui/core";
 
 interface Props extends KubeObjectDetailsProps<PipelineResource> {
 }
