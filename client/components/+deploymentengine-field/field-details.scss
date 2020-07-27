@@ -1,7 +1,0 @@
-@import "field.mixins";
-
-.FieldDetails {
-  .Badge {
-    @include field-status-bgc;
-  }
-}

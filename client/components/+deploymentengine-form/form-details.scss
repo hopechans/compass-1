@@ -1,7 +1,0 @@
-@import "form.mixins";
-
-.FormDetails {
-  .Badge {
-    @include form-status-bgc;
-  }
-}

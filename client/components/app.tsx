@@ -10,11 +10,11 @@ import { browserHistory } from "../navigation";
 import { Notifications } from "./notifications";
 import { NotFound } from "./+404";
 import { configStore } from "../config.store";
-import { UserManagement } from "./+user-management/user-management";
+import { UserManagement } from "./+user-management";
 import { ConfirmDialog } from "./confirm-dialog";
-import { usersManagementRoute } from "./+user-management/user-management.routes";
+import { usersManagementRoute } from "./+user-management";
 import { clusterRoute, clusterURL } from "./+cluster";
-import { KubeConfigDialog } from "./kubeconfig-dialog/kubeconfig-dialog";
+import { KubeConfigDialog } from "./kubeconfig-dialog";
 import { Nodes, nodesRoute } from "./+nodes";
 import { Workloads, workloadsRoute, workloadsURL } from "./+workloads";
 import { Tenant, tenantURL, tenantRoute } from "./+tenant";
@@ -23,21 +23,19 @@ import { Network, networkRoute } from "./+network";
 import { Storage, storageRoute } from "./+storage";
 import { Cluster } from "./+cluster/cluster";
 import { Config, configRoute } from "./+config";
-import { Events } from "./+events/events";
+import { Events } from "./+events";
 import { Login } from "./+login";
 import { Tekton, tektonRoute } from "./+tekton";
 import { Ovn, ovnRoute } from "./+ovn";
 import { eventRoute } from "./+events";
 import { ErrorBoundary } from "./error-boundary";
 import { Apps, appsRoute, appsURL } from "./+apps";
-import { KubeObjectDetails } from "./kube-object/kube-object-details";
+import { KubeObjectDetails } from "./kube-object";
 import { AddRoleBindingDialog } from "./+user-management-roles-bindings";
 import { PodLogsDialog } from "./+workloads-pods/pod-logs-dialog";
 import { DeploymentScaleDialog } from "./+workloads-deployments/deployment-scale-dialog";
 import { CustomResources } from "./+custom-resources/custom-resources";
 import { crdRoute } from "./+custom-resources";
-import { DeploymentEngine } from "./+deploymentengine";
-import { deploymentEngineRoute, deploymentEngineURL } from "./+deploymentengine";
 import 'antd/dist/antd.css';
 @observer
 class App extends React.Component {
@@ -71,7 +69,6 @@ class App extends React.Component {
               <Switch>
                 <Route component={Cluster} {...clusterRoute} />
                 <Route component={Nodes} {...nodesRoute} />
-                <Route component={DeploymentEngine} {...deploymentEngineRoute} />
                 <Route component={Workloads} {...workloadsRoute} />
                 <Route component={Config} {...configRoute} />
                 <Route component={Network} {...networkRoute} />
