@@ -22,11 +22,13 @@ export class PipelineResourceDetails extends React.Component<Props> {
 
     return (
       <div className="PipelineResourceDetails">
-        <KubeObjectMeta object={pipelineResource}/>
+
         <KubeEventDetails object={pipelineResource}/>
 
-        <DrawerTitle title={<Trans>Type</Trans>}/>
-        {pipelineResource.spec?.type}
+        <KubeObjectMeta object={pipelineResource}/>
+        <DrawerItem name={<Trans>Type</Trans>} >
+          {pipelineResource.spec?.type}
+        </DrawerItem>
 
         <DrawerTitle title={<Trans>Params</Trans>}/>
         {
