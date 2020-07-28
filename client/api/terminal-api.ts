@@ -31,6 +31,7 @@ export interface ITerminalApiOptions {
   namespace: string;
   pod: string;
   container: string;
+  shellType: string;
   id: string;
   node?: string;
   colorTheme?: "light" | "dark";
@@ -49,6 +50,7 @@ export class TerminalApi extends WebSocketApi {
       namespace: options.namespace,
       pod: options.pod,
       container: options.container,
+      shellType: options.shellType,
       logging: configStore.isDevelopment,
       autoConnect: true,
       flushOnOpen: false,
