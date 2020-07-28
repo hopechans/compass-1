@@ -17,7 +17,6 @@ import { Icon } from "../icon";
 import { IKubeObjectMetadata } from "../../api/kube-object";
 import { base64 } from "../../utils";
 import { Notifications } from "../notifications";
-import { showDetails } from "../../navigation";
 import upperFirst from "lodash/upperFirst";
 import { Checkbox } from "../checkbox";
 import { configStore } from "../../config.store";
@@ -173,9 +172,9 @@ export class ConfigSecretDialog extends React.Component<Props> {
         let setSuccess: boolean = false;
         this.secret[this.type].data.map(item => {
           if (item.key == key) {
-            item.value = base64.decode(ConfigSecretDialog.secret.data[key])
+            item.value = base64.decode(ConfigSecretDialog.secret.data[key]);
+            setSuccess = true;
           }
-          setSuccess = true;
         })
         if (!setSuccess) {
           this.secret[this.type].data.push(
@@ -195,9 +194,9 @@ export class ConfigSecretDialog extends React.Component<Props> {
       let setSuccess: boolean = false;
       this.secret[this.type].annotations.map(item => {
         if (item.key == splitR[0]) {
-          item.value = splitR[1]
+          item.value = splitR[1];
+          setSuccess = true;
         }
-        setSuccess = true;
       })
       if (!setSuccess) {
         this.secret[this.type].annotations.push(
@@ -212,15 +211,17 @@ export class ConfigSecretDialog extends React.Component<Props> {
     }
 
     ConfigSecretDialog.secret.getLabels().map(item => {
+      console.log(item)
       const splitR = item.split("=", 2)
       let setSuccess: boolean = false;
       this.secret[this.type].labels.map(item => {
         if (item.key == splitR[0]) {
-          item.value = splitR[1]
+          item.value = splitR[1];
+          setSuccess = true;
         }
-        setSuccess = true;
       })
       if (!setSuccess) {
+
         this.secret[this.type].labels.push(
           { key: splitR[0], value: splitR[1], required: true }
         )
