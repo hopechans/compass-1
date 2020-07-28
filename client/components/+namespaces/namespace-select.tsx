@@ -11,6 +11,7 @@ import { namespaceStore } from "./namespace.store";
 import { _i18n } from "../../i18n";
 import { FilterIcon } from "../item-object-list/filter-icon";
 import { FilterType } from "../item-object-list/page-filters.store";
+import { themeStore } from "../../theme.store";
 
 interface Props extends SelectProps {
   showIcons?: boolean;
@@ -67,14 +68,18 @@ export class NamespaceSelect extends React.Component<Props> {
   render() {
     const { className, showIcons, showClusterOption, clusterOptionLabel, customizeOptions, required, ...selectProps } = this.props;
     return (
-      <Select
-        className={cssNames("NamespaceSelect", className)}
-        menuClass="NamespaceSelectMenu"
-        required={required}
-        formatOptionLabel={this.formatOptionLabel}
-        options={this.options}
-        {...selectProps}
-      />
+      <>
+        <Select
+          className={cssNames("NamespaceSelect", className)}
+          menuClass="NamespaceSelectMenu"
+          required={required}
+          formatOptionLabel={this.formatOptionLabel}
+          options={this.options}
+          themeName = {themeStore.activeThemeId === "kontena-dark"?"dark":"light"}
+          {...selectProps}
+        />
+      </>
+     
     );
   }
 }

@@ -120,6 +120,7 @@ export class ThemeStore {
   };
 
   @observable activeThemeId = this.defaultTheme.name; // theme's filename without extension
+  @observable activeThemeType = this.defaultTheme.type;
   @observable themes = observable.map<string, ITheme>([], { deep: false });
 
   @computed get activeTheme() {
@@ -180,10 +181,11 @@ export class ThemeStore {
   }
 
   @action
-  async setTheme(themeId = this.defaultTheme.name) {
+  async setTheme(themeId = this.defaultTheme.name, themeType = this.defaultTheme.type) {
     try {
       await this.load(themeId);
       this.activeThemeId = themeId;
+      this.activeThemeType = themeType
     } catch (err) {
       if (themeId !== this.defaultTheme.name) {
         this.setTheme(); // fallback to default theme
