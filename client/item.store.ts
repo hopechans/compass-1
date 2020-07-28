@@ -1,17 +1,17 @@
 import orderBy from "lodash/orderBy";
 import { autobind, noop } from "./utils";
 import { action, computed, observable, when } from "mobx";
-
 export interface ItemObject {
   getId(): string;
   getName(): string;
+  getCreationTime?():string;
 }
 
 @autobind()
 export abstract class ItemStore<T extends ItemObject = ItemObject> {
   abstract loadAll(): Promise<void>;
 
-  protected defaultSorting = (item: T) => item.getName();
+  protected defaultSorting = (item: T) => item.getCreationTime();
 
   @observable isLoading = false;
   @observable isLoaded = false;
@@ -31,9 +31,9 @@ export abstract class ItemStore<T extends ItemObject = ItemObject> {
   protected sortItems(
     items: T[] = this.items,
     sorting?: ((item: T) => any)[],
-    order?: "asc" | "desc"
+    order?: "asc" | "desc" 
   ): T[] {
-    return orderBy(items, sorting || this.defaultSorting, order);
+    return orderBy(items, sorting || this.defaultSorting, order = "desc");
   }
 
   protected async createItem(...args: any[]): Promise<any>;
