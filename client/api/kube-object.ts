@@ -96,6 +96,10 @@ export class KubeObject implements ItemObject {
     return this.metadata.namespace || undefined;
   }
 
+  getCreationTime(){
+    return this.metadata.creationTimestamp
+  }
+
   // todo: refactor with named arguments
   getAge(humanize = true, compact = true, fromNow = false) {
     if (fromNow) {
