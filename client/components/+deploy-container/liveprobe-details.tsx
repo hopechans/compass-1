@@ -126,7 +126,7 @@ export class LiveprobeDetails extends React.Component<Props> {
                         />
                       </Grid>
                     </Grid>
-                  </div> : <div></div>
+                  </div> : null
               }
               {
                 this.value.pattern.type == "TCP" ?
@@ -139,7 +139,7 @@ export class LiveprobeDetails extends React.Component<Props> {
                       value={this.value.pattern.tcpPort}
                       onChange={value => this.value.pattern.tcpPort = value}
                     />
-                  </div> : <div></div>
+                  </div> : null
               }
               {
                 this.value.pattern.type == "Command" ?
@@ -152,9 +152,9 @@ export class LiveprobeDetails extends React.Component<Props> {
                       value={this.value.pattern.command}
                       onChange={value => this.value.pattern.command = value}
                     />
-                  </div> : <div></div>
+                  </div> : null
               }
-            </div> : <div></div>
+            </div> : null
         }
       </div>
     )

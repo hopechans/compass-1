@@ -56,42 +56,42 @@ export class ContainerDetails extends React.Component<Props> {
         {base ?
           <BaseDetails
             themeName={this.theme} value={this.value.base} onChange={(value) => this.value.base = value}
-          /> : <div></div>}
+          /> : null}
         <br />
         {commands ?
           <CommandDetails
             themeName={this.theme} value={this.value.commands} onChange={(value) => this.value.commands = value}
-          /> : <div></div>}
+          /> : null}
         <br />
         {args ?
           <ArgsDetails
             themeName={this.theme} value={this.value.args} onChange={(value) => this.value.args = value}
-          /> : <div></div>}
+          /> : null}
         <br />
         {environment ?
           <EnvironmentDetails
             themeName={this.theme} value={this.value.environment} onChange={(value) => this.value.environment = value}
-          /> : <div></div>}
+          /> : null}
         <br />
         {readyProbe ?
           <ReadyprobeDetails
             themeName={this.theme} value={this.value.readyProbe} onChange={(value) => this.value.readyProbe = value}
-          /> : <div></div>}
+          /> : null}
         <br />
         {liveProbe ?
           <LiveprobeDetails
             themeName={this.theme} value={this.value.liveProbe} onChange={(value) => this.value.liveProbe = value}
-          /> : <div></div>}
+          /> : null}
         <br />
         {lifeCycle ?
           <LifeCycleDetails
             themeName={this.theme} value={this.value.lifeCycle} onChange={(value) => this.value.lifeCycle = value}
-          /> : <div></div>}
+          /> : null}
 
         {volumeMounts ?
           <VolumeMountDetails
             themeName={this.theme} value={this.value.volumeMounts} onChange={(value) => this.value.volumeMounts = value}
-          /> : <div></div>}
+          /> : null}
       </div>
     )
   }

@@ -119,7 +119,7 @@ export class EnvironmentDetails extends React.Component<Props> {
                           value={this.value[index].envConfig.value}
                           onChange={value => this.value[index].envConfig.value = value}
                         />
-                      </div> : <div></div>
+                      </div> : null
                   }
                   {
                     this.value[index].type == "ConfigMaps" ?
@@ -159,7 +159,7 @@ export class EnvironmentDetails extends React.Component<Props> {
                           name={this.value[index].envConfig.configName}
                           onChange={value => this.value[index].envConfig.configKey = value.value}
                         />
-                      </div> : <div></div>
+                      </div> : null
                   }
                   {
                     this.value[index].type == "Secrets" ?
@@ -198,7 +198,7 @@ export class EnvironmentDetails extends React.Component<Props> {
                           name={this.value[index].envConfig.secretName}
                           onChange={value => this.value[index].envConfig.secretKey = value.value}
                         />
-                      </div> : <div></div>
+                      </div> : null
                   }
                   {
                     this.value[index].type == "Other" ?
@@ -212,7 +212,7 @@ export class EnvironmentDetails extends React.Component<Props> {
                           value={this.value[index].envConfig.enterCommand}
                           onChange={value => this.value[index].envConfig.enterCommand = value}
                         />
-                      </div> : <div></div>
+                      </div> : null
                   }
                 </div>
                 <br/>

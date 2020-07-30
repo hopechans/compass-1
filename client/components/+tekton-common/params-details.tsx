@@ -57,7 +57,7 @@ export class ParamsDetails extends React.Component<Props> {
     return (
       <div>
         <SubTitle className="fields-title" title="Params">
-          {!disable ? this.renderAdd() : <div></div>}
+          {!disable ? this.renderAdd() : null}
         </SubTitle>
         <div className="params">
           {this.value.map((item, index) => {
@@ -102,7 +102,7 @@ export class ParamsDetails extends React.Component<Props> {
                       />
                     </Grid>
                   ) : (
-                    <div></div>
+                    null
                   )}
                 </Grid>
               </div>

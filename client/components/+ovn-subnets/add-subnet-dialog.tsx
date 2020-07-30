@@ -170,7 +170,7 @@ export class AddSubNetDialog extends React.Component<Props> {
                       this.allowSubnets = value
                     })}
                   />
-                </> : <></>
+                </> : null
             }
           </WizardStep>
         </Wizard>

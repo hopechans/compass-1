@@ -353,7 +353,7 @@ export class AddSecretDialog extends React.Component<Props> {
                         value={this.userNotVisible}
                         onChange={(value: boolean) => this.userNotVisible = value}
                       />
-                    </> : <></>
+                    </> : null
                   }
                 </div> : null
             }

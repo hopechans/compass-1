@@ -45,7 +45,7 @@ export class MultiTaskStepDetails extends React.Component<Props> {
           />
         );
       }
-      return <div></div>;
+      return null;
     }
 
     return (

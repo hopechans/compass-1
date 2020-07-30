@@ -53,7 +53,7 @@ export class MultiPipelineTaskStepDetails extends React.Component<Props> {
           />
         );
       }
-      return <></>;
+      return null;
     };
 
     return (
@@ -74,7 +74,7 @@ export class MultiPipelineTaskStepDetails extends React.Component<Props> {
               </Collapse>
             );
           })
-        ) : <></>
+        ) : null
         }
       </div>
     );

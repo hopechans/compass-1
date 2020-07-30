@@ -60,7 +60,7 @@ export class MultiRuleDetails extends React.Component<Props> {
                 <RuleDetails value={this.value[index]} onChange={value => this.value[index] = value}/>
               </Collapse>
             );
-          }):<></>
+          }):null
         }
       </div>
     )

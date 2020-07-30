@@ -116,8 +116,10 @@ a {
   color:$textColorPrimary;
   cursor: pointer;
 
+  text-decoration: none ;
+
   [href] {
-    text-decoration: underline;
+    text-decoration: none;
   }
 
   //&:focus {

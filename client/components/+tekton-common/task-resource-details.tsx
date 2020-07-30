@@ -84,7 +84,7 @@ export class TaskResourceDetails extends React.Component<Props> {
             <br />
           </div>
         ) : (
-          <div></div>
+          null
         )}
 
         {this.value.map((item, index) => {

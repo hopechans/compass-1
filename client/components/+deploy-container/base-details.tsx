@@ -157,7 +157,7 @@ export class BaseDetails extends React.Component<Props> {
                         namespace={this.namespace}
                         onChange={value => this.value.imagePullSecret = value.value}
                       />
-                    </Grid> : <div></div>
+                    </Grid> : null
                   }
                 </Grid>
               </div> : null}

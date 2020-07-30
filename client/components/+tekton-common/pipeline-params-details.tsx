@@ -60,7 +60,7 @@ export class PipelineParamsDetails extends React.Component<Props> {
                   this.add();
                   e.stopPropagation();
                 }}
-              /> : <></>
+              /> : null
           }
         </SubTitle>
         {this.value.length > 0 ? (
@@ -79,7 +79,7 @@ export class PipelineParamsDetails extends React.Component<Props> {
             <br/>
           </div>
         ) : (
-          <></>
+          null
         )}
         {this.value.map((item, index) => {
           return (

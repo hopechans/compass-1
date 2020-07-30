@@ -252,7 +252,7 @@ export class AddStorageClassDialog extends React.Component<Props> {
                   options={this.imageFeaturesOptions}
                   value={this.params.imageFeatures}
                   onChange={value => this.params.imageFeatures = value.value} />
-              </> : <></>
+              </> : null
             }
           </WizardStep>
         </Wizard>

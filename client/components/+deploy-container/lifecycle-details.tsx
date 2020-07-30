@@ -86,7 +86,7 @@ export class LifeCycleDetails extends React.Component<Props> {
                       />
                     </Grid>
                   </Grid>
-                </div> : <div></div>}
+                </div> : null}
               {this.value.postStart.type == "TCP" ?
                 <div>
                   <SubTitle title={<Trans>TCP</Trans>}/>
@@ -97,7 +97,7 @@ export class LifeCycleDetails extends React.Component<Props> {
                     value={this.value.postStart.tcpPort}
                     onChange={value => this.value.postStart.tcpPort = value}
                   />
-                </div> : <div></div>}
+                </div> : null}
               {this.value.postStart.type == "Command" ?
                 <div>
                   <SubTitle title={<Trans>Command</Trans>}/>
@@ -107,7 +107,7 @@ export class LifeCycleDetails extends React.Component<Props> {
                     value={this.value.postStart.command}
                     onChange={value => this.value.postStart.command = value}
                   />
-                </div> : <div></div>}
+                </div> : null}
               <SubTitle title={<Trans>PreStop</Trans>}/>
               <Select
                 formatOptionLabel={this.formatOptionLabel}
@@ -139,7 +139,7 @@ export class LifeCycleDetails extends React.Component<Props> {
                       />
                     </Grid>
                   </Grid>
-                </div> : <div></div>}
+                </div> : null}
               {this.value.preStop.type == "TCP" ?
                 <div>
                   <SubTitle title={<Trans>TCP</Trans>}/>
@@ -150,7 +150,7 @@ export class LifeCycleDetails extends React.Component<Props> {
                     value={this.value.preStop.tcpPort}
                     onChange={value => this.value.preStop.tcpPort = value}
                   />
-                </div> : <div></div>}
+                </div> : null}
               {this.value.preStop.type == "Command" ?
                 <div>
                   <SubTitle title={<Trans>Command</Trans>}/>
@@ -160,8 +160,8 @@ export class LifeCycleDetails extends React.Component<Props> {
                     value={this.value.preStop.command}
                     onChange={value => this.value.preStop.command = value}
                   />
-                </div> : <div></div>}
-            </div> : <div></div>
+                </div> : null}
+            </div> : null
         }
       </div>
     )

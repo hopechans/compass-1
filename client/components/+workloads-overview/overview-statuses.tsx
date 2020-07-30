@@ -83,7 +83,7 @@ export class OverviewStatuses extends React.Component {
                 <div className="title"><Link to={cronJobsURL()}><Trans>CronJobs</Trans> ({cronJobs.length})</Link></div>
                 <OverviewWorkloadStatus status={cronJobStore.getStatuses(cronJobs)} />
               </div>
-            </> : <></>
+            </> : null
           }
         </div>
       </div>

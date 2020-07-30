@@ -84,7 +84,7 @@ export class PipelineResourceDetails extends React.Component<Props> {
             <br/>
           </>
         ) : (
-          <></>
+          null
         )}
 
         {this.value.map((item, index) => {

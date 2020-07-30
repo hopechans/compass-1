@@ -111,7 +111,7 @@ export class StackDetails extends React.Component<Props> {
                       }}
                     />
                     <br/>
-                  </div> : <div></div>}
+                  </div> : null}
                 {this.value[index].verification == "Account" ?
                   <div>
                     <SubTitle title={<Trans>User</Trans>}/>
@@ -136,7 +136,7 @@ export class StackDetails extends React.Component<Props> {
                       }}
                     />
                     <br/>
-                  </div> : <div></div>}
+                  </div> : null}
               </div>
             )
           })}
