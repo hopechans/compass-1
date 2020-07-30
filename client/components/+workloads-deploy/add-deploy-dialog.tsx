@@ -90,21 +90,21 @@ export class AddDeployDialog extends React.Component<Props> {
         <Wizard className="AddDeployDialog" header={header} done={this.close}>
           <WizardStep contentClass="flex gaps column" next={this.addDeployDialog}>
             <div className="init-form">
-              <Collapse panelName={<Trans>Base</Trans>}>
+              <Collapse panelName={<Trans>Base</Trans>} key={"base"}>
                 <AppDetails value={this.app} onChange={value => this.app = value} />
               </Collapse>
               <br />
-              <Collapse panelName={<Trans>Containers</Trans>}>
+              <Collapse panelName={<Trans>Containers</Trans>} key={"containers"}>
                 <MultiContainerDetails value={this.containers}
                   onChange={value => this.containers = value} />
               </Collapse>
               <br />
-              <Collapse panelName={<Trans>Service</Trans>}>
+              <Collapse panelName={<Trans>Service</Trans>} key={"services"}>
                 <DeployServiceDetails value={this.service}
                   onChange={value => this.service = value} />
               </Collapse>
               <br />
-              <Collapse panelName={<Trans>Volume</Trans>}>
+              <Collapse panelName={<Trans>Volume</Trans>} key={"volume"}>
                 <MultiVolumeClaimDetails value={this.volumeClaims}
                   onChange={value => this.volumeClaims = value} />
               </Collapse>

@@ -62,10 +62,10 @@ export class ServicesSelect extends React.Component<Props> {
     const {showIcons} = this.props;
     const {value, label} = option;
     return label || (
-      <>
+      <div>
         {showIcons && <Icon small material="layers"/>}
         {value}
-      </>
+      </div>
     );
   }
 

@@ -1,22 +1,19 @@
 import React from "react";
-import ExpansionPanel from "@material-ui/core/ExpansionPanel";
-import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
-import {createMuiTheme, ExpansionPanelActions} from "@material-ui/core";
+import {Accordion, AccordionDetails, AccordionSummary, createMuiTheme, ExpansionPanelActions} from "@material-ui/core";
 import {ThemeProvider} from "@material-ui/core/styles";
 import Divider from '@material-ui/core/Divider';
 
 const theme = createMuiTheme({
   overrides: {
-    MuiExpansionPanelDetails: {
+    MuiAccordionDetails: {
       root: {
         display: "gird",
       }
     },
     MuiPaper: {
       root: {
-        color: ""
+        color: "",
       },
     }
   },
@@ -28,11 +25,13 @@ export interface CollapseProps {
   extraExpand?: React.ReactNode,
   panelName?: React.ReactNode
   panelAction?: React.ReactNode
+  key?: string | number
 }
 
 const defaultProps: CollapseProps = {
   useExpandIcon: true,
   useDivider: true,
+  key: ""
 }
 
 export class Collapse extends React.Component<CollapseProps> {
@@ -40,29 +39,29 @@ export class Collapse extends React.Component<CollapseProps> {
   static defaultProps = defaultProps as object;
 
   render() {
-    const {useExpandIcon, useDivider, panelName, panelAction, extraExpand, children} = this.props;
+    const {key, useExpandIcon, useDivider, panelName, panelAction, extraExpand, children} = this.props;
 
     return (
       <ThemeProvider theme={theme}>
-        <ExpansionPanel>
-          <ExpansionPanelSummary
+        <Accordion key={key}>
+          <AccordionSummary
             expandIcon={
-              <>
+              <div>
                 {extraExpand}
                 {useExpandIcon ? <ExpandMoreIcon/> : null}
-              </>
+              </div>
             }
             aria-controls="panel1bh-content"
             id="panel1bh-header"
           >
             {panelName}
-          </ExpansionPanelSummary>
+          </AccordionSummary>
           {useDivider ? <Divider/> : null}
-          <ExpansionPanelDetails>
+          <AccordionDetails>
             {children}
-          </ExpansionPanelDetails>
+          </AccordionDetails>
           {panelAction ? <ExpansionPanelActions>{panelAction}</ExpansionPanelActions> : null}
-        </ExpansionPanel>
+        </Accordion>
       </ThemeProvider>
     )
   }

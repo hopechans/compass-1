@@ -2,12 +2,11 @@ import { observer } from "mobx-react";
 import React from "react";
 import { observable } from "mobx";
 import { ActionMeta } from "react-select/src/types";
-import { Popconfirm } from "antd";
 import { Collapse } from "../collapse";
-import { DeleteOutlined } from "@ant-design/icons";
 import { PipelineTask } from "../../api/endpoints";
 import { PipelineTaskDetail, pipelineTask } from "./pipeline-task";
 import { Trans } from "@lingui/macro";
+import {Icon} from "../icon";
 
 interface Props<T = any> extends Partial<Props> {
   value?: T;
@@ -43,26 +42,15 @@ export class MultiPipelineTaskStepDetails extends React.Component<Props> {
     const genExtra = (index: number) => {
       if (this.value.length > 1) {
         return (
-          <Popconfirm
-            title="Confirm Delete?"
-            onConfirm={(event: any) => {
+          <Icon
+            material={"delete_outline"}
+            style={{color: '#ff4d4f'}}
+            onClick={(event) => {
               this.remove(index);
+              event.preventDefault();
               event.stopPropagation();
             }}
-            onCancel={(event: any) => {
-              event.stopPropagation();
-            }}
-            okText="Yes"
-            cancelText="No"
-          >
-            <DeleteOutlined
-              translate={"yes"}
-              style={{ color: "#ff4d4f" }}
-              onClick={(event: any) => {
-                event.stopPropagation();
-              }}
-            />
-          </Popconfirm>
+          />
         );
       }
       return <></>;

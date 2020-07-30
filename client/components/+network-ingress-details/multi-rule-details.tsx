@@ -2,19 +2,17 @@ import {observer} from "mobx-react";
 import React from "react";
 import {observable} from "mobx";
 import {ActionMeta} from "react-select/src/types";
-import {Popconfirm} from "antd";
 import {Collapse} from "../collapse";
 import {Button} from "../button";
-import {DeleteOutlined} from '@ant-design/icons';
 import {RuleDetails} from "./rule-details";
 import {Rule, rule} from "./common";
 import {_i18n} from "../../i18n";
 import {Trans} from "@lingui/macro";
+import {Icon} from "../icon";
 
 interface Props<T = any> extends Partial<Props> {
   value?: T;
   themeName?: "dark" | "light" | "outlined";
-  divider?: true;
 
   onChange?(option: T, meta?: ActionMeta<any>): void;
 }
@@ -36,26 +34,15 @@ export class MultiRuleDetails extends React.Component<Props> {
 
     const genExtra = (index: number) => {
       return (
-        <Popconfirm
-          title={_i18n._("Confirm Delete?")}
-          onConfirm={(event: any) => {
+        <Icon
+          material={"delete_outline"}
+          style={{color: '#ff4d4f'}}
+          onClick={(event) => {
             this.remove(index);
+            event.preventDefault();
             event.stopPropagation();
           }}
-          onCancel={(event: any) => {
-            event.stopPropagation();
-          }}
-          okText={_i18n._("Yes")}
-          cancelText={_i18n._("No")}
-        >
-          <DeleteOutlined
-            translate={"yes"}
-            style={{color: "#ff4d4f"}}
-            onClick={(event: any) => {
-              event.stopPropagation();
-            }}
-          />
-        </Popconfirm>
+        />
       );
     }
 
@@ -69,7 +56,7 @@ export class MultiRuleDetails extends React.Component<Props> {
         {this.value.length > 0 ?
           this.value.map((item, index) => {
             return (
-              <Collapse panelName={<Trans>Rule</Trans>} extraExpand={genExtra(index)}>
+              <Collapse panelName={<Trans>Rule</Trans>} extraExpand={genExtra(index)} key={"rule" + index}>
                 <RuleDetails value={this.value[index]} onChange={value => this.value[index] = value}/>
               </Collapse>
             );

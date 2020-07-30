@@ -20,7 +20,6 @@ import {Notifications} from "../notifications";
 import {NamespaceSelect} from "../+namespaces/namespace-select";
 import {Select, SelectOption} from "../select";
 import {StackDetails} from "./stack-details";
-import {Divider} from "antd";
 
 interface Props extends Partial<DialogProps> {
 }

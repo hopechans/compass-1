@@ -9,17 +9,16 @@ import {Select, SelectOption} from "../select";
 import {Input} from "../input";
 import {observable} from "mobx";
 import {environment, Environment} from "./common";
-import {Divider, Row, Col} from "antd";
 import {SecretsSelect} from "../+config-secrets/secrets-select";
 import {NamespaceSelect} from "../+namespaces/namespace-select";
 import {ConfigMapsSelect} from "../+config-maps/config-maps-select";
 import {ConfigMapsKeySelect} from "../+config-maps/config-maps-key-select";
 import {SecretKeySelect} from "../+config-secrets/secret-key-select";
+import {Grid} from "@material-ui/core";
 
 interface Props<T = any> extends Partial<Props> {
   value?: T;
   themeName?: "dark" | "light" | "outlined";
-  divider?: true;
 
   onChange?(option: T, meta?: ActionMeta<any>): void;
 }
@@ -77,13 +76,12 @@ export class EnvironmentDetails extends React.Component<Props> {
   render() {
 
     return (
-      <>
-        {this.props.divider ? <Divider/> : <></>}
+      <div>
         <SubTitle className="fields-title" title={<Trans>Environment</Trans>}>{this.renderAdd()}</SubTitle>
         <div className="Environment">
           {this.value.map((item, index) => {
             return (
-              <>
+              <div>
                 <div key={index}>
                   <Icon
                     small
@@ -106,7 +104,7 @@ export class EnvironmentDetails extends React.Component<Props> {
                   />
                   {
                     this.value[index].type == "Custom" ?
-                      <>
+                      <div>
                         <SubTitle title={<Trans>Environment</Trans>}/>
                         <Input
                           required={true}
@@ -121,11 +119,11 @@ export class EnvironmentDetails extends React.Component<Props> {
                           value={this.value[index].envConfig.value}
                           onChange={value => this.value[index].envConfig.value = value}
                         />
-                      </> : <></>
+                      </div> : <div></div>
                   }
                   {
                     this.value[index].type == "ConfigMaps" ?
-                      <>
+                      <div>
                         <SubTitle title={<Trans>Environment</Trans>}/>
                         <Input
                           required={true}
@@ -135,16 +133,16 @@ export class EnvironmentDetails extends React.Component<Props> {
                         />
                         <br/>
 
-                        <Row justify="space-between">
-                          <Col span="10">
+                        <Grid container spacing={5}>
+                          <Grid item xs>
                             <SubTitle title={<Trans>ConfigMap Namespace</Trans>}/>
                             <NamespaceSelect
                               required autoFocus
                               value={this.namespace}
                               onChange={value => this.namespace = value.value}
                             />
-                          </Col>
-                          <Col span="10">
+                          </Grid>
+                          <Grid item xs>
                             <SubTitle title={<Trans>ConfigMap Name</Trans>}/>
                             <ConfigMapsSelect
                               required autoFocus
@@ -152,8 +150,8 @@ export class EnvironmentDetails extends React.Component<Props> {
                               namespace={this.namespace}
                               onChange={value => this.value[index].envConfig.configName = value.value}
                             />
-                          </Col>
-                        </Row>
+                          </Grid>
+                        </Grid>
                         <SubTitle title={<Trans>ConfigMap Key</Trans>}/>
                         <ConfigMapsKeySelect
                           required autoFocus
@@ -161,11 +159,11 @@ export class EnvironmentDetails extends React.Component<Props> {
                           name={this.value[index].envConfig.configName}
                           onChange={value => this.value[index].envConfig.configKey = value.value}
                         />
-                      </> : <></>
+                      </div> : <div></div>
                   }
                   {
                     this.value[index].type == "Secrets" ?
-                      <>
+                      <div>
                         <SubTitle title={<Trans>Environment</Trans>}/>
                         <Input
                           required={true}
@@ -174,16 +172,16 @@ export class EnvironmentDetails extends React.Component<Props> {
                           onChange={value => this.value[index].envConfig.name = value}
                         />
                         <br/>
-                        <Row justify="space-between">
-                          <Col span="10">
+                        <Grid container spacing={5}>
+                          <Grid item xs>
                             <SubTitle title={<Trans>Secret Namespace</Trans>}/>
                             <NamespaceSelect
                               required autoFocus
                               value={this.namespace}
                               onChange={value => this.namespace = value.value}
                             />
-                          </Col>
-                          <Col span="10">
+                          </Grid>
+                          <Grid item xs>
                             <SubTitle title={<Trans>Secret Name</Trans>}/>
                             <SecretsSelect
                               required autoFocus
@@ -191,8 +189,8 @@ export class EnvironmentDetails extends React.Component<Props> {
                               namespace={this.namespace}
                               onChange={value => this.value[index].envConfig.secretName = value.value}
                             />
-                          </Col>
-                        </Row>
+                          </Grid>
+                        </Grid>
                         <SubTitle title={<Trans>Secret Key</Trans>}/>
                         <SecretKeySelect
                           required autoFocus
@@ -200,11 +198,11 @@ export class EnvironmentDetails extends React.Component<Props> {
                           name={this.value[index].envConfig.secretName}
                           onChange={value => this.value[index].envConfig.secretKey = value.value}
                         />
-                      </> : <></>
+                      </div> : <div></div>
                   }
                   {
                     this.value[index].type == "Other" ?
-                      <>
+                      <div>
                         <SubTitle title={<Trans>Command</Trans>}/>
                         <Input
                           required={true}
@@ -214,15 +212,15 @@ export class EnvironmentDetails extends React.Component<Props> {
                           value={this.value[index].envConfig.enterCommand}
                           onChange={value => this.value[index].envConfig.enterCommand = value}
                         />
-                      </> : <></>
+                      </div> : <div></div>
                   }
                 </div>
                 <br/>
-              </>
+              </div>
             )
           })}
         </div>
-      </>
+      </div>
     )
   }
 }

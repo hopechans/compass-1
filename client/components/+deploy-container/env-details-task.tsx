@@ -7,15 +7,12 @@ import {_i18n} from "../../i18n";
 import {t, Trans} from "@lingui/macro";
 import {Input} from "../input";
 import {observable} from "mobx";
-import {Col, Row} from "../grid";
-import {Divider} from "antd";
 import {envVar, EnvVar} from "./common";
-import {systemName} from "../input/input.validators";
+import {Grid} from "@material-ui/core";
 
 interface EvnVarProps<T = any> extends Partial<EvnVarProps> {
   value?: T;
   themeName?: "dark" | "light" | "outlined";
-  divider?: true;
 
   onChange?(option: T, meta?: ActionMeta<any>): void;
 }
@@ -48,8 +45,7 @@ export class EvnVarDetails extends React.Component<EvnVarProps> {
 
   render() {
     return (
-      <>
-        {this.props.divider ? <Divider/> : <></>}
+      <div>
         <SubTitle className="fields-title" title={<Trans>Environment</Trans>}>
           {this.renderAdd()}
         </SubTitle>
@@ -57,8 +53,8 @@ export class EvnVarDetails extends React.Component<EvnVarProps> {
           {this.value.map((item, index) => {
             return (
               <div key={index}>
-                <Row>
-                  <Col span="10">
+                <Grid container spacing={5}>
+                  <Grid item xs>
                     <Input
                       className="item"
                       placeholder={_i18n._(t`Name`)}
@@ -68,8 +64,8 @@ export class EvnVarDetails extends React.Component<EvnVarProps> {
                         this.value[index].name = value;
                       }}
                     />
-                  </Col>
-                  <Col span="10" offset={1}>
+                  </Grid>
+                  <Grid item xs>
                     <Input
                       className="item"
                       placeholder={_i18n._(t`Value`)}
@@ -79,8 +75,8 @@ export class EvnVarDetails extends React.Component<EvnVarProps> {
                         this.value[index].value = value;
                       }}
                     />
-                  </Col>
-                  <Col span="1" offset={1}>
+                  </Grid>
+                  <Grid item xs>
                     <Icon
                       small
                       tooltip={_i18n._(t`Remove Env`)}
@@ -91,14 +87,14 @@ export class EvnVarDetails extends React.Component<EvnVarProps> {
                         e.stopPropagation();
                       }}
                     />
-                  </Col>
-                </Row>
+                  </Grid>
+                </Grid>
                 <br/>
               </div>
             );
           })}
         </div>
-      </>
+      </div>
     );
   }
 }

@@ -4,10 +4,10 @@ import {observable} from "mobx";
 import {SubTitle} from "../layout/sub-title";
 import {_i18n} from "../../i18n";
 import {ActionMeta} from "react-select/src/types";
-import {Row, Col, Divider} from "antd";
 import {Icon} from "../icon";
 import {t, Trans} from "@lingui/macro";
 import {Input} from "../input";
+import {Grid} from "@material-ui/core";
 
 interface Props<T = any> extends Partial<Props> {
   value?: T;
@@ -50,8 +50,8 @@ export class TlsHostsDetails extends React.Component<Props> {
         {this.value.map((item, index) => {
           return (
             <div key={index}>
-              <Row>
-                <Col span="23">
+              <Grid container spacing={5}>
+                <Grid item xs>
                   <Input
                     className="item"
                     placeholder={_i18n._(t`host`)}
@@ -60,8 +60,8 @@ export class TlsHostsDetails extends React.Component<Props> {
                       this.value[index] = value
                     }}
                   />
-                </Col>
-                <Col span="1">
+                </Grid>
+                <Grid item xs>
                   <Icon
                     small
                     tooltip={<Trans>Remove Host</Trans>}
@@ -72,8 +72,8 @@ export class TlsHostsDetails extends React.Component<Props> {
                       e.stopPropagation()
                     }}
                   />
-                </Col>
-              </Row>
+                </Grid>
+              </Grid>
             </div>
           )
         })}

@@ -1,21 +1,19 @@
-import { observer } from "mobx-react";
+import {observer} from "mobx-react";
 import React from "react";
-import { observable } from "mobx";
-import { Input } from "../input";
-import { ActionMeta } from "react-select/src/types";
-import { Select, SelectOption } from "../select";
-import { WorkspaceDeclaration as Workspace } from "../../api/endpoints/tekton-task.api";
-import { SubTitle } from "../layout/sub-title";
-import { Divider } from "antd";
-import { Icon } from "../icon";
-import { t, Trans } from "@lingui/macro";
-import { _i18n } from "../../i18n";
-import { Col, Row } from "../grid";
+import {observable} from "mobx";
+import {Input} from "../input";
+import {ActionMeta} from "react-select/src/types";
+import {SelectOption} from "../select";
+import {WorkspaceDeclaration as Workspace} from "../../api/endpoints/tekton-task.api";
+import {SubTitle} from "../layout/sub-title";
+import {Icon} from "../icon";
+import {t, Trans} from "@lingui/macro";
+import {_i18n} from "../../i18n";
+import {Grid} from "@material-ui/core";
 
 interface Props<T = any> extends Partial<Props> {
   value?: T;
   themeName?: "dark" | "light" | "outlined";
-  divider?: true;
 
   onChange?(option: T, meta?: ActionMeta<any>): void;
 }
@@ -34,6 +32,7 @@ export class TaskSpecWorkSpaces extends React.Component<Props> {
   get typeOptions() {
     return ["true", "false"];
   }
+
   add = () => {
     this.value.push(workspaces);
   };
@@ -43,11 +42,11 @@ export class TaskSpecWorkSpaces extends React.Component<Props> {
   };
 
   formatOptionLabel = (option: SelectOption) => {
-    const { value, label } = option;
+    const {value, label} = option;
     return (
       label || (
         <>
-          <Icon small material="layers" />
+          <Icon small material="layers"/>
           {value}
         </>
       )
@@ -70,36 +69,25 @@ export class TaskSpecWorkSpaces extends React.Component<Props> {
 
   render() {
     return (
-      <>
-        {this.props.divider ? <Divider /> : <></>}
+      <div>
         <SubTitle className="fields-title" title="Workspaces">
           {this.renderAdd()}
         </SubTitle>
         <div className="Workspaces">
           {this.value.map((item, index) => {
             return (
-              <>
+              <div>
                 <div key={index}>
-                  <Row>
-                    <Col span={10}>
+                  <Grid container spacing={5}>
+                    <Grid item xs>
                       <Input
                         placeholder={"Name"}
                         value={this.value[index].name}
                         onChange={(value) => (this.value[index].name = value)}
                       />
-                    </Col>
+                    </Grid>
 
-                    {/* <Col span={4} offset={1}>
-                      <Input
-                        placeholder={"Description"}
-                        value={this.value[index].description}
-                        onChange={(value) =>
-                          (this.value[index].description = value)
-                        }
-                      />
-                    </Col> */}
-
-                    <Col span={10} offset={1}>
+                    <Grid item xs>
                       <Input
                         placeholder={"MountPath"}
                         value={this.value[index].mountPath}
@@ -107,36 +95,8 @@ export class TaskSpecWorkSpaces extends React.Component<Props> {
                           (this.value[index].mountPath = value)
                         }
                       />
-                    </Col>
-
-                    {/* <Col span={4} offset={1}> */}
-                    {/* <Select
-                        value={this.value[index].readOnly}
-                        options={this.typeOptions}
-                        formatOptionLabel={this.formatOptionLabel}
-                        onChange={(value) =>
-                          (this.value[index].readOnly = value.value)
-                        }
-                      /> */}
-                    {/* <Input
-                        placeholder={"ReadOnly:true/false"}
-                        value={
-                          this.value[index]?.readOnly === true
-                            ? "true"
-                            : "false"
-                        }
-                        onChange={(value) => {
-                          if (value.toLowerCase() === "true") {
-                            this.value[index].readOnly = true;
-                          }
-                          if (value.toLowerCase() === "fasle") {
-                            this.value[index].readOnly = false;
-                          }
-                        }}
-                      /> */}
-                    {/* </Col> */}
-
-                    <Col span={1} offset={1}>
+                    </Grid>
+                    <Grid item xs>
                       <Icon
                         small
                         tooltip={<Trans>Remove Workspaces</Trans>}
@@ -147,15 +107,15 @@ export class TaskSpecWorkSpaces extends React.Component<Props> {
                           e.stopPropagation();
                         }}
                       />
-                    </Col>
-                  </Row>
+                    </Grid>
+                  </Grid>
                 </div>
-                <br />
-              </>
+                <br/>
+              </div>
             );
           })}
         </div>
-      </>
+      </div>
     );
   }
 

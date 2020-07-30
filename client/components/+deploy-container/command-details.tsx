@@ -4,17 +4,15 @@ import React from "react";
 import {SubTitle} from "../layout/sub-title";
 import {Icon} from "../icon";
 import {_i18n} from "../../i18n";
-import {t, Trans} from "@lingui/macro";
+import {t} from "@lingui/macro";
 import {Input} from "../input";
 import {observable} from "mobx";
-import {Col, Row} from "../grid";
-import {Divider} from 'antd';
 import {commands} from "./common";
+import {Grid} from "@material-ui/core";
 
 interface Props<T = any> extends Partial<Props> {
   value?: T;
   themeName?: "dark" | "light" | "outlined";
-  divider?: true;
 
   onChange?(option: T, meta?: ActionMeta<any>): void;
 }
@@ -49,26 +47,24 @@ export class CommandDetails extends React.Component<Props> {
   render() {
 
     return (
-      <>
-        {this.props.divider ? <Divider/> : <></>}
-        <SubTitle className="fields-title" title={<Trans>Command</Trans>}>{this.renderAdd()}</SubTitle>
+      <div>
+        <SubTitle className="fields-title" title={_i18n._("Command") + ' ' + this.value.length}>{this.renderAdd()}</SubTitle>
         <div className="command">
           {this.value.map((item, index) => {
             return (
               <div key={index}>
-                <Row>
-                  <Col span="23">
+                <Grid container spacing={5}>
+                  <Grid item xs>
                     <Input
                       className="item"
                       placeholder={_i18n._(t`Command`)}
-                      title={this.value[index]}
                       value={this.value[index]}
                       onChange={value => {
                         this.value[index] = value
                       }}
                     />
-                  </Col>
-                  <Col span="1">
+                  </Grid>
+                  <Grid item xs>
                     <Icon
                       small
                       tooltip={_i18n._(t`Remove Command`)}
@@ -79,14 +75,15 @@ export class CommandDetails extends React.Component<Props> {
                         e.stopPropagation()
                       }}
                     />
-                  </Col>
-                </Row>
+                  </Grid>
+                </Grid>
                 <br/>
               </div>
             )
           })}
         </div>
-      </>
+      </div>
     )
   }
+
 }

@@ -1,7 +1,6 @@
 import "./main-layout.scss";
 
 import * as React from "react";
-import { Redirect } from "react-router";
 import { observable, reaction } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { matchPath, RouteProps } from "react-router-dom";
@@ -9,7 +8,6 @@ import { Trans } from "@lingui/macro";
 import { createStorage, cssNames, isElectron } from "../../utils";
 import { Tab, Tabs } from "../tabs";
 import { Icon } from "../icon";
-import { openUserKubeConfig } from "../kubeconfig-dialog";
 import { Sidebar } from "./sidebar";
 import { configStore } from "../../config.store";
 import { ErrorBoundary } from "../error-boundary";
@@ -18,13 +16,11 @@ import { MenuItem } from "../menu";
 import { MenuActions } from "../menu/menu-actions";
 import { navigate, navigation } from "../../navigation";
 import { i18nStore } from "../../i18n";
-import { Badge } from "../badge";
 import { themeStore } from "../../theme.store";
 import {withRouter,RouteComponentProps } from 'react-router';
-import { Notifications } from "../notifications";
-import { message } from 'antd';
 import {kubeWatchApi } from '../../api/kube-watch-api'
 import store from 'store'
+import {Notifications} from "../notifications";
 
 export interface TabRoute extends RouteProps {
   title: React.ReactNode;
@@ -92,7 +88,7 @@ export class Layout extends React.Component<Props,State> {
   ifLogin():any{
     const userConfig = store.get('u_config')
     if(!userConfig){
-      message.error('Token Expired')
+      Notifications.error('Token Expired');
       setTimeout(()=>{
           this.loginout()
       },1000)

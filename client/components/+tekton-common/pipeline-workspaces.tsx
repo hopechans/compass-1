@@ -4,17 +4,15 @@ import { observable } from "mobx";
 import { Input } from "../input";
 import { ActionMeta } from "react-select/src/types";
 import { SubTitle } from "../layout/sub-title";
-import { Divider } from "antd";
 import { Icon } from "../icon";
 import { t, Trans } from "@lingui/macro";
 import { _i18n } from "../../i18n";
-import { WorkspacePipelineDeclaration } from "../../api/endpoints/tekton-pipeline.api";
-import { Col, Row } from "../grid";
+import { WorkspacePipelineDeclaration } from "../../api/endpoints";
+import {Grid} from "@material-ui/core";
 
 interface Props<T = any> extends Partial<Props> {
   value?: T;
   themeName?: "dark" | "light" | "outlined";
-  divider?: true;
 
   onChange?(option: T, meta?: ActionMeta<any>): void;
 }
@@ -52,8 +50,7 @@ export class PipelineWorkspaces extends React.Component<Props> {
 
   render() {
     return (
-      <>
-        {this.props.divider ? <Divider /> : <></>}
+      <div>
         <SubTitle className="fields-title" title="WorkSpaces">
           {this.renderAdd()}
         </SubTitle>
@@ -62,15 +59,15 @@ export class PipelineWorkspaces extends React.Component<Props> {
             return (
               <>
                 <div key={index}>
-                  <Row>
-                    <Col span={10}>
+                  <Grid container spacing={5}>
+                    <Grid item xs>
                       <Input
                         placeholder={"Name"}
                         value={this.value[index].name}
                         onChange={(value) => (this.value[index].name = value)}
                       />
-                    </Col>
-                    <Col span={10} offset={1}>
+                    </Grid>
+                    <Grid item xs>
                       <Input
                         placeholder={"Description"}
                         value={this.value[index].description}
@@ -78,9 +75,9 @@ export class PipelineWorkspaces extends React.Component<Props> {
                           (this.value[index].description = value)
                         }
                       />
-                    </Col>
+                    </Grid>
 
-                    <Col span={1} offset={1}>
+                    <Grid item xs>
                       <Icon
                         small
                         tooltip={<Trans>Remove Workspaces</Trans>}
@@ -91,15 +88,15 @@ export class PipelineWorkspaces extends React.Component<Props> {
                           e.stopPropagation();
                         }}
                       />
-                    </Col>
-                  </Row>
+                    </Grid>
+                  </Grid>
                 </div>
                 <br />
               </>
             );
           })}
         </div>
-      </>
+      </div>
     );
   }
 }

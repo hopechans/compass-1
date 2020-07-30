@@ -1,17 +1,17 @@
 import React from "react";
-import { observer } from "mobx-react";
-import { ActionMeta } from "react-select/src/types";
-import { themeStore } from "../../theme.store";
-import { EnvironmentDetails } from "./env-details";
-import { BaseDetails } from "./base-details";
-import { CommandDetails } from "./command-details";
-import { ReadyprobeDetails } from "./readyprobe-details"
-import { LiveprobeDetails } from "./liveprobe-details";
-import { LifeCycleDetails } from "./lifecycle-details";
-import { ArgsDetails } from "./args-details";
-import { observable } from "mobx";
-import { container } from "./common";
-import { VolumeMountDetails } from "./volume-mount";
+import {observer} from "mobx-react";
+import {ActionMeta} from "react-select/src/types";
+import {themeStore} from "../../theme.store";
+import {EnvironmentDetails} from "./env-details";
+import {BaseDetails} from "./base-details";
+import {CommandDetails} from "./command-details";
+import {ReadyprobeDetails} from "./readyprobe-details"
+import {LiveprobeDetails} from "./liveprobe-details";
+import {LifeCycleDetails} from "./lifecycle-details";
+import {ArgsDetails} from "./args-details";
+import {observable} from "mobx";
+import {container} from "./common";
+import {VolumeMountDetails} from "./volume-mount";
 
 interface Props<T = any> extends Partial<Props> {
   value?: T;
@@ -26,7 +26,6 @@ interface Props<T = any> extends Partial<Props> {
   readyProbe?: boolean;
   liveProbe?: boolean;
   lifeCycle?: boolean;
-  divider?: true;
   volumeMounts?: boolean;
 }
 
@@ -46,54 +45,54 @@ export class ContainerDetails extends React.Component<Props> {
   }
 
   private theme = this.props.themeName || themeStore.activeTheme.type;
-  private divider = this.props.divider;
 
   @observable value = this.props.value || container
 
   render() {
-    const { base, commands, args, environment, readyProbe, liveProbe, lifeCycle, volumeMounts } = this.props;
+    const {base, commands, args, environment, readyProbe, liveProbe, lifeCycle, volumeMounts} = this.props;
 
     return (
-      <>
-        {base ? <BaseDetails
-          themeName={this.theme} value={this.value.base}
-          onChange={(value) => this.value.base = value}
-        /> : <></>}
+      <div>
+        {base ?
+          <BaseDetails
+            themeName={this.theme} value={this.value.base} onChange={(value) => this.value.base = value}
+          /> : <div></div>}
+        <br />
+        {commands ?
+          <CommandDetails
+            themeName={this.theme} value={this.value.commands} onChange={(value) => this.value.commands = value}
+          /> : <div></div>}
+        <br />
+        {args ?
+          <ArgsDetails
+            themeName={this.theme} value={this.value.args} onChange={(value) => this.value.args = value}
+          /> : <div></div>}
+        <br />
+        {environment ?
+          <EnvironmentDetails
+            themeName={this.theme} value={this.value.environment} onChange={(value) => this.value.environment = value}
+          /> : <div></div>}
+        <br />
+        {readyProbe ?
+          <ReadyprobeDetails
+            themeName={this.theme} value={this.value.readyProbe} onChange={(value) => this.value.readyProbe = value}
+          /> : <div></div>}
+        <br />
+        {liveProbe ?
+          <LiveprobeDetails
+            themeName={this.theme} value={this.value.liveProbe} onChange={(value) => this.value.liveProbe = value}
+          /> : <div></div>}
+        <br />
+        {lifeCycle ?
+          <LifeCycleDetails
+            themeName={this.theme} value={this.value.lifeCycle} onChange={(value) => this.value.lifeCycle = value}
+          /> : <div></div>}
 
-        {commands ? <CommandDetails
-          themeName={this.theme} value={this.value.commands} divider={this.divider}
-          onChange={(value) => this.value.commands = value}
-        /> : <></>}
-
-        {args ? <ArgsDetails themeName={this.theme} value={this.value.args} divider={this.divider}
-          onChange={(value) => this.value.args = value}
-        /> : <></>}
-
-        {environment ? <EnvironmentDetails
-          themeName={this.theme} value={this.value.environment} divider={this.divider}
-          onChange={(value) => this.value.environment = value}
-        /> : <></>}
-
-        {readyProbe ? <ReadyprobeDetails
-          themeName={this.theme} value={this.value.readyProbe} divider={this.divider}
-          onChange={(value) => this.value.readyProbe = value}
-        /> : <></>}
-
-        {liveProbe ? <LiveprobeDetails
-          themeName={this.theme} value={this.value.liveProbe} divider={this.divider}
-          onChange={(value) => this.value.liveProbe = value}
-        /> : <></>}
-
-        {lifeCycle ? <LifeCycleDetails
-          themeName={this.theme} value={this.value.lifeCycle} divider={this.divider}
-          onChange={(value) => this.value.lifeCycle = value}
-        /> : <></>}
-
-        {volumeMounts ? <VolumeMountDetails
-          themeName={this.theme} value={this.value.volumeMounts} divider={this.divider}
-          onChange={(value) => this.value.volumeMounts = value}
-        /> : <></>}
-      </>
+        {volumeMounts ?
+          <VolumeMountDetails
+            themeName={this.theme} value={this.value.volumeMounts} onChange={(value) => this.value.volumeMounts = value}
+          /> : <div></div>}
+      </div>
     )
   }
 }

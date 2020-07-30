@@ -8,8 +8,8 @@ import {Input} from "../input";
 import {PipelineParams, pipelineParams} from "./common";
 import {SubTitle} from "../layout/sub-title";
 import {_i18n} from "../../i18n";
-import {Col, Row} from "../grid";
 import {Select} from "../select";
+import {Grid} from "@material-ui/core";
 
 interface Props<T = any> extends Partial<Props> {
   value?: T;
@@ -65,17 +65,17 @@ export class PipelineParamsDetails extends React.Component<Props> {
         </SubTitle>
         {this.value.length > 0 ? (
           <div>
-            <Row>
-              <Col span={7}>
+            <Grid container spacing={5}>
+              <Grid item xs>
                 <Trans>Name</Trans>
-              </Col>
-              <Col span={7} offset={1}>
+              </Grid>
+              <Grid item xs>
                 <Trans>Type</Trans>
-              </Col>
-              <Col span={7} offset={1}>
+              </Grid>
+              <Grid item xs>
                 <Trans>Default</Trans>
-              </Col>
-            </Row>
+              </Grid>
+            </Grid>
             <br/>
           </div>
         ) : (
@@ -84,15 +84,15 @@ export class PipelineParamsDetails extends React.Component<Props> {
         {this.value.map((item, index) => {
           return (
             <div>
-              <Row>
-                <Col span={7}>
+              <Grid container spacing={5}>
+                <Grid item xs>
                   <Input
                     disabled={disable}
                     value={this.value[index].name}
                     onChange={(value) => (this.value[index].name = value)}
                   />
-                </Col>
-                <Col span={7} offset={1}>
+                </Grid>
+                <Grid item xs>
                   <Select
                     isDisabled={disable}
                     value={this.value[index].type}
@@ -102,28 +102,26 @@ export class PipelineParamsDetails extends React.Component<Props> {
                       this.value[index].type = result.value;
                     }}
                   />
-                </Col>
-                <Col span={6} offset={1}>
+                </Grid>
+                <Grid item xs>
                   <Input
                     disabled={disable}
                     value={this.value[index].default}
                     onChange={(value) => (this.value[index].default = value)}
                   />
-                </Col>
-                {
-                  !disable ?
-                    <Col span={1} offset={1}>
-                      <Icon
-                        small
-                        material="remove_circle_outline"
-                        onClick={(e) => {
-                          this.remove(index);
-                          e.stopPropagation();
-                        }}
-                      />
-                    </Col> : <></>
-                }
-              </Row>
+                </Grid>
+                {!disable ?
+                  <Grid item xs>
+                    <Icon
+                      small
+                      material="remove_circle_outline"
+                      onClick={(e) => {
+                        this.remove(index);
+                        e.stopPropagation();
+                      }}
+                    />
+                  </Grid> : null}
+              </Grid>
               <br/>
             </div>
           );

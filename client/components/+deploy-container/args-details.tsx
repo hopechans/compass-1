@@ -7,14 +7,12 @@ import {_i18n} from "../../i18n";
 import {t, Trans} from "@lingui/macro";
 import {Input} from "../input";
 import {observable} from "mobx";
-import {Col, Row} from "../grid";
-import {Divider} from 'antd';
 import {args} from "./common";
+import {Grid} from "@material-ui/core";
 
 interface ArgsProps<T = any> extends Partial<ArgsProps> {
   value?: T;
   themeName?: "dark" | "light" | "outlined";
-  divider?: true;
 
   onChange?(option: T, meta?: ActionMeta<any>): void;
 }
@@ -49,15 +47,14 @@ export class ArgsDetails extends React.Component<ArgsProps> {
   render() {
 
     return (
-      <>
-        {this.props.divider ? <Divider/> : <></>}
+      <div>
         <SubTitle className="fields-title" title={<Trans>Arguments</Trans>}>{this.renderAdd()}</SubTitle>
         <div className="args">
           {this.value.map((item, index) => {
             return (
               <div key={index}>
-                <Row>
-                  <Col span="23">
+                <Grid container spacing={5}>
+                  <Grid item xs>
                     <Input
                       className="item"
                       placeholder={_i18n._(t`Arguments`)}
@@ -67,8 +64,8 @@ export class ArgsDetails extends React.Component<ArgsProps> {
                         this.value[index] = value
                       }}
                     />
-                  </Col>
-                  <Col span="1">
+                  </Grid>
+                  <Grid item xs>
                     <Icon
                       small
                       tooltip={_i18n._(t`Remove Arguments`)}
@@ -79,14 +76,14 @@ export class ArgsDetails extends React.Component<ArgsProps> {
                         e.stopPropagation()
                       }}
                     />
-                  </Col>
-                </Row>
+                  </Grid>
+                </Grid>
                 <br/>
               </div>
             )
           })}
         </div>
-      </>
+      </div>
     )
   }
 }

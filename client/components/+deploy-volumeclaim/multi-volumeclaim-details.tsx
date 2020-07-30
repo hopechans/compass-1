@@ -4,14 +4,11 @@ import {observable} from "mobx";
 import {ActionMeta} from "react-select/src/types";
 import {Button} from "../button";
 import {VolumeClaimDetails} from "./volumeclaim-details";
-import {Popconfirm} from "antd";
 import {Icon} from "../icon";
 import {Collapse} from "../collapse"
-
 import {volumeClaim, VolumeClaimTemplate} from "./common";
 import {_i18n} from "../../i18n";
 import {t} from "@lingui/macro";
-import {Popper} from "@material-ui/core";
 
 export interface VolumeClaimTemplateProps<T = any> extends Partial<VolumeClaimTemplateProps> {
   value?: T;
@@ -38,46 +35,35 @@ export class MultiVolumeClaimDetails extends React.Component<VolumeClaimTemplate
 
     const genExtra = (index: number) => {
       return (
-        <Popconfirm
-          title="Confirm Delete?"
-          onConfirm={(event: any) => {
-            event.preventDefault();
-            event.stopPropagation();
+        <Icon
+          material={"delete_outline"}
+          style={{color: '#ff4d4f'}}
+          onClick={(event) => {
             this.remove(index);
-          }}
-          onCancel={(event: any) => {
             event.preventDefault();
             event.stopPropagation();
           }}
-          okText="Yes"
-          cancelText="No">
-          <Icon
-            material={"delete_outline"}
-            style={{color: '#ff4d4f'}}
-            onClick={(event) => {
-              event.preventDefault();
-              event.stopPropagation();
-            }}
-          />
-        </Popconfirm>
+        />
       )
-
     }
 
     return (
-      <>
+      <div>
         <br/>
         <Button primary onClick={() => this.add()}><span>{_i18n._(t`Addition VolumeClaim`)}</span></Button>
         <br/><br/>
         {this.value.map((item, index) => {
           return (
-            <Collapse panelName={`VolumeClaim`} extraExpand={genExtra(index)}>
+            <Collapse
+              panelName={`VolumeClaim ` + this.value[index].metadata.name}
+              extraExpand={genExtra(index)}
+              key={"volumeClaim" + index}>
               <VolumeClaimDetails
                 value={this.value[index]} onChange={value => this.value[index] = value}/>
             </Collapse>
           )
         })}
-      </>
+      </div>
     )
   }
 }

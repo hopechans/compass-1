@@ -89,18 +89,18 @@ export class AddIngressDialog extends React.Component<Props> {
               value={this.name}
               onChange={value => this.name = value}
             />
-            <Collapse panelName={<Trans>Rules</Trans>}>
+            <Collapse panelName={<Trans>Rules</Trans>} key={"rules"}>
               <MultiRuleDetails
                 value={this.rules}
                 onChange={value => this.rules = value}/>
             </Collapse>
-            <Collapse panelName={<Trans>Backend</Trans>}>
+            <Collapse panelName={<Trans>Backend</Trans>} key={"backend"}>
               <BackendDetails
                 value={this.backend}
                 onChange={value => this.backend = value}
               />
             </Collapse>
-            <Collapse panelName={<Trans>Transport Layer Security</Trans>}>
+            <Collapse panelName={<Trans>Transport Layer Security</Trans>} key={"tls"}>
               <TlsDetails
                 value={this.tls}
                 onChange={value => this.tls = value}

@@ -1,21 +1,19 @@
-import { observer } from "mobx-react";
+import {observer} from "mobx-react";
 import React from "react";
-import { observable } from "mobx";
-import { Input } from "../input";
-import { ActionMeta } from "react-select/src/types";
-import { SubTitle } from "../layout/sub-title";
-import { Divider } from "antd";
-import { Icon } from "../icon";
-import { t, Trans } from "@lingui/macro";
-import { _i18n } from "../../i18n";
-import { WorkspaceBinding } from "../../api/endpoints/tekton-pipelinerun.api";
-import { Col, Row } from "../grid";
-import { PersistentVolumeClaimVolumeSource } from "../../api/endpoints/persistent-volume-claims.api";
+import {observable} from "mobx";
+import {Input} from "../input";
+import {ActionMeta} from "react-select/src/types";
+import {SubTitle} from "../layout/sub-title";
+import {Icon} from "../icon";
+import {t, Trans} from "@lingui/macro";
+import {_i18n} from "../../i18n";
+import {WorkspaceBinding} from "../../api/endpoints";
+import {PersistentVolumeClaimVolumeSource} from "../../api/endpoints";
+import {Grid} from "@material-ui/core";
 
 interface Props<T = any> extends Partial<Props> {
   value?: T;
   themeName?: "dark" | "light" | "outlined";
-  divider?: true;
 
   onChange?(option: T, meta?: ActionMeta<any>): void;
 }
@@ -59,25 +57,24 @@ export class PipelineRunWorkspaces extends React.Component<Props> {
 
   render() {
     return (
-      <>
-        {this.props.divider ? <Divider /> : <></>}
+      <div>
         <SubTitle className="fields-title" title="WorkSpaces">
           {this.renderAdd()}
         </SubTitle>
         <div className="Workspaces">
           {this.value.map((item, index) => {
             return (
-              <>
+              <div>
                 <div key={index}>
-                  <Row>
-                    <Col span={7}>
+                  <Grid container spacing={5}>
+                    <Grid item xs>
                       <Input
                         placeholder={"Name"}
                         value={this.value[index].name}
                         onChange={(value) => (this.value[index].name = value)}
                       />
-                    </Col>
-                    <Col span={6} offset={1}>
+                    </Grid>
+                    <Grid item xs>
                       <Input
                         placeholder={"SubPath"}
                         value={this.value[index].subPath}
@@ -85,9 +82,9 @@ export class PipelineRunWorkspaces extends React.Component<Props> {
                           (this.value[index].subPath = value)
                         }
                       />
-                    </Col>
+                    </Grid>
 
-                    <Col span={7} offset={1}>
+                    <Grid item xs>
                       <Input
                         placeholder={"PersistentVolumeClaimName"}
                         value={
@@ -96,12 +93,12 @@ export class PipelineRunWorkspaces extends React.Component<Props> {
                         onChange={(value) =>
                           (this.value[
                             index
-                          ].persistentVolumeClaim.claimName = value)
+                            ].persistentVolumeClaim.claimName = value)
                         }
                       />
-                    </Col>
+                    </Grid>
 
-                    <Col span={1} offset={1}>
+                    <Grid item xs>
                       <Icon
                         small
                         tooltip={<Trans>Remove Workspaces</Trans>}
@@ -112,15 +109,15 @@ export class PipelineRunWorkspaces extends React.Component<Props> {
                           e.stopPropagation();
                         }}
                       />
-                    </Col>
-                  </Row>
+                    </Grid>
+                  </Grid>
                 </div>
-                <br />
-              </>
+                <br/>
+              </div>
             );
           })}
         </div>
-      </>
+      </div>
     );
   }
 }

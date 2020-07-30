@@ -6,11 +6,12 @@ import { Select, SelectOption } from "../select";
 import { Icon } from "../icon";
 import { t, Trans } from "@lingui/macro";
 import { taskResources } from "./common";
-import { Col, Row } from "../grid";
+
 import { SubTitle } from "../layout/sub-title";
 import { _i18n } from "../../i18n";
 import { Input } from "../input";
 import { TaskResource } from "../../api/endpoints";
+import {Grid} from "@material-ui/core";
 
 interface Props<T = any> extends Partial<Props> {
   value?: T;
@@ -68,52 +69,52 @@ export class TaskResourceDetails extends React.Component<Props> {
           />
         </SubTitle>
         {this.value.length > 0 ? (
-          <>
-            <Row>
-              <Col span={6}>
+          <div>
+            <Grid container spacing={5}>
+              <Grid item xs>
                 <Trans>Name</Trans>
-              </Col>
-              <Col span={6} offset={2}>
+              </Grid>
+              <Grid item xs>
                 <Trans>ResourceType</Trans>
-              </Col>
-              <Col span={6} offset={2}>
+              </Grid>
+              <Grid item xs>
                 <Trans>TargetPath</Trans>
-              </Col>
-            </Row>
+              </Grid>
+            </Grid>
             <br />
-          </>
+          </div>
         ) : (
-          <></>
+          <div></div>
         )}
 
         {this.value.map((item, index) => {
           return (
-            <>
-              <Row>
-                <Col span={6}>
+            <div>
+              <Grid container spacing={5}>
+                <Grid item xs>
                   <Input
                     placeholder={"Name"}
                     value={this.value[index].name}
                     onChange={(value) => (this.value[index].name = value)}
                   />
-                </Col>
+                </Grid>
 
-                <Col span={6} offset={2}>
+                <Grid item xs>
                   <Select
                     value={this.value[index].type}
                     options={this.typeOptions}
                     formatOptionLabel={this.formatOptionLabel}
                     onChange={(value) => (this.value[index].type = value.value)}
                   />
-                </Col>
-                <Col span={6} offset={2}>
+                </Grid>
+                <Grid item xs>
                   <Input
                     placeholder={"TargetPath"}
                     value={this.value[index].targetPath}
                     onChange={(value) => (this.value[index].targetPath = value)}
                   />
-                </Col>
-                <Col span={1} offset={1}>
+                </Grid>
+                <Grid item xs>
                   <Icon
                     small
                     material="remove_circle_outline"
@@ -122,10 +123,10 @@ export class TaskResourceDetails extends React.Component<Props> {
                       this.remove(index);
                     }}
                   />
-                </Col>
-              </Row>
+                </Grid>
+              </Grid>
               <br />
-            </>
+            </div>
           );
         })}
       </div>

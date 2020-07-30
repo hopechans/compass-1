@@ -5,13 +5,11 @@ import {SubTitle} from "../layout/sub-title";
 import {_i18n} from "../../i18n";
 import {ActionMeta} from "react-select/src/types";
 import {Tls, tls} from "./common";
-import {Divider, Row, Col} from "antd";
 import {Icon} from "../icon";
 import {t, Trans} from "@lingui/macro";
-import {Input} from "../input";
 import {SecretsSelect} from "../+config-secrets/secrets-select";
 import {NamespaceSelect} from "../+namespaces/namespace-select";
-import {Button} from "../button/button";
+import {Button} from "../button";
 import {TlsHostsDetails} from "./tls-hosts";
 
 interface Props<T = any> extends Partial<Props> {

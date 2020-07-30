@@ -6,18 +6,16 @@ import {SubTitle} from "../layout/sub-title";
 import {Icon} from "../icon";
 import {_i18n} from "../../i18n";
 import {t, Trans} from "@lingui/macro";
-import {Col, Row} from "../grid";
 import {Input} from "../input";
 import {Checkbox} from "../checkbox";
 import {isNumber, isUrl} from "../input/input.validators";
 import {Select, SelectOption} from "../select";
 import {lifeCycle, LifeCycle} from "./common";
-import {Divider} from 'antd';
+import {Grid} from "@material-ui/core";
 
 interface Props<T = any> extends Partial<Props> {
   value?: T;
   themeName?: "dark" | "light" | "outlined";
-  divider?: true;
 
   onChange?(option: T, meta?: ActionMeta<any>): void;
 }
@@ -38,18 +36,17 @@ export class LifeCycleDetails extends React.Component<Props> {
   formatOptionLabel = (option: SelectOption) => {
     const {value, label} = option;
     return label || (
-      <>
+      <div>
         <Icon small material="layers"/>
         {value}
-      </>
+      </div>
     );
   }
 
   render() {
 
     return (
-      <>
-        {this.props.divider ? <Divider/> : <></>}
+      <div>
         <Checkbox
           theme="light"
           label={<Trans>Lifecycle</Trans>}
@@ -58,7 +55,7 @@ export class LifeCycleDetails extends React.Component<Props> {
         />
         {
           this.value.status ?
-            <>
+            <div>
               <SubTitle title={<Trans>PostStart</Trans>}/>
               <Select
                 formatOptionLabel={this.formatOptionLabel}
@@ -67,10 +64,10 @@ export class LifeCycleDetails extends React.Component<Props> {
                 onChange={value => this.value.postStart.type = value.value}
               />
               {this.value.postStart.type == "HTTP" ?
-                <>
+                <div>
                   <br/>
-                  <Row>
-                    <Col span="10">
+                  <Grid container spacing={5}>
+                    <Grid item xs>
                       <SubTitle title={<Trans>HTTP</Trans>}/>
                       <Input
                         placeholder={_i18n._(t`HTTP`)}
@@ -79,19 +76,19 @@ export class LifeCycleDetails extends React.Component<Props> {
                         value={this.value.postStart.httpPort}
                         onChange={value => this.value.postStart.httpPort = value}
                       />
-                    </Col>
-                    <Col span="10" offset="4">
+                    </Grid>
+                    <Grid item xs>
                       <SubTitle title={<Trans>URL</Trans>}/>
                       <Input
                         placeholder={_i18n._(t`URL`)}
                         value={this.value.postStart.url}
                         onChange={value => this.value.postStart.url = value}
                       />
-                    </Col>
-                  </Row>
-                </> : <></>}
+                    </Grid>
+                  </Grid>
+                </div> : <div></div>}
               {this.value.postStart.type == "TCP" ?
-                <>
+                <div>
                   <SubTitle title={<Trans>TCP</Trans>}/>
                   <Input
                     placeholder={_i18n._(t`TCP`)}
@@ -100,9 +97,9 @@ export class LifeCycleDetails extends React.Component<Props> {
                     value={this.value.postStart.tcpPort}
                     onChange={value => this.value.postStart.tcpPort = value}
                   />
-                </> : <></>}
+                </div> : <div></div>}
               {this.value.postStart.type == "Command" ?
-                <>
+                <div>
                   <SubTitle title={<Trans>Command</Trans>}/>
                   <Input
                     placeholder={_i18n._(t`Command`)}
@@ -110,7 +107,7 @@ export class LifeCycleDetails extends React.Component<Props> {
                     value={this.value.postStart.command}
                     onChange={value => this.value.postStart.command = value}
                   />
-                </> : <></>}
+                </div> : <div></div>}
               <SubTitle title={<Trans>PreStop</Trans>}/>
               <Select
                 formatOptionLabel={this.formatOptionLabel}
@@ -119,10 +116,10 @@ export class LifeCycleDetails extends React.Component<Props> {
                 onChange={value => this.value.preStop.type = value.value}
               />
               {this.value.preStop.type == "HTTP" ?
-                <>
+                <div>
                   <br/>
-                  <Row>
-                    <Col span="10">
+                  <Grid container spacing={5}>
+                    <Grid item xs>
                       <SubTitle title={<Trans>HTTP</Trans>}/>
                       <Input
                         placeholder={_i18n._(t`HTTP`)}
@@ -131,8 +128,8 @@ export class LifeCycleDetails extends React.Component<Props> {
                         value={this.value.preStop.httpPort}
                         onChange={value => this.value.preStop.httpPort = value}
                       />
-                    </Col>
-                    <Col span="10" offset="4">
+                    </Grid>
+                    <Grid item xs>
                       <SubTitle title={<Trans>URL</Trans>}/>
                       <Input
                         placeholder={_i18n._(t`URL`)}
@@ -140,11 +137,11 @@ export class LifeCycleDetails extends React.Component<Props> {
                         value={this.value.preStop.url}
                         onChange={value => this.value.preStop.url = value}
                       />
-                    </Col>
-                  </Row>
-                </> : <></>}
+                    </Grid>
+                  </Grid>
+                </div> : <div></div>}
               {this.value.preStop.type == "TCP" ?
-                <>
+                <div>
                   <SubTitle title={<Trans>TCP</Trans>}/>
                   <Input
                     placeholder={_i18n._(t`TCP`)}
@@ -153,9 +150,9 @@ export class LifeCycleDetails extends React.Component<Props> {
                     value={this.value.preStop.tcpPort}
                     onChange={value => this.value.preStop.tcpPort = value}
                   />
-                </> : <></>}
+                </div> : <div></div>}
               {this.value.preStop.type == "Command" ?
-                <>
+                <div>
                   <SubTitle title={<Trans>Command</Trans>}/>
                   <Input
                     placeholder={_i18n._(t`Command`)}
@@ -163,10 +160,10 @@ export class LifeCycleDetails extends React.Component<Props> {
                     value={this.value.preStop.command}
                     onChange={value => this.value.preStop.command = value}
                   />
-                </> : <></>}
-            </> : <></>
+                </div> : <div></div>}
+            </div> : <div></div>
         }
-      </>
+      </div>
     )
   }
 }

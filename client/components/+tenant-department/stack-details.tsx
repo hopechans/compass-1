@@ -7,8 +7,6 @@ import {_i18n} from "../../i18n";
 import {t, Trans} from "@lingui/macro";
 import {Input} from "../input";
 import {observable} from "mobx";
-import {Col, Row} from "../grid";
-import {Divider} from 'antd';
 import {Stack} from "../../api/endpoints";
 import {Select} from "../select";
 
@@ -23,7 +21,6 @@ export const stack: Stack = {
 interface Props<T = any> extends Partial<Props> {
   value?: T;
   themeName?: "dark" | "light" | "outlined";
-  divider?: true;
   name?: string
 
   onChange?(option: T, meta?: ActionMeta<any>): void;
@@ -69,8 +66,7 @@ export class StackDetails extends React.Component<Props> {
     const {name} = this.props
 
     return (
-      <>
-        {this.props.divider ? <Divider/> : <></>}
+      <div>
         <SubTitle className="fields-title" title={_i18n._(name)}>{this.renderAdd()}</SubTitle>
         <div className="stack">
           {this.value.map((item, index) => {
@@ -103,7 +99,7 @@ export class StackDetails extends React.Component<Props> {
                   onChange={value => this.value[index].verification = value.value}
                 />
                 {this.value[index].verification == "Certificate" ?
-                  <>
+                  <div>
                     <SubTitle title={<Trans>Token</Trans>}/>
                     <Input
                       className="item"
@@ -115,9 +111,9 @@ export class StackDetails extends React.Component<Props> {
                       }}
                     />
                     <br/>
-                  </> : <></>}
+                  </div> : <div></div>}
                 {this.value[index].verification == "Account" ?
-                  <>
+                  <div>
                     <SubTitle title={<Trans>User</Trans>}/>
                     <Input
                       className="item"
@@ -140,12 +136,12 @@ export class StackDetails extends React.Component<Props> {
                       }}
                     />
                     <br/>
-                  </> : <></>}
+                  </div> : <div></div>}
               </div>
             )
           })}
         </div>
-      </>
+      </div>
     )
   }
 }

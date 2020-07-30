@@ -7,14 +7,12 @@ import { _i18n } from "../../i18n";
 import { t, Trans } from "@lingui/macro";
 import { Input } from "../input";
 import { observable } from "mobx";
-import { Col, Row } from "../grid";
-import { Divider } from "antd";
 import { Params } from "./common";
+import {Grid} from "@material-ui/core";
 
 interface Props<T = any> extends Partial<Props> {
   value?: T;
   themeName?: "dark" | "light" | "outlined";
-  divider?: boolean;
   disable?: boolean;
 
   onChange?(option: T, meta?: ActionMeta<any>): void;
@@ -23,7 +21,6 @@ interface Props<T = any> extends Partial<Props> {
 @observer
 export class ParamsDetails extends React.Component<Props> {
   static defaultProps = {
-    divider: false,
     disable: false,
   };
 
@@ -58,17 +55,16 @@ export class ParamsDetails extends React.Component<Props> {
     const { disable } = this.props;
 
     return (
-      <>
-        {this.props.divider ? <Divider /> : <></>}
+      <div>
         <SubTitle className="fields-title" title="Params">
-          {!disable ? this.renderAdd() : <></>}
+          {!disable ? this.renderAdd() : <div></div>}
         </SubTitle>
         <div className="params">
           {this.value.map((item, index) => {
             return (
               <div key={index}>
-                <Row>
-                  <Col span="10">
+                <Grid container spacing={5}>
+                  <Grid item xs>
                     <Input
                       className="item"
                       disabled={disable}
@@ -79,8 +75,8 @@ export class ParamsDetails extends React.Component<Props> {
                         this.value[index].name = value;
                       }}
                     />
-                  </Col>
-                  <Col span="10" offset={2}>
+                  </Grid>
+                  <Grid item xs>
                     <Input
                       className="item"
                       // disabled={disable}
@@ -91,9 +87,9 @@ export class ParamsDetails extends React.Component<Props> {
                         this.value[index].value = value;
                       }}
                     />
-                  </Col>
+                  </Grid>
                   {!disable ? (
-                    <Col span="1" offset={1}>
+                    <Grid item xs>
                       <Icon
                         small
                         tooltip={<Trans>Remove Params</Trans>}
@@ -104,16 +100,16 @@ export class ParamsDetails extends React.Component<Props> {
                           e.stopPropagation();
                         }}
                       />
-                    </Col>
+                    </Grid>
                   ) : (
-                    <></>
+                    <div></div>
                   )}
-                </Row>
+                </Grid>
               </div>
             );
           })}
         </div>
-      </>
+      </div>
     );
   }
 }

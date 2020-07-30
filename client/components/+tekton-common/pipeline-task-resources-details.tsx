@@ -5,10 +5,10 @@ import {ActionMeta} from "react-select/src/types";
 import {Icon} from "../icon";
 import {t, Trans} from "@lingui/macro";
 import {Input} from "../input";
-import {PipelineTaskInputResource} from "../../api/endpoints/tekton-pipeline.api";
+import {PipelineTaskInputResource} from "../../api/endpoints";
 import {SubTitle} from "../layout/sub-title";
 import {_i18n} from "../../i18n";
-import {Col, Row} from "../grid";
+import {Grid} from "@material-ui/core";
 
 interface Props<T = any> extends Partial<Props> {
   value?: T;
@@ -47,8 +47,8 @@ export class PipelineTaskInputResourceDetail extends React.Component<Props> {
     return (
       <div className="params">
         <SubTitle className="fields-title" title={title}>
-          {
-            !disable ?? <Icon
+          {!disable ?
+            <Icon
               small
               tooltip={_i18n._(t`resource`)}
               material="add_circle_outline"
@@ -56,27 +56,25 @@ export class PipelineTaskInputResourceDetail extends React.Component<Props> {
                 this.add();
                 e.stopPropagation();
               }}
-            />
-          }
+            /> : null}
         </SubTitle>
-        {this.value.length > 0 ?? (
+        {this.value.length > 0 ?
           <>
-            <Row>
-              <Col span={12}>
+            <Grid container spacing={5}>
+              <Grid item xs>
                 <Trans>Name</Trans>
-              </Col>
-              <Col span={12}>
+              </Grid>
+              <Grid item xs>
                 <Trans>Resource</Trans>
-              </Col>
-            </Row>
+              </Grid>
+            </Grid>
             <br/>
-          </>
-        )}
+          </> : null}
         {this.value.map((item, index) => {
           return (
             <div>
-              <Row>
-                <Col span={10}>
+              <Grid container spacing={5}>
+                <Grid item xs>
                   <Input
                     placeholder={_i18n._(t`Name`)}
                     disabled={true}
@@ -86,8 +84,8 @@ export class PipelineTaskInputResourceDetail extends React.Component<Props> {
 
                     }}
                   />
-                </Col>
-                <Col span={10} offset={1}>
+                </Grid>
+                <Grid item xs>
                   <Input
                     placeholder={_i18n._(t`Value`)}
                     value={this.value[index].resource}
@@ -96,8 +94,8 @@ export class PipelineTaskInputResourceDetail extends React.Component<Props> {
                       console.log(this.value[index].resource);
                     }}
                   />
-                </Col>
-                {!disable ?? <Col span={1} offset={1}>
+                </Grid>
+                {!disable ?? <Grid item xs>
                   <Icon
                     small
                     material="remove_circle_outline"
@@ -106,8 +104,8 @@ export class PipelineTaskInputResourceDetail extends React.Component<Props> {
                       e.stopPropagation();
                     }}
                   />
-                </Col>}
-              </Row>
+                </Grid>}
+              </Grid>
               <br/>
             </div>
           )

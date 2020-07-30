@@ -2,23 +2,21 @@ import {ActionMeta} from "react-select/src/types";
 import {observer} from "mobx-react";
 import React from "react";
 import {observable} from "mobx";
-import {autobind} from "../../utils";
 import {SubTitle} from "../layout/sub-title";
 import {Icon} from "../icon";
 import {_i18n} from "../../i18n";
 import {number, t, Trans} from "@lingui/macro";
-import {Col, Row} from "../grid";
 import {Input} from "../input";
 import {Checkbox} from "../checkbox";
 import {isNumber} from "../input/input.validators";
 import {Select, SelectOption} from "../select";
 import {liveProbe, Probe} from "./common";
-import {Divider} from 'antd';
+import {Grid} from "@material-ui/core";
+
 
 interface Props<T = any> extends Partial<Props> {
   value?: T;
   themeName?: "dark" | "light" | "outlined";
-  divider?: true
 
   onChange?(option: T, meta?: ActionMeta<any>): void;
 }
@@ -39,18 +37,17 @@ export class LiveprobeDetails extends React.Component<Props> {
   formatOptionLabel = (option: SelectOption) => {
     const {value, label} = option;
     return label || (
-      <>
+      <div>
         <Icon small material="layers"/>
         {value}
-      </>
+      </div>
     );
   }
 
   render() {
 
     return (
-      <>
-        {this.props.divider ? <Divider/> : <></>}
+      <div>
         <Checkbox
           theme="light"
           label={<Trans>Liveness Probe</Trans>}
@@ -59,9 +56,9 @@ export class LiveprobeDetails extends React.Component<Props> {
         />
         {
           this.value.status ?
-            <>
-              <Row>
-                <Col span="10">
+            <div>
+              <Grid container spacing={5}>
+                <Grid item xs>
                   <SubTitle title={<Trans>Timeout</Trans>}/>
                   <Input
                     placeholder={_i18n._(t`Timeout`)}
@@ -78,8 +75,8 @@ export class LiveprobeDetails extends React.Component<Props> {
                     value={this.value.cycle}
                     onChange={value => this.value.cycle = value}
                   />
-                </Col>
-                <Col span="10" offset="4">
+                </Grid>
+                <Grid item xs>
                   <SubTitle title={<Trans>Failure</Trans>}/>
                   <Input
                     placeholder={_i18n._(t`Failure`)}
@@ -96,8 +93,8 @@ export class LiveprobeDetails extends React.Component<Props> {
                     value={this.value.delay}
                     onChange={value => this.value.delay = value}
                   />
-                </Col>
-              </Row>
+                </Grid>
+              </Grid>
               <SubTitle title={<Trans>Pattern Type</Trans>}/>
               <Select
                 formatOptionLabel={this.formatOptionLabel}
@@ -107,10 +104,10 @@ export class LiveprobeDetails extends React.Component<Props> {
               />
               {
                 this.value.pattern.type == "HTTP" ?
-                  <>
+                  <div>
                     <br/>
-                    <Row>
-                      <Col span="10">
+                    <Grid container spacing={5}>
+                      <Grid item xs>
                         <SubTitle title={<Trans>HTTP</Trans>}/>
                         <Input
                           placeholder={_i18n._(t`HTTP`)}
@@ -119,21 +116,21 @@ export class LiveprobeDetails extends React.Component<Props> {
                           value={this.value.pattern.httpPort}
                           onChange={value => this.value.pattern.httpPort = value}
                         />
-                      </Col>
-                      <Col span="10" offset="4">
+                      </Grid>
+                      <Grid item xs>
                         <SubTitle title={<Trans>URL</Trans>}/>
                         <Input
                           placeholder={_i18n._(t`URL`)}
                           value={this.value.pattern.url}
                           onChange={value => this.value.pattern.url = value}
                         />
-                      </Col>
-                    </Row>
-                  </> : <></>
+                      </Grid>
+                    </Grid>
+                  </div> : <div></div>
               }
               {
                 this.value.pattern.type == "TCP" ?
-                  <>
+                  <div>
                     <SubTitle title={<Trans>TCP</Trans>}/>
                     <Input
                       placeholder={_i18n._(t`TCP`)}
@@ -142,11 +139,11 @@ export class LiveprobeDetails extends React.Component<Props> {
                       value={this.value.pattern.tcpPort}
                       onChange={value => this.value.pattern.tcpPort = value}
                     />
-                  </> : <></>
+                  </div> : <div></div>
               }
               {
                 this.value.pattern.type == "Command" ?
-                  <>
+                  <div>
                     <SubTitle title={<Trans>Command</Trans>}/>
                     <Input
                       placeholder={_i18n._(t`Command`)}
@@ -155,11 +152,11 @@ export class LiveprobeDetails extends React.Component<Props> {
                       value={this.value.pattern.command}
                       onChange={value => this.value.pattern.command = value}
                     />
-                  </> : <></>
+                  </div> : <div></div>
               }
-            </> : <></>
+            </div> : <div></div>
         }
-      </>
+      </div>
     )
   }
 }
