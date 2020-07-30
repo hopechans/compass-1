@@ -72,7 +72,7 @@ export class Tekton extends React.Component<Props> {
   render() {
     const tabRoutes = Tekton.tabRoutes;
     return (
-      <MainLayout>
+      <MainLayout tabs={tabRoutes}>
         <Switch>
           {tabRoutes.map((route, index) => (
             <Route key={index} {...route} />
