@@ -7,22 +7,17 @@ import { t, Trans } from "@lingui/macro";
 import { _i18n } from "../../i18n";
 import { Dialog, DialogProps } from "../dialog";
 import { Wizard, WizardStep } from "../wizard";
-import { IPodContainer, Pod, podsApi, TaskRun } from "../../api/endpoints";
+import { podsApi } from "../../api/endpoints";
 import { Icon } from "../icon";
 import { Select, SelectOption } from "../select";
 import { Spinner } from "../spinner";
 import { cssNames, downloadFile, interval } from "../../utils";
-// import { taskRunStore } from "./taskrun.store";
-import moment from "moment";
-
 import ListSubheader from "@material-ui/core/ListSubheader";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import Grid from "@material-ui/core/Grid";
 import Paper from "@material-ui/core/Paper";
-// import TreeView from "react-treeview";
 
 interface Props extends Partial<DialogProps> {}
 
