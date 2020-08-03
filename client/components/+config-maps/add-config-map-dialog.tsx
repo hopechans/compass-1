@@ -12,11 +12,11 @@ import { Input } from "../input";
 import { ConfigMapDataDetails } from "./config-map-data-details";
 import { Collapse } from "../collapse";
 import { Data } from "./common";
-import { configMapApi, ConfigMap } from "../../../client/api/endpoints";
+import { configMapApi, ConfigMap } from "../../api/endpoints";
 import { NamespaceSelect } from "../+namespaces/namespace-select";
-import { _i18n } from "../../../client/i18n";
-import { IKubeObjectMetadata } from "../../../client/api/kube-object";
-import { showDetails } from "../../../client/navigation";
+import { _i18n } from "../../i18n";
+import { IKubeObjectMetadata } from "../../api/kube-object";
+import { showDetails } from "../../navigation";
 
 interface Props extends Partial<DialogProps> {
 }
@@ -69,7 +69,7 @@ export class AddConfigMapDialog extends React.Component<Props> {
       showDetails(newConfigMap.selfLink);
       this.reset();
       Notifications.ok(
-        <>ConfigMap {this.name} save succeeded</>
+        <div>ConfigMap {this.name} save succeeded</div>
       );
       this.close();
     } catch (err) {
@@ -106,7 +106,7 @@ export class AddConfigMapDialog extends React.Component<Props> {
               onChange={value => this.name = value}
             />
 
-            <Collapse panelName={<Trans>Data</Trans>}>
+            <Collapse panelName={<Trans>Data</Trans>} key={"Data"}>
               <ConfigMapDataDetails
                 value={this.data}
                 onChange={value => this.data = value}

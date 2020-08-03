@@ -7,7 +7,7 @@ import { Spinner } from "../spinner";
 import { ServiceAccountsSecret } from "./service-accounts-secret";
 import { DrawerItem, DrawerTitle } from "../drawer";
 import { disposeOnUnmount, observer } from "mobx-react";
-import { secretsStore, opsSecretsStore } from "../+config-secrets/secrets.store";
+import { secretsStore, opsSecretsStore } from "../+config-secrets";
 import { Link } from "react-router-dom";
 import { Secret, ServiceAccount, serviceAccountsApi } from "../../api/endpoints";
 import { KubeEventDetails } from "../+events/kube-event-details";
@@ -15,7 +15,7 @@ import { getDetailsUrl } from "../../navigation";
 import { KubeObjectDetailsProps } from "../kube-object";
 import { apiManager } from "../../api/api-manager";
 import { KubeObjectMeta } from "../kube-object/kube-object-meta";
-import { Row } from "../grid";
+import {Grid} from "@material-ui/core";
 
 interface Props extends KubeObjectDetailsProps<ServiceAccount> {
 }
@@ -56,11 +56,11 @@ export class ServiceAccountsDetails extends React.Component<Props> {
     return secrets.map(secret => {
       if (secret) {
         return (
-          <Row>
+          <Grid>
             <Link key={secret.getId()} to={getDetailsUrl(secret.selfLink)}>
               {secret.getName()}
             </Link>
-          </Row>
+          </Grid>
         )
       }
     }

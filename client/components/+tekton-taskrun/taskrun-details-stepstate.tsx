@@ -23,13 +23,13 @@ export class TaskRunDetailsStepState extends React.Component<Props> {
             <DrawerItem name={<Trans>Reason</Trans>}>
               <span className="text-secondary">{stepState.waiting.reason}</span>
             </DrawerItem>
-          </> : <></>}
+          </> : null}
         {stepState.running ?
           <>
             <DrawerItem name={<Trans>StartedAt</Trans>}>
               <span className="text-secondary">{stepState.running.startedAt}</span>
             </DrawerItem>
-          </> : <></>}
+          </> : null}
         {stepState.terminated ?
           <>
             <DrawerItem name={<Trans>ContainerID</Trans>}>
@@ -47,7 +47,7 @@ export class TaskRunDetailsStepState extends React.Component<Props> {
             <DrawerItem name={<Trans>FinishedAt</Trans>}>
               <span className="text-secondary">{stepState.terminated.finishedAt}</span>
             </DrawerItem>
-          </> : <></>}
+          </> : null}
       </div>
     )
   }

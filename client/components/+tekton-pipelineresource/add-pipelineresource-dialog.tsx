@@ -1,3 +1,5 @@
+import "./add-pipelineresource-dialog.scss"
+
 import { observer } from "mobx-react";
 import React from "react";
 import { observable } from "mobx";
@@ -99,9 +101,11 @@ export class AddPipelineResourceDialog extends React.Component<Props> {
     );
 
     return (
-      <Dialog isOpen={AddPipelineResourceDialog.isOpen} close={this.close}>
+      <Dialog
+        isOpen={AddPipelineResourceDialog.isOpen}
+        className="AddPipelineResourceDialog"
+        close={this.close}>
         <Wizard
-          className="AddPipelineResourceDialog"
           header={header}
           done={this.close}
         >
@@ -121,6 +125,7 @@ export class AddPipelineResourceDialog extends React.Component<Props> {
               value={this.type}
               onChange={(value) => (this.type = value.value)}
             />
+            <br/>
             <ParamsDetails
               value={this.params}
               onChange={(value) => (this.params = value)}

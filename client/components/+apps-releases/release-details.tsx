@@ -26,7 +26,7 @@ import { _i18n } from "../../i18n";
 import { themeStore } from "../../theme.store";
 import { apiManager } from "../../api/api-manager";
 import { SubTitle } from "../layout/sub-title";
-import { secretsStore } from "../+config-secrets/secrets.store";
+import { secretsStore } from "../+config-secrets";
 import { Secret } from "../../api/endpoints";
 
 interface Props {

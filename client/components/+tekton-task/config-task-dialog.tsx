@@ -1,6 +1,6 @@
 import "./config-task-dialog.scss";
 
-import { observer } from "mobx-react";
+import {observer} from "mobx-react";
 import React from "react";
 import {
   PipelineParams,
@@ -8,21 +8,22 @@ import {
   taskStep,
   resources, TaskSpecWorkSpaces, PipelineParamsDetails, ResourcesDetail, MultiTaskStepDetails,
 } from "../+tekton-common";
-import { observable, toJS } from "mobx";
-import { Dialog } from "../dialog";
-import { Wizard, WizardStep } from "../wizard";
-import { Trans, t } from "@lingui/macro";
-import { taskStore } from "./task.store";
+import {observable, toJS} from "mobx";
+import {Dialog} from "../dialog";
+import {Wizard, WizardStep} from "../wizard";
+import {Trans, t} from "@lingui/macro";
+import {taskStore} from "./task.store";
 
-import { TaskResources, Task } from "../../api/endpoints";
-import { Notifications } from "../notifications";
-import { createMuiTheme } from "@material-ui/core";
-import { WorkspaceDeclaration as Workspace } from "../../api/endpoints/tekton-task.api";
-import { ThemeProvider } from "@material-ui/core/styles";
-import { SubTitle } from "../layout/sub-title";
-import { Input } from "../input";
-import { systemName } from "../input/input.validators";
-import { _i18n } from "../../i18n";
+import {TaskResources, Task} from "../../api/endpoints";
+import {Notifications} from "../notifications";
+import {createMuiTheme} from "@material-ui/core";
+import {WorkspaceDeclaration as Workspace} from "../../api/endpoints/tekton-task.api";
+import {ThemeProvider} from "@material-ui/core/styles";
+import {SubTitle} from "../layout/sub-title";
+import {Input} from "../input";
+import {systemName} from "../input/input.validators";
+import {_i18n} from "../../i18n";
+import {Collapse} from "../collapse";
 
 interface Props<T = any> extends Partial<Props> {
   themeName?: "dark" | "light" | "outlined";
@@ -111,7 +112,7 @@ export class ConfigTaskDialog extends React.Component<Props> {
     const resources = toJS(this.value.resources);
     const steps = toJS(this.value.taskSteps);
     const workspaces = toJS(this.value.workspace);
-    const volumes = [{ name: "build-path", emptyDir: {}, }];
+    const volumes = [{name: "build-path", emptyDir: {},}];
 
     try {
       this.task.metadata.name = this.value.taskName;
@@ -120,7 +121,7 @@ export class ConfigTaskDialog extends React.Component<Props> {
       this.task.spec.workspaces = workspaces;
       this.task.spec.steps = steps;
 
-      await taskStore.update(this.task, { ...this.task });
+      await taskStore.update(this.task, {...this.task});
       Notifications.ok(<>Task {this.value.taskName} save succeeded</>);
       this.close();
     } catch (err) {
@@ -142,8 +143,7 @@ export class ConfigTaskDialog extends React.Component<Props> {
         >
           <Wizard header={header} done={this.close}>
             <WizardStep contentClass="flex gaps column" next={this.handle}>
-
-              <SubTitle title={<Trans>Task Name</Trans>} />
+              <SubTitle title={<Trans>Task Name</Trans>}/>
               <Input
                 required={true}
                 validators={systemName}
@@ -151,30 +151,42 @@ export class ConfigTaskDialog extends React.Component<Props> {
                 value={this.value.taskName}
                 onChange={(value) => (this.value.taskName = value)}
               />
-              <br />
-              
-              <TaskSpecWorkSpaces
-                value={this.value.workspace}
-                onChange={(vaule) => { this.value.workspace = vaule }}
-              />
-
-              <br />
-              <PipelineParamsDetails
-                value={this.value.pipelineParams}
-                onChange={(value) => { this.value.pipelineParams = value }}
-              />
-
-              <br />
-              <ResourcesDetail
-                value={this.value.resources}
-                onChange={(value) => { this.value.resources = value }}
-              />
-
-              <br />
-              <MultiTaskStepDetails
-                value={this.value.taskSteps}
-                onChange={(value) => { this.value.taskSteps = value }}
-              />
+              <br/>
+              <Collapse panelName={<Trans>WorkSpaces</Trans>} key={"WorkSpaces"}>
+                <TaskSpecWorkSpaces
+                  value={this.value.workspace}
+                  onChange={(vaule) => {
+                    this.value.workspace = vaule
+                  }}
+                />
+              </Collapse>
+              <br/>
+              <Collapse panelName={<Trans>PipelineParams</Trans>} key={"PipelineParams"}>
+                <PipelineParamsDetails
+                  value={this.value.pipelineParams}
+                  onChange={(value) => {
+                    this.value.pipelineParams = value
+                  }}
+                />
+              </Collapse>
+              <br/>
+              <Collapse panelName={<Trans>Resources</Trans>} key={"Resources"}>
+                <ResourcesDetail
+                  value={this.value.resources}
+                  onChange={(value) => {
+                    this.value.resources = value
+                  }}
+                />
+              </Collapse>
+              <br/>
+              <Collapse panelName={<Trans>TaskStep</Trans>} key={"TaskStep"}>
+                <MultiTaskStepDetails
+                  value={this.value.taskSteps}
+                  onChange={(value) => {
+                    this.value.taskSteps = value
+                  }}
+                />
+              </Collapse>
             </WizardStep>
           </Wizard>
         </Dialog>

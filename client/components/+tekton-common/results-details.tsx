@@ -5,7 +5,6 @@ import {Input} from "../input";
 import {ActionMeta} from "react-select/src/types";
 import {result, Result} from "./common";
 import {SubTitle} from "../layout/sub-title";
-import {Divider} from "antd";
 import {Icon} from "../icon";
 import {t, Trans} from "@lingui/macro";
 import {_i18n} from "../../i18n";
@@ -13,7 +12,6 @@ import {_i18n} from "../../i18n";
 interface Props<T = any> extends Partial<Props> {
   value?: T;
   themeName?: "dark" | "light" | "outlined";
-  divider?: true;
 
   onChange?(option: T, meta?: ActionMeta<any>): void;
 }
@@ -36,7 +34,7 @@ export class ResultsDetails extends React.Component<Props> {
       <Icon
         small
         tooltip={_i18n._(t`Results`)}
-        material="add_circle_outline"
+        material="edit"
         onClick={(e) => {
           this.add();
           e.stopPropagation();
@@ -47,19 +45,18 @@ export class ResultsDetails extends React.Component<Props> {
 
   render() {
     return (
-      <>
-        {this.props.divider ? <Divider/> : <></>}
+      <div>
         <SubTitle className="fields-title" title="Results">{this.renderAdd()}</SubTitle>
         <div className="Results">
           {this.value.map((item, index) => {
             return (
-              <>
+              <div>
                 <div key={index}>
                   <Icon
                     small
                     tooltip={<Trans>Remove Result</Trans>}
                     className="remove-icon"
-                    material="remove_circle_outline"
+                    material="clear"
                     onClick={(e) => {
                       this.remove(index);
                       e.stopPropagation();
@@ -81,11 +78,11 @@ export class ResultsDetails extends React.Component<Props> {
                   />
                 </div>
                 <br/>
-              </>
+              </div>
             )
           })}
         </div>
-      </>
+      </div>
     )
   }
 }

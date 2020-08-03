@@ -17,7 +17,6 @@ import {Notifications} from "../notifications";
 import {NamespaceSelect} from "../+namespaces/namespace-select";
 import {Select, SelectOption} from "../select";
 import {StackDetails} from "./stack-details";
-import {Divider} from "antd";
 
 interface Props extends Partial<DialogProps> {
 }
@@ -127,13 +126,9 @@ export class ConfigDepartmentDialog extends React.Component<Props> {
               />
             </div>
             <br/>
-            <div className="git">
-              <StackDetails name={"Git"} value={this.gits} onChange={value => this.gits = value}/>
-            </div>
+            <StackDetails name={"Git"} value={this.gits} onChange={value => this.gits = value}/>
             <br/>
-            <div className="register">
-              <StackDetails name={"Register"} value={this.registers} onChange={value => this.registers = value}/>
-            </div>
+            <StackDetails name={"Register"} value={this.registers} onChange={value => this.registers = value}/>
           </WizardStep>
         </Wizard>
       </Dialog>

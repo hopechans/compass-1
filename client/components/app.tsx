@@ -17,7 +17,7 @@ import { clusterRoute, clusterURL } from "./+cluster";
 import { KubeConfigDialog } from "./kubeconfig-dialog";
 import { Nodes, nodesRoute } from "./+nodes";
 import { Workloads, workloadsRoute, workloadsURL } from "./+workloads";
-import { Tenant, tenantURL, tenantRoute } from "./+tenant";
+import { Tenant, tenantRoute } from "./+tenant";
 import { Namespaces, namespacesRoute } from "./+namespaces";
 import { Network, networkRoute } from "./+network";
 import { Storage, storageRoute } from "./+storage";
@@ -29,14 +29,14 @@ import { Tekton, tektonRoute } from "./+tekton";
 import { Ovn, ovnRoute } from "./+ovn";
 import { eventRoute } from "./+events";
 import { ErrorBoundary } from "./error-boundary";
-import { Apps, appsRoute, appsURL } from "./+apps";
+import { Apps, appsRoute } from "./+apps";
 import { KubeObjectDetails } from "./kube-object";
 import { AddRoleBindingDialog } from "./+user-management-roles-bindings";
 import { PodLogsDialog } from "./+workloads-pods/pod-logs-dialog";
 import { DeploymentScaleDialog } from "./+workloads-deployments/deployment-scale-dialog";
 import { CustomResources } from "./+custom-resources/custom-resources";
 import { crdRoute } from "./+custom-resources";
-import 'antd/dist/antd.css';
+
 @observer
 class App extends React.Component {
   static rootElem = document.getElementById('app');

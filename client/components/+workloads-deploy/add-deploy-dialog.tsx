@@ -1,23 +1,22 @@
 import "./add-deploy-dialog.scss"
 
 import React from "react";
-import { observer } from "mobx-react";
-import { Dialog, DialogProps } from "../dialog";
-import { observable } from "mobx";
-import { Trans } from "@lingui/macro";
-import { Wizard, WizardStep } from "../wizard";
-import { Container, container, MultiContainerDetails } from "../+deploy-container";
-import { Collapse } from "../collapse";
-import { deployService, DeployServiceDetails, Service } from "../+deploy-service";
-import { MultiVolumeClaimDetails, VolumeClaimTemplate } from "../+deploy-volumeclaim";
-import { app, App } from "../+deploy-app";
-import { AppDetails } from "../+deploy-app";
-import { deployStore } from "./deploy.store";
-import { Notifications } from "../notifications";
-import { configStore } from "../../config.store";
+import {observer} from "mobx-react";
+import {Dialog, DialogProps} from "../dialog";
+import {observable} from "mobx";
+import {Trans} from "@lingui/macro";
+import {Wizard, WizardStep} from "../wizard";
+import {Container, container, MultiContainerDetails} from "../+deploy-container";
+import {deployService, DeployServiceDetails, Service} from "../+deploy-service";
+import {MultiVolumeClaimDetails, VolumeClaimTemplate} from "../+deploy-volumeclaim";
+import {app, App} from "../+deploy-app";
+import {AppDetails} from "../+deploy-app";
+import {deployStore} from "./deploy.store";
+import {Notifications} from "../notifications";
+import {configStore} from "../../config.store";
+import {Collapse} from "../collapse";
 
 interface Props extends DialogProps {
-
 }
 
 @observer
@@ -50,7 +49,7 @@ export class AddDeployDialog extends React.Component<Props> {
 
   addDeployDialog = async () => {
 
-    const { app, containers, service, volumeClaims } = this;
+    const {app, containers, service, volumeClaims} = this;
     const name = app.name + '-' + Math.floor(Date.now() / 1000)
 
     try {
@@ -84,29 +83,28 @@ export class AddDeployDialog extends React.Component<Props> {
 
     return (
       <Dialog
+        className="AddDeployDialog"
         isOpen={AddDeployDialog.isOpen}
         close={this.close}
       >
-        <Wizard className="AddDeployDialog" header={header} done={this.close}>
-          <WizardStep contentClass="flex gaps column" next={this.addDeployDialog}>
+        <Wizard className={"AddDeployWizard"} header={header} done={this.close}>
+          <WizardStep className={"AddDeployWizardStep"} contentClass="flex gaps column" next={this.addDeployDialog}>
             <div className="init-form">
-              <Collapse panelName={<Trans>Base</Trans>}>
-                <AppDetails value={this.app} onChange={value => this.app = value} />
-              </Collapse>
-              <br />
-              <Collapse panelName={<Trans>Containers</Trans>}>
+              <AppDetails value={this.app} onChange={value => this.app = value}/>
+              <br/>
+              <Collapse panelName={<Trans>Containers</Trans>} key={"containers"}>
                 <MultiContainerDetails value={this.containers}
-                  onChange={value => this.containers = value} />
+                                       onChange={value => this.containers = value}/>
               </Collapse>
-              <br />
-              <Collapse panelName={<Trans>Service</Trans>}>
+              <br/>
+              <Collapse panelName={<Trans>Service</Trans>} key={"services"}>
                 <DeployServiceDetails value={this.service}
-                  onChange={value => this.service = value} />
+                                      onChange={value => this.service = value}/>
               </Collapse>
-              <br />
-              <Collapse panelName={<Trans>Volume</Trans>}>
+              <br/>
+              <Collapse panelName={<Trans>Volume</Trans>} key={"volume"}>
                 <MultiVolumeClaimDetails value={this.volumeClaims}
-                  onChange={value => this.volumeClaims = value} />
+                                         onChange={value => this.volumeClaims = value}/>
               </Collapse>
             </div>
           </WizardStep>

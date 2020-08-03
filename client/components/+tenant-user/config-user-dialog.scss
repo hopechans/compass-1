@@ -1,8 +1,7 @@
 .ConfigUserDialog {
   .Wizard {
-    --wizard-width: 40vw;
-    --wizard-content-height: 50vh;
-    --wizard-content-max-height: 70vh;
+    width: 40vw;
+    height: 70vh;
   }
 
   .WizardStep {

@@ -41,48 +41,31 @@ export class TaskStepDetails extends React.Component<Props> {
           value={this.value.name}
           onChange={(value) => (this.value.name = value)}
         />
-        <br />
         <SubTitle title={"Image"} />
         <Input
           placeholder={"Image"}
           value={this.value.image}
           onChange={(value) => (this.value.image = value)}
         />
-        <br />
         <SubTitle title={"Working Directory"} />
         <Input
           placeholder={_i18n._("Working Directory")}
           value={this.value.workingDir}
           onChange={(value) => (this.value.workingDir = value)}
         />
-        <br />
+        <br/>
         <CommandDetails
           value={this.value.command}
           onChange={(value) => (this.value.command = value)}
         />
-        <br />
         <ArgsDetails
           value={this.value.args}
           onChange={(value) => (this.value.args = value)}
         />
-        <br />
         <EvnVarDetails
           value={this.value.env}
           onChange={(value) => (this.value.env = value)}
         />
-        <br />
-        {/* <Divider />
-        <br />
-        <WorkspacesDetails
-          value={this.value.workspaces}
-          onChange={(value) => (this.value.workspaces = value)}
-        /> */}
-        {/* <Divider />
-        <br />
-        <ResultsDetails
-          value={this.value.results}
-          onChange={(value) => (this.value.results = value)}
-        /> */}
         <SubTitle title={<Trans>Script</Trans>} />
         <Input
           multiLine={true}

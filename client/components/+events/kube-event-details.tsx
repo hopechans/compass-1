@@ -30,7 +30,7 @@ export class KubeEventDetails extends React.Component<Props> {
     const events = eventStore.getEventsByObject(object);
     if (!events.length) {
       return (
-        <></>
+        null
       )
     }
     return (

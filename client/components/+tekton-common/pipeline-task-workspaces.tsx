@@ -4,17 +4,15 @@ import { observable } from "mobx";
 import { Input } from "../input";
 import { ActionMeta } from "react-select/src/types";
 import { SubTitle } from "../layout/sub-title";
-import { Divider } from "antd";
 import { Icon } from "../icon";
 import { t, Trans } from "@lingui/macro";
 import { _i18n } from "../../i18n";
-import { WorkspacePipelineTaskBinding } from "../../api/endpoints/tekton-pipeline.api";
-import { Col, Row } from "../grid";
+import { WorkspacePipelineTaskBinding } from "../../api/endpoints";
+import {Grid} from "@material-ui/core";
 
 interface Props<T = any> extends Partial<Props> {
   value?: T;
   themeName?: "dark" | "light" | "outlined";
-  divider?: true;
 
   onChange?(option: T, meta?: ActionMeta<any>): void;
 }
@@ -41,7 +39,7 @@ export class PipelineTaskWorkSpaces extends React.Component<Props> {
       <Icon
         small
         tooltip={_i18n._(t`WorkSpaces`)}
-        material="add_circle_outline"
+        material="edit"
         onClick={(e) => {
           this.add();
           e.stopPropagation();
@@ -52,25 +50,24 @@ export class PipelineTaskWorkSpaces extends React.Component<Props> {
 
   render() {
     return (
-      <>
-        {this.props.divider ? <Divider /> : <></>}
+      <div>
         <SubTitle className="fields-title" title="WorkSpaces">
           {this.renderAdd()}
         </SubTitle>
         <div className="Workspaces">
           {this.value.map((item, index) => {
             return (
-              <>
+              <div>
                 <div key={index}>
-                  <Row>
-                    <Col span={10}>
+                  <Grid container spacing={5}>
+                    <Grid item xs>
                       <Input
                         placeholder={"Name"}
                         value={this.value[index].name}
                         onChange={(value) => (this.value[index].name = value)}
                       />
-                    </Col>
-                    <Col span={10} offset={1}>
+                    </Grid>
+                    <Grid item xs>
                       <Input
                         placeholder={"workspace"}
                         value={this.value[index].workspace}
@@ -78,28 +75,27 @@ export class PipelineTaskWorkSpaces extends React.Component<Props> {
                           (this.value[index].workspace = value)
                         }
                       />
-                    </Col>
-
-                    <Col span={1} offset={1}>
+                    </Grid>
+                    <Grid item xs>
                       <Icon
                         small
                         tooltip={<Trans>Remove Workspaces</Trans>}
                         className="remove-icon"
-                        material="remove_circle_outline"
+                        material="clear"
                         onClick={(e) => {
                           this.remove(index);
                           e.stopPropagation();
                         }}
                       />
-                    </Col>
-                  </Row>
+                    </Grid>
+                  </Grid>
                 </div>
                 <br />
-              </>
+              </div>
             );
           })}
         </div>
-      </>
+      </div>
     );
   }
 }

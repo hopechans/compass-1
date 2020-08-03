@@ -116,8 +116,10 @@ a {
   color:$textColorPrimary;
   cursor: pointer;
 
+  text-decoration: none ;
+
   [href] {
-    text-decoration: underline;
+    text-decoration: none;
   }
 
   //&:focus {
@@ -195,4 +197,10 @@ a {
 input:-webkit-autofill {
   -webkit-animation-name: autofill-remove-bgc;
   -webkit-animation-fill-mode: both;
+}
+
+.editIcon {
+  > span {
+    line-height: 0.7 !important ;
+  }
 }

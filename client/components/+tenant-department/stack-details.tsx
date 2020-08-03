@@ -7,10 +7,26 @@ import {_i18n} from "../../i18n";
 import {t, Trans} from "@lingui/macro";
 import {Input} from "../input";
 import {observable} from "mobx";
-import {Col, Row} from "../grid";
-import {Divider} from 'antd';
 import {Stack} from "../../api/endpoints";
 import {Select} from "../select";
+import {stopPropagation} from "../../utils";
+import {createMuiTheme, Grid, Paper} from "@material-ui/core";
+import {ThemeProvider} from "@material-ui/core/styles";
+
+const theme = createMuiTheme({
+  overrides: {
+    MuiExpansionPanelDetails: {
+      root: {
+        display: "gird",
+      },
+    },
+    MuiPaper: {
+      root: {
+        color: "",
+      },
+    },
+  },
+});
 
 export const stack: Stack = {
   address: "",
@@ -23,7 +39,6 @@ export const stack: Stack = {
 interface Props<T = any> extends Partial<Props> {
   value?: T;
   themeName?: "dark" | "light" | "outlined";
-  divider?: true;
   name?: string
 
   onChange?(option: T, meta?: ActionMeta<any>): void;
@@ -50,102 +65,110 @@ export class StackDetails extends React.Component<Props> {
     ]
   }
 
-  renderAdd() {
+  rStack(index: number) {
     return (
-      <Icon
-        small
-        tooltip={_i18n._(t`Stack`)}
-        material="add_circle_outline"
-        onClick={(e) => {
-          this.add();
-          e.stopPropagation();
-        }}
-      />
+      <>
+        <br/>
+        <Paper elevation={3} style={{padding: 25}}>
+          <Grid container spacing={1}>
+            <Grid item xs={11}>
+              <SubTitle title={<Trans>Address</Trans>}/>
+              <Input
+                className="item"
+                placeholder={_i18n._(t`Address`)}
+                title={this.value[index].address}
+                value={this.value[index].address}
+                onChange={value => {
+                  this.value[index].address = value
+                }}
+              />
+              <SubTitle title={<Trans>Verification</Trans>}/>
+              <Select
+                options={this.Options}
+                value={this.value[index].verification}
+                onChange={value => this.value[index].verification = value.value}
+              />
+              {this.value[index].verification == "Certificate" ?
+                <>
+                  <SubTitle title={<Trans>Token</Trans>}/>
+                  <Input
+                    className="item"
+                    placeholder={_i18n._(t`Token`)}
+                    title={this.value[index].token}
+                    value={this.value[index].token}
+                    onChange={value => {
+                      this.value[index].token = value
+                    }}
+                  />
+                  <br/>
+                </> : null}
+              {this.value[index].verification == "Account" ?
+                <>
+                  <SubTitle title={<Trans>User</Trans>}/>
+                  <Input
+                    className="item"
+                    placeholder={_i18n._(t`User`)}
+                    title={this.value[index].user}
+                    value={this.value[index].user}
+                    onChange={value => {
+                      this.value[index].user = value
+                    }}
+                  />
+                  <SubTitle title={<Trans>Password</Trans>}/>
+                  <Input
+                    className="item"
+                    type="password"
+                    placeholder={_i18n._(t`Password`)}
+                    title={this.value[index].password}
+                    value={this.value[index].password}
+                    onChange={value => {
+                      this.value[index].password = value
+                    }}
+                  />
+                  <br/>
+                </> : null}
+            </Grid>
+            <Grid item xs style={{textAlign: "center"}}>
+              <Icon
+                style={{margin: "0.8vw, 0.9vh"}}
+                small
+                tooltip={_i18n._(t`Remove Environment`)}
+                className="remove-icon"
+                material="clear"
+                onClick={(e) => {
+                  this.remove(index);
+                  e.stopPropagation();
+                }}
+              />
+            </Grid>
+          </Grid>
+        </Paper>
+      </>
     )
   }
 
   render() {
 
     const {name} = this.props
-
     return (
-      <>
-        {this.props.divider ? <Divider/> : <></>}
-        <SubTitle className="fields-title" title={_i18n._(name)}>{this.renderAdd()}</SubTitle>
-        <div className="stack">
-          {this.value.map((item, index) => {
-            return (
-              <div key={index}>
-                <Icon
-                  small
-                  tooltip={_i18n._(t`Remove Stack`)}
-                  className="remove-icon"
-                  material="remove_circle_outline"
-                  onClick={(e) => {
-                    this.remove(index);
-                    e.stopPropagation()
-                  }}
-                />
-                <SubTitle title={<Trans>Address</Trans>}/>
-                <Input
-                  className="item"
-                  placeholder={_i18n._(t`Address`)}
-                  title={this.value[index].address}
-                  value={this.value[index].address}
-                  onChange={value => {
-                    this.value[index].address = value
-                  }}
-                />
-                <SubTitle title={<Trans>Verification</Trans>}/>
-                <Select
-                  options={this.Options}
-                  value={this.value[index].verification}
-                  onChange={value => this.value[index].verification = value.value}
-                />
-                {this.value[index].verification == "Certificate" ?
-                  <>
-                    <SubTitle title={<Trans>Token</Trans>}/>
-                    <Input
-                      className="item"
-                      placeholder={_i18n._(t`Token`)}
-                      title={this.value[index].token}
-                      value={this.value[index].token}
-                      onChange={value => {
-                        this.value[index].token = value
-                      }}
-                    />
-                    <br/>
-                  </> : <></>}
-                {this.value[index].verification == "Account" ?
-                  <>
-                    <SubTitle title={<Trans>User</Trans>}/>
-                    <Input
-                      className="item"
-                      placeholder={_i18n._(t`User`)}
-                      title={this.value[index].user}
-                      value={this.value[index].user}
-                      onChange={value => {
-                        this.value[index].user = value
-                      }}
-                    />
-                    <SubTitle title={<Trans>Password</Trans>}/>
-                    <Input
-                      className="item"
-                      type="password"
-                      placeholder={_i18n._(t`Password`)}
-                      title={this.value[index].password}
-                      value={this.value[index].password}
-                      onChange={value => {
-                        this.value[index].password = value
-                      }}
-                    />
-                    <br/>
-                  </> : <></>}
-              </div>
-            )
-          })}
-        </div>
-      </>
+      <ThemeProvider theme={theme}>
+        <SubTitle
+          title={
+            <>
+              {_i18n._(name)}
+              &nbsp;&nbsp;
+              <Icon material={"edit"} className={"editIcon"} onClick={event => {
+                stopPropagation(event);
+                this.add()
+              }} small/>
+            </>
+          }>
+        </SubTitle>
+        {this.value.map((item, index) => {
+          return this.rStack(index)
+        })}
+      </ThemeProvider>
     )
   }
+
 }

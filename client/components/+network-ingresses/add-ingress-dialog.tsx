@@ -70,18 +70,12 @@ export class AddIngressDialog extends React.Component<Props> {
     return (
       <Dialog
         {...dialogProps}
+        className="AddIngressDialog"
         isOpen={AddIngressDialog.isOpen}
         close={this.close}
       >
-        <Wizard className="AddIngressDialog" header={header} done={this.close}>
+        <Wizard header={header} done={this.close}>
           <WizardStep contentClass="flow column" nextLabel={<Trans>Create</Trans>} next={this.createIngress}>
-            <SubTitle title={<Trans>Namespace</Trans>}/>
-            <NamespaceSelect
-              themeName="light"
-              title={"namespace"}
-              value={this.namespace}
-              onChange={({value}) => this.namespace = value}
-            />
             <SubTitle title={<Trans>Name</Trans>}/>
             <Input
               required={true}
@@ -89,18 +83,25 @@ export class AddIngressDialog extends React.Component<Props> {
               value={this.name}
               onChange={value => this.name = value}
             />
-            <Collapse panelName={<Trans>Rules</Trans>}>
+            <SubTitle title={<Trans>Namespace</Trans>}/>
+            <NamespaceSelect
+              themeName="light"
+              title={"namespace"}
+              value={this.namespace}
+              onChange={({value}) => this.namespace = value}
+            />
+            <Collapse panelName={<Trans>Rules</Trans>} key={"rules"}>
               <MultiRuleDetails
                 value={this.rules}
                 onChange={value => this.rules = value}/>
             </Collapse>
-            <Collapse panelName={<Trans>Backend</Trans>}>
+            <Collapse panelName={<Trans>Backend</Trans>} key={"backend"}>
               <BackendDetails
                 value={this.backend}
                 onChange={value => this.backend = value}
               />
             </Collapse>
-            <Collapse panelName={<Trans>Transport Layer Security</Trans>}>
+            <Collapse panelName={<Trans>Transport Layer Security</Trans>} key={"tls"}>
               <TlsDetails
                 value={this.tls}
                 onChange={value => this.tls = value}

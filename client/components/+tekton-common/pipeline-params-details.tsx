@@ -8,8 +8,9 @@ import {Input} from "../input";
 import {PipelineParams, pipelineParams} from "./common";
 import {SubTitle} from "../layout/sub-title";
 import {_i18n} from "../../i18n";
-import {Col, Row} from "../grid";
 import {Select} from "../select";
+import {Grid} from "@material-ui/core";
+import {stopPropagation} from "../../utils";
 
 interface Props<T = any> extends Partial<Props> {
   value?: T;
@@ -32,7 +33,10 @@ export class PipelineParamsDetails extends React.Component<Props> {
   @observable value: PipelineParams[] = this.props.value || [];
 
   get Options() {
-    return ["string", "array"];
+    return [
+      "string",
+      "array"
+    ];
   }
 
   add = () => {
@@ -43,90 +47,95 @@ export class PipelineParamsDetails extends React.Component<Props> {
     this.value.splice(index, 1);
   };
 
-  render() {
-
-    const {titleDisplay, disable} = this.props;
-
+  rTab() {
     return (
-      <div className="params">
-        <SubTitle className="fields-title" title={titleDisplay ? <Trans>Pipeline Params</Trans> : ""}>
-          {
-            !disable ?
+      <>
+        <br/>
+        <Grid container spacing={5}>
+          <Grid item xs={3}>
+            <Trans>Name</Trans>
+          </Grid>
+          <Grid item xs={4}>
+            <Trans>Type</Trans>
+          </Grid>
+          <Grid item xs={3}>
+            <Trans>Default</Trans>
+          </Grid>
+        </Grid>
+        <br/>
+      </>
+    )
+  }
+
+  rForm(index: number, disable: boolean) {
+    return (
+      <>
+        <Grid container spacing={5}>
+          <Grid item xs={3}>
+            <Input
+              disabled={disable}
+              value={this.value[index].name}
+              onChange={(value) => (this.value[index].name = value)}
+            />
+          </Grid>
+          <Grid item xs={4}>
+            <Select
+              isDisabled={disable}
+              value={this.value[index].type}
+              options={this.Options}
+              onChange={(value) => {
+                let result = toJS(value);
+                this.value[index].type = result.value;
+              }}
+            />
+          </Grid>
+          <Grid item xs={3}>
+            <Input
+              disabled={disable}
+              value={this.value[index].default}
+              onChange={(value) => (this.value[index].default = value)}
+            />
+          </Grid>
+          {!disable ?
+            <Grid item xs>
               <Icon
                 small
-                tooltip={_i18n._(t`Add Pipeline Params`)}
-                material="add_circle_outline"
-                onClick={(e) => {
-                  this.add();
-                  e.stopPropagation();
+                tooltip={_i18n._(t`Remove`)}
+                className="remove-icon"
+                material="clear"
+                onClick={(event) => {
+                  this.remove(index);
+                  stopPropagation(event)
                 }}
-              /> : <></>
-          }
+              />
+            </Grid> : null}
+        </Grid>
+        <br/>
+      </>
+    )
+  }
+
+  render() {
+    const {titleDisplay, disable} = this.props;
+    return (
+      <div className="params">
+        <SubTitle className="fields-title" title={
+          <>
+            {titleDisplay ? <Trans>Pipeline Params</Trans> : ""}
+            {!disable ?
+              <>
+                &nbsp;&nbsp;
+                <Icon material={"edit"} className={"editIcon"} onClick={event => {
+                  stopPropagation(event);
+                  this.add()
+                }} small/>
+              </> : null}
+          </>
+        }>
         </SubTitle>
-        {this.value.length > 0 ? (
-          <div>
-            <Row>
-              <Col span={7}>
-                <Trans>Name</Trans>
-              </Col>
-              <Col span={7} offset={1}>
-                <Trans>Type</Trans>
-              </Col>
-              <Col span={7} offset={1}>
-                <Trans>Default</Trans>
-              </Col>
-            </Row>
-            <br/>
-          </div>
-        ) : (
-          <></>
-        )}
+        {this.value.length > 0 ? this.rTab() : null}
         {this.value.map((item, index) => {
-          return (
-            <div>
-              <Row>
-                <Col span={7}>
-                  <Input
-                    disabled={disable}
-                    value={this.value[index].name}
-                    onChange={(value) => (this.value[index].name = value)}
-                  />
-                </Col>
-                <Col span={7} offset={1}>
-                  <Select
-                    isDisabled={disable}
-                    value={this.value[index].type}
-                    options={this.Options}
-                    onChange={(value) => {
-                      let result = toJS(value);
-                      this.value[index].type = result.value;
-                    }}
-                  />
-                </Col>
-                <Col span={6} offset={1}>
-                  <Input
-                    disabled={disable}
-                    value={this.value[index].default}
-                    onChange={(value) => (this.value[index].default = value)}
-                  />
-                </Col>
-                {
-                  !disable ?
-                    <Col span={1} offset={1}>
-                      <Icon
-                        small
-                        material="remove_circle_outline"
-                        onClick={(e) => {
-                          this.remove(index);
-                          e.stopPropagation();
-                        }}
-                      />
-                    </Col> : <></>
-                }
-              </Row>
-              <br/>
-            </div>
-          );
+          return this.rForm(index, disable);
         })}
       </div>
     );

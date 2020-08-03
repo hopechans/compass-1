@@ -1,70 +1,69 @@
 import React from 'react'
 import axios from 'axios'
 import store from 'store'
-import { computed, observable } from "mobx";
-import { observer } from "mobx-react";
-import { t,Trans } from "@lingui/macro";
-import { message, Alert} from 'antd';
-import { SubTitle } from '../layout/sub-title'
-import { cssNames } from "../../utils";
-import { systemName } from "../input/input.validators";
-import { configStore } from "../../config.store";
-import { themeStore } from "../../theme.store";
-import { Notifications } from "../notifications";
-import { withRouter, RouteComponentProps } from 'react-router';
-import { crdStore } from '../+custom-resources'
-import { _i18n } from "../../i18n";
-import { Input } from '../input'
-import { createStorage } from "../../utils";
-import { Button } from '../button'
+import {observable} from "mobx";
+import {observer} from "mobx-react";
+import {t, Trans} from "@lingui/macro";
+import Alert from "@material-ui/lab/Alert";
+import {SubTitle} from '../layout/sub-title'
+import {cssNames} from "../../utils";
+import {systemName} from "../input/input.validators";
+import {configStore} from "../../config.store";
+import {themeStore} from "../../theme.store";
+import {Notifications} from "../notifications";
+import {withRouter, RouteComponentProps} from 'react-router';
+import {crdStore} from '../+custom-resources'
+import {_i18n} from "../../i18n";
+import {Input} from '../input'
+import {Button} from '../button'
 import './login.scss'
+import {Paper, Slide} from "@material-ui/core";
 
 interface Props extends RouteComponentProps {
   history: any
 }
+
 @observer
-class LoginComponet extends React.Component<Props>{
+class LoginComponet extends React.Component<Props> {
 
   @observable username = ''
   @observable password = ''
   @observable loading = false
 
-  onKeyDown = (e:React.KeyboardEvent) => {
-    if(e.keyCode === 13) {
+  onKeyDown = (e: React.KeyboardEvent) => {
+    if (e.keyCode === 13) {
       this.onFinish()
     }
   }
 
   onFinish = () => {
-    if(!this.username || !this.password){
+    if (!this.username || !this.password) {
       Notifications.error('Please enter account or password')
       return
     }
     this.loading = true
-    axios.post('/user-login', {username:this.username,password:this.password})
-      .then((res: any) => {
-        configStore.isLoaded = true
-        configStore.setConfig(res.data)
-        store.set('u_config',res.data)
-        crdStore.loadAll()
-        Notifications.ok('Login Success')
-        const hide = message.loading('Loading..', 1500);
-        setTimeout(hide, 1500);
-        this.loading = true
-        setTimeout(() => {
-          if (res.data.isClusterAdmin === true) {
-            this.props.history.push('/cluster')
-          }else{
-            this.props.history.push('/workloads')
-          }
-          this.loading = false
-        }, 500)
-      }).catch(err => {
-        if(err && err.response){
-          Notifications.error(err.response.data)
+    axios.post('/user-login', {username: this.username, password: this.password})
+    .then((res: any) => {
+      configStore.isLoaded = true
+      configStore.setConfig(res.data)
+      store.set('u_config', res.data)
+      crdStore.loadAll()
+      Notifications.ok('Login Success')
+      this.loading = true
+      setTimeout(() => {
+        if (res.data.isClusterAdmin === true) {
+          this.props.history.push('/cluster')
+        } else {
+          this.props.history.push('/workloads')
         }
         this.loading = false
-      })
+      }, 500)
+    }).catch(err => {
+      if (err && err.response) {
+        Notifications.error(err.response.data)
+      }
+      this.loading = false
+    })
   };
 
   render() {
@@ -74,9 +73,15 @@ class LoginComponet extends React.Component<Props>{
     return (
       <div className={cssNames("login-main", themeStore.activeTheme.type)}>
 
+        <Slide direction={"down"} in={this.loading} style={{ marginTop: "12px"}}>
+          <Paper elevation={8} style={{ paddingLeft: "2vw", paddingTop: "1vh", width: "14vw", height:"4vh", flexWrap: 'wrap' }}>
+              Loading......
+            </Paper>
+        </Slide>
+
         <div className="login-header">
           <div className="login-title">
-            <img src={logoImg} />
+            <img src={logoImg}/>
             <div className="text">Compass</div>
           </div>
           <div className="login-sub-title">Compass Cloud Platform</div>
@@ -84,33 +89,34 @@ class LoginComponet extends React.Component<Props>{
 
         <div className="login-content">
           <div>
-              <SubTitle title={<Trans>Username</Trans>}/>
-              <Input
-                maxLength={30}
-                placeholder={_i18n._(t`Input your username`)}
-                value={this.username}
-                iconLeft="person"
-                validators={systemName}
-                onChange={v => this.username = v}
-              />
-              <SubTitle title={<Trans>Password</Trans>}/>
-              <Input
-                maxLength={30}
-                placeholder={_i18n._(t`Input your password`)}
-                value={this.password}
-                iconLeft="lock"
-                onChange={v => this.password = v}
-                onKeyDown={e=>this.onKeyDown(e)}
-                type="password"
-              />
-              <Button className="login-btn-submit" primary waiting={this.loading} onClick={this.onFinish} >
-                Submit
-              </Button>
-            </div>
+            <SubTitle title={<Trans>Username</Trans>}/>
+            <Input
+              maxLength={30}
+              placeholder={_i18n._(t`Input your username`)}
+              value={this.username}
+              iconLeft="person"
+              validators={systemName}
+              onChange={v => this.username = v}
+            />
+            <SubTitle title={<Trans>Password</Trans>}/>
+            <Input
+              maxLength={30}
+              placeholder={_i18n._(t`Input your password`)}
+              value={this.password}
+              iconLeft="lock"
+              onChange={v => this.password = v}
+              onKeyDown={e => this.onKeyDown(e)}
+              type="password"
+            />
+            <Button className="login-btn-submit" primary waiting={this.loading} onClick={this.onFinish}>
+              Submit
+            </Button>
+          </div>
 
         </div>
         <div className="footer">
-          <Alert message="Only supports Chrome browser" showIcon type="warning" closable style={{ marginTop: '50px' }} />
+          <Alert style={{marginTop: '20px', padding: "2px 70px 2px"}} severity="warning">Only supports Chrome
+            browser</Alert>
         </div>
       </div>
     );

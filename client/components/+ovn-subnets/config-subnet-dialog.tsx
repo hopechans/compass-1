@@ -193,7 +193,7 @@ export class ConfigSubNetDialog extends React.Component<Props> {
                                     <AllowSubnets
                                         value={this.allowSubnets} onChange={(value => { this.allowSubnets = value })}
                                     />
-                                </> : <></>
+                                </> : null
                         }
                     </WizardStep>
                 </Wizard>

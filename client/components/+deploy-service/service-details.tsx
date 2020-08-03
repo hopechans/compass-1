@@ -1,17 +1,25 @@
+import "./service-details.scss";
+
 import React from "react";
 import {observer} from "mobx-react";
-import {Row, Col} from "../grid";
 import {SubTitle} from "../layout/sub-title";
 import {t, Trans} from "@lingui/macro";
 import {Select, SelectOption} from "../select";
 import {Icon} from "../icon";
 import {_i18n} from "../../i18n";
 import {Input} from "../input";
-import {isNumber, systemName} from "../input/input.validators";
+import {isNumber} from "../input/input.validators";
 import {observable} from "mobx";
 import {deployPort, deployService, Service} from "./common";
 import {ActionMeta} from "react-select/src/types";
+import {Tab, Tabs, AppBar, Paper, Badge, Divider, Grid, FormControlLabel, Switch} from "@material-ui/core";
+import {stopPropagation} from "../../utils";
 
+interface TabPanelProps {
+  children?: React.ReactNode;
+  index: any;
+  value: any;
+}
 
 export interface Props<T = any> extends Partial<Props> {
   value?: T;
@@ -25,17 +33,7 @@ export interface Props<T = any> extends Partial<Props> {
 export class DeployServiceDetails extends React.Component<Props> {
 
   @observable value: Service = this.props.value || deployService;
-
-  formatOptionLabel = (option: SelectOption) => {
-    const {showIcons} = this.props;
-    const {value, label} = option;
-    return label || (
-      <>
-        {showIcons && <Icon small material="layers"/>}
-        {value}
-      </>
-    );
-  }
+  @observable Index: number = 0;
 
   get typeOptions() {
     return [
@@ -60,95 +58,107 @@ export class DeployServiceDetails extends React.Component<Props> {
     this.value.ports.splice(index, 1);
   }
 
-  render() {
+  rPorts(index: number) {
     return (
       <>
-        <SubTitle title={<Trans>Service Type</Trans>}/>
-        <Select
-          formatOptionLabel={this.formatOptionLabel}
-          options={this.typeOptions}
-          value={this.value.type}
-          onChange={v => {
-            this.value.type = v.value
-          }}
-        />
-        <SubTitle compact className="fields-title" title={_i18n._(t`Ports`)}>
-          <Icon
-            small
-            tooltip={_i18n._(t`Ports`)}
-            material="add_circle_outline"
-            onClick={(e) => {
-              this.add();
-              e.stopPropagation();
-            }}
-          />
-        </SubTitle>
-        <div className="ports">
-          {this.value.ports.map((item, index) => {
-            return (
-              <div key={index}>
-                <br/>
-                <Icon
-                  small
-                  tooltip={<Trans>Remove</Trans>}
-                  className="remove-icon"
-                  material="remove_circle_outline"
-                  onClick={(e) => {
-                    this.remove(index);
-                    e.stopPropagation()
-                  }}
-                />
+        <br/>
+        <Paper elevation={3} style={{padding: 25}}>
+          <Grid container spacing={1}>
+            <Grid item xs={11}>
+              <Grid>
                 <SubTitle title={<Trans>Name</Trans>}/>
                 <Input
                   className="item"
                   required={true}
                   placeholder={_i18n._(t`Name`)}
-                  // validators={systemName}
-                  title={this.value.ports[index].name}
                   value={this.value.ports[index].name}
-                  onChange={value => {
-                    this.value.ports[index].name = value
+                  onChange={(value) => {
+                    this.value.ports[index].name = value;
                   }}
                 />
                 <SubTitle title={<Trans>Protocol</Trans>}/>
                 <Select
-                  formatOptionLabel={this.formatOptionLabel}
                   options={this.protocolOptions}
                   value={this.value.ports[index].protocol}
                   onChange={v => {
                     this.value.ports[index].protocol = v.value;
                   }}
                 />
-                <br/>
-                <Row>
-                  <Col span={10}>
-                    <SubTitle title={<Trans>Port</Trans>}/>
-                    <Input
-                      required={true}
-                      placeholder={_i18n._(t`Port`)}
-                      type="number"
-                      validators={isNumber}
-                      value={this.value.ports[index].port}
-                      onChange={value => this.value.ports[index].port = value}
-                    />
-                  </Col>
-                  <Col span={10} offset={4}>
-                    <SubTitle title={<Trans>TargetPort</Trans>}/>
-                    <Input
-                      required={true}
-                      placeholder={_i18n._(t`TargetPort`)}
-                      type="number"
-                      validators={isNumber}
-                      value={this.value.ports[index].targetPort}
-                      onChange={value => this.value.ports[index].targetPort = value}
-                    />
-                  </Col>
-                </Row>
-              </div>
-            )
-          })}
-        </div>
+              </Grid>
+              <br/>
+              <Grid container spacing={5}>
+                <Grid item xs>
+                  <SubTitle title={<Trans>Port</Trans>}/>
+                  <Input
+                    required={true}
+                    placeholder={_i18n._(t`Port`)}
+                    type="number"
+                    validators={isNumber}
+                    value={this.value.ports[index].port}
+                    onChange={value => this.value.ports[index].port = value}
+                  />
+                </Grid>
+                <Grid item xs>
+                  <SubTitle title={<Trans>TargetPort</Trans>}/>
+                  <Input
+                    required={true}
+                    placeholder={_i18n._(t`TargetPort`)}
+                    type="number"
+                    validators={isNumber}
+                    value={this.value.ports[index].targetPort}
+                    onChange={value => this.value.ports[index].targetPort = value}
+                  />
+                </Grid>
+              </Grid>
+            </Grid>
+            <Grid item xs style={{textAlign: "center"}}>
+              <Icon
+                small
+                tooltip={_i18n._(t`Remove Ports`)}
+                style={{margin: "0.8vw, 0.9vh"}}
+                className="remove-icon"
+                material="clear"
+                onClick={(e) => {
+                  this.remove(index);
+                  e.stopPropagation()
+                }}
+              />
+            </Grid>
+          </Grid>
+        </Paper>
       </>
     )
   }
+
+  render() {
+
+    return (
+      <>
+        <SubTitle title={<Trans>Service Type</Trans>}/>
+        <Select
+          options={this.typeOptions}
+          value={this.value.type}
+          onChange={v => {
+            this.value.type = v.value
+          }}
+        />
+        <SubTitle
+          title={
+            <>
+              <Trans>Ports</Trans>
+              &nbsp;&nbsp;
+              <Icon material={"edit"} className={"editIcon"} onClick={event => {
+                stopPropagation(event);
+                this.add()
+              }} small/>
+            </>
+          }>
+        </SubTitle>
+        {this.value.ports.map((item, index) => {
+          return this.rPorts(index)
+        })}
+      </>
+    )
+  }
+
 }

@@ -3,14 +3,12 @@ import {observer} from "mobx-react";
 import React from "react";
 import {Button} from "../button";
 import {Collapse} from "../collapse";
-import {Popconfirm} from "antd";
 import {ContainerDetails} from "./container-details";
 import {observable} from "mobx";
-import {DeleteOutlined} from '@ant-design/icons';
 import {container, Container} from "./common";
 import {_i18n} from "../../i18n";
 import {t, Trans} from "@lingui/macro";
-
+import {Icon} from "../icon";
 
 interface Props<T = any> extends Partial<Props> {
   value?: T;
@@ -58,50 +56,33 @@ export class MultiContainerDetails extends React.Component<Props> {
     const genExtra = (index: number) => {
       if (this.value.length > 1) {
         return (
-          <Popconfirm
-            title={_i18n._(`Confirm Delete?`)}
-            onConfirm={(event: any) => {
-              event.preventDefault();
-              event.stopPropagation();
+          <Icon
+            material={"delete_outline"}
+            style={{color: '#ff4d4f'}}
+            onClick={(event) => {
               this.remove(index);
-            }}
-            onCancel={(event: any) => {
               event.preventDefault();
               event.stopPropagation();
             }}
-            okText={_i18n._(`Yes`)}
-            cancelText={_i18n._(`No`)}>
-            <DeleteOutlined
-              translate={"yes"}
-              style={{color: '#ff4d4f'}}
-              onClick={(event) => {
-                event.preventDefault();
-                event.stopPropagation();
-              }}
-            />
-          </Popconfirm>
+          />
         )
       }
-      return (<></>)
+      return null
     }
 
     return (
       <>
-        <Button primary onClick={() => this.add()}><span>{_i18n._(t`Addition Container`)}</span></Button>
-        <br/><br/>
+        <Button primary onClick={() => this.add()}>
+          <span>{_i18n._(t`Add Container`)}</span>
+        </Button>
+        <br/>
+        <br/>
         {this.value.map((item, index) => {
           return (
-            <Collapse panelName={<Trans>Container</Trans>} extraExpand={genExtra(index)}>
+            <Collapse panelName={<Trans>Container</Trans>} extraExpand={genExtra(index)} key={"container" + index}>
               <ContainerDetails
-                base={true}
-                commands={true}
-                args={true}
-                environment={true}
-                readyProbe={true}
-                liveProbe={true}
-                lifeCycle={true}
-                divider={true}
-                volumeMounts={true}
+                args={true} base={true} commands={true} environment={true}
+                liveProbe={true} lifeCycle={true} volumeMounts={true} readyProbe={true}
                 value={this.value[index]}
                 onChange={(value: any) => {
                   this.value[index] = value

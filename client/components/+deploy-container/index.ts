@@ -2,8 +2,6 @@ export * from "./args-details";
 export * from "./base-details";
 export * from "./command-details";
 export * from "./lifecycle-details";
-export * from "./liveprobe-details";
-export * from "./readyprobe-details";
 export * from "./container-details";
 export * from "./multi-container-details";
 export * from "./common";

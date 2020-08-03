@@ -6,10 +6,10 @@ import {Select, SelectOption} from "../select";
 import {Icon} from "../icon";
 import {t, Trans} from "@lingui/macro";
 import {PipelineResources, pipelineResources} from "./common";
-import {Col, Row} from "antd";
 import {SubTitle} from "../layout/sub-title";
 import {_i18n} from "../../i18n";
 import {Input} from "../input";
+import {Grid} from "@material-ui/core";
 
 interface Props<T = any> extends Partial<Props> {
   value?: T;
@@ -64,7 +64,7 @@ export class PipelineResourceDetails extends React.Component<Props> {
           <Icon
             small
             tooltip={_i18n._(t`Resource`)}
-            material="add_circle_outline"
+            material="edit"
             onClick={(e) => {
               this.add();
               e.stopPropagation();
@@ -73,33 +73,33 @@ export class PipelineResourceDetails extends React.Component<Props> {
         </SubTitle>
         {this.value.length > 0 ? (
           <>
-            <Row>
-              <Col span={9}>
+            <Grid container spacing={5}>
+              <Grid item xs>
                 <Trans>Name</Trans>
-              </Col>
-              <Col span={9} offset={2}>
+              </Grid>
+              <Grid item xs>
                 <Trans>ResourceType</Trans>
-              </Col>
-            </Row>
+              </Grid>
+            </Grid>
             <br/>
           </>
         ) : (
-          <></>
+          null
         )}
 
         {this.value.map((item, index) => {
           return (
             <>
-              <Row>
-                <Col span={9}>
+              <Grid container spacing={5}>
+                <Grid item xs>
                   <Input
                     placeholder={"name"}
                     disabled={disable}
                     value={this.value[index].name}
                     onChange={(value) => (this.value[index].name = value)}
                   />
-                </Col>
-                <Col span={9} offset={2}>
+                </Grid>
+                <Grid item xs>
                   <Select
                     value={this.value[index].type}
                     isDisabled={disable}
@@ -107,18 +107,18 @@ export class PipelineResourceDetails extends React.Component<Props> {
                     formatOptionLabel={this.formatOptionLabel}
                     onChange={(value) => (this.value[index].type = value.value)}
                   />
-                </Col>
-                <Col span={2} offset={2}>
+                </Grid>
+                <Grid item xs>
                   <Icon
                     small
-                    material="remove_circle_outline"
+                    material="clear"
                     onClick={(e) => {
                       e.stopPropagation();
                       this.remove(index);
                     }}
                   />
-                </Col>
-              </Row>
+                </Grid>
+              </Grid>
               <br/>
             </>
           );

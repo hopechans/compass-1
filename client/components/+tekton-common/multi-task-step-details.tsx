@@ -3,17 +3,15 @@ import React from "react";
 import {observable} from "mobx";
 import {ActionMeta} from "react-select/src/types";
 import {Collapse} from "../collapse";
-import {Popconfirm} from "antd";
 import {Button} from "../button";
-import {DeleteOutlined} from '@ant-design/icons';
 import {taskStep, TaskStep} from "./common";
 import {TaskStepDetails} from "./task-step-details";
 import {t, Trans} from "@lingui/macro";
+import {Icon} from "../icon";
 
 interface Props<T = any> extends Partial<Props> {
   value?: T;
   themeName?: "dark" | "light" | "outlined";
-  divider?: true;
 
   onChange?(option: T, meta?: ActionMeta<any>): void;
 }
@@ -36,29 +34,18 @@ export class MultiTaskStepDetails extends React.Component<Props> {
     const genExtra = (index: number) => {
       if (this.value.length > 1) {
         return (
-          <Popconfirm
-            title="Confirm Delete?"
-            onConfirm={(event: any) => {
+          <Icon
+            material={"delete_outline"}
+            style={{color: '#ff4d4f'}}
+            onClick={(event) => {
               this.remove(index);
+              event.preventDefault();
               event.stopPropagation();
             }}
-            onCancel={(event: any) => {
-              event.stopPropagation();
-            }}
-            okText="Yes"
-            cancelText="No"
-          >
-            <DeleteOutlined
-              translate={"yes"}
-              style={{color: "#ff4d4f"}}
-              onClick={(event: any) => {
-                event.stopPropagation();
-              }}
-            />
-          </Popconfirm>
+          />
         );
       }
-      return <></>;
+      return null;
     }
 
     return (
@@ -71,11 +58,11 @@ export class MultiTaskStepDetails extends React.Component<Props> {
         {this.value.length > 0 ?
           this.value.map((item, index) => {
             return (
-              <Collapse panelName={<Trans>Step</Trans>} extraExpand={genExtra(index)}>
+              <Collapse panelName={<Trans>Step</Trans>} extraExpand={genExtra(index)} key={"step" + index}>
                 <TaskStepDetails value={this.value[index]} onChange={value => this.value[index] = value}/>
               </Collapse>
             );
-          }) : <></>}
+          }) : null}
       </>
     )
   }
