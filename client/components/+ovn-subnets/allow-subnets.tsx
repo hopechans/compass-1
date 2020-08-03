@@ -40,7 +40,7 @@ export class AllowSubnets extends React.Component<Props> {
             <>
               <Trans>AllowSubnets</Trans>
               &nbsp;&nbsp;
-              <Icon material={"edit"} onClick={event => {
+              <Icon material={"edit"} className={"editIcon"} onClick={event => {
                 stopPropagation(event);
                 this.add()
               }} small/>

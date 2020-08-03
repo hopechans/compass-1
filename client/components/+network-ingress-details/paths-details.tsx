@@ -76,7 +76,7 @@ export class PathsDetails extends React.Component<Props> {
             <>
               <Trans>HTTP.paths</Trans>
               &nbsp;&nbsp;
-              <Icon material={"edit"} onClick={event => {
+              <Icon material={"edit"} className={"editIcon"} onClick={event => {
                 stopPropagation(event);
                 this.add()
               }} small/>

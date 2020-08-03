@@ -157,7 +157,7 @@ export class StackDetails extends React.Component<Props> {
             <>
               {_i18n._(name)}
               &nbsp;&nbsp;
-              <Icon material={"edit"} onClick={event => {
+              <Icon material={"edit"} className={"editIcon"} onClick={event => {
                 stopPropagation(event);
                 this.add()
               }} small/>

@@ -81,7 +81,7 @@ export class EvnVarDetails extends React.Component<EvnVarProps> {
             <>
               <Trans>Environment</Trans>
               &nbsp;&nbsp;
-              <Icon material={"edit"} onClick={event => {
+              <Icon material={"edit"} className={"editIcon"} onClick={event => {
                 stopPropagation(event);
                 this.add()
               }} small/>

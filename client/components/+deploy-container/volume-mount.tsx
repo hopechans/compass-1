@@ -82,7 +82,7 @@ export class VolumeMountDetails extends React.Component<ArgsProps> {
           <>
             <Trans>VolumeMounts</Trans>
             &nbsp;&nbsp;
-            <Icon material={"edit"} onClick={event => {
+            <Icon material={"edit"} className={"editIcon"} onClick={event => {
               this.add();
               stopPropagation(event)
             }} small/>

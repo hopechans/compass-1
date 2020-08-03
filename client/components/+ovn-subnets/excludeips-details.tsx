@@ -40,7 +40,7 @@ export class ExcludeIPsDetails extends React.Component<Props> {
             <>
               <Trans>Exclude IP</Trans>
               &nbsp;&nbsp;
-              <Icon material={"edit"} onClick={event => {
+              <Icon material={"edit"} className={"editIcon"} onClick={event => {
                 stopPropagation(event);
                 this.add()
               }} small/>

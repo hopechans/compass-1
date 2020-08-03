@@ -198,3 +198,9 @@ input:-webkit-autofill {
   -webkit-animation-name: autofill-remove-bgc;
   -webkit-animation-fill-mode: both;
 }
+
+.editIcon {
+  > span {
+    line-height: 0.7 !important ;
+  }
+}
