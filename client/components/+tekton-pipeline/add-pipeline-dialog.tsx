@@ -9,8 +9,7 @@ import { Dialog } from "../dialog";
 import { Wizard, WizardStep } from "../wizard";
 import { Notifications } from "../notifications";
 import { configStore } from "../../config.store";
-import { pipelineStore } from "./pipeline.store";
-import { pipelineApi } from "../../../client/api/endpoints";
+import { pipelineApi } from "../../api/endpoints";
 
 interface Props<T = any> extends Partial<Props> { }
 
