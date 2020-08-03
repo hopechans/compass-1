@@ -1,9 +1,7 @@
 .PipelineRunVisualDialog {
   .Wizard {
-    --wizard-width: 93vw;
-    --wizard-content-height: 45vw;
-    --wizard-content-max-height: 40vw;
-
+    width: 95vw;
+    height: 85vh;
   }
 
   .WizardStep {
