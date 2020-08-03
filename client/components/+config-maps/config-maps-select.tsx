@@ -1,7 +1,7 @@
 import React from "react";
 import {computed} from "mobx";
 import {observer} from "mobx-react";
-import {t, Trans} from "@lingui/macro";
+import {t} from "@lingui/macro";
 import {Select, SelectOption, SelectProps} from "../select";
 import {cssNames, noop} from "../../utils";
 import {Icon} from "../icon";
