@@ -61,8 +61,11 @@ export class AddPipelineDialog extends React.Component<Props> {
     );
 
     return (
-      <Dialog isOpen={AddPipelineDialog.isOpen} close={this.close}>
-        <Wizard className="AddPipelineDialog" header={header} done={this.close}>
+      <Dialog
+        className="AddPipelineDialog"
+        isOpen={AddPipelineDialog.isOpen}
+        close={this.close}>
+        <Wizard  header={header} done={this.close}>
           <WizardStep contentClass="flex gaps column" next={this.submit}>
             <SubTitle title={"Pipeline Name"} />
             <Input

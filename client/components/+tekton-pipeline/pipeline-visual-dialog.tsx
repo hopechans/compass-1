@@ -12,10 +12,11 @@ import { CopyTaskDialog } from "../+tekton-task/copy-task-dialog";
 import { PipelineSaveDialog } from "./pipeline-save-dialog";
 import { tektonGraphStore } from "../+tekton-graph/tekton-graph.store";
 import { pipelineStore } from "./pipeline.store";
-import { configStore } from "../../config.store";
-import { IKubeObjectMetadata } from "../../../client/api/kube-object";
+import { IKubeObjectMetadata } from "../../api/kube-object";
 
-interface Props extends Partial<Props> { }
+interface Props extends Partial<Props> {
+
+}
 
 @observer
 export class PipelineVisualDialog extends React.Component<Props> {
@@ -38,8 +39,8 @@ export class PipelineVisualDialog extends React.Component<Props> {
     setTimeout(() => {
       const anchor = document.getElementsByClassName("step-content")[0];
 
-      const width = anchor.scrollWidth - 50;
-      const height = anchor.scrollHeight - 60;
+      const width = anchor.scrollWidth + 300;
+      const height = anchor.scrollHeight + 300;
 
       this.graph = new Graphs(width, height);
       this.graph.init();
@@ -121,7 +122,6 @@ export class PipelineVisualDialog extends React.Component<Props> {
 
   updateTektonGraph = async (data: string) => {
 
-
     const graphName = this.pipeline.getName() + "-" + new Date().getTime().toString();
     const tektonGraph: Partial<TektonGraph> = {
       metadata: {
@@ -144,6 +144,7 @@ export class PipelineVisualDialog extends React.Component<Props> {
   };
 
   save = async () => {
+
     this.data = this.graph.instance.save();
 
     const data = JSON.stringify(this.data);
