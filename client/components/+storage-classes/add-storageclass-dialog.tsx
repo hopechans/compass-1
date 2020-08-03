@@ -147,10 +147,11 @@ export class AddStorageClassDialog extends React.Component<Props> {
     return (
       <Dialog
         {...dialogProps}
+        className="AddStorageClassDialog"
         isOpen={AddStorageClassDialog.isOpen}
         close={this.close}
       >
-        <Wizard className="AddStorageClassDialog" header={header} done={this.close}>
+        <Wizard  header={header} done={this.close}>
           <WizardStep
             contentClass="flex gaps column"
             nextLabel={<Trans>Apply</Trans>}

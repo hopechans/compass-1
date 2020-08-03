@@ -61,7 +61,7 @@ export class MultiVolumeClaimDetails extends React.Component<VolumeClaimTemplate
             </Grid>
             <Grid item xs style={{textAlign: "center"}}>
               <Icon
-                style={{margin: "0.8vw, 0.9vh", position: "absolute"}}
+                style={{margin: "0.8vw, 0.9vh"}}
                 small
                 tooltip={_i18n._(t`Remove Environment`)}
                 className="remove-icon"

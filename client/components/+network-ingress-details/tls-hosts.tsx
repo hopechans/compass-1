@@ -34,7 +34,7 @@ export class TlsHostsDetails extends React.Component<Props> {
       <Icon
         small
         tooltip={_i18n._(t`Hosts`)}
-        material="add_circle_outline"
+        material="edit"
         onClick={(e) => {
           e.stopPropagation();
           this.add();
@@ -50,8 +50,8 @@ export class TlsHostsDetails extends React.Component<Props> {
         {this.value.map((item, index) => {
           return (
             <div key={index}>
-              <Grid container spacing={5}>
-                <Grid item xs>
+              <Grid container spacing={1}>
+                <Grid item xs={11}>
                   <Input
                     className="item"
                     placeholder={_i18n._(t`host`)}
@@ -66,7 +66,7 @@ export class TlsHostsDetails extends React.Component<Props> {
                     small
                     tooltip={<Trans>Remove Host</Trans>}
                     className="remove-icon"
-                    material="remove_circle_outline"
+                    material="clear"
                     onClick={(e) => {
                       this.remove(index);
                       e.stopPropagation()

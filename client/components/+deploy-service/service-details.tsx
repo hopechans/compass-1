@@ -115,7 +115,7 @@ export class DeployServiceDetails extends React.Component<Props> {
               <Icon
                 small
                 tooltip={_i18n._(t`Remove Ports`)}
-                style={{margin: "0.8vw, 0.9vh", position: "absolute"}}
+                style={{margin: "0.8vw, 0.9vh"}}
                 className="remove-icon"
                 material="clear"
                 onClick={(e) => {

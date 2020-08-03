@@ -15,6 +15,8 @@ import {MenuItem} from "../menu";
 import {Icon} from "../icon";
 import {_i18n} from "../../i18n";
 import {ConfigResourceQuotaDialog} from "./config-resource-quota-dialog";
+import {Link} from "react-router-dom";
+import Tooltip from "@material-ui/core/Tooltip";
 
 enum sortBy {
   name = "name",
@@ -27,6 +29,22 @@ interface Props extends RouteComponentProps<IResourceQuotaRouteParams> {
 
 @observer
 export class ResourceQuotas extends React.Component<Props> {
+
+  renderResourceQuotasName(resourceQuota: ResourceQuota) {
+    const name = resourceQuota.getName();
+    return (
+      <Link onClick={(event) => {
+        event.stopPropagation();
+        ConfigResourceQuotaDialog.open(resourceQuota);
+      }
+      } to={null}>
+        <Tooltip title={name} placement="top-start">
+          <span>{name}</span>
+        </Tooltip>
+      </Link>
+    );
+  }
+
   render() {
     return (
       <>
@@ -48,7 +66,7 @@ export class ResourceQuotas extends React.Component<Props> {
             {title: <Trans>Age</Trans>, className: "age", sortBy: sortBy.age},
           ]}
           renderTableContents={(resourceQuota: ResourceQuota) => [
-            resourceQuota.getName(),
+            this.renderResourceQuotasName(resourceQuota),
             resourceQuota.getNs(),
             resourceQuota.getAge(),
           ]}

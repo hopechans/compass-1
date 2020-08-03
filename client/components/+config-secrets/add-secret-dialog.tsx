@@ -1,27 +1,26 @@
 import "./add-secret-dialog.scss"
 
 import React from "react";
-import { observable } from "mobx";
-import { observer } from "mobx-react";
-import { t, Trans } from "@lingui/macro";
-import { _i18n } from "../../i18n";
-import { Dialog, DialogProps } from "../dialog";
-import { Wizard, WizardStep } from "../wizard";
-import { Input } from "../input";
-import { isUrl, systemName } from "../input/input.validators";
-import { Secret, secretsApi, SecretType, opsSecretsApi } from "../../api/endpoints";
-import { SubTitle } from "../layout/sub-title";
-import { NamespaceSelect } from "../+namespaces/namespace-select";
-import { Select, SelectOption } from "../select";
-import { Icon } from "../icon";
-import { IKubeObjectMetadata } from "../../api/kube-object";
-import { base64 } from "../../utils";
-import { Notifications } from "../notifications";
-import { showDetails } from "../../navigation";
+import {observable} from "mobx";
+import {observer} from "mobx-react";
+import {t, Trans} from "@lingui/macro";
+import {_i18n} from "../../i18n";
+import {Dialog, DialogProps} from "../dialog";
+import {Wizard, WizardStep} from "../wizard";
+import {Input} from "../input";
+import {isUrl, systemName} from "../input/input.validators";
+import {Secret, secretsApi, SecretType, opsSecretsApi} from "../../api/endpoints";
+import {SubTitle} from "../layout/sub-title";
+import {NamespaceSelect} from "../+namespaces/namespace-select";
+import {Select, SelectOption} from "../select";
+import {Icon} from "../icon";
+import {IKubeObjectMetadata} from "../../api/kube-object";
+import {base64} from "../../utils";
+import {Notifications} from "../notifications";
 import upperFirst from "lodash/upperFirst";
-import { Checkbox } from "../checkbox";
-import { configStore } from "../../config.store";
-import { namespaceStore } from "../+namespaces/namespace.store";
+import {Checkbox} from "../checkbox";
+import {configStore} from "../../config.store";
+import {namespaceStore} from "../+namespaces/namespace.store";
 
 interface Props extends Partial<DialogProps> {
   className: string
@@ -57,11 +56,11 @@ type ISecretField = keyof ISecretTemplate;
 @observer
 export class AddSecretDialog extends React.Component<Props> {
 
-  static defaultProps = { className: "Secrets" }
+  static defaultProps = {className: "Secrets"}
 
   @observable static isOpen = false;
   @observable dockerConfigAddress: string = "";
-  @observable dockerConfig: DockerConfig = { username: "", password: "", email: "" };
+  @observable dockerConfig: DockerConfig = {username: "", password: "", email: ""};
   @observable isOpsSecret = false;
 
   static open() {
@@ -76,8 +75,8 @@ export class AddSecretDialog extends React.Component<Props> {
     [SecretType.Opaque]: {},
     [SecretType.ServiceAccountToken]: {
       annotations: [
-        { key: "kubernetes.io/service-account.name", required: true },
-        { key: "kubernetes.io/service-account.uid", required: true }
+        {key: "kubernetes.io/service-account.name", required: true},
+        {key: "kubernetes.io/service-account.uid", required: true}
       ],
     },
     [SecretType.DockerConfigJson]: {},
@@ -89,14 +88,14 @@ export class AddSecretDialog extends React.Component<Props> {
   private opsSecretTemplate: { [p: string]: ISecretTemplate } = {
     [SecretType.BasicAuth]: {
       data: [
-        { key: "username", required: true },
-        { key: "password", required: true }
+        {key: "username", required: true},
+        {key: "password", required: true}
       ]
     },
     [SecretType.SSHAuth]: {
       data: [
-        { key: "username", value: "", required: true },
-        { key: "password", value: "", required: true }
+        {key: "username", value: "", required: true},
+        {key: "password", value: "", required: true}
       ]
     },
   }
@@ -125,7 +124,7 @@ export class AddSecretDialog extends React.Component<Props> {
 
   onOpen = async () => {
 
-    const { className } = this.props;
+    const {className} = this.props;
 
     if (this.props.className == "OpsSecrets") {
       this.isOpsSecret = true;
@@ -139,7 +138,7 @@ export class AddSecretDialog extends React.Component<Props> {
 
       let iNamespace = namespaceStore.getByName(ns);
       if (iNamespace == undefined) {
-        iNamespace = await namespaceStore.create({ name: configStore.getOpsNamespace() });
+        iNamespace = await namespaceStore.create({name: configStore.getOpsNamespace()});
       }
       this.namespace = iNamespace.getName();
     }
@@ -158,7 +157,7 @@ export class AddSecretDialog extends React.Component<Props> {
     }
 
     return fields.reduce<any>((data, field) => {
-      const { key, value } = field;
+      const {key, value} = field;
       if (key) {
         data[key] = processValue ? processValue(value) : value;
       }
@@ -167,9 +166,9 @@ export class AddSecretDialog extends React.Component<Props> {
   }
 
   createSecret = async () => {
-    const { name, namespace, type } = this;
-    const { className } = this.props;
-    const { data = [], annotations = [] } = this.secret[type];
+    const {name, namespace, type} = this;
+    const {className} = this.props;
+    const {data = [], annotations = []} = this.secret[type];
 
     let labels = this.userNotVisible ? new Map<string, string>().set("hide", "1") : new Map<string, string>()
     if (className == "OpsSecrets") {
@@ -189,7 +188,7 @@ export class AddSecretDialog extends React.Component<Props> {
 
     try {
       const api = className == "OpsSecrets" ? opsSecretsApi : secretsApi;
-      await api.create({ namespace, name }, secret);
+      await api.create({namespace, name}, secret);
 
       Notifications.ok(<>Secret {name} save succeeded</>);
       this.close();
@@ -200,7 +199,7 @@ export class AddSecretDialog extends React.Component<Props> {
 
   addField = (field: ISecretField) => {
     const fields = this.secret[this.type][field] || [];
-    fields.push({ key: "", value: "" });
+    fields.push({key: "", value: ""});
     this.secret[this.type][field] = fields;
   }
 
@@ -217,39 +216,42 @@ export class AddSecretDialog extends React.Component<Props> {
           <Icon
             small
             tooltip={_i18n._(t`Add Field`)}
-            material="add_circle_outline"
+            material="edit"
             onClick={() => this.addField(field)}
           />
         </SubTitle>
         <div className="secret-fields">
           {fields.map((item, index) => {
-            const { key = "", value = "", required } = item;
+            const {key = "", value = "", required} = item;
             return (
-              <div key={index} className="secret-field flex gaps auto align-center">
-                <Input
-                  className="key"
-                  placeholder={_i18n._(t`Name`)}
-                  title={key}
-                  tabIndex={required ? -1 : 0}
-                  readOnly={required}
-                  value={key} onChange={v => item.key = v}
-                />
-                <Input
-                  multiLine maxRows={5}
-                  required={required}
-                  className="value"
-                  placeholder={_i18n._(t`Value`)}
-                  value={value} onChange={v => item.value = v}
-                />
-                <Icon
-                  small
-                  // disabled={required}
-                  tooltip={required ? <Trans>Required Field</Trans> : <Trans>Remove Field</Trans>}
-                  className="remove-icon"
-                  material="remove_circle_outline"
-                  onClick={() => this.removeField(field, index)}
-                />
-              </div>
+              <>
+                <div key={index} className="secret-field flex gaps auto align-center">
+                  <Input
+                    className="key"
+                    placeholder={_i18n._(t`Name`)}
+                    title={key}
+                    tabIndex={required ? -1 : 0}
+                    readOnly={required}
+                    value={key} onChange={v => item.key = v}
+                  />
+                  <Input
+                    multiLine maxRows={5}
+                    required={required}
+                    className="value"
+                    placeholder={_i18n._(t`Value`)}
+                    value={value} onChange={v => item.value = v}
+                  />
+                  <Icon
+                    small
+                    // disabled={required}
+                    tooltip={required ? <Trans>Required Field</Trans> : <Trans>Remove Field</Trans>}
+                    className="remove-icon"
+                    material="clear"
+                    onClick={() => this.removeField(field, index)}
+                  />
+                </div>
+                <br/>
+              </>
             )
           })}
         </div>
@@ -260,7 +262,7 @@ export class AddSecretDialog extends React.Component<Props> {
   renderDockerConfigFields() {
     return (
       <div>
-        <SubTitle title={<Trans>Address</Trans>} />
+        <SubTitle title={<Trans>Address</Trans>}/>
         <Input
           required={true}
           placeholder={_i18n._("Address")}
@@ -268,14 +270,14 @@ export class AddSecretDialog extends React.Component<Props> {
           value={this.dockerConfigAddress}
           onChange={value => this.dockerConfigAddress = value}
         />
-        <SubTitle title={<Trans>User</Trans>} />
+        <SubTitle title={<Trans>User</Trans>}/>
         <Input
           required={true}
           placeholder={_i18n._("User")}
           value={this.dockerConfig.username}
           onChange={value => this.dockerConfig.username = value}
         />
-        <SubTitle title={<Trans>Password</Trans>} />
+        <SubTitle title={<Trans>Password</Trans>}/>
         <Input
           placeholder={_i18n._("Password")}
           required={true}
@@ -283,7 +285,7 @@ export class AddSecretDialog extends React.Component<Props> {
           value={this.dockerConfig.password}
           onChange={value => this.dockerConfig.password = value}
         />
-        <SubTitle title={<Trans>Email</Trans>} />
+        <SubTitle title={<Trans>Email</Trans>}/>
         <Input
           placeholder={_i18n._("Email")}
           value={this.dockerConfig.email}
@@ -298,10 +300,10 @@ export class AddSecretDialog extends React.Component<Props> {
     return (
       <div className="secret-fields">
 
-        <SubTitle compact className="fields-title" title={upperFirst(field.toString())} />
+        <SubTitle compact className="fields-title" title={upperFirst(field.toString())}/>
 
         {fields.map((item, index) => {
-          const { key = "", value = "", required } = item;
+          const {key = "", value = "", required} = item;
           return (
             <div key={index} className="secret-field flex gaps auto align-center">
               <Input
@@ -328,9 +330,9 @@ export class AddSecretDialog extends React.Component<Props> {
   }
 
   render() {
-    const { ...dialogProps } = this.props;
-    const { namespace, name, type } = this;
-    const { isClusterAdmin } = configStore;
+    const {...dialogProps} = this.props;
+    const {namespace, name, type} = this;
+    const {isClusterAdmin} = configStore;
     const header = <h5><Trans>Create Secret</Trans></h5>;
     return (
       <Dialog
@@ -347,7 +349,7 @@ export class AddSecretDialog extends React.Component<Props> {
                 <div className="secret-userNotVisible">
                   {isClusterAdmin ?
                     <>
-                      <SubTitle title={"UserNotVisible"} />
+                      <SubTitle title={"UserNotVisible"}/>
                       <Checkbox
                         theme="light"
                         value={this.userNotVisible}
@@ -359,7 +361,7 @@ export class AddSecretDialog extends React.Component<Props> {
             }
 
             <div className="secret-name">
-              <SubTitle title={"Secret name"} />
+              <SubTitle title={"Secret name"}/>
               <Input
                 autoFocus required
                 placeholder={_i18n._(t`Name`)}
@@ -370,21 +372,21 @@ export class AddSecretDialog extends React.Component<Props> {
 
             <div className="flex auto gaps">
               <div className="secret-namespace">
-                <SubTitle title={<Trans>Namespace</Trans>} />
+                <SubTitle title={<Trans>Namespace</Trans>}/>
                 <NamespaceSelect
                   isDisabled={this.isOpsSecret}
                   required={true}
                   themeName="light"
                   value={namespace}
-                  onChange={({ value }) => this.namespace = value}
+                  onChange={({value}) => this.namespace = value}
                 />
               </div>
               <div className="secret-type">
-                <SubTitle title={<Trans>Secret type</Trans>} />
+                <SubTitle title={<Trans>Secret type</Trans>}/>
                 <Select
                   themeName="light"
                   options={this.types}
-                  value={type} onChange={({ value }: SelectOption) => this.type = value}
+                  value={type} onChange={({value}: SelectOption) => this.type = value}
                 />
               </div>
             </div>

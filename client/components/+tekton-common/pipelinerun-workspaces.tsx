@@ -46,7 +46,7 @@ export class PipelineRunWorkspaces extends React.Component<Props> {
       <Icon
         small
         tooltip={_i18n._(t`WorkSpaces`)}
-        material="add_circle_outline"
+        material="edit"
         onClick={(e) => {
           this.add();
           e.stopPropagation();
@@ -103,7 +103,7 @@ export class PipelineRunWorkspaces extends React.Component<Props> {
                         small
                         tooltip={<Trans>Remove Workspaces</Trans>}
                         className="remove-icon"
-                        material="remove_circle_outline"
+                        material="clear"
                         onClick={(e) => {
                           this.remove(index);
                           e.stopPropagation();

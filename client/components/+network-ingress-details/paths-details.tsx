@@ -9,6 +9,8 @@ import {Icon} from "../icon";
 import {t, Trans} from "@lingui/macro";
 import {BackendDetails} from "./backend-details";
 import {Input} from "../input";
+import {stopPropagation} from "../../utils";
+import {Grid, Paper} from "@material-ui/core";
 
 interface Props<T = any> extends Partial<Props> {
   value?: T;
@@ -30,52 +32,61 @@ export class PathsDetails extends React.Component<Props> {
     this.value.splice(index, 1);
   }
 
-  renderAdd() {
+  rResult(index: number) {
     return (
-      <Icon
-        small
-        tooltip={_i18n._(t`Paths`)}
-        material="add_circle_outline"
-        onClick={(e) => {
-          this.add();
-          e.stopPropagation();
-        }}
-      />
+      <>
+        <Paper elevation={3} style={{padding: 25}}>
+          <Grid container spacing={5}>
+            <Grid item xs={11}>
+              <SubTitle title={"Path"}/>
+              <Input
+                required={true}
+                value={this.value[index].path}
+                onChange={value => this.value[index].path = value}
+              />
+              <BackendDetails
+                value={this.value[index].backend}
+                onChange={value => this.value[index].backend = value}/>
+            </Grid>
+            <Grid item xs style={{textAlign: "center"}}>
+              <Icon
+                style={{margin: "0.8vw, 0.9vh"}}
+                small
+                tooltip={_i18n._(t`Remove`)}
+                className="remove-icon"
+                material="clear"
+                onClick={(event) => {
+                  this.remove(index);
+                  stopPropagation(event);
+                }}
+              />
+            </Grid>
+          </Grid>
+        </Paper>
+        <br/>
+      </>
     )
   }
 
   render() {
     return (
       <>
-        <SubTitle className="fields-title" title="HTTP.Paths">{this.renderAdd()}</SubTitle>
+        <SubTitle
+          title={
+            <>
+              <Trans>HTTP.paths</Trans>
+              &nbsp;&nbsp;
+              <Icon material={"edit"} onClick={event => {
+                stopPropagation(event);
+                this.add()
+              }} small/>
+            </>
+          }>
+        </SubTitle>
+        <br/>
         <div className="Results">
           {this.value.map((item, index) => {
-            return (
-              <>
-                <div key={index}>
-                  <Icon
-                    small
-                    tooltip={<Trans>Remove Path</Trans>}
-                    className="remove-icon"
-                    material="remove_circle_outline"
-                    onClick={(e) => {
-                      this.remove(index);
-                      e.stopPropagation();
-                    }}
-                  />
-                  <SubTitle title={"Path"}/>
-                  <Input
-                    required={true}
-                    value={this.value[index].path}
-                    onChange={value => this.value[index].path = value}
-                  />
-                  <BackendDetails
-                    value={this.value[index].backend}
-                    onChange={value => this.value[index].backend = value}/>
-                </div>
-                <br/>
-              </>
-            )
+            return this.rResult(index)
           })}
         </div>
       </>

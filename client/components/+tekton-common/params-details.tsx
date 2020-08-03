@@ -42,13 +42,60 @@ export class ParamsDetails extends React.Component<Props> {
       <Icon
         small
         tooltip={_i18n._(t`Params`)}
-        material="add_circle_outline"
+        material="edit"
         onClick={(e) => {
           this.add();
           e.stopPropagation();
         }}
       />
     );
+  }
+
+  rParams(index: number, disable: boolean) {
+    return (
+      <>
+        <Grid container spacing={5}>
+          <Grid item xs={5}>
+            <Input
+              className="item"
+              disabled={disable}
+              placeholder={_i18n._(t`Name`)}
+              title={this.value[index].name}
+              value={this.value[index].name}
+              onChange={(value) => {
+                this.value[index].name = value;
+              }}
+            />
+          </Grid>
+          <Grid item xs={5}>
+            <Input
+              className="item"
+              // disabled={disable}
+              placeholder={_i18n._(t`Value`)}
+              title={this.value[index].value}
+              value={this.value[index].value}
+              onChange={(value) => {
+                this.value[index].value = value;
+              }}
+            />
+          </Grid>
+          {!disable ? (
+            <Grid item xs>
+              <Icon
+                small
+                tooltip={<Trans>Remove Params</Trans>}
+                className="remove-icon"
+                material="clear"
+                onClick={(e) => {
+                  this.remove(index);
+                  e.stopPropagation();
+                }}
+              />
+            </Grid>
+          ) : null}
+        </Grid>
+      </>
+    )
   }
 
   render() {
@@ -61,52 +108,7 @@ export class ParamsDetails extends React.Component<Props> {
         </SubTitle>
         <div className="params">
           {this.value.map((item, index) => {
-            return (
-              <div key={index}>
-                <Grid container spacing={5}>
-                  <Grid item xs>
-                    <Input
-                      className="item"
-                      disabled={disable}
-                      placeholder={_i18n._(t`Name`)}
-                      title={this.value[index].name}
-                      value={this.value[index].name}
-                      onChange={(value) => {
-                        this.value[index].name = value;
-                      }}
-                    />
-                  </Grid>
-                  <Grid item xs>
-                    <Input
-                      className="item"
-                      // disabled={disable}
-                      placeholder={_i18n._(t`Value`)}
-                      title={this.value[index].value}
-                      value={this.value[index].value}
-                      onChange={(value) => {
-                        this.value[index].value = value;
-                      }}
-                    />
-                  </Grid>
-                  {!disable ? (
-                    <Grid item xs>
-                      <Icon
-                        small
-                        tooltip={<Trans>Remove Params</Trans>}
-                        className="remove-icon"
-                        material="remove_circle_outline"
-                        onClick={(e) => {
-                          this.remove(index);
-                          e.stopPropagation();
-                        }}
-                      />
-                    </Grid>
-                  ) : (
-                    null
-                  )}
-                </Grid>
-              </div>
-            );
+            return this.rParams(index, disable);
           })}
         </div>
       </div>

@@ -8,6 +8,7 @@ import {t, Trans} from "@lingui/macro";
 import {Input} from "../input";
 import {observable} from "mobx";
 import {Grid} from "@material-ui/core";
+import {stopPropagation} from "../../utils";
 
 interface Props<T = any> extends Partial<Props> {
   value?: T;
@@ -30,31 +31,28 @@ export class AllowSubnets extends React.Component<Props> {
     this.value.splice(index, 1);
   }
 
-  renderAdd() {
-    return (
-      <Icon
-        small
-        tooltip={_i18n._(t`CIDR`)}
-        material="add_circle_outline"
-        onClick={(e) => {
-          this.add();
-          e.stopPropagation();
-        }}
-      />
-    )
-  }
-
   render() {
 
     return (
       <div>
-        <SubTitle className="fields-title" title="AllowSubnets">{this.renderAdd()}</SubTitle>
+        <SubTitle
+          title={
+            <>
+              <Trans>AllowSubnets</Trans>
+              &nbsp;&nbsp;
+              <Icon material={"edit"} onClick={event => {
+                stopPropagation(event);
+                this.add()
+              }} small/>
+            </>
+          }>
+        </SubTitle>
         <div className="allowSubnets">
           {this.value.map((item, index) => {
             return (
               <div key={index}>
                 <Grid container spacing={5}>
-                  <Grid item xs>
+                  <Grid item xs={11}>
                     <Input
                       className="item"
                       required={true}
@@ -71,7 +69,7 @@ export class AllowSubnets extends React.Component<Props> {
                       small
                       tooltip={<Trans>Remove Subnet</Trans>}
                       className="remove-icon"
-                      material="remove_circle_outline"
+                      material="clear"
                       onClick={(e) => {
                         this.remove(index);
                         e.stopPropagation()

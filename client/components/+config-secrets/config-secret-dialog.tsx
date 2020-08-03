@@ -9,7 +9,7 @@ import {Dialog, DialogProps} from "../dialog";
 import {Wizard, WizardStep} from "../wizard";
 import {Input} from "../input";
 import {isUrl, systemName} from "../input/input.validators";
-import {Secret, secretsApi, SecretType, opsSecretsApi} from "../../api/endpoints";
+import {Secret, SecretType} from "../../api/endpoints";
 import {SubTitle} from "../layout/sub-title";
 import {NamespaceSelect} from "../+namespaces/namespace-select";
 import {Select, SelectOption} from "../select";
@@ -269,10 +269,7 @@ export class ConfigSecretDialog extends React.Component<Props> {
 
     try {
       const api = className == "OpsSecrets" ? opsSecretsStore : secretsStore;
-      const newSecret = await api.update(ConfigSecretDialog.secret, {...secret});
-
-      // showDetails(newSecret.selfLink);
-
+      await api.update(ConfigSecretDialog.secret, {...secret});
       Notifications.ok(
         <div>Secret {name} save succeeded</div>
       );
@@ -301,7 +298,7 @@ export class ConfigSecretDialog extends React.Component<Props> {
           <Icon
             small
             tooltip={_i18n._(t`Add Field`)}
-            material="add_circle_outline"
+            material="edit"
             onClick={() => this.addField(field)}
           />
         </SubTitle>
@@ -309,31 +306,34 @@ export class ConfigSecretDialog extends React.Component<Props> {
           {fields.map((item, index) => {
             const {key = "", value = "", required} = item;
             return (
-              <div key={index} className="secret-field flex gaps auto align-center">
-                <Input
-                  className="key"
-                  placeholder={_i18n._(t`Name`)}
-                  title={key}
-                  tabIndex={required ? -1 : 0}
-                  readOnly={required}
-                  value={key} onChange={v => item.key = v}
-                />
-                <Input
-                  multiLine maxRows={5}
-                  required={required}
-                  className="value"
-                  placeholder={_i18n._(t`Value`)}
-                  value={value} onChange={v => item.value = v}
-                />
-                <Icon
-                  small
-                  // disabled={required}
-                  tooltip={required ? <Trans>Required Field</Trans> : <Trans>Remove Field</Trans>}
-                  className="remove-icon"
-                  material="remove_circle_outline"
-                  onClick={() => this.removeField(field, index)}
-                />
-              </div>
+              <>
+                <div key={index} className="secret-field flex gaps auto align-center">
+                  <Input
+                    className="key"
+                    placeholder={_i18n._(t`Name`)}
+                    title={key}
+                    tabIndex={required ? -1 : 0}
+                    readOnly={required}
+                    value={key} onChange={v => item.key = v}
+                  />
+                  <Input
+                    multiLine maxRows={5}
+                    required={required}
+                    className="value"
+                    placeholder={_i18n._(t`Value`)}
+                    value={value} onChange={v => item.value = v}
+                  />
+                  <Icon
+                    small
+                    // disabled={required}
+                    tooltip={required ? <Trans>Required Field</Trans> : <Trans>Remove Field</Trans>}
+                    className="remove-icon"
+                    material="clear"
+                    onClick={() => this.removeField(field, index)}
+                  />
+                </div>
+                <br/>
+              </>
             )
           })}
         </div>

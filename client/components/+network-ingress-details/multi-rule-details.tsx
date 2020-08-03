@@ -48,9 +48,7 @@ export class MultiRuleDetails extends React.Component<Props> {
 
     return (
       <div>
-        <Button primary onClick={() => this.add()}>
-          <span>{_i18n._("Add Rule")}</span>
-        </Button>
+        <Button primary onClick={() => this.add()}><span>{_i18n._("Add Rule")}</span></Button>
         <br/>
         <br/>
         {this.value.length > 0 ?
@@ -60,7 +58,7 @@ export class MultiRuleDetails extends React.Component<Props> {
                 <RuleDetails value={this.value[index]} onChange={value => this.value[index] = value}/>
               </Collapse>
             );
-          }):null
+          }) : null
         }
       </div>
     )

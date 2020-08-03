@@ -1,4 +1,10 @@
 .AddResourceQuotaDialog {
+
+  .Wizard {
+    width: 38vw;
+    height: 65vh;
+  }
+
   .quota-select {
     flex-basis: 55%;
   }

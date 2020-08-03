@@ -1,9 +1,7 @@
 .AddRoleDialog {
   .Wizard {
-    --wizard-width: 35vw;
-    --wizard-content-max-width: 40vw;
-    --wizard-content-height: 25vh;
-    --wizard-content-max-height: 30vh;
+    width: 40vw;
+    height: 80vh;
   }
 
   .WizardStep {

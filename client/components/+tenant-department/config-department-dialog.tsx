@@ -126,13 +126,9 @@ export class ConfigDepartmentDialog extends React.Component<Props> {
               />
             </div>
             <br/>
-            <div className="git">
-              <StackDetails name={"Git"} value={this.gits} onChange={value => this.gits = value}/>
-            </div>
+            <StackDetails name={"Git"} value={this.gits} onChange={value => this.gits = value}/>
             <br/>
-            <div className="register">
-              <StackDetails name={"Register"} value={this.registers} onChange={value => this.registers = value}/>
-            </div>
+            <StackDetails name={"Register"} value={this.registers} onChange={value => this.registers = value}/>
           </WizardStep>
         </Wizard>
       </Dialog>

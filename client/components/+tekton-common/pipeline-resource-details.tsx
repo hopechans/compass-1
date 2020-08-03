@@ -64,7 +64,7 @@ export class PipelineResourceDetails extends React.Component<Props> {
           <Icon
             small
             tooltip={_i18n._(t`Resource`)}
-            material="add_circle_outline"
+            material="edit"
             onClick={(e) => {
               this.add();
               e.stopPropagation();
@@ -111,7 +111,7 @@ export class PipelineResourceDetails extends React.Component<Props> {
                 <Grid item xs>
                   <Icon
                     small
-                    material="remove_circle_outline"
+                    material="clear"
                     onClick={(e) => {
                       e.stopPropagation();
                       this.remove(index);
