@@ -1,6 +1,6 @@
 import "./copy-task-dialog.scss";
 
-import { observer } from "mobx-react";
+import {observer} from "mobx-react";
 import React from "react";
 import {
   PipelineParamsDetails,
@@ -12,30 +12,30 @@ import {
   resources,
   TaskSpecWorkSpaces,
 } from "../+tekton-common";
-import { observable, toJS } from "mobx";
-import { Dialog } from "../dialog";
-import { Wizard, WizardStep } from "../wizard";
-import { Trans, t } from "@lingui/macro";
-import { ActionMeta } from "react-select/src/types";
-import { SubTitle } from "../layout/sub-title";
-import { Input } from "../input";
-import { _i18n } from "../../i18n";
-import { taskStore } from "./task.store";
+import {observable, toJS} from "mobx";
+import {Dialog} from "../dialog";
+import {Wizard, WizardStep} from "../wizard";
+import {Trans} from "@lingui/macro";
+import {ActionMeta} from "react-select/src/types";
+import {SubTitle} from "../layout/sub-title";
+import {Input} from "../input";
+import {_i18n} from "../../i18n";
+import {taskStore} from "./task.store";
 
 import FormGroup from "@material-ui/core/FormGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Switch from "@material-ui/core/Switch";
-import { Select, SelectOption } from "../select";
-import { Icon } from "../icon";
-import { TaskResources, Task } from "../../api/endpoints";
-import { Notifications } from "../notifications";
-import { systemName } from "../input/input.validators";
-import { createMuiTheme } from "@material-ui/core";
-import { ThemeProvider } from "@material-ui/core/styles";
-import { configStore } from "../../config.store";
-import { WorkspaceDeclaration as Workspace } from "../../api/endpoints/tekton-task.api";
-import { IKubeObjectMetadata } from "../../../client/api/kube-object";
-import { namespaceStore } from "../+namespaces/namespace.store";
+import {Select, SelectOption} from "../select";
+import {Icon} from "../icon";
+import {TaskResources,} from "../../api/endpoints";
+import {Notifications} from "../notifications";
+import {systemName} from "../input/input.validators";
+import {createMuiTheme, Paper} from "@material-ui/core";
+import {ThemeProvider} from "@material-ui/core/styles";
+import {configStore} from "../../config.store";
+import {WorkspaceDeclaration as Workspace} from "../../api/endpoints/tekton-task.api";
+import {Collapse} from "../collapse";
+
 interface Props<T = any> extends Partial<Props> {
   value?: T;
 
@@ -95,7 +95,6 @@ export class CopyTaskDialog extends React.Component<Props> {
   @observable ifSwitch: boolean = false;
   @observable name: string;
   @observable change: boolean;
-
 
   static open(graph: any, node: any, namespace: string) {
     CopyTaskDialog.isOpen = true;
@@ -159,7 +158,9 @@ export class CopyTaskDialog extends React.Component<Props> {
     ];
 
     try {
-      if (!this.ifSwitch) { this.value.taskName = this.value.taskName; }
+      // if (!this.ifSwitch) {
+      //   this.value.taskName = this.value.taskName;
+      // }
 
       const task = taskStore.getByName(this.value.taskName, CopyTaskDialog.namespace);
       if (task === undefined) {
@@ -186,7 +187,7 @@ export class CopyTaskDialog extends React.Component<Props> {
           task.spec.resources = resources;
           task.spec.workspaces = workspaces;
           task.spec.steps = steps;
-          taskStore.apply(task, { ...task });
+          taskStore.apply(task, {...task});
         }
       }
       Notifications.ok(<>Task {this.value.taskName} save succeeded</>);
@@ -208,10 +209,79 @@ export class CopyTaskDialog extends React.Component<Props> {
 
   get taskOptions() {
     const options = taskStore
-      .getAllByNs(CopyTaskDialog.namespace)
-      .map((item) => ({ value: item.getName() }))
-      .slice();
+    .getAllByNs(CopyTaskDialog.namespace)
+    .map((item) => ({value: item.getName()}))
+    .slice();
     return [...options];
+  }
+
+  rUnSwitch() {
+    return (
+      <div hidden={!this.ifSwitch}>
+        <Select
+          value={this.value.taskName}
+          options={this.taskOptions}
+          formatOptionLabel={this.formatOptionLabel}
+          themeName={"light"}
+          onChange={(value: string) => {
+            this.value.taskName = value;
+            const taskName: any = toJS(this.value.taskName);
+            this.value.taskName = taskName.value;
+          }}
+        />
+      </div>
+    )
+  }
+
+  rSwitch() {
+    return (
+      <div hidden={this.ifSwitch}>
+        <SubTitle title={<Trans>Task Name</Trans>}/>
+        <Input
+          required={true}
+          validators={systemName}
+          placeholder={_i18n._("Task Name")}
+          value={this.value.taskName}
+          onChange={(value) => (this.value.taskName = value)}
+        />
+        <br/>
+        <Collapse panelName={<Trans>WorkSpaces</Trans>} key={"WorkSpaces"}>
+          <TaskSpecWorkSpaces
+            value={this.value.workspace}
+            onChange={(value) => {
+              this.value.workspace = value
+            }}
+          />
+        </Collapse>
+        <br/>
+        <Collapse panelName={<Trans>PipelineParams</Trans>} key={"PipelineParams"}>
+          <PipelineParamsDetails
+            value={this.value.pipelineParams}
+            onChange={(value) => {
+              this.value.pipelineParams = value
+            }}
+          />
+        </Collapse>
+        <br/>
+        <Collapse panelName={<Trans>Resources</Trans>} key={"Resources"}>
+          <ResourcesDetail
+            value={this.value.resources}
+            onChange={(value) => {
+              this.value.resources = value
+            }}
+          />
+        </Collapse>
+        <br/>
+        <Collapse panelName={<Trans>TaskStep</Trans>} key={"TaskStep"}>
+          <MultiTaskStepDetails
+            value={this.value.taskSteps}
+            onChange={(value) => {
+              this.value.taskSteps = value
+            }}
+          />
+        </Collapse>
+      </div>
+    )
   }
 
   render() {
@@ -239,59 +309,13 @@ export class CopyTaskDialog extends React.Component<Props> {
                   }
                   label={
                     this.ifSwitch
-                      ? (<SubTitle title={<Trans>Select module</Trans>} />)
-                      : (<SubTitle title={<Trans>Template configuration</Trans>} />)
+                      ? (<SubTitle title={<Trans>Select module</Trans>}/>)
+                      : (<SubTitle title={<Trans>Template configuration</Trans>}/>)
                   }
                 />
               </FormGroup>
-              
-              <div hidden={this.ifSwitch}>
-                <SubTitle title={<Trans>Task Name</Trans>} />
-                <Input
-                  required={true}
-                  validators={systemName}
-                  placeholder={_i18n._("Task Name")}
-                  value={this.value.taskName}
-                  onChange={(value) => (this.value.taskName = value)}
-                />
-
-                <br />
-                <TaskSpecWorkSpaces
-                  value={this.value.workspace}
-                  onChange={(vaule) => { this.value.workspace = vaule }}
-                />
-
-                <br />
-                <PipelineParamsDetails
-                  value={this.value.pipelineParams}
-                  onChange={(value) => { this.value.pipelineParams = value }}
-                />
-
-                <br />
-                <ResourcesDetail
-                  value={this.value.resources}
-                  onChange={(value) => { this.value.resources = value }}
-                />
-                <br />
-                <MultiTaskStepDetails
-                  value={this.value.taskSteps}
-                  onChange={(value) => { this.value.taskSteps = value }}
-                />
-              </div>
-
-              <div hidden={!this.ifSwitch}>
-                <Select
-                  value={this.value.taskName}
-                  options={this.taskOptions}
-                  formatOptionLabel={this.formatOptionLabel}
-                  onChange={(value: string) => {
-                    this.value.taskName = value;
-                    const taskName: any = toJS(this.value.taskName);
-                    this.value.taskName = taskName.value;
-                  }}
-                />
-              </div>
-
+              {this.rSwitch()}
+              {this.rUnSwitch()}
             </WizardStep>
           </Wizard>
         </Dialog>

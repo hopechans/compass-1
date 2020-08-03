@@ -3,12 +3,16 @@ import React from "react";
 import {observable} from "mobx";
 import {ActionMeta} from "react-select/src/types";
 import {Button} from "../button";
-import {VolumeClaimDetails} from "./volumeclaim-details";
 import {Icon} from "../icon";
 import {Collapse} from "../collapse"
 import {volumeClaim, VolumeClaimTemplate} from "./common";
 import {_i18n} from "../../i18n";
-import {t} from "@lingui/macro";
+import {t, Trans} from "@lingui/macro";
+import {Grid, Paper} from "@material-ui/core";
+import {SubTitle} from "../layout/sub-title";
+import {Input} from "../input";
+import {isNumber} from "../input/input.validators";
+import {stopPropagation} from "../../utils";
 
 export interface VolumeClaimTemplateProps<T = any> extends Partial<VolumeClaimTemplateProps> {
   value?: T;
@@ -31,39 +35,71 @@ export class MultiVolumeClaimDetails extends React.Component<VolumeClaimTemplate
     this.value.splice(index, 1)
   }
 
+  rVolumeClaim(index: number) {
+    return (
+      <>
+        <br/>
+        <Paper elevation={3} style={{padding: 25}}>
+          <Grid container spacing={1}>
+            <Grid item xs={11}>
+              <SubTitle title={<Trans>Name</Trans>}/>
+              <Input
+                required={true}
+                placeholder={_i18n._(t`Name`)}
+                value={this.value[index].metadata.name}
+                onChange={value => this.value[index].metadata.name = value}
+              />
+              <SubTitle title={<Trans>Request Storage Size</Trans>}/>
+              <Input
+                required={true}
+                placeholder={_i18n._(t`Request Storage Size(MB)`)}
+                type="number"
+                validators={isNumber}
+                value={this.value[index].spec.resources.requests.storage}
+                onChange={value => this.value[index].spec.resources.requests.storage = value}
+              />
+            </Grid>
+            <Grid item xs style={{textAlign: "center"}}>
+              <Icon
+                style={{margin: "0.8vw, 0.9vh", position: "absolute"}}
+                small
+                tooltip={_i18n._(t`Remove Environment`)}
+                className="remove-icon"
+                material="clear"
+                onClick={(e) => {
+                  this.remove(index);
+                  e.stopPropagation();
+                }}
+              />
+            </Grid>
+          </Grid>
+        </Paper>
+      </>
+    )
+  }
+
   render() {
 
-    const genExtra = (index: number) => {
-      return (
-        <Icon
-          material={"delete_outline"}
-          style={{color: '#ff4d4f'}}
-          onClick={(event) => {
-            this.remove(index);
-            event.preventDefault();
-            event.stopPropagation();
-          }}
-        />
-      )
-    }
-
     return (
-      <div>
-        <br/>
-        <Button primary onClick={() => this.add()}><span>{_i18n._(t`Addition VolumeClaim`)}</span></Button>
-        <br/><br/>
+      <>
+        <SubTitle
+          title={
+            <>
+              <Trans>VolumeClaim</Trans>
+              &nbsp;&nbsp;
+              <Icon material={"edit"} onClick={event => {
+                stopPropagation(event);
+                this.add()
+              }} small/>
+            </>
+          }>
+        </SubTitle>
         {this.value.map((item, index) => {
           return (
-            <Collapse
-              panelName={`VolumeClaim ` + this.value[index].metadata.name}
-              extraExpand={genExtra(index)}
-              key={"volumeClaim" + index}>
-              <VolumeClaimDetails
-                value={this.value[index]} onChange={value => this.value[index] = value}/>
-            </Collapse>
+            this.rVolumeClaim(index)
           )
         })}
-      </div>
+      </>
     )
   }
 }

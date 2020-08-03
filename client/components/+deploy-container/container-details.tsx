@@ -5,13 +5,13 @@ import {themeStore} from "../../theme.store";
 import {EnvironmentDetails} from "./env-details";
 import {BaseDetails} from "./base-details";
 import {CommandDetails} from "./command-details";
-import {ReadyprobeDetails} from "./readyprobe-details"
-import {LiveprobeDetails} from "./liveprobe-details";
+import {ProbeDetails} from "./probe-details";
 import {LifeCycleDetails} from "./lifecycle-details";
 import {ArgsDetails} from "./args-details";
 import {observable} from "mobx";
 import {container} from "./common";
 import {VolumeMountDetails} from "./volume-mount";
+import {Paper} from "@material-ui/core";
 
 interface Props<T = any> extends Partial<Props> {
   value?: T;
@@ -19,13 +19,13 @@ interface Props<T = any> extends Partial<Props> {
 
   onChange?(option: T, meta?: ActionMeta<any>): void;
 
+  args?: boolean;
   base?: boolean;
   commands?: boolean;
-  args?: boolean;
   environment?: boolean;
-  readyProbe?: boolean;
   liveProbe?: boolean;
   lifeCycle?: boolean;
+  readyProbe?: boolean;
   volumeMounts?: boolean;
 }
 
@@ -33,14 +33,13 @@ interface Props<T = any> extends Partial<Props> {
 export class ContainerDetails extends React.Component<Props> {
 
   static defaultProps = {
+    args: true,
     base: true,
     commands: true,
-    args: true,
     environment: true,
-    readyProbe: true,
     liveProbe: true,
     lifeCycle: true,
-    divider: true,
+    readyProbe: true,
     volumeMounts: true,
   }
 
@@ -52,47 +51,63 @@ export class ContainerDetails extends React.Component<Props> {
     const {base, commands, args, environment, readyProbe, liveProbe, lifeCycle, volumeMounts} = this.props;
 
     return (
-      <div>
+      <>
         {base ?
           <BaseDetails
-            themeName={this.theme} value={this.value.base} onChange={(value) => this.value.base = value}
+            themeName={this.theme} value={this.value.base}
+            onChange={(value) => this.value.base = value}
           /> : null}
-        <br />
-        {commands ?
-          <CommandDetails
-            themeName={this.theme} value={this.value.commands} onChange={(value) => this.value.commands = value}
-          /> : null}
-        <br />
-        {args ?
-          <ArgsDetails
-            themeName={this.theme} value={this.value.args} onChange={(value) => this.value.args = value}
-          /> : null}
-        <br />
-        {environment ?
-          <EnvironmentDetails
-            themeName={this.theme} value={this.value.environment} onChange={(value) => this.value.environment = value}
-          /> : null}
-        <br />
+        <br/>
         {readyProbe ?
-          <ReadyprobeDetails
-            themeName={this.theme} value={this.value.readyProbe} onChange={(value) => this.value.readyProbe = value}
+          <ProbeDetails
+            className={"ReadyProbe"}
+            themeName={this.theme}
+            value={this.value.readyProbe}
+            onChange={(value) => this.value.readyProbe = value}
           /> : null}
-        <br />
+        <br/>
         {liveProbe ?
-          <LiveprobeDetails
-            themeName={this.theme} value={this.value.liveProbe} onChange={(value) => this.value.liveProbe = value}
+          <ProbeDetails
+            className={"LiveNessProbe"}
+            themeName={this.theme}
+            value={this.value.liveProbe}
+            onChange={(value) => this.value.liveProbe = value}
           /> : null}
-        <br />
+        <br/>
         {lifeCycle ?
           <LifeCycleDetails
-            themeName={this.theme} value={this.value.lifeCycle} onChange={(value) => this.value.lifeCycle = value}
+            themeName={this.theme} value={this.value.lifeCycle}
+            onChange={(value) => this.value.lifeCycle = value}
           /> : null}
-
+        <br/>
+        {environment ?
+          <EnvironmentDetails
+            themeName={this.theme}
+            value={this.value.environment}
+            onChange={(value) => this.value.environment = value}
+          /> : null}
+        <br/>
+        {commands ?
+          <CommandDetails
+            themeName={this.theme}
+            value={this.value.commands}
+            onChange={(value) => this.value.commands = value}
+          /> : null}
+        <br/>
+        {args ?
+          <ArgsDetails
+            themeName={this.theme}
+            value={this.value.args}
+            onChange={(value) => this.value.args = value}
+          /> : null}
+        <br/>
         {volumeMounts ?
           <VolumeMountDetails
-            themeName={this.theme} value={this.value.volumeMounts} onChange={(value) => this.value.volumeMounts = value}
+            themeName={this.theme}
+            value={this.value.volumeMounts}
+            onChange={(value) => this.value.volumeMounts = value}
           /> : null}
-      </div>
+      </>
     )
   }
 }

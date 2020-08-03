@@ -1,8 +1,7 @@
 import {observer} from "mobx-react";
 import React from "react";
 import {observable} from "mobx";
-import {Select, SelectOption} from "../select";
-import {Icon} from "../icon";
+import {Select} from "../select";
 import {SubTitle} from "../layout/sub-title";
 import {Input} from "../input";
 import {_i18n} from "../../i18n";
@@ -29,32 +28,12 @@ export class BaseDetails extends React.Component<Props> {
   @observable value: Base = this.props.value || base
   @observable namespace: string = '';
 
-  formatOptionLabel = (option: SelectOption) => {
-    const {value, label} = option;
-    return label || (
-      <div>
-        <Icon small material="layers"/>
-        {value}
-      </div>
-    );
-  }
-
   get selectOptions() {
     return [
       "IfNotPresent",
       "Always",
       "Never",
     ];
-  }
-
-  formatOptionSelectImageAddressLabel = (option: SelectOption) => {
-    const {value} = option;
-    return (
-      <>
-        <Icon small material="layers"/>
-        {value}
-      </>
-    );
   }
 
   get selectImageAddressOptions() {
@@ -65,105 +44,55 @@ export class BaseDetails extends React.Component<Props> {
     ]
   }
 
-  render() {
-
+  rImageFrom() {
     return (
-      <div>
-
-        <SubTitle title={<Trans>Container Name</Trans>}/>
-        <Input
-          required={true}
-          placeholder={_i18n._(t`Container Name`)}
-          value={this.value.name}
-          onChange={v => this.value.name = v}
-        />
-
-        <br/>
-        <Grid
-          container
-          spacing={5}
-          alignItems={"center"}
-          direction={"row"}
-        >
-          <Grid item xs>
-            <SubTitle title={<Trans>Image From</Trans>}/>
-            <Select
-              formatOptionLabel={this.formatOptionSelectImageAddressLabel}
-              options={this.selectImageAddressOptions}
-              value={this.value.imageFrom}
-              onChange={v => {
-                this.value.imageFrom = v.value;
-              }}
-            />
-          </Grid>
-          <Grid item xs>
-            <SubTitle title={<Trans>Image Pull Policy</Trans>}/>
-            <Select
-              required={true}
-              formatOptionLabel={this.formatOptionLabel}
-              options={this.selectOptions}
-              value={this.value.imagePullPolicy}
-              onChange={value => this.value.imagePullPolicy = value.value}
-            />
-          </Grid>
-        </Grid>
-
-        <br/>
-        {this.value.imageFrom != "" ?
-          <div>
+      <>
+        {this.value.imageFrom ?
+          <>
             <SubTitle title={<Trans>Image Address</Trans>}/>
-            {this.value.imageFrom == "public" ?
-              <Input
-                required={true}
-                placeholder={_i18n._(t`Image Address`)}
-                value={this.value.image}
-                onChange={v => this.value.image = v}
-              /> : null}
-            {this.value.imageFrom == "internal" ?
-              <Input
-                required={true}
-                placeholder={_i18n._(t`Image Address`)}
-                value={this.value.image}
-                onChange={v => this.value.image = v}
-              /> : null}
-            {this.value.imageFrom == "private" ?
-              <div>
-                <Input
-                  required autoFocus
-                  placeholder={_i18n._(t`Image Address`)}
-                  value={this.value.image}
-                  onChange={v => this.value.image = v}
+            <Input
+              required={true}
+              placeholder={_i18n._(t`Image Address`)}
+              value={this.value.image}
+              onChange={v => this.value.image = v}
+            />
+          </> : null}
+        {this.value.imageFrom == "private" ?
+          <>
+            <br/>
+            <Grid container spacing={5}>
+              <Grid item xs>
+                <SubTitle title={<Trans>Secret Namespace</Trans>}/>
+                <NamespaceSelect
+                  value={this.namespace}
+                  placeholder={_i18n._(t`Secret Namespace`)}
+                  themeName="light"
+                  className="box grow"
+                  onChange={(value) => {
+                    this.namespace = value.value
+                  }}
                 />
-                <br/>
-                <Grid container spacing={5}>
-                  <Grid item xs>
-                    <SubTitle title={<Trans>Secret Namespace</Trans>}/>
-                    <NamespaceSelect
-                      value={this.namespace}
-                      placeholder={_i18n._(t`Secret Namespace`)}
-                      themeName="light"
-                      className="box grow"
-                      onChange={(value) => {
-                        this.namespace = value.value
-                      }}
-                    />
-                  </Grid>
-                  {this.namespace ?
-                    <Grid item xs>
-                      <SubTitle title={<Trans>Image Pull Secret</Trans>}/>
-                      <SecretsSelect
-                        required autoFocus
-                        value={this.value.imagePullSecret}
-                        namespace={this.namespace}
-                        onChange={value => this.value.imagePullSecret = value.value}
-                      />
-                    </Grid> : null
-                  }
-                </Grid>
-              </div> : null}
-          </div> : null
-        }
+              </Grid>
+              {this.namespace ?
+                <Grid item xs>
+                  <SubTitle title={<Trans>Image Pull Secret</Trans>}/>
+                  <SecretsSelect
+                    required autoFocus
+                    value={this.value.imagePullSecret}
+                    namespace={this.namespace}
+                    onChange={value => this.value.imagePullSecret = value.value}
+                  />
+                </Grid> : null
+              }
+            </Grid>
+          </> : null}
+      </>
+    )
+  }
 
+  rLimit() {
+    return (
+      <>
         <br/>
         <Grid container spacing={5}>
           <Grid item xs>
@@ -191,6 +120,14 @@ export class BaseDetails extends React.Component<Props> {
             }/>
           </Grid>
         </Grid>
+      </>
+    )
+  }
+
+  rRequired() {
+    return (
+      <>
+        <br/>
         <Grid container spacing={5}>
           <Grid item xs>
             <SubTitle title={<Trans>Required CPU</Trans>} children={
@@ -217,6 +154,52 @@ export class BaseDetails extends React.Component<Props> {
             }/>
           </Grid>
         </Grid>
+      </>
+    )
+  }
+
+  render() {
+
+    return (
+      <div>
+        <SubTitle title={<Trans>Container Name</Trans>}/>
+        <Input
+          required={true}
+          placeholder={_i18n._(t`Container Name`)}
+          value={this.value.name}
+          onChange={v => this.value.name = v}
+        />
+        <br/>
+        <Grid
+          container
+          spacing={5}
+          alignItems={"center"}
+          direction={"row"}
+        >
+          <Grid item xs>
+            <SubTitle title={<Trans>Image From</Trans>}/>
+            <Select
+              themeName={"light"}
+              options={this.selectImageAddressOptions}
+              value={this.value.imageFrom}
+              onChange={v => {
+                this.value.imageFrom = v.value;
+              }}
+            />
+          </Grid>
+          <Grid item xs>
+            <SubTitle title={<Trans>Image Pull Policy</Trans>}/>
+            <Select
+              required={true}
+              options={this.selectOptions}
+              value={this.value.imagePullPolicy}
+              onChange={value => this.value.imagePullPolicy = value.value}
+            />
+          </Grid>
+        </Grid>
+        {this.value.imageFrom != "" ? this.rImageFrom() : null}
+        {this.rLimit()}
+        {this.rRequired()}
       </div>
     )
   }

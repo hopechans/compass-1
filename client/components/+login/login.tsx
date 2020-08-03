@@ -4,7 +4,6 @@ import store from 'store'
 import {observable} from "mobx";
 import {observer} from "mobx-react";
 import {t, Trans} from "@lingui/macro";
-import Snackbar from '@material-ui/core/Snackbar';
 import Alert from "@material-ui/lab/Alert";
 import {SubTitle} from '../layout/sub-title'
 import {cssNames} from "../../utils";
@@ -18,6 +17,7 @@ import {_i18n} from "../../i18n";
 import {Input} from '../input'
 import {Button} from '../button'
 import './login.scss'
+import {Paper, Slide} from "@material-ui/core";
 
 interface Props extends RouteComponentProps {
   history: any
@@ -73,11 +73,11 @@ class LoginComponet extends React.Component<Props> {
     return (
       <div className={cssNames("login-main", themeStore.activeTheme.type)}>
 
-        <Snackbar
-          anchorOrigin={{vertical: 'top', horizontal: 'center'}}
-          style={{ padding: "2px 70px 2px" }}
-          open={this.loading}
-          message={"Loading ....."} />
+        <Slide direction={"down"} in={this.loading} style={{ marginTop: "12px"}}>
+          <Paper elevation={8} style={{ paddingLeft: "2vw", paddingTop: "1vh", width: "14vw", height:"4vh", flexWrap: 'wrap' }}>
+              Loading......
+            </Paper>
+        </Slide>
 
         <div className="login-header">
           <div className="login-title">

@@ -9,6 +9,7 @@ import {Input} from "../input";
 import {observable} from "mobx";
 import {envVar, EnvVar} from "./common";
 import {Grid} from "@material-ui/core";
+import {stopPropagation} from "../../utils";
 
 interface EvnVarProps<T = any> extends Partial<EvnVarProps> {
   value?: T;
@@ -29,72 +30,70 @@ export class EvnVarDetails extends React.Component<EvnVarProps> {
     this.value.splice(index, 1);
   };
 
-  renderAdd() {
+  rEnv(index: number) {
     return (
-      <Icon
-        small
-        tooltip={_i18n._(t`AddEnv`)}
-        material="add_circle_outline"
-        onClick={(e) => {
-          this.add();
-          e.stopPropagation();
-        }}
-      />
-    );
+      <>
+        <Grid container spacing={5}>
+          <Grid item xs={5}>
+            <Input
+              className="item"
+              placeholder={_i18n._(t`Name`)}
+              title={this.value[index].name}
+              value={this.value[index].name}
+              onChange={(value) => {
+                this.value[index].name = value;
+              }}
+            />
+          </Grid>
+          <Grid item xs={5}>
+            <Input
+              className="item"
+              placeholder={_i18n._(t`Value`)}
+              title={this.value[index].value}
+              value={this.value[index].value}
+              onChange={(value) => {
+                this.value[index].value = value;
+              }}
+            />
+          </Grid>
+          <Grid item xs>
+            <Icon
+              small
+              tooltip={_i18n._(t`Remove Command`)}
+              className="remove-icon"
+              material="clear"
+              onClick={(event) => {
+                this.remove(index);
+                stopPropagation(event)
+              }}
+            />
+          </Grid>
+        </Grid>
+      </>
+    )
   }
 
   render() {
     return (
-      <div>
-        <SubTitle className="fields-title" title={<Trans>Environment</Trans>}>
-          {this.renderAdd()}
+      <>
+        <SubTitle
+          title={
+            <>
+              <Trans>Environment</Trans>
+              &nbsp;&nbsp;
+              <Icon material={"edit"} onClick={event => {
+                stopPropagation(event);
+                this.add()
+              }} small/>
+            </>
+          }>
         </SubTitle>
         <div className="envs">
           {this.value.map((item, index) => {
-            return (
-              <div key={index}>
-                <Grid container spacing={5}>
-                  <Grid item xs>
-                    <Input
-                      className="item"
-                      placeholder={_i18n._(t`Name`)}
-                      title={this.value[index].name}
-                      value={this.value[index].name}
-                      onChange={(value) => {
-                        this.value[index].name = value;
-                      }}
-                    />
-                  </Grid>
-                  <Grid item xs>
-                    <Input
-                      className="item"
-                      placeholder={_i18n._(t`Value`)}
-                      title={this.value[index].value}
-                      value={this.value[index].value}
-                      onChange={(value) => {
-                        this.value[index].value = value;
-                      }}
-                    />
-                  </Grid>
-                  <Grid item xs>
-                    <Icon
-                      small
-                      tooltip={_i18n._(t`Remove Env`)}
-                      className="remove-icon"
-                      material="remove_circle_outline"
-                      onClick={(e) => {
-                        this.remove(index);
-                        e.stopPropagation();
-                      }}
-                    />
-                  </Grid>
-                </Grid>
-                <br/>
-              </div>
-            );
+            return this.rEnv(index);
           })}
         </div>
-      </div>
+      </>
     );
   }
 }

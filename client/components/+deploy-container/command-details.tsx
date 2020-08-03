@@ -4,11 +4,12 @@ import React from "react";
 import {SubTitle} from "../layout/sub-title";
 import {Icon} from "../icon";
 import {_i18n} from "../../i18n";
-import {t} from "@lingui/macro";
+import {t, Trans} from "@lingui/macro";
 import {Input} from "../input";
 import {observable} from "mobx";
 import {commands} from "./common";
 import {Grid} from "@material-ui/core";
+import {stopPropagation} from "../../utils";
 
 interface Props<T = any> extends Partial<Props> {
   value?: T;
@@ -30,59 +31,60 @@ export class CommandDetails extends React.Component<Props> {
     this.value.splice(index, 1);
   }
 
-  renderAdd() {
+  rCommand(index: number) {
     return (
-      <Icon
-        small
-        tooltip={_i18n._(t`Command`)}
-        material="add_circle_outline"
-        onClick={(e) => {
-          this.add();
-          e.stopPropagation();
-        }}
-      />
+      <>
+        <Grid container spacing={1} alignItems={"center"} direction={"row"}>
+          <Grid item xs={11}>
+            <Input
+              className="item"
+              placeholder={_i18n._(t`Command`)}
+              value={this.value[index]}
+              onChange={value => {
+                this.value[index] = value
+              }}
+            />
+          </Grid>
+          <Grid item xs>
+            <Icon
+              small
+              tooltip={_i18n._(t`Remove Command`)}
+              className="remove-icon"
+              material="clear"
+              onClick={(event) => {
+                this.remove(index);
+                stopPropagation(event)
+              }}
+            />
+          </Grid>
+        </Grid>
+        <br/>
+      </>
     )
   }
 
   render() {
 
     return (
-      <div>
-        <SubTitle className="fields-title" title={_i18n._("Command") + ' ' + this.value.length}>{this.renderAdd()}</SubTitle>
+      <>
+        <SubTitle
+          title={
+            <>
+              <Trans>Command</Trans>
+              &nbsp;&nbsp;
+              <Icon material={"edit"} onClick={event => {
+                stopPropagation(event);
+                this.add()
+              }} small/>
+            </>
+          }>
+        </SubTitle>
         <div className="command">
           {this.value.map((item, index) => {
-            return (
-              <div key={index}>
-                <Grid container spacing={5}>
-                  <Grid item xs>
-                    <Input
-                      className="item"
-                      placeholder={_i18n._(t`Command`)}
-                      value={this.value[index]}
-                      onChange={value => {
-                        this.value[index] = value
-                      }}
-                    />
-                  </Grid>
-                  <Grid item xs>
-                    <Icon
-                      small
-                      tooltip={_i18n._(t`Remove Command`)}
-                      className="remove-icon"
-                      material="remove_circle_outline"
-                      onClick={(e) => {
-                        this.remove(index);
-                        e.stopPropagation()
-                      }}
-                    />
-                  </Grid>
-                </Grid>
-                <br/>
-              </div>
-            )
+            return this.rCommand(index);
           })}
         </div>
-      </div>
+      </>
     )
   }
 

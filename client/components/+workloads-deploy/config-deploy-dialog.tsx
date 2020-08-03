@@ -1,20 +1,20 @@
 import "./config-deploy-dialog.scss"
 
 import React from "react";
-import { observer } from "mobx-react";
-import { Dialog, DialogProps } from "../dialog";
-import { observable } from "mobx";
-import { Trans } from "@lingui/macro";
-import { Wizard, WizardStep } from "../wizard";
-import { Container, container, MultiContainerDetails } from "../+deploy-container";
-import { Collapse } from "../collapse";
-import { deployService, DeployServiceDetails, Service } from "../+deploy-service";
-import { MultiVolumeClaimDetails, VolumeClaimTemplate } from "../+deploy-volumeclaim";
-import { app, App } from "../+deploy-app";
-import { AppDetails } from "../+deploy-app";
-import { deployStore } from "./deploy.store";
-import { Notifications } from "../notifications";
-import { Deploy } from "../../api/endpoints";
+import {observer} from "mobx-react";
+import {Dialog, DialogProps} from "../dialog";
+import {observable} from "mobx";
+import {Trans} from "@lingui/macro";
+import {Wizard, WizardStep} from "../wizard";
+import {Container, container, MultiContainerDetails} from "../+deploy-container";
+import {Collapse} from "../collapse";
+import {deployService, DeployServiceDetails, Service} from "../+deploy-service";
+import {MultiVolumeClaimDetails, VolumeClaimTemplate} from "../+deploy-volumeclaim";
+import {app, App} from "../+deploy-app";
+import {AppDetails} from "../+deploy-app";
+import {deployStore} from "./deploy.store";
+import {Notifications} from "../notifications";
+import {Deploy} from "../../api/endpoints";
 
 interface Props extends DialogProps {
 
@@ -96,29 +96,28 @@ export class ConfigDeployDialog extends React.Component<Props> {
     return (
       <Dialog
         isOpen={ConfigDeployDialog.isOpen}
+        className="ConfigDeployDialog"
         onOpen={this.onOpen}
         close={this.close}
       >
-        <Wizard className="ConfigDeployDialog" header={header} done={this.close}>
-          <WizardStep contentClass="flex gaps column" next={this.updateDeploy}>
-            <div className="init-form">
-              <Collapse panelName={<Trans>App</Trans>} key={"app"}>
-                <AppDetails value={this.app} onChange={value => this.app = value} />
-              </Collapse>
-              <br />
-              <Collapse panelName={<Trans>MultiContainer</Trans>} key={"multiContainer"}>
+        <Wizard className={"ConfigDeployWizard"} header={header} done={this.close}>
+          <WizardStep className={"ConfigDeployWizardStep"} contentClass="flex gaps column" next={this.updateDeploy}>
+            <div>
+              <AppDetails value={this.app} onChange={value => this.app = value}/>
+              <br/>
+              <Collapse panelName={<Trans>Containers</Trans>} key={"containers"}>
                 <MultiContainerDetails value={this.containers}
-                  onChange={value => this.containers = value} />
+                                       onChange={value => this.containers = value}/>
               </Collapse>
-              <br />
-              <Collapse panelName={<Trans>DeployService</Trans>} key={"deployService"}>
+              <br/>
+              <Collapse panelName={<Trans>Service</Trans>} key={"services"}>
                 <DeployServiceDetails value={this.service}
-                  onChange={value => this.service = value} />
+                                      onChange={value => this.service = value}/>
               </Collapse>
-              <br />
-              <Collapse panelName={<Trans>MultiVolumeClaim</Trans>} key={"multiVolumeClaim"}>
+              <br/>
+              <Collapse panelName={<Trans>Volume</Trans>} key={"volume"}>
                 <MultiVolumeClaimDetails value={this.volumeClaims}
-                  onChange={value => this.volumeClaims = value} />
+                                         onChange={value => this.volumeClaims = value}/>
               </Collapse>
             </div>
           </WizardStep>

@@ -67,25 +67,22 @@ export class MultiContainerDetails extends React.Component<Props> {
           />
         )
       }
-      return (null)
+      return null
     }
 
     return (
-      <div>
-        <Button primary onClick={() => this.add()}><span>{_i18n._(t`Add Container`)}</span></Button>
-        <br/><br/>
+      <>
+        <Button primary onClick={() => this.add()}>
+          <span>{_i18n._(t`Add Container`)}</span>
+        </Button>
+        <br/>
+        <br/>
         {this.value.map((item, index) => {
           return (
             <Collapse panelName={<Trans>Container</Trans>} extraExpand={genExtra(index)} key={"container" + index}>
               <ContainerDetails
-                base={true}
-                commands={true}
-                args={true}
-                environment={true}
-                readyProbe={true}
-                liveProbe={true}
-                lifeCycle={true}
-                volumeMounts={true}
+                args={true} base={true} commands={true} environment={true}
+                liveProbe={true} lifeCycle={true} volumeMounts={true} readyProbe={true}
                 value={this.value[index]}
                 onChange={(value: any) => {
                   this.value[index] = value
@@ -94,7 +91,7 @@ export class MultiContainerDetails extends React.Component<Props> {
             </Collapse>
           )
         })}
-      </div>
+      </>
     )
   }
 }

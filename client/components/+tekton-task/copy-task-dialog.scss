@@ -1,8 +1,7 @@
 .CopyAddDeployDialog {
   .Wizard {
-    --wizard-width: 60vw;
-    --wizard-content-height: 70vh;
-    --wizard-content-max-height: 70vh;
+    width: 50vw;
+    height: 85vh;
   }
 
   .WizardStep {
