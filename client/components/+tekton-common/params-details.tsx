@@ -9,6 +9,7 @@ import { Input } from "../input";
 import { observable } from "mobx";
 import { Params } from "./common";
 import {Grid} from "@material-ui/core";
+import {stopPropagation} from "../../utils";
 
 interface Props<T = any> extends Partial<Props> {
   value?: T;
@@ -36,20 +37,6 @@ export class ParamsDetails extends React.Component<Props> {
   remove = (index: number) => {
     this.value.splice(index, 1);
   };
-
-  renderAdd() {
-    return (
-      <Icon
-        small
-        tooltip={_i18n._(t`Params`)}
-        material="edit"
-        onClick={(e) => {
-          this.add();
-          e.stopPropagation();
-        }}
-      />
-    );
-  }
 
   rParams(index: number, disable: boolean) {
     return (
@@ -103,8 +90,20 @@ export class ParamsDetails extends React.Component<Props> {
 
     return (
       <div>
-        <SubTitle className="fields-title" title="Params">
-          {!disable ? this.renderAdd() : null}
+        <SubTitle
+          title={
+            <>
+              <Trans>Params</Trans>
+              {!disable?
+                <>
+                  &nbsp;&nbsp;
+                  <Icon material={"edit"} className={"editIcon"} onClick={event => {
+                    stopPropagation(event);
+                    this.add()
+                  }} small/>
+                </>: null}
+            </>
+          }>
         </SubTitle>
         <div className="params">
           {this.value.map((item, index) => {

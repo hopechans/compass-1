@@ -9,6 +9,7 @@ import {PipelineTaskInputResource} from "../../api/endpoints";
 import {SubTitle} from "../layout/sub-title";
 import {_i18n} from "../../i18n";
 import {Grid} from "@material-ui/core";
+import {stopPropagation} from "../../utils";
 
 interface Props<T = any> extends Partial<Props> {
   value?: T;
@@ -42,75 +43,87 @@ export class PipelineTaskInputResourceDetail extends React.Component<Props> {
     this.value.splice(index, 1);
   };
 
+  rTab() {
+    return (
+      <>
+        <Grid container spacing={5}>
+          <Grid item xs={5}>
+            <Trans>Name</Trans>
+          </Grid>
+          <Grid item xs={5}>
+            <Trans>Resource</Trans>
+          </Grid>
+        </Grid>
+        <br/>
+      </>
+    )
+  }
+
+  rForm(index: number, disable: boolean) {
+    return (
+      <>
+        <Grid container spacing={5}>
+          <Grid item xs={5}>
+            <Input
+              placeholder={_i18n._(t`Name`)}
+              disabled={true}
+              value={this.value[index].name}
+              onChange={(value) => {
+                this.value[index].name = value;
+
+              }}
+            />
+          </Grid>
+          <Grid item xs={5}>
+            <Input
+              placeholder={_i18n._(t`Value`)}
+              value={this.value[index].resource}
+              onChange={(value) => {
+                this.value[index].resource = value;
+                console.log(this.value[index].resource);
+              }}
+            />
+          </Grid>
+          {!disable ?? <Grid item xs>
+            <Icon
+              small
+              material="clear"
+              onClick={(e) => {
+                this.remove(index);
+                e.stopPropagation();
+              }}
+            />
+          </Grid>}
+        </Grid>
+        <br/>
+      </>
+    )
+  }
+
   render() {
     const {title, disable} = this.props;
     return (
-      <div className="params">
-        <SubTitle className="fields-title" title={title}>
-          {!disable ?
-            <Icon
-              small
-              tooltip={_i18n._(t`resource`)}
-              material="edit"
-              onClick={(e) => {
-                this.add();
-                e.stopPropagation();
-              }}
-            /> : null}
+      <>
+        <SubTitle
+          title={
+            <>
+              {title}
+              {!disable ?
+                <>
+                  &nbsp;&nbsp;
+                  <Icon material={"edit"} className={"editIcon"} onClick={event => {
+                    stopPropagation(event);
+                    this.add()
+                  }} small/>
+                </> : null}
+            </>
+          }>
         </SubTitle>
-        {this.value.length > 0 ?
-          <>
-            <Grid container spacing={5}>
-              <Grid item xs>
-                <Trans>Name</Trans>
-              </Grid>
-              <Grid item xs>
-                <Trans>Resource</Trans>
-              </Grid>
-            </Grid>
-            <br/>
-          </> : null}
+        {this.value.length > 0 ? this.rTab() : null}
         {this.value.map((item, index) => {
-          return (
-            <div>
-              <Grid container spacing={5}>
-                <Grid item xs>
-                  <Input
-                    placeholder={_i18n._(t`Name`)}
-                    disabled={true}
-                    value={this.value[index].name}
-                    onChange={(value) => {
-                      this.value[index].name = value;
-
-                    }}
-                  />
-                </Grid>
-                <Grid item xs>
-                  <Input
-                    placeholder={_i18n._(t`Value`)}
-                    value={this.value[index].resource}
-                    onChange={(value) => {
-                      this.value[index].resource = value;
-                      console.log(this.value[index].resource);
-                    }}
-                  />
-                </Grid>
-                {!disable ?? <Grid item xs>
-                  <Icon
-                    small
-                    material="clear"
-                    onClick={(e) => {
-                      this.remove(index);
-                      e.stopPropagation();
-                    }}
-                  />
-                </Grid>}
-              </Grid>
-              <br/>
-            </div>
-          )
+          return this.rForm(index, disable)
         })}
-      </div>
+      </>
     );
   }
 }

@@ -4,17 +4,16 @@ import {observable} from "mobx";
 import {ActionMeta} from "react-select/src/types";
 import {Select, SelectOption} from "../select";
 import {Icon} from "../icon";
-import {t, Trans} from "@lingui/macro";
+import {Trans} from "@lingui/macro";
 import {PipelineResources, pipelineResources} from "./common";
 import {SubTitle} from "../layout/sub-title";
-import {_i18n} from "../../i18n";
 import {Input} from "../input";
 import {Grid} from "@material-ui/core";
+import {stopPropagation} from "../../utils";
 
 interface Props<T = any> extends Partial<Props> {
   value?: T;
   themeName?: "dark" | "light" | "outlined";
-  divider?: boolean;
   disable?: boolean
 
   onChange?(option: T, meta?: ActionMeta<any>): void;
@@ -24,7 +23,6 @@ interface Props<T = any> extends Partial<Props> {
 export class PipelineResourceDetails extends React.Component<Props> {
 
   static defaultProps = {
-    divider: false,
     disable: false,
   }
 
@@ -39,7 +37,10 @@ export class PipelineResourceDetails extends React.Component<Props> {
   };
 
   get typeOptions() {
-    return ["image", "git"];
+    return [
+      "image",
+      "git"
+    ];
   }
 
   formatOptionLabel = (option: SelectOption) => {
@@ -54,76 +55,82 @@ export class PipelineResourceDetails extends React.Component<Props> {
     );
   };
 
+  rTab() {
+    return (
+      <>
+        <br/>
+        <Grid container spacing={5}>
+          <Grid item xs={5}>
+            <Trans>Name</Trans>
+          </Grid>
+          <Grid item xs={5}>
+            <Trans>ResourceType</Trans>
+          </Grid>
+        </Grid>
+        <br/>
+      </>
+    )
+  }
+
+  rForm(index: number, disable: boolean) {
+    return (
+      <>
+        <Grid container spacing={5}>
+          <Grid item xs={5}>
+            <Input
+              placeholder={"name"}
+              disabled={disable}
+              value={this.value[index].name}
+              onChange={(value) => (this.value[index].name = value)}
+            />
+          </Grid>
+          <Grid item xs={5}>
+            <Select
+              value={this.value[index].type}
+              isDisabled={disable}
+              options={this.typeOptions}
+              formatOptionLabel={this.formatOptionLabel}
+              onChange={(value) => (this.value[index].type = value.value)}
+            />
+          </Grid>
+          <Grid item xs>
+            <Icon
+              small
+              material="clear"
+              onClick={(e) => {
+                e.stopPropagation();
+                this.remove(index);
+              }}
+            />
+          </Grid>
+        </Grid>
+        <br/>
+      </>
+    )
+  }
+
   render() {
 
     const {disable} = this.props
-
     return (
-      <div className="Resource">
-        <SubTitle className="fields-title" title="Pipeline Resources">
-          <Icon
-            small
-            tooltip={_i18n._(t`Resource`)}
-            material="edit"
-            onClick={(e) => {
-              this.add();
-              e.stopPropagation();
-            }}
-          />
-        </SubTitle>
-        {this.value.length > 0 ? (
-          <>
-            <Grid container spacing={5}>
-              <Grid item xs>
-                <Trans>Name</Trans>
-              </Grid>
-              <Grid item xs>
-                <Trans>ResourceType</Trans>
-              </Grid>
-            </Grid>
-            <br/>
-          </>
-        ) : (
-          null
-        )}
-
-        {this.value.map((item, index) => {
-          return (
+      <>
+        <SubTitle
+          title={
             <>
-              <Grid container spacing={5}>
-                <Grid item xs>
-                  <Input
-                    placeholder={"name"}
-                    disabled={disable}
-                    value={this.value[index].name}
-                    onChange={(value) => (this.value[index].name = value)}
-                  />
-                </Grid>
-                <Grid item xs>
-                  <Select
-                    value={this.value[index].type}
-                    isDisabled={disable}
-                    options={this.typeOptions}
-                    formatOptionLabel={this.formatOptionLabel}
-                    onChange={(value) => (this.value[index].type = value.value)}
-                  />
-                </Grid>
-                <Grid item xs>
-                  <Icon
-                    small
-                    material="clear"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      this.remove(index);
-                    }}
-                  />
-                </Grid>
-              </Grid>
-              <br/>
+              <Trans>Pipeline Resources</Trans>
+              &nbsp;&nbsp;
+              <Icon material={"edit"} className={"editIcon"} onClick={event => {
+                stopPropagation(event);
+                this.add()
+              }} small/>
             </>
-          );
+          }>
+        </SubTitle>
+        {this.value.length > 0 ? this.rTab() : null}
+        {this.value.map((item, index) => {
+          return this.rForm(index, disable);
         })}
-      </div>
+      </>
     );
   }
 }

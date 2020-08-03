@@ -46,38 +46,29 @@ export class PipelineSaveDetails extends React.Component<Props> {
           value={this.value.pipelineName}
           disabled={true}
           validators={systemName}
-          onChange={(value) => (this.value.pipelineName = value)}
+          onChange={(value) => { this.value.pipelineName = value }}
         />
-        <br />
+        <br/>
         <PipelineParamsDetails
           value={this.value.params}
-          onChange={(value) => {
-            this.value.params = value;
-          }}
+          onChange={(value) => { this.value.params = value }}
         />
-        <br />
         <PipelineResourceDetails
           value={this.value.resources}
           onChange={(value) => {
             this.value.resources = value.value;
           }}
         />
-        <br />
         <PipelineWorkspaces
           value={this.value.workspaces}
-          onChange={(value) => {
-            this.value.workspaces = value;
-          }}
+          onChange={(value) => {this.value.workspaces = value }}
         />
-        <br />
+        <br/>
         <MultiPipelineTaskStepDetails
           disable={true}
           value={this.value.tasks}
-          onChange={(value) => {
-            this.value.tasks = value;
-          }}
+          onChange={(value) => { this.value.tasks = value }}
         />
-        <br />
       </div>
     );
   }
