@@ -66,15 +66,15 @@ export class PipelineRunWorkspaces extends React.Component<Props> {
             return (
               <div>
                 <div key={index}>
-                  <Grid container spacing={5}>
-                    <Grid item xs>
+                  <Grid container spacing={3} alignItems="center" direction="row">
+                    <Grid item xs zeroMinWidth>
                       <Input
                         placeholder={"Name"}
                         value={this.value[index].name}
                         onChange={(value) => (this.value[index].name = value)}
                       />
                     </Grid>
-                    <Grid item xs>
+                    <Grid item xs zeroMinWidth>
                       <Input
                         placeholder={"SubPath"}
                         value={this.value[index].subPath}
@@ -84,7 +84,7 @@ export class PipelineRunWorkspaces extends React.Component<Props> {
                       />
                     </Grid>
 
-                    <Grid item xs>
+                    <Grid item xs zeroMinWidth>
                       <Input
                         placeholder={"PersistentVolumeClaimName"}
                         value={
@@ -98,7 +98,7 @@ export class PipelineRunWorkspaces extends React.Component<Props> {
                       />
                     </Grid>
 
-                    <Grid item xs>
+                    <Grid item xs zeroMinWidth>
                       <Icon
                         small
                         tooltip={<Trans>Remove Workspaces</Trans>}

@@ -50,8 +50,8 @@ export class TlsHostsDetails extends React.Component<Props> {
         {this.value.map((item, index) => {
           return (
             <div key={index}>
-              <Grid container spacing={1}>
-                <Grid item xs={11}>
+              <Grid container spacing={3} alignItems="center" direction="row">
+                <Grid item xs={11} zeroMinWidth>
                   <Input
                     className="item"
                     placeholder={_i18n._(t`host`)}
@@ -61,7 +61,7 @@ export class TlsHostsDetails extends React.Component<Props> {
                     }}
                   />
                 </Grid>
-                <Grid item xs>
+                <Grid item xs zeroMinWidth>
                   <Icon
                     small
                     tooltip={<Trans>Remove Host</Trans>}

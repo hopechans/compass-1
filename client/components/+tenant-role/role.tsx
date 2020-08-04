@@ -35,13 +35,7 @@ export class TenantRoles extends React.Component<Props> {
   renderRoleName(role: TenantRole) {
     const name = role.getName();
     return (
-      <Link
-        onClick={(event) => {
-          stopPropagation(event);
-          ConfigRoleDialog.open(role);
-        }}
-        to={null}
-      >
+      <Link onClick={(event) => { stopPropagation(event); ConfigRoleDialog.open(role) }} to={null}>
         <Tooltip title={name} placement="top-start">
           <span>{name}</span>
         </Tooltip>

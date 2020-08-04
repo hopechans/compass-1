@@ -59,11 +59,11 @@ export class PipelineResourceDetails extends React.Component<Props> {
     return (
       <>
         <br/>
-        <Grid container spacing={5}>
-          <Grid item xs={5}>
+        <Grid container spacing={3} alignItems="center" direction="row">
+          <Grid item xs={5} zeroMinWidth>
             <Trans>Name</Trans>
           </Grid>
-          <Grid item xs={5}>
+          <Grid item xs={5} zeroMinWidth>
             <Trans>ResourceType</Trans>
           </Grid>
         </Grid>
@@ -75,8 +75,8 @@ export class PipelineResourceDetails extends React.Component<Props> {
   rForm(index: number, disable: boolean) {
     return (
       <>
-        <Grid container spacing={5}>
-          <Grid item xs={5}>
+        <Grid container spacing={3} alignItems="center" direction="row">
+          <Grid item xs={5} zeroMinWidth>
             <Input
               placeholder={"name"}
               disabled={disable}
@@ -84,7 +84,7 @@ export class PipelineResourceDetails extends React.Component<Props> {
               onChange={(value) => (this.value[index].name = value)}
             />
           </Grid>
-          <Grid item xs={5}>
+          <Grid item xs={5} zeroMinWidth>
             <Select
               value={this.value[index].type}
               isDisabled={disable}
@@ -93,7 +93,7 @@ export class PipelineResourceDetails extends React.Component<Props> {
               onChange={(value) => (this.value[index].type = value.value)}
             />
           </Grid>
-          <Grid item xs>
+          <Grid item xs zeroMinWidth>
             <Icon
               small
               material="clear"

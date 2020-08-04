@@ -1,7 +1,7 @@
 import "./pipeline-run-dialog.scss";
 import { observer } from "mobx-react";
 import React from "react";
-import { observable, toJS } from "mobx";
+import { observable } from "mobx";
 import { SubTitle } from "../layout/sub-title";
 import { Input } from "../input";
 import { _i18n } from "../../i18n";
@@ -13,23 +13,19 @@ import {
   pipelineRunApi,
   PipelineResourceBinding,
   PipelineRef,
-  PipelineDeclaredResource,
   WorkspaceBinding,
   Pipeline,
   Param,
   PipelineRun,
-  TektonGraph,
 } from "../../api/endpoints";
 import { Notifications } from "../notifications";
 import { PipelineRunResourceDetails } from "./pipeline-run-resource-details";
 import { systemName } from "../input/input.validators";
 import { configStore } from "../../config.store";
 import { pipelineStore } from "../+tekton-pipeline/pipeline.store";
-import { pipelineRunStore } from "./pipelinerun.store";
 import {
   PipelineRunWorkspaces,
   ParamsDetails,
-  params,
 } from "../+tekton-common";
 import { tektonGraphStore } from "../+tekton-graph/tekton-graph.store";
 import { IKubeObjectMetadata } from "../../api/kube-object";
@@ -126,8 +122,6 @@ export class PipelineRunDialog extends React.Component<Props> {
         height = nodeSize.height;
       }
 
-
-
       const graph = await tektonGraphStore.create(
         {
           name: "run-" + this.pipeline.getName() + "-" + new Date().getTime().toString(),
@@ -178,10 +172,11 @@ export class PipelineRunDialog extends React.Component<Props> {
     return (
       <Dialog
         isOpen={PipelineRunDialog.isOpen}
+        className="PipelineRunDialog"
         close={this.close}
         onOpen={this.onOpen}
       >
-        <Wizard className="PipelineRunDialog" header={header} done={this.close}>
+        <Wizard header={header} done={this.close}>
           <WizardStep contentClass="flex gaps column" next={this.submit}>
             <SubTitle title={<Trans>Name</Trans>} />
             <Input
@@ -191,7 +186,6 @@ export class PipelineRunDialog extends React.Component<Props> {
               value={this.value.name}
               onChange={(value) => (this.value.name = value)}
             />
-
             <SubTitle title={<Trans>Pipeline Ref</Trans>} />
             <Input
               placeholder={_i18n._("Pipeline Ref")}
@@ -207,26 +201,22 @@ export class PipelineRunDialog extends React.Component<Props> {
               value={this.value?.serviceAccountName}
               onChange={(value) => (this.value.serviceAccountName = value)}
             />
-
             <br />
             <ParamsDetails
               value={this.value?.params}
               onChange={(value) => { this.value.params = value }}
             />
-
             <br />
             <PipelineRunResourceDetails
               value={this.value?.resources}
               namespace={this.value?.namespace}
               onChange={(value) => { this.value.resources = value; }}
             />
-
             <br />
             <PipelineRunWorkspaces
               value={this.value?.workspces}
               onChange={(value) => { this.value.workspces = value; }}
             />
-
           </WizardStep>
         </Wizard>
       </Dialog>

@@ -12,6 +12,7 @@ import {apiManager} from "../../api/api-manager";
 import {Link} from "react-router-dom";
 import Tooltip from "@material-ui/core/Tooltip";
 import {ConfigTaskDialog} from "./config-task-dialog";
+import {stopPropagation} from "../../utils";
 
 enum sortBy {
   name = "name",
@@ -31,11 +32,7 @@ export class Tasks extends React.Component<Props> {
   renderTaskName(task: Task) {
     const name = task.getName();
     return (
-      <Link onClick={(event) => {
-        event.stopPropagation();
-        ConfigTaskDialog.open(task);
-      }
-      } to={null}>
+      <Link onClick={(event) => { stopPropagation(event); ConfigTaskDialog.open(task) }} to={null}>
         <Tooltip title={name} placement="top-start">
           <span>{name}</span>
         </Tooltip>
@@ -86,7 +83,7 @@ export class Tasks extends React.Component<Props> {
             return <TaskMenu object={item}/>;
           }}
         />
-        <ConfigTaskDialog />
+        <ConfigTaskDialog/>
       </>
     );
   }

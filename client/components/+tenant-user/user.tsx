@@ -35,13 +35,7 @@ export class TenantUsers extends React.Component<Props> {
   renderUserName(user: TenantUser) {
     const name = user.getName();
     return (
-      <Link
-        onClick={(event) => {
-          stopPropagation(event);
-          ConfigUserDialog.open(user);
-        }}
-        to={null}
-      >
+      <Link onClick={(event) => { stopPropagation(event); ConfigUserDialog.open(user) }} to={null}>
         <Tooltip title={name} placement="top-start">
           <span>{name}</span>
         </Tooltip>

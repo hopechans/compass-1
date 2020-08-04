@@ -44,14 +44,14 @@ export class TaskResourceDetails extends React.Component<Props> {
     return (
       <>
         <br/>
-        <Grid container spacing={5}>
-          <Grid item xs={3}>
+        <Grid container spacing={3} alignItems="center" direction="row">
+          <Grid item xs={3} zeroMinWidth>
             <Trans>Name</Trans>
           </Grid>
-          <Grid item xs={4}>
+          <Grid item xs={4} zeroMinWidth>
             <Trans>ResourceType</Trans>
           </Grid>
-          <Grid item xs={3}>
+          <Grid item xs={3} zeroMinWidth>
             <Trans>TargetPath</Trans>
           </Grid>
         </Grid>
@@ -63,15 +63,15 @@ export class TaskResourceDetails extends React.Component<Props> {
   rForm(index: number) {
     return (
       <>
-        <Grid container spacing={5}>
-          <Grid item xs={3}>
+        <Grid container spacing={3} alignItems="center" direction="row">
+          <Grid item xs={3} zeroMinWidth>
             <Input
               placeholder={"Name"}
               value={this.value[index].name}
               onChange={(value) => (this.value[index].name = value)}
             />
           </Grid>
-          <Grid item xs={4}>
+          <Grid item xs={4} zeroMinWidth>
             <Select
               themeName={"light"}
               value={this.value[index].type}
@@ -79,14 +79,14 @@ export class TaskResourceDetails extends React.Component<Props> {
               onChange={(value) => (this.value[index].type = value.value)}
             />
           </Grid>
-          <Grid item xs={3}>
+          <Grid item xs={3} zeroMinWidth>
             <Input
               placeholder={"TargetPath"}
               value={this.value[index].targetPath}
               onChange={(value) => (this.value[index].targetPath = value)}
             />
           </Grid>
-          <Grid item xs>
+          <Grid item xs zeroMinWidth>
             <Icon
               small
               className="remove-icon"

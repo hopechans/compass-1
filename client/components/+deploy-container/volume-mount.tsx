@@ -40,7 +40,7 @@ export class VolumeMountDetails extends React.Component<ArgsProps> {
           spacing={2}
           direction={"row"}
         >
-          <Grid item xs={5}>
+          <Grid item xs={5} zeroMinWidth>
             <Input
               required={true}
               placeholder={_i18n._(t`Name eg: volumeClaims name`)}
@@ -48,7 +48,7 @@ export class VolumeMountDetails extends React.Component<ArgsProps> {
               onChange={value => this.value.items[index].name = value}
             />
           </Grid>
-          <Grid item xs={5}>
+          <Grid item xs={5} zeroMinWidth>
             <Input
               required={true}
               placeholder={_i18n._(t`MountPath eg: /data`)}
@@ -58,7 +58,7 @@ export class VolumeMountDetails extends React.Component<ArgsProps> {
               }
             />
           </Grid>
-          <Grid item xs={2}>
+          <Grid item xs={2} zeroMinWidth>
             <Icon
               small
               tooltip={<Trans>Remove MountPath</Trans>}

@@ -41,8 +41,8 @@ export class ParamsDetails extends React.Component<Props> {
   rParams(index: number, disable: boolean) {
     return (
       <>
-        <Grid container spacing={5}>
-          <Grid item xs={5}>
+        <Grid container spacing={3} alignItems="center" direction="row">
+          <Grid item xs={5} zeroMinWidth>
             <Input
               className="item"
               disabled={disable}
@@ -54,7 +54,7 @@ export class ParamsDetails extends React.Component<Props> {
               }}
             />
           </Grid>
-          <Grid item xs={5}>
+          <Grid item xs={5} zeroMinWidth>
             <Input
               className="item"
               // disabled={disable}
@@ -67,7 +67,7 @@ export class ParamsDetails extends React.Component<Props> {
             />
           </Grid>
           {!disable ? (
-            <Grid item xs>
+            <Grid item xs zeroMinWidth>
               <Icon
                 small
                 tooltip={<Trans>Remove Params</Trans>}

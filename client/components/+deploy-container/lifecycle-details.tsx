@@ -46,8 +46,8 @@ export class LifeCycleDetails extends React.Component<Props> {
     return (
       <>
         <br/>
-        <Grid container spacing={5}>
-          <Grid item xs>
+        <Grid container spacing={3} alignItems="center" direction="row">
+          <Grid item xs zeroMinWidth>
             <SubTitle title={<Trans>HTTP</Trans>}/>
             <Input
               placeholder={_i18n._(t`0`)}
@@ -57,7 +57,7 @@ export class LifeCycleDetails extends React.Component<Props> {
               onChange={value => { of.httpPort = value }}
             />
           </Grid>
-          <Grid item xs>
+          <Grid item xs zeroMinWidth>
             <SubTitle title={<Trans>URL</Trans>}/>
             <Input
               placeholder={_i18n._(t`http://`)}

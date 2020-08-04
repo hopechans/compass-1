@@ -27,6 +27,7 @@ import { PipelineVisualDialog } from "./pipeline-visual-dialog";
 import { tektonGraphStore } from "../+tekton-graph/tekton-graph.store";
 import { Link } from "react-router-dom";
 import Tooltip from "@material-ui/core/Tooltip";
+import {stopPropagation} from "../../utils";
 
 enum sortBy {
   name = "name",
@@ -49,13 +50,7 @@ export class Pipelines extends React.Component<Props> {
   renderPipelineName(pipeline: Pipeline) {
     const name = pipeline.getName();
     return (
-      <Link
-        onClick={(event) => {
-          event.stopPropagation();
-          PipelineVisualDialog.open(pipeline);
-        }}
-        to={null}
-      >
+      <Link onClick={(event) => { stopPropagation(event); PipelineVisualDialog.open(pipeline) }} to={null}>
         <Tooltip title={name} placement="top-start">
           <span>{name}</span>
         </Tooltip>

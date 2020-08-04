@@ -46,11 +46,11 @@ export class PipelineTaskInputResourceDetail extends React.Component<Props> {
   rTab() {
     return (
       <>
-        <Grid container spacing={5}>
-          <Grid item xs={5}>
+        <Grid container spacing={3} alignItems="center" direction="row">
+          <Grid item xs={5} zeroMinWidth>
             <Trans>Name</Trans>
           </Grid>
-          <Grid item xs={5}>
+          <Grid item xs={5} zeroMinWidth>
             <Trans>Resource</Trans>
           </Grid>
         </Grid>
@@ -62,8 +62,8 @@ export class PipelineTaskInputResourceDetail extends React.Component<Props> {
   rForm(index: number, disable: boolean) {
     return (
       <>
-        <Grid container spacing={5}>
-          <Grid item xs={5}>
+        <Grid container spacing={3} alignItems="center" direction="row">
+          <Grid item xs={5} zeroMinWidth>
             <Input
               placeholder={_i18n._(t`Name`)}
               disabled={true}
@@ -74,7 +74,7 @@ export class PipelineTaskInputResourceDetail extends React.Component<Props> {
               }}
             />
           </Grid>
-          <Grid item xs={5}>
+          <Grid item xs={5} zeroMinWidth>
             <Input
               placeholder={_i18n._(t`Value`)}
               value={this.value[index].resource}
@@ -84,7 +84,7 @@ export class PipelineTaskInputResourceDetail extends React.Component<Props> {
               }}
             />
           </Grid>
-          {!disable ?? <Grid item xs>
+          {!disable ?? <Grid item xs zeroMinWidth>
             <Icon
               small
               material="clear"

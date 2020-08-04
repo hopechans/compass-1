@@ -82,8 +82,8 @@ export class EnvironmentDetails extends React.Component<Props> {
           onChange={value => this.value[index].envConfig.name = value}
         />
         <br/>
-        <Grid container spacing={5}>
-          <Grid item xs>
+        <Grid container spacing={3} alignItems="center" direction="row">
+          <Grid item xs zeroMinWidth>
             <SubTitle title={<Trans>ConfigMap Namespace</Trans>}/>
             <NamespaceSelect
               required autoFocus
@@ -91,7 +91,7 @@ export class EnvironmentDetails extends React.Component<Props> {
               onChange={value => this.namespace = value.value}
             />
           </Grid>
-          <Grid item xs>
+          <Grid item xs zeroMinWidth>
             <SubTitle title={<Trans>ConfigMap Name</Trans>}/>
             <ConfigMapsSelect
               required autoFocus
@@ -123,8 +123,8 @@ export class EnvironmentDetails extends React.Component<Props> {
           onChange={value => this.value[index].envConfig.name = value}
         />
         <br/>
-        <Grid container spacing={5}>
-          <Grid item xs>
+        <Grid container spacing={3} alignItems="center" direction="row">
+          <Grid item xs zeroMinWidth>
             <SubTitle title={<Trans>Secret Namespace</Trans>}/>
             <NamespaceSelect
               required autoFocus
@@ -132,7 +132,7 @@ export class EnvironmentDetails extends React.Component<Props> {
               onChange={value => this.namespace = value.value}
             />
           </Grid>
-          <Grid item xs>
+          <Grid item xs zeroMinWidth>
             <SubTitle title={<Trans>Secret Name</Trans>}/>
             <SecretsSelect
               required autoFocus
@@ -191,8 +191,8 @@ export class EnvironmentDetails extends React.Component<Props> {
               <>
                 <br/>
                 <Paper elevation={3} style={{padding: 20}}>
-                  <Grid container spacing={1}>
-                    <Grid item xs={11}>
+                  <Grid container spacing={3} alignItems="center" direction="row">
+                    <Grid item xs={11} zeroMinWidth>
                       <div key={index}>
                         <SubTitle title={<Trans>Environment Type</Trans>}/>
                         <Select
@@ -210,7 +210,7 @@ export class EnvironmentDetails extends React.Component<Props> {
                       </div>
                       <br/>
                     </Grid>
-                    <Grid item xs style={{textAlign: "center"}}>
+                    <Grid item xs zeroMinWidth style={{textAlign: "center"}}>
                       <Icon
                         style={{margin: "0.8vw, 0.9vh"}}
                         small

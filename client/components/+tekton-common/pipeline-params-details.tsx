@@ -51,14 +51,14 @@ export class PipelineParamsDetails extends React.Component<Props> {
     return (
       <>
         <br/>
-        <Grid container spacing={5}>
-          <Grid item xs={3}>
+        <Grid container spacing={3} alignItems="center" direction="row">
+          <Grid item xs={3} zeroMinWidth>
             <Trans>Name</Trans>
           </Grid>
-          <Grid item xs={4}>
+          <Grid item xs={4} zeroMinWidth>
             <Trans>Type</Trans>
           </Grid>
-          <Grid item xs={3}>
+          <Grid item xs={3} zeroMinWidth>
             <Trans>Default</Trans>
           </Grid>
         </Grid>
@@ -70,15 +70,15 @@ export class PipelineParamsDetails extends React.Component<Props> {
   rForm(index: number, disable: boolean) {
     return (
       <>
-        <Grid container spacing={5}>
-          <Grid item xs={3}>
+        <Grid container spacing={3} alignItems="center" direction="row">
+          <Grid item xs={3} zeroMinWidth>
             <Input
               disabled={disable}
               value={this.value[index].name}
               onChange={(value) => (this.value[index].name = value)}
             />
           </Grid>
-          <Grid item xs={4}>
+          <Grid item xs={4} zeroMinWidth>
             <Select
               isDisabled={disable}
               value={this.value[index].type}
@@ -89,7 +89,7 @@ export class PipelineParamsDetails extends React.Component<Props> {
               }}
             />
           </Grid>
-          <Grid item xs={3}>
+          <Grid item xs={3} zeroMinWidth>
             <Input
               disabled={disable}
               value={this.value[index].default}
@@ -97,7 +97,7 @@ export class PipelineParamsDetails extends React.Component<Props> {
             />
           </Grid>
           {!disable ?
-            <Grid item xs>
+            <Grid item xs zeroMinWidth>
               <Icon
                 small
                 tooltip={_i18n._(t`Remove`)}
