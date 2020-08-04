@@ -141,6 +141,7 @@ export class CopyTaskDialog extends React.Component<Props> {
   };
 
   handle = () => {
+    // event.stopPropagation();
     this.saveTask();
     CopyTaskDialog.graph.setTaskName(CopyTaskDialog.node, this.value.taskName);
   };

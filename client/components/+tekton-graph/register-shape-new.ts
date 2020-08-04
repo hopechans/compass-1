@@ -19,7 +19,7 @@ function drawPipeline(cfg: PipelineGraphConfig, group: Group): IShape {
 }
 
 //drawBase draw base shape :4shape
-function drawBase(cfg: PipelineGraphConfig, group: Group): any {
+function drawBase(cfg: PipelineGraphConfig, group: Group): IShape {
   const shape = group.addShape("rect", {
     attrs: {
       x: 2,
@@ -317,157 +317,150 @@ function drawSubNode(group: Group) {
   });
 }
 
-G6.registerNode(
-  pipelineNode,
-  {
-    drawShape: function drawShape(cfg: PipelineGraphConfig, group: Group) {
-      return drawPipeline(cfg, group);
-    },
+G6.registerNode(pipelineNode, {
+  drawShape: function drawShape(cfg: PipelineGraphConfig, group: Group) {
+    return drawPipeline(cfg, group);
+  },
 
-    // handle node event
-    setState(name: string, value: string, item: Item) {
-      const group = item.getContainer();
+  // handle node event
+  setState(name: string, value: string, item: Item) {
+    const group = item.getContainer();
 
-      if (name === "time" && value) {
+    if (name === "time" && value) {
+      group
+        .getChildren()
+        .find((child) => {
+          return child.get("labels") === "time";
+        })
+        .attr({ text: value });
+    }
+
+    if (
+      name === "hover" &&
+      value &&
+      item.getModel().role === NodeRole.Primary
+    ) {
+      setTimeout(() => {
+        drawAddNode(group);
+
+        if (item.getID() === "1-1") {
+          return;
+        }
+
+        if (hasRightNeighborNode(item as INode)) {
+          return;
+        }
+
+        if (hasSubNode(item as INode)) {
+          return;
+        }
+
+        drawSubNode(group);
+      }, 100);
+    }
+
+    if (name === "hover" && value && item.getModel().role === NodeRole.Second) {
+      setTimeout(() => {
+        drawSubNode(group);
+      }, 100);
+    }
+
+    if (name === "hover" && !value) {
+      setTimeout(() => {
         group
           .getChildren()
-          .find((child) => {
-            return child.get("labels") === "time";
+          ?.filter((child) => {
+            return child.get("labels") === "addond";
           })
-          .attr({ text: value });
-      }
+          .map((item) => {
+            group.removeChild(item);
+          });
+      }, 300);
+    }
 
-      if (
-        name === "hover" &&
-        value &&
-        item.getModel().role === NodeRole.Primary
-      ) {
-        setTimeout(() => {
-          drawAddNode(group);
+    if (name === "click") {
+      let shape = group.get("children")[2];
+      shape.attr({ text: value });
+      return;
+    }
 
-          if (item.getID() === "1-1") {
-            return;
-          }
+    if (name === "Running") {
+      const shapestatus = group.get("children")[4];
+      const shapeText = group.get("children")[5];
+      shapestatus.attr({
+        fill: "#20d867",
+      });
 
-          if (hasRightNeighborNode(item as INode)) {
-            return;
-          }
+      shapeText.attr({
+        text: "Running. ",
+        fontStyle: "",
+      });
+    }
 
-          if (hasSubNode(item as INode)) {
-            return;
-          }
+    if (name === "Pendding") {
+      const shapestatus = group.get("children")[4];
+      const shapeText = group.get("children")[5];
+      shapestatus.attr({
+        fill: "#ffc12f",
+      });
 
-          drawSubNode(group);
-        }, 100);
-      }
+      shapeText.attr({
+        text: "Pendding. ",
+        fontStyle: "",
+      });
+    }
 
-      if (
-        name === "hover" &&
-        value &&
-        item.getModel().role === NodeRole.Second
-      ) {
-        setTimeout(() => {
-          drawSubNode(group);
-        }, 100);
-      }
+    if (name === "Succeeded") {
+      const shapeImg = group.get("children")[4];
+      const shapeText = group.get("children")[5];
+      shapeImg.attr({
+        img:
+          "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAXCAYAAAAP6L+eAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAGSSURBVEhL7ZFLSwJRGIb7PwVREfQDKrRQutIiohIKKlu0iIgW7YOiP9DeMgLRvCUVWmAJkUFQVBQaXTXLyzg6zrydM3OwaLRUaOczu/N985z3O18N/omqOE9VnKdisUS+pJDCyes5PjIJiJLEKgoViamUynbCBxhwT8Ny6wEnpFlVoWwxlcazSbjCXrRbh1G3rkG/awovXJR1KJQtpsnsoX20EWmtSYNW6xDOopfIigLrUChLzIsZeWytbZQk1aJj24Bg5AKClGMdX6jEoiQiwscw71+SF5PO8fI5n8vAfOOA3jGO+o1O9JHx/U+nJGlWrv9EJY5l4lgJrqFlq5e8nRHehwDe+HeYrmzocU6iwazDoGeGnB/nLy2ESkybfY8BaMi4NBmVLBwtk4RGNJr1GNmdhef+ECmBY38URiWmW0+RBVnuPNDZx+SEzZtdaCJSw94cXCEfktkU6y5O0eXRRdE37XZOyEkVqReJEqSUomIKXZjp2obFwCrcYV/JUsqvYgqVP3ORksb/zp/iSqmKGcAncmSXV+WwdxEAAAAASUVORK5CYII=",
+      });
 
-      if (name === "hover" && !value) {
-        setTimeout(() => {
-          group
-            .getChildren()
-            ?.filter((child) => {
-              return child.get("labels") === "addond";
-            })
-            .map((item) => {
-              group.removeChild(item);
-            });
-        }, 300);
-      }
+      shapeText.attr({
+        text: "Succeed. ",
+        fontStyle: "",
+      });
+    }
 
-      if (name === "click") {
-        let shape = group.get("children")[2];
-        shape.attr({ text: value });
-      }
+    if (name === "Failed") {
+      const shapeImg = group.get("children")[4];
+      const shapeText = group.get("children")[5];
+      shapeImg.attr({
+        img:
+          "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAVCAYAAABLy77vAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAADESURBVDhP7ZI9CgIxEEY9jBdYe93en1ovaWFr4QWEBYUV72AhCnbCmBd2Fk0yKwFtxAeB2czw8jFsTz7EX/Se74luh6PcL9fmK4YeMyGRaNsvpJ4tkjLu6DETEolOy5Uf3JeTl5epuaPHTEhyRyqrBiMv4FBbEjCXfV5vpCqGXuCPq7mzMEWgybqSKN2JmiSaLDtRuyMnaHfk6qwdqWRXjr1AoebOkkUiBuvp3P6PXI+ZkEjEyymJQu85qWIuO5efFYk8AGssmC7B7olJAAAAAElFTkSuQmCC",
+      });
+      shapeText.attr({
+        text: "Failed. ",
+        fontStyle: "",
+      });
+    }
 
-      if (name === "Running") {
-        const shapestatus = group.get("children")[4];
-        const shapeText = group.get("children")[5];
-        shapestatus.attr({
-          fill: "#20d867",
-        });
+    if (name === "TaskRunCancelled") {
+      const shapestatus = group.get("children")[4];
+      const shapeText = group.get("children")[5];
+      shapestatus.attr({
+        fill: "#3296fa",
+      });
 
-        shapeText.attr({
-          text: "Running. ",
-          fontStyle: "",
-        });
-      }
+      shapeText.attr({
+        text: "Cancel. ",
+        fontStyle: "",
+      });
+    }
 
-      if (name === "Pendding") {
-        const shapestatus = group.get("children")[4];
-        const shapeText = group.get("children")[5];
-        shapestatus.attr({
-          fill: "#ffc12f",
-        });
+    if (name === "TaskRunTimeout") {
+      const shapestatus = group.get("children")[4];
+      const shapeText = group.get("children")[5];
+      shapestatus.attr({
+        fill: "#f02b2b",
+      });
 
-        shapeText.attr({
-          text: "Pendding. ",
-          fontStyle: "",
-        });
-      }
-
-      if (name === "Succeeded") {
-        const shapeImg = group.get("children")[4];
-        const shapeText = group.get("children")[5];
-        shapeImg.attr({
-          img:
-            "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAXCAYAAAAP6L+eAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAGSSURBVEhL7ZFLSwJRGIb7PwVREfQDKrRQutIiohIKKlu0iIgW7YOiP9DeMgLRvCUVWmAJkUFQVBQaXTXLyzg6zrydM3OwaLRUaOczu/N985z3O18N/omqOE9VnKdisUS+pJDCyes5PjIJiJLEKgoViamUynbCBxhwT8Ny6wEnpFlVoWwxlcazSbjCXrRbh1G3rkG/awovXJR1KJQtpsnsoX20EWmtSYNW6xDOopfIigLrUChLzIsZeWytbZQk1aJj24Bg5AKClGMdX6jEoiQiwscw71+SF5PO8fI5n8vAfOOA3jGO+o1O9JHx/U+nJGlWrv9EJY5l4lgJrqFlq5e8nRHehwDe+HeYrmzocU6iwazDoGeGnB/nLy2ESkybfY8BaMi4NBmVLBwtk4RGNJr1GNmdhef+ECmBY38URiWmW0+RBVnuPNDZx+SEzZtdaCJSw94cXCEfktkU6y5O0eXRRdE37XZOyEkVqReJEqSUomIKXZjp2obFwCrcYV/JUsqvYgqVP3ORksb/zp/iSqmKGcAncmSXV+WwdxEAAAAASUVORK5CYII=",
-        });
-
-        shapeText.attr({
-          text: "Succeed. ",
-          fontStyle: "",
-        });
-      }
-
-      if (name === "Failed") {
-        const shapeImg = group.get("children")[4];
-        const shapeText = group.get("children")[5];
-        shapeImg.attr({
-          img:
-            "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAVCAYAAABLy77vAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAADESURBVDhP7ZI9CgIxEEY9jBdYe93en1ovaWFr4QWEBYUV72AhCnbCmBd2Fk0yKwFtxAeB2czw8jFsTz7EX/Se74luh6PcL9fmK4YeMyGRaNsvpJ4tkjLu6DETEolOy5Uf3JeTl5epuaPHTEhyRyqrBiMv4FBbEjCXfV5vpCqGXuCPq7mzMEWgybqSKN2JmiSaLDtRuyMnaHfk6qwdqWRXjr1AoebOkkUiBuvp3P6PXI+ZkEjEyymJQu85qWIuO5efFYk8AGssmC7B7olJAAAAAElFTkSuQmCC",
-        });
-        shapeText.attr({
-          text: "Failed. ",
-          fontStyle: "",
-        });
-      }
-
-      if (name === "TaskRunCancelled") {
-        const shapestatus = group.get("children")[4];
-        const shapeText = group.get("children")[5];
-        shapestatus.attr({
-          fill: "#3296fa",
-        });
-
-        shapeText.attr({
-          text: "Cancel. ",
-          fontStyle: "",
-        });
-      }
-
-      if (name === "TaskRunTimeout") {
-        const shapestatus = group.get("children")[4];
-        const shapeText = group.get("children")[5];
-        shapestatus.attr({
-          fill: "#f02b2b",
-        });
-
-        shapeText.attr({
-          text: "Cancel. ",
-          fontStyle: "",
-        });
-      }
-    },
+      shapeText.attr({
+        text: "Cancel. ",
+        fontStyle: "",
+      });
+    }
   },
-  "rect"
-);
+});

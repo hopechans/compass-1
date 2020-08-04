@@ -20,7 +20,7 @@ interface Props extends Partial<Props> {}
 export class PipelineRunVisualDialog extends React.Component<Props> {
   @observable static isOpen = false;
   @observable static Data: PipelineRun = null;
-  @observable graph: any = null;
+  @observable graph: PipelineGraph = null;
   @observable currentNode: any = null;
   @observable pendingTimeInterval: any = null;
   @observable updateTimeInterval: any = null;
@@ -50,7 +50,22 @@ export class PipelineRunVisualDialog extends React.Component<Props> {
 
       const pipelineGraphConfig = defaultInitConfig(width, height);
       this.graph = new PipelineGraph(pipelineGraphConfig);
-      this.graph.init();
+
+      // let nodeSize = pipelineStore.getNodeSize(this.pipeline);
+      // if (nodeSize != null) {
+      //   this.graph.changeSize(nodeSize.width, nodeSize.height);
+      // }
+
+      // this.graph.bindClickOnNode((currentNode: any) => {
+      //   this.currentNode = currentNode;
+      //   CopyTaskDialog.open(
+      //     this.graph,
+      //     this.currentNode,
+      //     PipelineVisualDialog.Data.getNs()
+      //   );
+      // });
+      // const nodeData = pipelineStore.getNodeData(this.pipeline);
+      // this.graph.renderPipelineGraph(nodeData);
 
       let nodeSize = pipelineRunStore.getNodeSize(this.pipelineRun);
       if (nodeSize != null) {
@@ -58,9 +73,9 @@ export class PipelineRunVisualDialog extends React.Component<Props> {
       }
 
       if (nodeData === undefined || nodeData === "") {
-        this.graph.instance.data(defaultInitData);
+        this.graph.data(defaultInitData);
       } else {
-        this.graph.instance.data(nodeData);
+        this.graph.data(nodeData);
       }
 
       this.graph.bindClickOnNode((currentNode: any) => {
@@ -95,8 +110,8 @@ export class PipelineRunVisualDialog extends React.Component<Props> {
           nodeData.nodes[index].showtime = true;
         });
 
-        this.graph.instance.clear();
-        this.graph.instance.changeData(nodeData);
+        this.graph.clear();
+        this.graph.changeData(nodeData);
       }
     }, 500);
   }
@@ -114,15 +129,13 @@ export class PipelineRunVisualDialog extends React.Component<Props> {
           const currentTaskRun = currentTaskRunMap[item.taskName];
           if (currentTaskRun !== undefined) {
             //should get current node itme and update the time.
-            let currentItem = this.graph.instance.findById(
-              nodeData.nodes[index].id
-            );
+            let currentItem = this.graph.findById(nodeData.nodes[index].id);
             //dynimic set the state: missing notreay
             if (currentTaskRun?.status?.conditions[0]?.reason == undefined) {
               return;
             }
 
-            this.graph.instance.setItemState(
+            this.graph.setItemState(
               currentItem,
               currentTaskRun?.status?.conditions[0]?.reason,
               ""
@@ -144,7 +157,7 @@ export class PipelineRunVisualDialog extends React.Component<Props> {
             }
 
             //set the time
-            this.graph.instance.setItemState(currentItem, "time", totalTime);
+            this.graph.setItemState(currentItem, "time", totalTime);
           }
         });
       }

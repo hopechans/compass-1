@@ -218,7 +218,7 @@ export class PipelineGraph extends Graph {
             this.addItem("edge", {
               source: cfg.source,
               target: cfg.target,
-              type: "ç",
+              type: "cubic-horizontal",
               style: {
                 stroke: "#959DA5",
                 lineWidth: 2,
@@ -234,19 +234,6 @@ export class PipelineGraph extends Graph {
     const cfg: Partial<PipelineNodeConfig> = { taskName: taskName };
     this.updateItem(node, cfg);
   }
-
-  //   setTaskName(taskName: string, node: any): void {
-  //     // let nodes: any = this.save();
-
-  //     // nodes.nodes.map((item: any, index: number) => {
-  //     //   if (node._cfg.id === item.id) {
-  //     //     item.taskName = taskName;
-  //     //   }
-  //     //   nodes[index] = item;
-  //     // });
-  //     // this.changeData(nodes);
-  //     this.setItemState(node, "click", taskName);
-  //   }
 
   setNodeRole(node: Item, role: NodeRole): void {
     const cfg: Partial<PipelineNodeConfig> = { role: role };
@@ -291,18 +278,5 @@ export class PipelineGraph extends Graph {
     this.data(nodeData);
     this.setMode("addEdge");
     this.render();
-  }
-
-  draw(data: GraphData): void {
-    this.bindClickOnNode(null);
-    this.bindMouseenter();
-    this.bindMouseleave();
-
-    this.enableShowtime(data);
-    this.enableAddNode(data);
-    this.enableSubNode(data);
-
-    this.data(data);
-    this.setMode("addEdge");
   }
 }
