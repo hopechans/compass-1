@@ -17,6 +17,7 @@ import {_i18n} from "../../i18n";
 import {ConfigResourceQuotaDialog} from "./config-resource-quota-dialog";
 import {Link} from "react-router-dom";
 import Tooltip from "@material-ui/core/Tooltip";
+import {stopPropagation} from "../../utils";
 
 enum sortBy {
   name = "name",
@@ -33,11 +34,7 @@ export class ResourceQuotas extends React.Component<Props> {
   renderResourceQuotasName(resourceQuota: ResourceQuota) {
     const name = resourceQuota.getName();
     return (
-      <Link onClick={(event) => {
-        event.stopPropagation();
-        ConfigResourceQuotaDialog.open(resourceQuota);
-      }
-      } to={null}>
+      <Link onClick={(event) => { stopPropagation(event); ConfigResourceQuotaDialog.open(resourceQuota) }} to={null}>
         <Tooltip title={name} placement="top-start">
           <span>{name}</span>
         </Tooltip>

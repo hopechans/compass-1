@@ -155,9 +155,7 @@ export class ConfigTaskDialog extends React.Component<Props> {
               <Collapse panelName={<Trans>WorkSpaces</Trans>} key={"WorkSpaces"}>
                 <TaskSpecWorkSpaces
                   value={this.value.workspace}
-                  onChange={(vaule) => {
-                    this.value.workspace = vaule
-                  }}
+                  onChange={(value) => { this.value.workspace = value}}
                 />
               </Collapse>
               <br/>

@@ -40,13 +40,7 @@ export class Stones extends React.Component<Props> {
   renderStoneName(stone: Stone) {
     const name = stone.getName();
     return (
-      <Link
-        onClick={(event) => {
-          stopPropagation(event);
-          ConfigStoneDialog.open(stone);
-        }}
-        to={null}
-      >
+      <Link  onClick={(event) => { stopPropagation(event); ConfigStoneDialog.open(stone) }} to={null}>
         <Tooltip title={name} placement="top-start">
           <span>{name}</span>
         </Tooltip>

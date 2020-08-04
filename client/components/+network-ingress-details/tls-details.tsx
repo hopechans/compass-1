@@ -53,8 +53,8 @@ export class TlsDetails extends React.Component<Props> {
       <>
         <br/>
         <Paper elevation={3} style={{ padding: 25 }}>
-          <Grid container spacing={1}>
-            <Grid item xs={11}>
+          <Grid container spacing={3} alignItems="center" direction="row">
+            <Grid item xs={11} zeroMinWidth>
               <TlsHostsDetails
                 divider={true}
                 value={this.value[index].hosts}
@@ -74,7 +74,7 @@ export class TlsDetails extends React.Component<Props> {
                 onChange={value => this.value[index].secretName = value.value}
               />
             </Grid>
-            <Grid item xs style={{textAlign: "center"}}>
+            <Grid item xs zeroMinWidth style={{textAlign: "center"}}>
               <Icon
                 style={{margin: "0.8vw, 0.9vh"}}
                 small

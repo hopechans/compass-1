@@ -44,8 +44,8 @@ export class TaskSpecWorkSpaces extends React.Component<Props> {
   rWorkSpace(index: number) {
     return (
       <>
-        <Grid container spacing={5}>
-          <Grid item xs={5}>
+        <Grid container spacing={3} alignItems="center" direction="row">
+          <Grid item xs={5} zeroMinWidth>
             <Input
               placeholder={"Name"}
               value={this.value[index].name}
@@ -53,7 +53,7 @@ export class TaskSpecWorkSpaces extends React.Component<Props> {
             />
           </Grid>
 
-          <Grid item xs={5}>
+          <Grid item xs={5} zeroMinWidth>
             <Input
               placeholder={"MountPath"}
               value={this.value[index].mountPath}
@@ -62,7 +62,7 @@ export class TaskSpecWorkSpaces extends React.Component<Props> {
               }
             />
           </Grid>
-          <Grid item xs>
+          <Grid item xs zeroMinWidth>
             <Icon
               small
               tooltip={_i18n._(t`Remove`)}
@@ -94,11 +94,9 @@ export class TaskSpecWorkSpaces extends React.Component<Props> {
             </>
           }>
         </SubTitle>
-        <div className="Workspaces">
-          {this.value.map((item, index) => {
-            return this.rWorkSpace(index);
-          })}
-        </div>
+        {this.value.map((item, index) => {
+          return this.rWorkSpace(index);
+        })}
       </>
     );
   }

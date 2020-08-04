@@ -49,8 +49,8 @@ export class ProbeDetails extends React.Component<Props> {
 
   rBase() {
     return (
-      <Grid container spacing={5}>
-        <Grid item xs>
+      <Grid container spacing={3} alignItems="center" direction="row">
+        <Grid item xs zeroMinWidth>
           <SubTitle title={<Trans>Timeout</Trans>}/>
           <Input
             placeholder={_i18n._(t`0`)}
@@ -68,7 +68,7 @@ export class ProbeDetails extends React.Component<Props> {
             onChange={value => this.value.cycle = value}
           />
         </Grid>
-        <Grid item xs>
+        <Grid item xs zeroMinWidth>
           <SubTitle title={<Trans>Failure</Trans>}/>
           <Input
             placeholder={_i18n._(t`0`)}
@@ -94,8 +94,8 @@ export class ProbeDetails extends React.Component<Props> {
     return (
       <>
         <br/>
-        <Grid container spacing={5}>
-          <Grid item xs>
+        <Grid container spacing={3} alignItems="center" direction="row">
+          <Grid item xs zeroMinWidth>
             <SubTitle title={<Trans>HTTP</Trans>}/>
             <Input
               placeholder={_i18n._(t`0`)}
@@ -105,7 +105,7 @@ export class ProbeDetails extends React.Component<Props> {
               onChange={value => this.value.pattern.httpPort = value}
             />
           </Grid>
-          <Grid item xs>
+          <Grid item xs zeroMinWidth>
             <SubTitle title={<Trans>URL</Trans>}/>
             <Input
               placeholder={_i18n._(t`http://`)}

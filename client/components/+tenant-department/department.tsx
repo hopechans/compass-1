@@ -34,13 +34,7 @@ export class TenantDepartments extends React.Component<Props> {
   renderDepartmentName(department: TenantDepartment) {
     const name = department.getName();
     return (
-      <Link
-        onClick={(event) => {
-          stopPropagation(event);
-            ConfigDepartmentDialog.open(department);
-        }}
-        to={null}
-      >
+      <Link onClick={(event) => { stopPropagation(event); ConfigDepartmentDialog.open(department); }} to={null}>
         <Tooltip title={name} placement="top-start">
           <span>{name}</span>
         </Tooltip>

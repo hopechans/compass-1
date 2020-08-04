@@ -187,12 +187,8 @@ export class PodDetails extends React.Component<Props> {
                   </DrawerItem>
                   {claimName && (
                     <DrawerItem name={<Trans>Claim Name</Trans>}>
-                      <Link
-                        to={getDetailsUrl(pvcApi.getUrl({
-                          name: claimName,
-                          namespace: pod.getNs(),
-                        }))}
-                      >{claimName}
+                      <Link  to={getDetailsUrl(pvcApi.getUrl({name: claimName, namespace: pod.getNs()}))}>
+                        {claimName}
                       </Link>
                     </DrawerItem>
                   )}

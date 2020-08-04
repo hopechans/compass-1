@@ -46,13 +46,7 @@ export class Secrets extends React.Component<Props> {
   renderSecretName(secret: Secret) {
     const name = secret.getName();
     return (
-      <Link
-        onClick={(event) => {
-          stopPropagation(event);
-          ConfigSecretDialog.open(secret);
-        }}
-        to={null}
-      >
+      <Link  onClick={(event) => { stopPropagation(event); ConfigSecretDialog.open(secret) }} to={null}>
         <Tooltip title={name} placement="top-start">
           <span>{name}</span>
         </Tooltip>

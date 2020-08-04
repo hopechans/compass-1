@@ -54,15 +54,15 @@ export class PipelineTaskWorkSpaces extends React.Component<Props> {
           return (
             <div>
               <div key={index}>
-                <Grid container spacing={5}>
-                  <Grid item xs={5}>
+                <Grid container spacing={3} alignItems="center" direction="row">
+                  <Grid item xs={5} zeroMinWidth>
                     <Input
                       placeholder={"Name"}
                       value={this.value[index].name}
                       onChange={(value) => (this.value[index].name = value)}
                     />
                   </Grid>
-                  <Grid item xs={5}>
+                  <Grid item xs={5} zeroMinWidth>
                     <Input
                       placeholder={"workspace"}
                       value={this.value[index].workspace}
@@ -71,7 +71,7 @@ export class PipelineTaskWorkSpaces extends React.Component<Props> {
                       }
                     />
                   </Grid>
-                  <Grid item xs>
+                  <Grid item xs zeroMinWidth>
                     <Icon
                       small
                       tooltip={<Trans>Remove</Trans>}

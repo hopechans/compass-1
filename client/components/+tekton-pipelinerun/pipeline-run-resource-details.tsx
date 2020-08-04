@@ -83,7 +83,7 @@ export class PipelineRunResourceDetails extends React.Component<Props> {
 
         {this.value.map((item, index) => {
           return (
-            <Grid container spacing={1}>
+            <Grid container spacing={3} alignItems="center" direction="row">
               <Grid xs={12}>
                 <br />
               </Grid>

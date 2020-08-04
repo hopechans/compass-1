@@ -14,7 +14,7 @@ import { observable } from "mobx";
 import { taskRunStore } from "../+tekton-taskrun";
 import { TooltipContent } from "../tooltip";
 import { StatusBrick } from "../status-brick";
-import { cssNames } from "../../utils";
+import {cssNames, stopPropagation} from "../../utils";
 import { MenuItem } from "../menu";
 import { Icon } from "../icon";
 import { Notifications } from "../notifications";
@@ -121,13 +121,7 @@ export class PipelineRuns extends React.Component<Props> {
   renderPipelineName(pipelineRun: PipelineRun) {
     const name = pipelineRun.getName();
     return (
-      <Link
-        onClick={(event) => {
-          event.stopPropagation();
-          PipelineRunVisualDialog.open(pipelineRun);
-        }}
-        to={null}
-      >
+      <Link onClick={(event) => { stopPropagation(event); PipelineRunVisualDialog.open(pipelineRun) }} to={null}>
         <Tooltip title={name} placement="top-start">
           <span>{name}</span>
         </Tooltip>

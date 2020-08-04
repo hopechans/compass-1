@@ -33,8 +33,8 @@ export class EvnVarDetails extends React.Component<EvnVarProps> {
   rEnv(index: number) {
     return (
       <>
-        <Grid container spacing={5}>
-          <Grid item xs={5}>
+        <Grid container spacing={3} alignItems="center" direction="row">
+          <Grid item xs={5} zeroMinWidth>
             <Input
               className="item"
               placeholder={_i18n._(t`Name`)}
@@ -45,7 +45,7 @@ export class EvnVarDetails extends React.Component<EvnVarProps> {
               }}
             />
           </Grid>
-          <Grid item xs={5}>
+          <Grid item xs={5} zeroMinWidth>
             <Input
               className="item"
               placeholder={_i18n._(t`Value`)}
@@ -56,7 +56,7 @@ export class EvnVarDetails extends React.Component<EvnVarProps> {
               }}
             />
           </Grid>
-          <Grid item xs>
+          <Grid item xs zeroMinWidth>
             <Icon
               small
               tooltip={_i18n._(t`Remove Command`)}

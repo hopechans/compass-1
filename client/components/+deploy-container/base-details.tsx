@@ -60,8 +60,8 @@ export class BaseDetails extends React.Component<Props> {
         {this.value.imageFrom == "private" ?
           <>
             <br/>
-            <Grid container spacing={5}>
-              <Grid item xs>
+            <Grid container spacing={3} alignItems="center" direction="row">
+              <Grid item xs zeroMinWidth>
                 <SubTitle title={<Trans>Secret Namespace</Trans>}/>
                 <NamespaceSelect
                   value={this.namespace}
@@ -74,7 +74,7 @@ export class BaseDetails extends React.Component<Props> {
                 />
               </Grid>
               {this.namespace ?
-                <Grid item xs>
+                <Grid item xs zeroMinWidth>
                   <SubTitle title={<Trans>Image Pull Secret</Trans>}/>
                   <SecretsSelect
                     required autoFocus
@@ -94,8 +94,8 @@ export class BaseDetails extends React.Component<Props> {
     return (
       <>
         <br/>
-        <Grid container spacing={5}>
-          <Grid item xs>
+        <Grid container spacing={3} alignItems="center" direction="row">
+          <Grid item xs zeroMinWidth>
             <SubTitle title={<Trans>Limit CPU</Trans>} children={
               <Input
                 required={true}
@@ -107,7 +107,7 @@ export class BaseDetails extends React.Component<Props> {
               />
             }/>
           </Grid>
-          <Grid item xs>
+          <Grid item xs zeroMinWidth>
             <SubTitle title={<Trans>Limit Memory</Trans>} children={
               <Input
                 required={true}
@@ -128,8 +128,8 @@ export class BaseDetails extends React.Component<Props> {
     return (
       <>
         <br/>
-        <Grid container spacing={5}>
-          <Grid item xs>
+        <Grid container spacing={3} alignItems="center" direction="row">
+          <Grid item xs zeroMinWidth>
             <SubTitle title={<Trans>Required CPU</Trans>} children={
               <Input
                 required={true}
@@ -141,7 +141,7 @@ export class BaseDetails extends React.Component<Props> {
               />
             }/>
           </Grid>
-          <Grid item xs>
+          <Grid item xs zeroMinWidth>
             <SubTitle title={<Trans>Required Memory</Trans>} children={
               <Input
                 required={true}
@@ -176,7 +176,7 @@ export class BaseDetails extends React.Component<Props> {
           alignItems={"center"}
           direction={"row"}
         >
-          <Grid item xs>
+          <Grid item xs zeroMinWidth>
             <SubTitle title={<Trans>Image From</Trans>}/>
             <Select
               themeName={"light"}
@@ -187,7 +187,7 @@ export class BaseDetails extends React.Component<Props> {
               }}
             />
           </Grid>
-          <Grid item xs>
+          <Grid item xs zeroMinWidth>
             <SubTitle title={<Trans>Image Pull Policy</Trans>}/>
             <Select
               required={true}
