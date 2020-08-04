@@ -58,12 +58,7 @@ export class PipelineVisualDialog extends React.Component<Props> {
         );
       });
       const nodeData = pipelineStore.getNodeData(this.pipeline);
-      this.graph.data(nodeData);
-      this.graph.enableAddNode(nodeData);
-      this.graph.enableSubNode(nodeData);
-      this.graph.bindMouseenter();
-      this.graph.bindMouseleave();
-      this.graph.render();
+      this.graph.renderPipelineGraph(nodeData);
     }, 100);
   };
 

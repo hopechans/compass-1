@@ -94,12 +94,14 @@ export class PipelineGraph extends Graph {
           Number(point.y),
           nodeLayoutIndex
         );
+        return;
       }
 
       if (shape === "left-plus") {
         const source = item as INode;
         this.moveNode(node);
         this.removeNode(source);
+        return;
       }
 
       if (cb) {
@@ -281,14 +283,15 @@ export class PipelineGraph extends Graph {
     return Object.assign(pipelineGraphData, this.save());
   }
 
-  //   initData() {
-  //     let data = defaultInitGraphNode as PipelineGraphData;
-  //     this.enableAddNode(data);
-  //     this.enableSubNode(data);
-
-  //     this.data(data);
-  //     this.setMode("addEdge");
-  //   }
+  renderPipelineGraph(nodeData: PipelineGraphData) {
+    this.enableAddNode(nodeData);
+    this.enableSubNode(nodeData);
+    this.bindMouseenter();
+    this.bindMouseleave();
+    this.data(nodeData);
+    this.setMode("addEdge");
+    this.render();
+  }
 
   draw(data: GraphData): void {
     this.bindClickOnNode(null);

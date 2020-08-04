@@ -27,7 +27,7 @@ function drawBase(cfg: PipelineGraphConfig, group: Group): any {
       width: 180,
       height: 42,
       radius: 8,
-      fill: "#f1f1f9",
+      fill: "#fff",
     },
     name: "main-box",
     draggable: true,
