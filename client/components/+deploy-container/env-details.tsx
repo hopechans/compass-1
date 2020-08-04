@@ -190,7 +190,7 @@ export class EnvironmentDetails extends React.Component<Props> {
             return (
               <>
                 <br/>
-                <Paper elevation={3} style={{padding: 20}}>
+                <Paper elevation={3} style={{padding: 25}}>
                   <Grid container spacing={3} alignItems="center" direction="row">
                     <Grid item xs={11} zeroMinWidth>
                       <div key={index}>

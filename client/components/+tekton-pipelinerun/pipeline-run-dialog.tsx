@@ -193,7 +193,6 @@ export class PipelineRunDialog extends React.Component<Props> {
               value={this.value?.pipelineRef?.name}
               onChange={(value) => (this.value.pipelineRef.name = value)}
             />
-
             <SubTitle title={<Trans>Service Account Name</Trans>} />
             <Input
               disabled={true}
@@ -206,8 +205,8 @@ export class PipelineRunDialog extends React.Component<Props> {
               value={this.value?.params}
               onChange={(value) => { this.value.params = value }}
             />
-            <br />
             <PipelineRunResourceDetails
+              disable={true}
               value={this.value?.resources}
               namespace={this.value?.namespace}
               onChange={(value) => { this.value.resources = value; }}
