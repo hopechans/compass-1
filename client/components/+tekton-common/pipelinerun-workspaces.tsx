@@ -51,7 +51,7 @@ export class PipelineRunWorkspaces extends React.Component<Props> {
     return (
       <>
         <br/>
-        <Grid container spacing={3} alignItems="center" direction="row">
+        <Grid container spacing={5} alignItems="center" direction="row">
           <Grid item xs={3} zeroMinWidth>
             <Input
               placeholder={"Name"}

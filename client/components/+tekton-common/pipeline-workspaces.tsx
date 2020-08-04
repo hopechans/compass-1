@@ -54,7 +54,7 @@ export class PipelineWorkspaces extends React.Component<Props> {
         {this.value.map((item, index) => {
           return (
             <>
-              <Grid container spacing={3} alignItems="center" direction="row">
+              <Grid container spacing={5} alignItems="center" direction="row">
                 <Grid item xs={5} zeroMinWidth>
                   <Input
                     placeholder={"Name"}

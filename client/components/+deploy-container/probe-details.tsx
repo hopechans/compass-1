@@ -49,7 +49,7 @@ export class ProbeDetails extends React.Component<Props> {
 
   rBase() {
     return (
-      <Grid container spacing={3} alignItems="center" direction="row">
+      <Grid container spacing={5} alignItems="center" direction="row">
         <Grid item xs zeroMinWidth>
           <SubTitle title={<Trans>Timeout</Trans>}/>
           <Input
@@ -94,7 +94,7 @@ export class ProbeDetails extends React.Component<Props> {
     return (
       <>
         <br/>
-        <Grid container spacing={3} alignItems="center" direction="row">
+        <Grid container spacing={5} alignItems="center" direction="row">
           <Grid item xs zeroMinWidth>
             <SubTitle title={<Trans>HTTP</Trans>}/>
             <Input

@@ -63,7 +63,7 @@ export class DeployServiceDetails extends React.Component<Props> {
       <>
         <br/>
         <Paper elevation={3} style={{padding: 25}}>
-          <Grid container spacing={3} alignItems="center" direction="row">
+          <Grid container spacing={5} alignItems="center" direction="row">
             <Grid item xs={11} zeroMinWidth>
               <Grid>
                 <SubTitle title={<Trans>Name</Trans>}/>
@@ -86,7 +86,7 @@ export class DeployServiceDetails extends React.Component<Props> {
                 />
               </Grid>
               <br/>
-              <Grid container spacing={3} alignItems="center" direction="row">
+              <Grid container spacing={5} alignItems="center" direction="row">
                 <Grid item xs zeroMinWidth>
                   <SubTitle title={<Trans>Port</Trans>}/>
                   <Input

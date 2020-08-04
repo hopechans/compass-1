@@ -60,7 +60,7 @@ export class BaseDetails extends React.Component<Props> {
         {this.value.imageFrom == "private" ?
           <>
             <br/>
-            <Grid container spacing={3} alignItems="center" direction="row">
+            <Grid container spacing={5} alignItems="center" direction="row">
               <Grid item xs zeroMinWidth>
                 <SubTitle title={<Trans>Secret Namespace</Trans>}/>
                 <NamespaceSelect
@@ -94,7 +94,7 @@ export class BaseDetails extends React.Component<Props> {
     return (
       <>
         <br/>
-        <Grid container spacing={3} alignItems="center" direction="row">
+        <Grid container spacing={5} alignItems="center" direction="row">
           <Grid item xs zeroMinWidth>
             <SubTitle title={<Trans>Limit CPU</Trans>} children={
               <Input
@@ -128,7 +128,7 @@ export class BaseDetails extends React.Component<Props> {
     return (
       <>
         <br/>
-        <Grid container spacing={3} alignItems="center" direction="row">
+        <Grid container spacing={5} alignItems="center" direction="row">
           <Grid item xs zeroMinWidth>
             <SubTitle title={<Trans>Required CPU</Trans>} children={
               <Input

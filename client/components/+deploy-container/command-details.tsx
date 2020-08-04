@@ -34,7 +34,7 @@ export class CommandDetails extends React.Component<Props> {
   rCommand(index: number) {
     return (
       <>
-        <Grid container spacing={3} alignItems="center" direction="row">
+        <Grid container spacing={5} alignItems="center" direction="row">
           <Grid item xs={11} zeroMinWidth>
             <Input
               className="item"
