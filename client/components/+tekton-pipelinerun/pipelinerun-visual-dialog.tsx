@@ -7,12 +7,14 @@ import { Dialog } from "../dialog";
 import { Wizard, WizardStep } from "../wizard";
 import { observer } from "mobx-react";
 import { PipelineRun } from "../../api/endpoints";
-import { graphId, Graphs, initData } from "../+tekton-graph/graphs";
+// import { graphId, Graphs, initData } from "../+tekton-graph/graphs";
+import { graphId, PipelineGraph } from "../+tekton-graph/graph-new";
 import { secondsToHms } from "../../api/endpoints";
 import { pipelineRunStore } from "./pipelinerun.store";
 import { TaskRunLogsDialog } from "../+tekton-taskrun/task-run-logs-dialog";
+import { defaultInitData, defaultInitConfig } from "../+tekton-graph/common";
 
-interface Props extends Partial<Props> { }
+interface Props extends Partial<Props> {}
 
 @observer
 export class PipelineRunVisualDialog extends React.Component<Props> {
@@ -46,16 +48,17 @@ export class PipelineRunVisualDialog extends React.Component<Props> {
       const width = anchor.scrollWidth - 50;
       const height = anchor.scrollHeight - 60;
 
-      this.graph = new Graphs(width, height);
+      const pipelineGraphConfig = defaultInitConfig(width, height);
+      this.graph = new PipelineGraph(pipelineGraphConfig);
       this.graph.init();
 
       let nodeSize = pipelineRunStore.getNodeSize(this.pipelineRun);
       if (nodeSize != null) {
-        this.graph.changeSize(nodeSize.width, nodeSize.height)
+        this.graph.changeSize(nodeSize.width, nodeSize.height);
       }
 
       if (nodeData === undefined || nodeData === "") {
-        this.graph.instance.data(initData);
+        this.graph.instance.data(defaultInitData);
       } else {
         this.graph.instance.data(nodeData);
       }

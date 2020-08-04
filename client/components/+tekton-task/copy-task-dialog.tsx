@@ -1,6 +1,6 @@
 import "./copy-task-dialog.scss";
 
-import {observer} from "mobx-react";
+import { observer } from "mobx-react";
 import React from "react";
 import {
   PipelineParamsDetails,
@@ -12,29 +12,30 @@ import {
   resources,
   TaskSpecWorkSpaces,
 } from "../+tekton-common";
-import {observable, toJS} from "mobx";
-import {Dialog} from "../dialog";
-import {Wizard, WizardStep} from "../wizard";
-import {Trans} from "@lingui/macro";
-import {ActionMeta} from "react-select/src/types";
-import {SubTitle} from "../layout/sub-title";
-import {Input} from "../input";
-import {_i18n} from "../../i18n";
-import {taskStore} from "./task.store";
+import { observable, toJS } from "mobx";
+import { Dialog } from "../dialog";
+import { Wizard, WizardStep } from "../wizard";
+import { Trans } from "@lingui/macro";
+import { ActionMeta } from "react-select/src/types";
+import { SubTitle } from "../layout/sub-title";
+import { Input } from "../input";
+import { _i18n } from "../../i18n";
+import { taskStore } from "./task.store";
 
 import FormGroup from "@material-ui/core/FormGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Switch from "@material-ui/core/Switch";
-import {Select, SelectOption} from "../select";
-import {Icon} from "../icon";
-import {TaskResources,} from "../../api/endpoints";
-import {Notifications} from "../notifications";
-import {systemName} from "../input/input.validators";
-import {createMuiTheme, Paper} from "@material-ui/core";
-import {ThemeProvider} from "@material-ui/core/styles";
-import {configStore} from "../../config.store";
-import {WorkspaceDeclaration as Workspace} from "../../api/endpoints/tekton-task.api";
-import {Collapse} from "../collapse";
+import { Select, SelectOption } from "../select";
+import { Icon } from "../icon";
+import { TaskResources } from "../../api/endpoints";
+import { Notifications } from "../notifications";
+import { systemName } from "../input/input.validators";
+import { createMuiTheme, Paper } from "@material-ui/core";
+import { ThemeProvider } from "@material-ui/core/styles";
+import { configStore } from "../../config.store";
+import { WorkspaceDeclaration as Workspace } from "../../api/endpoints/tekton-task.api";
+import { Collapse } from "../collapse";
+import { graphId, PipelineGraph } from "../+tekton-graph/graph-new";
 
 interface Props<T = any> extends Partial<Props> {
   value?: T;
@@ -88,7 +89,7 @@ export const task: TaskResult = {
 export class CopyTaskDialog extends React.Component<Props> {
   @observable value: TaskResult = this.props.value || task;
   @observable static isOpen = false;
-  @observable static graph: any;
+  @observable static graph: PipelineGraph;
   @observable static node: any;
   @observable static data: any;
   @observable static namespace: string;
@@ -96,7 +97,7 @@ export class CopyTaskDialog extends React.Component<Props> {
   @observable name: string;
   @observable change: boolean;
 
-  static open(graph: any, node: any, namespace: string) {
+  static open(graph: PipelineGraph, node: any, namespace: string) {
     CopyTaskDialog.isOpen = true;
     CopyTaskDialog.namespace = namespace;
     this.graph = graph;
@@ -141,7 +142,7 @@ export class CopyTaskDialog extends React.Component<Props> {
 
   handle = () => {
     this.saveTask();
-    CopyTaskDialog.graph.setTaskName(this.value.taskName, CopyTaskDialog.node);
+    CopyTaskDialog.graph.setTaskName(CopyTaskDialog.node, this.value.taskName);
   };
 
   saveTask = () => {
@@ -162,13 +163,19 @@ export class CopyTaskDialog extends React.Component<Props> {
       //   this.value.taskName = this.value.taskName;
       // }
 
-      const task = taskStore.getByName(this.value.taskName, CopyTaskDialog.namespace);
+      const task = taskStore.getByName(
+        this.value.taskName,
+        CopyTaskDialog.namespace
+      );
       if (task === undefined) {
         taskStore.create(
           {
             name: this.value.taskName,
             namespace: configStore.getOpsNamespace(),
-            labels: new Map<string, string>().set("namespace", configStore.getDefaultNamespace()),
+            labels: new Map<string, string>().set(
+              "namespace",
+              configStore.getDefaultNamespace()
+            ),
           },
           {
             spec: {
@@ -187,7 +194,7 @@ export class CopyTaskDialog extends React.Component<Props> {
           task.spec.resources = resources;
           task.spec.workspaces = workspaces;
           task.spec.steps = steps;
-          taskStore.apply(task, {...task});
+          taskStore.apply(task, { ...task });
         }
       }
       Notifications.ok(<>Task {this.value.taskName} save succeeded</>);
@@ -204,14 +211,21 @@ export class CopyTaskDialog extends React.Component<Props> {
 
   formatOptionLabel = (option: SelectOption) => {
     const { value, label } = option;
-    return (label || (<><Icon small material="layers" />{value}</>));
+    return (
+      label || (
+        <>
+          <Icon small material="layers" />
+          {value}
+        </>
+      )
+    );
   };
 
   get taskOptions() {
     const options = taskStore
-    .getAllByNs(CopyTaskDialog.namespace)
-    .map((item) => ({value: item.getName()}))
-    .slice();
+      .getAllByNs(CopyTaskDialog.namespace)
+      .map((item) => ({ value: item.getName() }))
+      .slice();
     return [...options];
   }
 
@@ -230,13 +244,13 @@ export class CopyTaskDialog extends React.Component<Props> {
           }}
         />
       </div>
-    )
+    );
   }
 
   rSwitch() {
     return (
       <div hidden={this.ifSwitch}>
-        <SubTitle title={<Trans>Task Name</Trans>}/>
+        <SubTitle title={<Trans>Task Name</Trans>} />
         <Input
           required={true}
           validators={systemName}
@@ -244,48 +258,55 @@ export class CopyTaskDialog extends React.Component<Props> {
           value={this.value.taskName}
           onChange={(value) => (this.value.taskName = value)}
         />
-        <br/>
+        <br />
         <Collapse panelName={<Trans>WorkSpaces</Trans>} key={"WorkSpaces"}>
           <TaskSpecWorkSpaces
             value={this.value.workspace}
             onChange={(value) => {
-              this.value.workspace = value
+              this.value.workspace = value;
             }}
           />
         </Collapse>
-        <br/>
-        <Collapse panelName={<Trans>PipelineParams</Trans>} key={"PipelineParams"}>
+        <br />
+        <Collapse
+          panelName={<Trans>PipelineParams</Trans>}
+          key={"PipelineParams"}
+        >
           <PipelineParamsDetails
             value={this.value.pipelineParams}
             onChange={(value) => {
-              this.value.pipelineParams = value
+              this.value.pipelineParams = value;
             }}
           />
         </Collapse>
-        <br/>
+        <br />
         <Collapse panelName={<Trans>Resources</Trans>} key={"Resources"}>
           <ResourcesDetail
             value={this.value.resources}
             onChange={(value) => {
-              this.value.resources = value
+              this.value.resources = value;
             }}
           />
         </Collapse>
-        <br/>
+        <br />
         <Collapse panelName={<Trans>TaskStep</Trans>} key={"TaskStep"}>
           <MultiTaskStepDetails
             value={this.value.taskSteps}
             onChange={(value) => {
-              this.value.taskSteps = value
+              this.value.taskSteps = value;
             }}
           />
         </Collapse>
       </div>
-    )
+    );
   }
 
   render() {
-    const header = (<h5><Trans>Apply Task</Trans></h5>);
+    const header = (
+      <h5>
+        <Trans>Apply Task</Trans>
+      </h5>
+    );
 
     return (
       <ThemeProvider theme={theme}>
@@ -308,9 +329,11 @@ export class CopyTaskDialog extends React.Component<Props> {
                     />
                   }
                   label={
-                    this.ifSwitch
-                      ? (<SubTitle title={<Trans>Select module</Trans>}/>)
-                      : (<SubTitle title={<Trans>Template configuration</Trans>}/>)
+                    this.ifSwitch ? (
+                      <SubTitle title={<Trans>Select module</Trans>} />
+                    ) : (
+                      <SubTitle title={<Trans>Template configuration</Trans>} />
+                    )
                   }
                 />
               </FormGroup>
