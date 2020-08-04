@@ -70,7 +70,7 @@ export class ParamsDetails extends React.Component<Props> {
             <Grid item xs zeroMinWidth>
               <Icon
                 small
-                tooltip={<Trans>Remove Params</Trans>}
+                tooltip={<Trans>Remove</Trans>}
                 className="remove-icon"
                 material="clear"
                 onClick={(e) => {
@@ -89,7 +89,7 @@ export class ParamsDetails extends React.Component<Props> {
     const { disable } = this.props;
 
     return (
-      <div>
+      <>
         <SubTitle
           title={
             <>
@@ -105,12 +105,10 @@ export class ParamsDetails extends React.Component<Props> {
             </>
           }>
         </SubTitle>
-        <div className="params">
-          {this.value.map((item, index) => {
-            return this.rParams(index, disable);
-          })}
-        </div>
-      </div>
+        {this.value.map((item, index) => {
+          return this.rParams(index, disable);
+        })}
+      </>
     );
   }
 }
