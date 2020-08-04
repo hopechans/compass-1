@@ -51,7 +51,7 @@ export class AllowSubnets extends React.Component<Props> {
           {this.value.map((item, index) => {
             return (
               <div key={index}>
-                <Grid container spacing={3} alignItems="center" direction="row">
+                <Grid container spacing={5} alignItems="center" direction="row">
                   <Grid item xs={11} zeroMinWidth>
                     <Input
                       className="item"

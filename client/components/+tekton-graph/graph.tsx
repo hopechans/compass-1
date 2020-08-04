@@ -63,7 +63,7 @@ export class Graph extends React.Component<IProps, IState> {
     return (
       <div>
         <div hidden={open}>
-          <Grid container spacing={3} alignItems="center" direction="row">
+          <Grid container spacing={5} alignItems="center" direction="row">
             <Grid item xs={1} zeroMinWidth/>
             <Grid item xs={5} zeroMinWidth/>
             <Grid item xs={3} zeroMinWidth className="btn-group">

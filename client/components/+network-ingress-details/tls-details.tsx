@@ -53,7 +53,7 @@ export class TlsDetails extends React.Component<Props> {
       <>
         <br/>
         <Paper elevation={3} style={{ padding: 25 }}>
-          <Grid container spacing={3} alignItems="center" direction="row">
+          <Grid container spacing={5} alignItems="center" direction="row">
             <Grid item xs={11} zeroMinWidth>
               <TlsHostsDetails
                 divider={true}

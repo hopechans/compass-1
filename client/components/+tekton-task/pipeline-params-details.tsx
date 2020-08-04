@@ -4,7 +4,6 @@ import React from "react";
 import {observer} from "mobx-react";
 import {Trans} from "@lingui/macro";
 import {PipelineParams} from "../../api/endpoints";
-import {Spinner} from "../spinner";
 import {DrawerTitle} from "../drawer";
 import {Table, TableCell, TableHead, TableRow} from "../table";
 

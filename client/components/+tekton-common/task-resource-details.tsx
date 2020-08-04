@@ -44,16 +44,21 @@ export class TaskResourceDetails extends React.Component<Props> {
     return (
       <>
         <br/>
-        <Grid container spacing={3} alignItems="center" direction="row">
-          <Grid item xs={3} zeroMinWidth>
-            <Trans>Name</Trans>
+        <Grid container spacing={5} direction={"row"}>
+          <Grid item xs={11} direction={"row"} zeroMinWidth>
+            <Grid container spacing={5} direction={"row"} zeroMinWidth>
+              <Grid item xs zeroMinWidth>
+                <Trans>Name</Trans>
+              </Grid>
+              <Grid item xs zeroMinWidth>
+                <Trans>ResourceType</Trans>
+              </Grid>
+              <Grid item xs zeroMinWidth>
+                <Trans>TargetPath</Trans>
+              </Grid>
+            </Grid>
           </Grid>
-          <Grid item xs={4} zeroMinWidth>
-            <Trans>ResourceType</Trans>
-          </Grid>
-          <Grid item xs={3} zeroMinWidth>
-            <Trans>TargetPath</Trans>
-          </Grid>
+          <Grid item xs/>
         </Grid>
         <br/>
       </>
@@ -63,29 +68,34 @@ export class TaskResourceDetails extends React.Component<Props> {
   rForm(index: number) {
     return (
       <>
-        <Grid container spacing={3} alignItems="center" direction="row">
-          <Grid item xs={3} zeroMinWidth>
-            <Input
-              placeholder={"Name"}
-              value={this.value[index].name}
-              onChange={(value) => (this.value[index].name = value)}
-            />
+        <Grid container spacing={5} alignItems="center" direction="row">
+          <Grid item xs={11} direction={"row"} zeroMinWidth>
+            <Grid container spacing={5} direction={"row"} zeroMinWidth>
+              <Grid item xs zeroMinWidth>
+                <Input
+                  placeholder={"Name"}
+                  value={this.value[index].name}
+                  onChange={(value) => (this.value[index].name = value)}
+                />
+              </Grid>
+              <Grid item xs zeroMinWidth>
+                <Select
+                  themeName={"light"}
+                  value={this.value[index].type}
+                  options={this.typeOptions}
+                  onChange={(value) => (this.value[index].type = value.value)}
+                />
+              </Grid>
+              <Grid item xs zeroMinWidth>
+                <Input
+                  placeholder={"TargetPath"}
+                  value={this.value[index].targetPath}
+                  onChange={(value) => (this.value[index].targetPath = value)}
+                />
+              </Grid>
+            </Grid>
           </Grid>
-          <Grid item xs={4} zeroMinWidth>
-            <Select
-              themeName={"light"}
-              value={this.value[index].type}
-              options={this.typeOptions}
-              onChange={(value) => (this.value[index].type = value.value)}
-            />
-          </Grid>
-          <Grid item xs={3} zeroMinWidth>
-            <Input
-              placeholder={"TargetPath"}
-              value={this.value[index].targetPath}
-              onChange={(value) => (this.value[index].targetPath = value)}
-            />
-          </Grid>
+
           <Grid item xs zeroMinWidth>
             <Icon
               small

@@ -41,30 +41,34 @@ export class ParamsDetails extends React.Component<Props> {
   rParams(index: number, disable: boolean) {
     return (
       <>
-        <Grid container spacing={3} alignItems="center" direction="row">
-          <Grid item xs={5} zeroMinWidth>
-            <Input
-              className="item"
-              disabled={disable}
-              placeholder={_i18n._(t`Name`)}
-              title={this.value[index].name}
-              value={this.value[index].name}
-              onChange={(value) => {
-                this.value[index].name = value;
-              }}
-            />
-          </Grid>
-          <Grid item xs={5} zeroMinWidth>
-            <Input
-              className="item"
-              // disabled={disable}
-              placeholder={_i18n._(t`Value`)}
-              title={this.value[index].value}
-              value={this.value[index].value}
-              onChange={(value) => {
-                this.value[index].value = value;
-              }}
-            />
+        <Grid container spacing={5} alignItems="center" direction="row">
+          <Grid item xs={11} direction={"row"} zeroMinWidth>
+            <Grid container spacing={1} direction={"row"} zeroMinWidth>
+              <Grid item xs zeroMinWidth>
+                <Input
+                  className="item"
+                  disabled={disable}
+                  placeholder={_i18n._(t`Name`)}
+                  title={this.value[index].name}
+                  value={this.value[index].name}
+                  onChange={(value) => {
+                    this.value[index].name = value;
+                  }}
+                />
+              </Grid>
+              <Grid item xs zeroMinWidth>
+                <Input
+                  className="item"
+                  // disabled={disable}
+                  placeholder={_i18n._(t`Value`)}
+                  title={this.value[index].value}
+                  value={this.value[index].value}
+                  onChange={(value) => {
+                    this.value[index].value = value;
+                  }}
+                />
+              </Grid>
+            </Grid>
           </Grid>
           {!disable ? (
             <Grid item xs zeroMinWidth>

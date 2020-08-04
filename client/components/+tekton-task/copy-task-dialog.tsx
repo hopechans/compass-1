@@ -245,32 +245,26 @@ export class CopyTaskDialog extends React.Component<Props> {
           onChange={(value) => (this.value.taskName = value)}
         />
         <br/>
-        <Collapse panelName={<Trans>WorkSpaces</Trans>} key={"WorkSpaces"}>
-          <TaskSpecWorkSpaces
-            value={this.value.workspace}
-            onChange={(value) => {
-              this.value.workspace = value
-            }}
-          />
-        </Collapse>
+        <TaskSpecWorkSpaces
+          value={this.value.workspace}
+          onChange={(value) => {
+            this.value.workspace = value
+          }}
+        />
         <br/>
-        <Collapse panelName={<Trans>PipelineParams</Trans>} key={"PipelineParams"}>
-          <PipelineParamsDetails
-            value={this.value.pipelineParams}
-            onChange={(value) => {
-              this.value.pipelineParams = value
-            }}
-          />
-        </Collapse>
+        <PipelineParamsDetails
+          value={this.value.pipelineParams}
+          onChange={(value) => {
+            this.value.pipelineParams = value
+          }}
+        />
         <br/>
-        <Collapse panelName={<Trans>Resources</Trans>} key={"Resources"}>
-          <ResourcesDetail
-            value={this.value.resources}
-            onChange={(value) => {
-              this.value.resources = value
-            }}
-          />
-        </Collapse>
+        <ResourcesDetail
+          value={this.value.resources}
+          onChange={(value) => {
+            this.value.resources = value
+          }}
+        />
         <br/>
         <Collapse panelName={<Trans>TaskStep</Trans>} key={"TaskStep"}>
           <MultiTaskStepDetails

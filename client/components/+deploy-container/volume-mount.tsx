@@ -35,30 +35,30 @@ export class VolumeMountDetails extends React.Component<ArgsProps> {
     return (
       <>
         <br/>
-        <Grid
-          container
-          spacing={2}
-          direction={"row"}
-        >
-          <Grid item xs={5} zeroMinWidth>
-            <Input
-              required={true}
-              placeholder={_i18n._(t`Name eg: volumeClaims name`)}
-              value={this.value.items[index].name}
-              onChange={value => this.value.items[index].name = value}
-            />
+        <Grid container spacing={5} direction={"row"} zeroMinWidth>
+          <Grid item xs={11} direction={"row"} zeroMinWidth>
+            <Grid container spacing={1} direction={"row"} zeroMinWidth>
+              <Grid item xs zeroMinWidth>
+                <Input
+                  required={true}
+                  placeholder={_i18n._(t`Name eg: volumeClaims name`)}
+                  value={this.value.items[index].name}
+                  onChange={value => this.value.items[index].name = value}
+                />
+              </Grid>
+              <Grid item xs zeroMinWidth>
+                <Input
+                  required={true}
+                  placeholder={_i18n._(t`MountPath eg: /data`)}
+                  value={this.value.items[index].mountPath}
+                  onChange={
+                    value => this.value.items[index].mountPath = value
+                  }
+                />
+              </Grid>
+            </Grid>
           </Grid>
-          <Grid item xs={5} zeroMinWidth>
-            <Input
-              required={true}
-              placeholder={_i18n._(t`MountPath eg: /data`)}
-              value={this.value.items[index].mountPath}
-              onChange={
-                value => this.value.items[index].mountPath = value
-              }
-            />
-          </Grid>
-          <Grid item xs={2} zeroMinWidth>
+          <Grid item xs zeroMinWidth>
             <Icon
               small
               tooltip={<Trans>Remove MountPath</Trans>}

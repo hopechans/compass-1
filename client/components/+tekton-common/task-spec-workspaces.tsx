@@ -44,23 +44,26 @@ export class TaskSpecWorkSpaces extends React.Component<Props> {
   rWorkSpace(index: number) {
     return (
       <>
-        <Grid container spacing={3} alignItems="center" direction="row">
-          <Grid item xs={5} zeroMinWidth>
-            <Input
-              placeholder={"Name"}
-              value={this.value[index].name}
-              onChange={(value) => (this.value[index].name = value)}
-            />
-          </Grid>
-
-          <Grid item xs={5} zeroMinWidth>
-            <Input
-              placeholder={"MountPath"}
-              value={this.value[index].mountPath}
-              onChange={(value) =>
-                (this.value[index].mountPath = value)
-              }
-            />
+        <Grid container spacing={5} direction={"row"} zeroMinWidth>
+          <Grid item xs={11} direction={"row"} zeroMinWidth>
+            <Grid container spacing={1} direction={"row"} zeroMinWidth>
+              <Grid item xs zeroMinWidth>
+                <Input
+                  placeholder={"Name"}
+                  value={this.value[index].name}
+                  onChange={(value) => (this.value[index].name = value)}
+                />
+              </Grid>
+              <Grid item xs zeroMinWidth>
+                <Input
+                  placeholder={"MountPath"}
+                  value={this.value[index].mountPath}
+                  onChange={(value) =>
+                    (this.value[index].mountPath = value)
+                  }
+                />
+              </Grid>
+            </Grid>
           </Grid>
           <Grid item xs zeroMinWidth>
             <Icon

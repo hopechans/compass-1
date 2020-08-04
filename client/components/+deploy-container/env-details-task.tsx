@@ -33,7 +33,7 @@ export class EvnVarDetails extends React.Component<EvnVarProps> {
   rEnv(index: number) {
     return (
       <>
-        <Grid container spacing={3} alignItems="center" direction="row">
+        <Grid container spacing={5} alignItems="center" direction="row">
           <Grid item xs={5} zeroMinWidth>
             <Input
               className="item"

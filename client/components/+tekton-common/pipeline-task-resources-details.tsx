@@ -46,7 +46,7 @@ export class PipelineTaskInputResourceDetail extends React.Component<Props> {
   rTab() {
     return (
       <>
-        <Grid container spacing={3} alignItems="center" direction="row">
+        <Grid container spacing={5} alignItems="center" direction="row">
           <Grid item xs={5} zeroMinWidth>
             <Trans>Name</Trans>
           </Grid>
@@ -62,7 +62,7 @@ export class PipelineTaskInputResourceDetail extends React.Component<Props> {
   rForm(index: number, disable: boolean) {
     return (
       <>
-        <Grid container spacing={3} alignItems="center" direction="row">
+        <Grid container spacing={5} alignItems="center" direction="row">
           <Grid item xs={5} zeroMinWidth>
             <Input
               placeholder={_i18n._(t`Name`)}
