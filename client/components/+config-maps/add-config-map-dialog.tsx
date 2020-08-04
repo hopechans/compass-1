@@ -88,7 +88,6 @@ export class AddConfigMapDialog extends React.Component<Props> {
       >
         <Wizard className="AddConfigMapDialog" header={header} done={this.close}>
           <WizardStep contentClass="flow column" nextLabel={<Trans>Create</Trans>} next={this.createConfigMap}>
-
             <SubTitle title={<Trans>Namespace</Trans>} />
             <NamespaceSelect
               value={this.namespace}
@@ -97,7 +96,6 @@ export class AddConfigMapDialog extends React.Component<Props> {
               className="box grow"
               onChange={({ value }) => this.namespace = value}
             />
-
             <SubTitle title={<Trans>Name</Trans>} />
             <Input
               required={true}
@@ -105,13 +103,8 @@ export class AddConfigMapDialog extends React.Component<Props> {
               value={this.name}
               onChange={value => this.name = value}
             />
-
-            <Collapse panelName={<Trans>Data</Trans>} key={"Data"}>
-              <ConfigMapDataDetails
-                value={this.data}
-                onChange={value => this.data = value}
-              />
-            </Collapse>
+            <br/>
+            <ConfigMapDataDetails value={this.data} onChange={value => this.data = value} />
           </WizardStep>
         </Wizard>
       </Dialog>
