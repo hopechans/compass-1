@@ -80,8 +80,14 @@ export class PipelineRunVisualDialog extends React.Component<Props> {
 
       this.graph.bindClickOnNode((currentNode: any) => {
         const group = currentNode.getContainer();
-        let shape = group.get("children")[2];
-        const name = shape.attrs.text;
+        const name = group
+          .getChildren()
+          ?.filter((child: { get: (arg0: string) => string }) => {
+            return child.get("labels") === "taskName";
+          })
+          .map((item: any) => {
+            return item.attrs.text || "";
+          });
 
         const names = pipelineRunStore.getTaskRunName(this.pipelineRun);
         const currentTaskRunMap = pipelineRunStore.getTaskRun(names);

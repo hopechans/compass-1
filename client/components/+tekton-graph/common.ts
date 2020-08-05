@@ -22,13 +22,13 @@ export enum NodeRole {
 }
 
 export enum NodeStatus {
-  Pending,
-  Failed,
-  Running,
-  Progress,
-  Succeeded,
-  Cancel,
-  Timeout,
+  Pending = "Pending",
+  Failed = "Failed",
+  Running = "Running",
+  Progress = "Progress",
+  Succeeded = "Succeeded",
+  Cancel = "Cancel",
+  Timeout = "Timeout",
 }
 
 export interface PipelineGraphOptions extends GraphOptions {}

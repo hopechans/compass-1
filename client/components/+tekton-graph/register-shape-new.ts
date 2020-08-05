@@ -35,6 +35,7 @@ function drawBase(cfg: PipelineGraphConfig, group: Group): IShape {
 
   // 标题
   group.addShape("text", {
+    labels: "taskName",
     attrs: {
       y: 20,
       x: 5,
