@@ -14,6 +14,8 @@ import { pipelineRunStore } from "./pipelinerun.store";
 import { TaskRunLogsDialog } from "../+tekton-taskrun/task-run-logs-dialog";
 import { defaultInitData, defaultInitConfig } from "../+tekton-graph/common";
 
+const taskName = "taskName";
+
 interface Props extends Partial<Props> {}
 
 @observer
@@ -51,22 +53,6 @@ export class PipelineRunVisualDialog extends React.Component<Props> {
       const pipelineGraphConfig = defaultInitConfig(width, height);
       this.graph = new PipelineGraph(pipelineGraphConfig);
 
-      // let nodeSize = pipelineStore.getNodeSize(this.pipeline);
-      // if (nodeSize != null) {
-      //   this.graph.changeSize(nodeSize.width, nodeSize.height);
-      // }
-
-      // this.graph.bindClickOnNode((currentNode: any) => {
-      //   this.currentNode = currentNode;
-      //   CopyTaskDialog.open(
-      //     this.graph,
-      //     this.currentNode,
-      //     PipelineVisualDialog.Data.getNs()
-      //   );
-      // });
-      // const nodeData = pipelineStore.getNodeData(this.pipeline);
-      // this.graph.renderPipelineGraph(nodeData);
-
       let nodeSize = pipelineRunStore.getNodeSize(this.pipelineRun);
       if (nodeSize != null) {
         this.graph.changeSize(nodeSize.width, nodeSize.height);
@@ -83,7 +69,7 @@ export class PipelineRunVisualDialog extends React.Component<Props> {
         const name = group
           .getChildren()
           ?.filter((child: { get: (arg0: string) => string }) => {
-            return child.get("labels") === "taskName";
+            return child.get("labels") === taskName;
           })
           .map((item: any) => {
             return item.attrs.text || "";
@@ -111,7 +97,7 @@ export class PipelineRunVisualDialog extends React.Component<Props> {
             nodeData.nodes[index].status =
               currentTaskRun.status.conditions[0].reason;
           } else {
-            nodeData.nodes[index].status = "Pendding";
+            nodeData.nodes[index].status = "Pending";
           }
           nodeData.nodes[index].showtime = true;
         });
@@ -125,7 +111,9 @@ export class PipelineRunVisualDialog extends React.Component<Props> {
   renderTimeInterval(nodeData: any) {
     //Interval 1s update status and time in graph
     this.updateTimeInterval = setInterval(() => {
-      const names = this.pipelineRun.getTaskRunName();
+      const names = pipelineRunStore
+        .getByName(this.pipelineRun.getName())
+        .getTaskRunName();
       clearInterval(this.pendingTimeInterval);
       if (names.length > 0) {
         const currentTaskRunMap = pipelineRunStore.getTaskRun(names);

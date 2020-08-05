@@ -27,8 +27,8 @@ export enum NodeStatus {
   Running = "Running",
   Progress = "Progress",
   Succeeded = "Succeeded",
-  Cancel = "Cancel",
-  Timeout = "Timeout",
+  Cancel = "TaskRunCancelled",
+  Timeout = "TaskRunTimeout",
 }
 
 export interface PipelineGraphOptions extends GraphOptions {}
