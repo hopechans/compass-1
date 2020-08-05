@@ -66,6 +66,7 @@ function drawBase(cfg: PipelineGraphConfig, group: Group): IShape {
 
 function drawStatus(group: Group, color: string, name: string): IShape {
   return group.addShape("circle", {
+    labels: name,
     attrs: {
       x: 20,
       y: 33,
@@ -97,6 +98,7 @@ function drawNodeStatus(cfg: PipelineGraphConfig, group: Group): IShape {
       drawStatus(group, "#20d867", "running");
       //status for text
       return group.addShape("text", {
+        labels: "running",
         attrs: {
           y: 40,
           x: 25,
@@ -309,7 +311,7 @@ function drawSubNode(group: Group) {
       height: 20,
       textAlign: "center",
       textBaseline: "middle",
-      text: "✂︎",
+      text: "⎼",
       fill: "#51863d",
       cursor: "pointer",
       isCollapseShape: true,
@@ -385,16 +387,27 @@ G6.registerNode(pipelineNode, {
     }
 
     if (name === "Running") {
-      const shapestatus = group.get("children")[4];
-      const shapeText = group.get("children")[5];
-      shapestatus.attr({
-        fill: "#20d867",
-      });
+      group
+        .getChildren()
+        ?.filter((child) => {
+          return child.get("labels") === "running";
+        })
+        .map((item) => {
+          item.attr({
+            fill: "#20d867",
+          });
+        });
 
-      shapeText.attr({
-        text: "Running. ",
-        fontStyle: "",
-      });
+      //   const shapestatus = group.get("children")[4];
+      //   const shapeText = group.get("children")[5];
+      //   shapestatus.attr({
+      //     fill: "#20d867",
+      //   });
+
+      //   shapeText.attr({
+      //     text: "Running. ",
+      //     fontStyle: "",
+      //   });
     }
 
     if (name === "Pendding") {

@@ -136,6 +136,10 @@ export class PipelineGraph extends Graph {
         right: true,
         left: true,
       },
+      anchorPoints: [
+        [0, 0.5],
+        [1, 0.5],
+      ],
     };
 
     if (this.addItem("node", pipelineNodeConfig) === undefined) {

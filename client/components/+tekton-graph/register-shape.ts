@@ -365,186 +365,182 @@ function drawTime(cfg: any, group: any) {
   }
 }
 
-G6.registerNode(
-  "card-node",
-  {
-    drawShape: function drawShape(cfg: any, group: any) {
-      const color = cfg.error ? "#F4664A" : "#30BF78";
-      const shape = drawPipeline(cfg, group);
-      return shape;
-    },
-    setState(name: any, value: any, item: any) {
-      const group = item.getContainer();
-      if (name === "time" && value) {
-        let shape = group.get("children")[7];
-        shape.attr({ text: value });
-      }
-      if (name === "hover" && value) {
-        const lightColor = "lightblue";
-        const collapsed = true;
-        const rectConfig = {
-          lineWidth: 1,
-          fontSize: 12,
-          fill: "#fff",
-          radius: 24,
-          stroke: lightColor,
-          opacity: 1,
-        };
-
-        group.addShape("circle", {
-          name: "test",
-          attrs: {
-            x: 192,
-            y: 25,
-            r: 8,
-            stroke: lightColor,
-            fill: collapsed ? lightColor : "",
-            isCollapseShape: true,
-          },
-        });
-
-        group.addShape("text", {
-          name: "right-plus",
-          attrs: {
-            x: 192,
-            y: 25,
-            width: 20,
-            height: 20,
-            textAlign: "center",
-            textBaseline: "middle",
-            text: collapsed ? "+" : "-",
-            fontSize: 10,
-            fill: collapsed ? "#00000" : lightColor,
-            cursor: "pointer",
-            isCollapseShape: true,
-          },
-        });
-
-        group.addShape("circle", {
-          name: "test",
-          attrs: {
-            x: 90,
-            y: 53,
-            r: 8,
-            stroke: lightColor,
-            fill: collapsed ? lightColor : "",
-            isCollapseShape: true,
-          },
-        });
-        group.addShape("text", {
-          name: "bottom-plus",
-          attrs: {
-            x: 90,
-            y: 53,
-            width: 16,
-            height: 16,
-            textAlign: "center",
-            textBaseline: "middle",
-            text: collapsed ? "+" : "-",
-            fontSize: 10,
-            fill: collapsed ? "#00000" : lightColor,
-            cursor: "pointer",
-            isCollapseShape: true,
-          },
-        });
-      }
-
-      if (name === "hover" && !value) {
-        const shape = group.get("children");
-        console.log(shape);
-        setTimeout(() => {
-          group.removeChild(group.get("children")[shape.length - 2]);
-          group.removeChild(group.get("children")[shape.length - 1]);
-        }, 100);
-        setTimeout(() => {
-          group.removeChild(group.get("children")[shape.length - 2]);
-          group.removeChild(group.get("children")[shape.length - 1]);
-        }, 100);
-      }
-
-      if (name === "click") {
-        let shape = group.get("children")[2];
-        shape.attr({ text: value });
-      }
-
-      if (name === "Running") {
-        const shapestatus = group.get("children")[4];
-        const shapeText = group.get("children")[5];
-        shapestatus.attr({
-          fill: "#20d867",
-        });
-
-        shapeText.attr({
-          text: "Running. ",
-          fontStyle: "",
-        });
-      }
-
-      if (name === "Pendding") {
-        const shapestatus = group.get("children")[4];
-        const shapeText = group.get("children")[5];
-        shapestatus.attr({
-          fill: "#ffc12f",
-        });
-
-        shapeText.attr({
-          text: "Pendding. ",
-          fontStyle: "",
-        });
-      }
-
-      if (name === "Succeeded") {
-        const shapeImg = group.get("children")[4];
-        const shapeText = group.get("children")[5];
-        shapeImg.attr({
-          img:
-            "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAXCAYAAAAP6L+eAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAGSSURBVEhL7ZFLSwJRGIb7PwVREfQDKrRQutIiohIKKlu0iIgW7YOiP9DeMgLRvCUVWmAJkUFQVBQaXTXLyzg6zrydM3OwaLRUaOczu/N985z3O18N/omqOE9VnKdisUS+pJDCyes5PjIJiJLEKgoViamUynbCBxhwT8Ny6wEnpFlVoWwxlcazSbjCXrRbh1G3rkG/awovXJR1KJQtpsnsoX20EWmtSYNW6xDOopfIigLrUChLzIsZeWytbZQk1aJj24Bg5AKClGMdX6jEoiQiwscw71+SF5PO8fI5n8vAfOOA3jGO+o1O9JHx/U+nJGlWrv9EJY5l4lgJrqFlq5e8nRHehwDe+HeYrmzocU6iwazDoGeGnB/nLy2ESkybfY8BaMi4NBmVLBwtk4RGNJr1GNmdhef+ECmBY38URiWmW0+RBVnuPNDZx+SEzZtdaCJSw94cXCEfktkU6y5O0eXRRdE37XZOyEkVqReJEqSUomIKXZjp2obFwCrcYV/JUsqvYgqVP3ORksb/zp/iSqmKGcAncmSXV+WwdxEAAAAASUVORK5CYII=",
-        });
-
-        shapeText.attr({
-          text: "Succeed. ",
-          fontStyle: "",
-        });
-      }
-      if (name === "Failed") {
-        const shapeImg = group.get("children")[4];
-        const shapeText = group.get("children")[5];
-        shapeImg.attr({
-          img:
-            "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAVCAYAAABLy77vAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAADESURBVDhP7ZI9CgIxEEY9jBdYe93en1ovaWFr4QWEBYUV72AhCnbCmBd2Fk0yKwFtxAeB2czw8jFsTz7EX/Se74luh6PcL9fmK4YeMyGRaNsvpJ4tkjLu6DETEolOy5Uf3JeTl5epuaPHTEhyRyqrBiMv4FBbEjCXfV5vpCqGXuCPq7mzMEWgybqSKN2JmiSaLDtRuyMnaHfk6qwdqWRXjr1AoebOkkUiBuvp3P6PXI+ZkEjEyymJQu85qWIuO5efFYk8AGssmC7B7olJAAAAAElFTkSuQmCC",
-        });
-        shapeText.attr({
-          text: "Failed. ",
-          fontStyle: "",
-        });
-      }
-
-      if (name === "TaskRunCancelled") {
-        const shapestatus = group.get("children")[4];
-        const shapeText = group.get("children")[5];
-        shapestatus.attr({
-          fill: "#3296fa",
-        });
-
-        shapeText.attr({
-          text: "Cancel. ",
-          fontStyle: "",
-        });
-      }
-
-      if (name === "TaskRunTimeout") {
-        const shapestatus = group.get("children")[4];
-        const shapeText = group.get("children")[5];
-        shapestatus.attr({
-          fill: "#f02b2b",
-        });
-
-        shapeText.attr({
-          text: "Cancel. ",
-          fontStyle: "",
-        });
-      }
-    },
+G6.registerNode("card-node", {
+  drawShape: function drawShape(cfg: any, group: any) {
+    const color = cfg.error ? "#F4664A" : "#30BF78";
+    const shape = drawPipeline(cfg, group);
+    return shape;
   },
-  "single-node"
-);
+  setState(name: any, value: any, item: any) {
+    const group = item.getContainer();
+    if (name === "time" && value) {
+      let shape = group.get("children")[7];
+      shape.attr({ text: value });
+    }
+    if (name === "hover" && value) {
+      const lightColor = "lightblue";
+      const collapsed = true;
+      const rectConfig = {
+        lineWidth: 1,
+        fontSize: 12,
+        fill: "#fff",
+        radius: 24,
+        stroke: lightColor,
+        opacity: 1,
+      };
+
+      group.addShape("circle", {
+        name: "test",
+        attrs: {
+          x: 192,
+          y: 25,
+          r: 8,
+          stroke: lightColor,
+          fill: collapsed ? lightColor : "",
+          isCollapseShape: true,
+        },
+      });
+
+      group.addShape("text", {
+        name: "right-plus",
+        attrs: {
+          x: 192,
+          y: 25,
+          width: 20,
+          height: 20,
+          textAlign: "center",
+          textBaseline: "middle",
+          text: collapsed ? "+" : "-",
+          fontSize: 10,
+          fill: collapsed ? "#00000" : lightColor,
+          cursor: "pointer",
+          isCollapseShape: true,
+        },
+      });
+
+      group.addShape("circle", {
+        name: "test",
+        attrs: {
+          x: 90,
+          y: 53,
+          r: 8,
+          stroke: lightColor,
+          fill: collapsed ? lightColor : "",
+          isCollapseShape: true,
+        },
+      });
+      group.addShape("text", {
+        name: "bottom-plus",
+        attrs: {
+          x: 90,
+          y: 53,
+          width: 16,
+          height: 16,
+          textAlign: "center",
+          textBaseline: "middle",
+          text: collapsed ? "+" : "-",
+          fontSize: 10,
+          fill: collapsed ? "#00000" : lightColor,
+          cursor: "pointer",
+          isCollapseShape: true,
+        },
+      });
+    }
+
+    if (name === "hover" && !value) {
+      const shape = group.get("children");
+      console.log(shape);
+      setTimeout(() => {
+        group.removeChild(group.get("children")[shape.length - 2]);
+        group.removeChild(group.get("children")[shape.length - 1]);
+      }, 100);
+      setTimeout(() => {
+        group.removeChild(group.get("children")[shape.length - 2]);
+        group.removeChild(group.get("children")[shape.length - 1]);
+      }, 100);
+    }
+
+    if (name === "click") {
+      let shape = group.get("children")[2];
+      shape.attr({ text: value });
+    }
+
+    if (name === "Running") {
+      const shapestatus = group.get("children")[4];
+      const shapeText = group.get("children")[5];
+      shapestatus.attr({
+        fill: "#20d867",
+      });
+
+      shapeText.attr({
+        text: "Running. ",
+        fontStyle: "",
+      });
+    }
+
+    if (name === "Pendding") {
+      const shapestatus = group.get("children")[4];
+      const shapeText = group.get("children")[5];
+      shapestatus.attr({
+        fill: "#ffc12f",
+      });
+
+      shapeText.attr({
+        text: "Pendding. ",
+        fontStyle: "",
+      });
+    }
+
+    if (name === "Succeeded") {
+      const shapeImg = group.get("children")[4];
+      const shapeText = group.get("children")[5];
+      shapeImg.attr({
+        img:
+          "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAXCAYAAAAP6L+eAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAGSSURBVEhL7ZFLSwJRGIb7PwVREfQDKrRQutIiohIKKlu0iIgW7YOiP9DeMgLRvCUVWmAJkUFQVBQaXTXLyzg6zrydM3OwaLRUaOczu/N985z3O18N/omqOE9VnKdisUS+pJDCyes5PjIJiJLEKgoViamUynbCBxhwT8Ny6wEnpFlVoWwxlcazSbjCXrRbh1G3rkG/awovXJR1KJQtpsnsoX20EWmtSYNW6xDOopfIigLrUChLzIsZeWytbZQk1aJj24Bg5AKClGMdX6jEoiQiwscw71+SF5PO8fI5n8vAfOOA3jGO+o1O9JHx/U+nJGlWrv9EJY5l4lgJrqFlq5e8nRHehwDe+HeYrmzocU6iwazDoGeGnB/nLy2ESkybfY8BaMi4NBmVLBwtk4RGNJr1GNmdhef+ECmBY38URiWmW0+RBVnuPNDZx+SEzZtdaCJSw94cXCEfktkU6y5O0eXRRdE37XZOyEkVqReJEqSUomIKXZjp2obFwCrcYV/JUsqvYgqVP3ORksb/zp/iSqmKGcAncmSXV+WwdxEAAAAASUVORK5CYII=",
+      });
+
+      shapeText.attr({
+        text: "Succeed. ",
+        fontStyle: "",
+      });
+    }
+    if (name === "Failed") {
+      const shapeImg = group.get("children")[4];
+      const shapeText = group.get("children")[5];
+      shapeImg.attr({
+        img:
+          "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAVCAYAAABLy77vAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAADESURBVDhP7ZI9CgIxEEY9jBdYe93en1ovaWFr4QWEBYUV72AhCnbCmBd2Fk0yKwFtxAeB2czw8jFsTz7EX/Se74luh6PcL9fmK4YeMyGRaNsvpJ4tkjLu6DETEolOy5Uf3JeTl5epuaPHTEhyRyqrBiMv4FBbEjCXfV5vpCqGXuCPq7mzMEWgybqSKN2JmiSaLDtRuyMnaHfk6qwdqWRXjr1AoebOkkUiBuvp3P6PXI+ZkEjEyymJQu85qWIuO5efFYk8AGssmC7B7olJAAAAAElFTkSuQmCC",
+      });
+      shapeText.attr({
+        text: "Failed. ",
+        fontStyle: "",
+      });
+    }
+
+    if (name === "TaskRunCancelled") {
+      const shapestatus = group.get("children")[4];
+      const shapeText = group.get("children")[5];
+      shapestatus.attr({
+        fill: "#3296fa",
+      });
+
+      shapeText.attr({
+        text: "Cancel. ",
+        fontStyle: "",
+      });
+    }
+
+    if (name === "TaskRunTimeout") {
+      const shapestatus = group.get("children")[4];
+      const shapeText = group.get("children")[5];
+      shapestatus.attr({
+        fill: "#f02b2b",
+      });
+
+      shapeText.attr({
+        text: "Cancel. ",
+        fontStyle: "",
+      });
+    }
+  },
+});
