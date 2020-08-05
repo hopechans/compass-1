@@ -11,6 +11,8 @@ import {
 } from "./common";
 import { INode } from "@antv/g6/lib/interface/item";
 
+const circle = "circle";
+
 function drawPipeline(cfg: PipelineGraphConfig, group: Group): IShape {
   const shape = drawBase(cfg, group);
   drawNodeStatus(cfg, group);
@@ -66,40 +68,38 @@ function drawBase(cfg: PipelineGraphConfig, group: Group): IShape {
 }
 
 function drawStatus(group: Group, color: string, name: string): IShape {
-  return group.addShape("circle", {
-    labels: name,
+  return group.addShape(circle, {
     attrs: {
       x: 20,
-      y: 33,
+      y: 36,
       r: 3.5,
       fill: color,
     },
-    name: name,
+    name: name + circle,
   });
 }
 
 function drawNodeStatus(cfg: PipelineGraphConfig, group: Group): IShape {
   switch (cfg.status) {
     case NodeStatus.Pending:
-      drawStatus(group, "#ffc12f", "pendding");
+      drawStatus(group, "#ffc12f", NodeStatus.Pending);
       return group.addShape("text", {
         attrs: {
           y: 40,
           x: 25,
           height: 16,
           width: 16,
-          text: "Pendding.",
+          text: "Pending.",
           fill: "gray",
           fontSize: 10,
         },
-        name: "title",
+        name: NodeStatus.Pending,
       });
 
     case NodeStatus.Running:
-      drawStatus(group, "#20d867", "running");
+      drawStatus(group, "#20d867", NodeStatus.Running);
       //status for text
       return group.addShape("text", {
-        labels: "running",
         attrs: {
           y: 40,
           x: 25,
@@ -109,7 +109,7 @@ function drawNodeStatus(cfg: PipelineGraphConfig, group: Group): IShape {
           fill: "gray",
           fontSize: 10,
         },
-        name: "title",
+        name: NodeStatus.Running,
       });
 
     case NodeStatus.Progress:
@@ -232,7 +232,7 @@ function drawTime(cfg: PipelineGraphConfig, group: Group) {
       labels: "timeimage",
       attrs: {
         x: 90,
-        y: 28,
+        y: 30,
         width: 15,
         height: 15,
         img:
@@ -319,6 +319,18 @@ function drawSubNode(group: Group) {
     },
   });
 }
+const setState = (group: Group, fill: string, text: string) => {
+  const shapestatus = group.get("children")[3];
+  const shapeText = group.get("children")[4];
+  shapestatus.attr({
+    fill: fill,
+  });
+
+  shapeText.attr({
+    text: text,
+    fontStyle: "",
+  });
+};
 
 G6.registerNode(pipelineNode, {
   drawShape: function drawShape(cfg: PipelineGraphConfig, group: Group) {
@@ -328,7 +340,6 @@ G6.registerNode(pipelineNode, {
   // handle node event
   setState(name: string, value: string, item: Item) {
     const group = item.getContainer();
-
     if (name === "time" && value) {
       group
         .getChildren()
@@ -387,94 +398,34 @@ G6.registerNode(pipelineNode, {
       return;
     }
 
-    if (name === "Running") {
-      group
-        .getChildren()
-        ?.filter((child) => {
-          return child.get("labels") === "running";
-        })
-        .map((item) => {
-          item.attr({
-            fill: "#20d867",
-          });
-        });
-
-      //   const shapestatus = group.get("children")[4];
-      //   const shapeText = group.get("children")[5];
-      //   shapestatus.attr({
-      //     fill: "#20d867",
-      //   });
-
-      //   shapeText.attr({
-      //     text: "Running. ",
-      //     fontStyle: "",
-      //   });
+    if (name === NodeStatus.Running) {
+      setState(group, "#3296fa", "Running. ");
+      return;
     }
 
-    if (name === "Pendding") {
-      const shapestatus = group.get("children")[4];
-      const shapeText = group.get("children")[5];
-      shapestatus.attr({
-        fill: "#ffc12f",
-      });
-
-      shapeText.attr({
-        text: "Pendding. ",
-        fontStyle: "",
-      });
+    if (name === NodeStatus.Pending) {
+      setState(group, "#ffc12f", "Pendding. ");
+      return;
     }
 
-    if (name === "Succeeded") {
-      const shapeImg = group.get("children")[4];
-      const shapeText = group.get("children")[5];
-      shapeImg.attr({
-        img:
-          "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAXCAYAAAAP6L+eAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAGSSURBVEhL7ZFLSwJRGIb7PwVREfQDKrRQutIiohIKKlu0iIgW7YOiP9DeMgLRvCUVWmAJkUFQVBQaXTXLyzg6zrydM3OwaLRUaOczu/N985z3O18N/omqOE9VnKdisUS+pJDCyes5PjIJiJLEKgoViamUynbCBxhwT8Ny6wEnpFlVoWwxlcazSbjCXrRbh1G3rkG/awovXJR1KJQtpsnsoX20EWmtSYNW6xDOopfIigLrUChLzIsZeWytbZQk1aJj24Bg5AKClGMdX6jEoiQiwscw71+SF5PO8fI5n8vAfOOA3jGO+o1O9JHx/U+nJGlWrv9EJY5l4lgJrqFlq5e8nRHehwDe+HeYrmzocU6iwazDoGeGnB/nLy2ESkybfY8BaMi4NBmVLBwtk4RGNJr1GNmdhef+ECmBY38URiWmW0+RBVnuPNDZx+SEzZtdaCJSw94cXCEfktkU6y5O0eXRRdE37XZOyEkVqReJEqSUomIKXZjp2obFwCrcYV/JUsqvYgqVP3ORksb/zp/iSqmKGcAncmSXV+WwdxEAAAAASUVORK5CYII=",
-      });
-
-      shapeText.attr({
-        text: "Succeed. ",
-        fontStyle: "",
-      });
+    if (name === NodeStatus.Succeeded) {
+      setState(group, "#20d867", "Succeed. ");
+      return;
     }
 
-    if (name === "Failed") {
-      const shapeImg = group.get("children")[4];
-      const shapeText = group.get("children")[5];
-      shapeImg.attr({
-        img:
-          "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAVCAYAAABLy77vAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAADESURBVDhP7ZI9CgIxEEY9jBdYe93en1ovaWFr4QWEBYUV72AhCnbCmBd2Fk0yKwFtxAeB2czw8jFsTz7EX/Se74luh6PcL9fmK4YeMyGRaNsvpJ4tkjLu6DETEolOy5Uf3JeTl5epuaPHTEhyRyqrBiMv4FBbEjCXfV5vpCqGXuCPq7mzMEWgybqSKN2JmiSaLDtRuyMnaHfk6qwdqWRXjr1AoebOkkUiBuvp3P6PXI+ZkEjEyymJQu85qWIuO5efFYk8AGssmC7B7olJAAAAAElFTkSuQmCC",
-      });
-      shapeText.attr({
-        text: "Failed. ",
-        fontStyle: "",
-      });
+    if (name === NodeStatus.Failed) {
+      setState(group, "#ffc12f", "Succeed. ");
+      return;
     }
 
-    if (name === "TaskRunCancelled") {
-      const shapestatus = group.get("children")[4];
-      const shapeText = group.get("children")[5];
-      shapestatus.attr({
-        fill: "#3296fa",
-      });
-
-      shapeText.attr({
-        text: "Cancel. ",
-        fontStyle: "",
-      });
+    if (name === NodeStatus.Cancel) {
+      setState(group, "#3296fa", "Cancel. ");
+      return;
     }
 
-    if (name === "TaskRunTimeout") {
-      const shapestatus = group.get("children")[4];
-      const shapeText = group.get("children")[5];
-      shapestatus.attr({
-        fill: "#f02b2b",
-      });
-
-      shapeText.attr({
-        text: "Cancel. ",
-        fontStyle: "",
-      });
+    if (name === NodeStatus.Timeout) {
+      setState(group, "#f02b2b", "Timeout. ");
+      return;
     }
   },
 });
