@@ -79,149 +79,58 @@ function drawStatus(group: Group, color: string, name: string): IShape {
   });
 }
 
+const drawTextShape = (group: Group, name: string, text: string) => {
+  return group.addShape("text", {
+    attrs: {
+      y: 40,
+      x: 25,
+      height: 16,
+      width: 16,
+      text: text,
+      fill: "gray",
+      fontSize: 10,
+    },
+    name: name,
+  });
+};
+
 function drawNodeStatus(cfg: PipelineGraphConfig, group: Group): IShape {
   switch (cfg.status) {
     case NodeStatus.Pending:
       drawStatus(group, "#ffc12f", NodeStatus.Pending);
-      return group.addShape("text", {
-        attrs: {
-          y: 40,
-          x: 25,
-          height: 16,
-          width: 16,
-          text: "Pending.",
-          fill: "gray",
-          fontSize: 10,
-        },
-        name: NodeStatus.Pending,
-      });
+      return drawTextShape(group, NodeStatus.Pending, "Pending.");
 
     case NodeStatus.Running:
       drawStatus(group, "#20d867", NodeStatus.Running);
       //status for text
-      return group.addShape("text", {
-        attrs: {
-          y: 40,
-          x: 25,
-          height: 16,
-          width: 16,
-          text: "Running.",
-          fill: "gray",
-          fontSize: 10,
-        },
-        name: NodeStatus.Running,
-      });
+      return drawTextShape(group, NodeStatus.Running, "Running.");
 
     case NodeStatus.Progress:
-      group.addShape("circle", {
-        attrs: {
-          x: 13,
-          y: 32,
-          r: 5,
-          fill: "#ea9518",
-        },
-        name: "image-shape",
-      });
-
-      return group.addShape("text", {
-        attrs: {
-          y: 40,
-          x: 25,
-          height: 16,
-          width: 16,
-          text: "In progress.",
-          fill: "gray",
-          fontSize: 10,
-        },
-        name: "title",
-      });
+      drawStatus(group, "#20d867", NodeStatus.Running);
+      return drawTextShape(group, NodeStatus.Progress, "In progress.");
 
     case NodeStatus.Cancel:
       drawStatus(group, "#3296fa", "cancel");
       //status for text
-      return group.addShape("text", {
-        attrs: {
-          y: 40,
-          x: 25,
-          height: 16,
-          width: 16,
-          text: "Cancel.",
-          fill: "gray",
-          fontSize: 10,
-        },
-        name: "title",
-      });
+      return drawTextShape(group, NodeStatus.Cancel, "Cancel.");
 
     case NodeStatus.Succeeded:
-      group.addShape("image", {
-        attrs: {
-          x: 6,
-          y: 25,
-          width: 18,
-          height: 18,
-          img:
-            "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAXCAYAAAAP6L+eAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAGSSURBVEhL7ZFLSwJRGIb7PwVREfQDKrRQutIiohIKKlu0iIgW7YOiP9DeMgLRvCUVWmAJkUFQVBQaXTXLyzg6zrydM3OwaLRUaOczu/N985z3O18N/omqOE9VnKdisUS+pJDCyes5PjIJiJLEKgoViamUynbCBxhwT8Ny6wEnpFlVoWwxlcazSbjCXrRbh1G3rkG/awovXJR1KJQtpsnsoX20EWmtSYNW6xDOopfIigLrUChLzIsZeWytbZQk1aJj24Bg5AKClGMdX6jEoiQiwscw71+SF5PO8fI5n8vAfOOA3jGO+o1O9JHx/U+nJGlWrv9EJY5l4lgJrqFlq5e8nRHehwDe+HeYrmzocU6iwazDoGeGnB/nLy2ESkybfY8BaMi4NBmVLBwtk4RGNJr1GNmdhef+ECmBY38URiWmW0+RBVnuPNDZx+SEzZtdaCJSw94cXCEfktkU6y5O0eXRRdE37XZOyEkVqReJEqSUomIKXZjp2obFwCrcYV/JUsqvYgqVP3ORksb/zp/iSqmKGcAncmSXV+WwdxEAAAAASUVORK5CYII=",
-        },
-        name: "image-shape",
-      });
-
+      // set status
+      drawStatus(group, "#20d867", NodeStatus.Succeeded);
       //status for text
-      return group.addShape("text", {
-        attrs: {
-          y: 40,
-          x: 25,
-          height: 16,
-          width: 16,
-          text: "Succeed.",
-          fill: "gray",
-          fontSize: 10,
-        },
-        name: "title",
-      });
+      return drawTextShape(group, NodeStatus.Succeeded, "Succeed.");
 
     case NodeStatus.Timeout:
       // set status
       drawStatus(group, "#f02b2b", "timeout");
       //status for text
-      return group.addShape("text", {
-        attrs: {
-          y: 40,
-          x: 25,
-          height: 16,
-          width: 16,
-          text: "TimeOut.",
-          fill: "gray",
-          fontSize: 10,
-        },
-        name: "title",
-      });
+      return drawTextShape(group, NodeStatus.Timeout, "Timeout.");
 
     case NodeStatus.Failed:
-      group.addShape("image", {
-        attrs: {
-          x: 8,
-          y: 25,
-          width: 15,
-          height: 15,
-          img:
-            "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAVCAYAAABLy77vAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAADESURBVDhP7ZI9CgIxEEY9jBdYe93en1ovaWFr4QWEBYUV72AhCnbCmBd2Fk0yKwFtxAeB2czw8jFsTz7EX/Se74luh6PcL9fmK4YeMyGRaNsvpJ4tkjLu6DETEolOy5Uf3JeTl5epuaPHTEhyRyqrBiMv4FBbEjCXfV5vpCqGXuCPq7mzMEWgybqSKN2JmiSaLDtRuyMnaHfk6qwdqWRXjr1AoebOkkUiBuvp3P6PXI+ZkEjEyymJQu85qWIuO5efFYk8AGssmC7B7olJAAAAAElFTkSuQmCC",
-        },
-        name: "image-shape",
-      });
-
+      // set status
+      drawStatus(group, "red", "failed");
       //status for text
-      return group.addShape("text", {
-        attrs: {
-          y: 40,
-          x: 25,
-          height: 16,
-          width: 16,
-          text: "Failed.",
-          fill: "gray",
-          fontSize: 10,
-        },
-        name: "title",
-      });
+      return drawTextShape(group, NodeStatus.Failed, "Failed.");
   }
 }
 
