@@ -17,6 +17,7 @@
 
 html {
   font-size: 62.5%; // 1 rem == 10px
+  letter-spacing: 0.09em;
   color: $textColorPrimary;
   background-color: $mainBackground;
   --flex-gap: #{$padding};
@@ -66,7 +67,7 @@ h1,h2,h3,h4,h5,h6{
 h1 {
   font-size: 11.2rem;
   font-weight: $font-weight-thin;
-  letter-spacing: -.010em;
+  //letter-spacing: -.010em;
   margin: 0;
 }
 
@@ -117,6 +118,7 @@ a {
   cursor: pointer;
 
   text-decoration: none ;
+  letter-spacing: 0.02em;
 
   [href] {
     text-decoration: none;

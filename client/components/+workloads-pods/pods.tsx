@@ -1,24 +1,26 @@
 import "./pods.scss"
 
-import React from "react";
-import { observer } from "mobx-react";
-import { Link } from "react-router-dom";
-import { Trans } from "@lingui/macro";
-import { podsStore } from "./pods.store";
-import { RouteComponentProps } from "react-router";
-import { volumeClaimStore } from "../+storage-volume-claims/volume-claim.store";
-import { IPodsRouteParams } from "../+workloads";
-import { eventStore } from "../+events/event.store";
-import { KubeObjectListLayout } from "../kube-object";
-import { Pod, podsApi } from "../../api/endpoints";
-import { PodMenu } from "./pod-menu";
-import { stopPropagation } from "../../utils";
-import { KubeEventIcon } from "../+events/kube-event-icon";
-import { getDetailsUrl } from "../../navigation";
+import React, {Fragment} from "react";
+import {observer} from "mobx-react";
+import {Link} from "react-router-dom";
+import {Trans} from "@lingui/macro";
+import {podsStore} from "./pods.store";
+import {RouteComponentProps} from "react-router";
+import {volumeClaimStore} from "../+storage-volume-claims/volume-claim.store";
+import {IPodsRouteParams} from "../+workloads";
+import {eventStore} from "../+events/event.store";
+import {KubeObjectListLayout} from "../kube-object";
+import {Pod, podsApi} from "../../api/endpoints";
+import {PodMenu} from "./pod-menu";
+import {stopPropagation} from "../../utils";
+import {KubeEventIcon} from "../+events/kube-event-icon";
+import {getDetailsUrl} from "../../navigation";
 import kebabCase from "lodash/kebabCase";
-import { lookupApiLink } from "../../api/kube-api";
-import { apiManager } from "../../api/api-manager";
-import { PodContainerStatuses } from "./pod-container-statuses";
+import {lookupApiLink} from "../../api/kube-api";
+import {apiManager} from "../../api/api-manager";
+import {PodContainerStatuses} from "./pod-container-statuses";
+import {TooltipContent} from "../tooltip";
+import {Tooltip} from "../tooltip";
 
 enum sortBy {
   name = "name",
@@ -37,6 +39,21 @@ interface Props extends RouteComponentProps<IPodsRouteParams> {
 
 @observer
 export class Pods extends React.Component<Props> {
+
+  renderStatus(pod: Pod) {
+    const b = pod.getStatusMessage(true);
+    const tooltipId = pod.getName();
+    const tooltip = (
+      <>
+        <span id={tooltipId}>{b.reason}</span>
+        {b.message != "" ?
+          <Tooltip htmlFor={tooltipId} following>
+            <TooltipContent tableView>{b.message}</TooltipContent>
+          </Tooltip> : null}
+      </>
+    );
+    return {title: tooltip, className: kebabCase(b.reason)}
+  }
 
   render() {
     return (
@@ -60,25 +77,25 @@ export class Pods extends React.Component<Props> {
         ]}
         renderHeaderTitle={<Trans>Pods</Trans>}
         renderTableHeader={[
-          { title: <Trans>Name</Trans>, className: "name", sortBy: sortBy.name },
-          { className: "warning" },
-          { title: <Trans>Namespace</Trans>, className: "namespace", sortBy: sortBy.namespace },
-          { title: <Trans>Containers</Trans>, className: "containers", sortBy: sortBy.containers },
-          { title: <Trans>Restarts</Trans>, className: "restarts", sortBy: sortBy.restarts },
-          { title: <Trans>Controlled By</Trans>, className: "owners", sortBy: sortBy.owners },
-          { title: <Trans>Node</Trans>, className: "node", sortBy: sortBy.node },
-          { title: <Trans>QoS</Trans>, className: "qos", sortBy: sortBy.qos },
-          { title: <Trans>Age</Trans>, className: "age", sortBy: sortBy.age },
-          { title: <Trans>Status</Trans>, className: "status", sortBy: sortBy.status },
+          {title: <Trans>Name</Trans>, className: "name", sortBy: sortBy.name},
+          {className: "warning"},
+          {title: <Trans>Namespace</Trans>, className: "namespace", sortBy: sortBy.namespace},
+          {title: <Trans>Containers</Trans>, className: "containers", sortBy: sortBy.containers},
+          {title: <Trans>Restarts</Trans>, className: "restarts", sortBy: sortBy.restarts},
+          {title: <Trans>Controlled By</Trans>, className: "owners", sortBy: sortBy.owners},
+          {title: <Trans>Node</Trans>, className: "node", sortBy: sortBy.node},
+          {title: <Trans>QoS</Trans>, className: "qos", sortBy: sortBy.qos},
+          {title: <Trans>Age</Trans>, className: "age", sortBy: sortBy.age},
+          {title: <Trans>Status</Trans>, className: "status", sortBy: sortBy.status},
         ]}
         renderTableContents={(pod: Pod) => [
           pod.getName(),
-          pod.hasIssues() && <KubeEventIcon object={pod} />,
+          pod.hasIssues() && <KubeEventIcon object={pod}/>,
           pod.getNs(),
-          <PodContainerStatuses pod={pod} />,
+          <PodContainerStatuses pod={pod}/>,
           pod.getRestartsCount(),
           pod.getOwnerRefs().map(ref => {
-            const { kind, name } = ref;
+            const {kind, name} = ref;
             const detailsLink = getDetailsUrl(lookupApiLink(ref, pod));
             return (
               <Link key={name} to={detailsLink} className="owner" onClick={stopPropagation}>
@@ -89,10 +106,10 @@ export class Pods extends React.Component<Props> {
           pod.getNodeName(),
           pod.getQosClass(),
           pod.getAge(),
-          { title: pod.getStatusMessage(), className: kebabCase(pod.getStatusMessage()) }
+          this.renderStatus(pod),
         ]}
         renderItemMenu={(item: Pod) => {
-          return <PodMenu object={item} />
+          return <PodMenu object={item}/>
         }}
       />
     )

@@ -1,5 +1,19 @@
 // Custom fonts, bundled with app
 
+// SourceCodePro
+
+//@font-face {
+//  font-family: 'Source Code Pro';
+//  src: local('Source Code Pro Medium Italic'), local('Source-Code-Pro-Medium-Italic'),
+//  url('fonts/SourceCodePro-MediumItalic.ttf') format('truetype');
+//}
+
+@font-face {
+  font-family: 'Nanum Gothic';
+  src: local('Nanum Gothic'),
+  url('fonts/NanumGothicCoding-Regular.ttf') format('truetype');
+}
+
 // Material Design Icons
 // https://material.io/resources/icons/
 // https://github.com/google/material-design-icons/tree/master/iconfont
@@ -115,3 +129,4 @@
   src: local('RobotoMono'),
   url('fonts/roboto-mono-nerd.ttf') format('truetype');
 }
+

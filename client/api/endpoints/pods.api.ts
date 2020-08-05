@@ -1,7 +1,7 @@
-import { IAffinity, WorkloadKubeObject } from "../workload-kube-object";
-import { autobind } from "../../utils";
-import { IMetrics, metricsApi } from "./metrics.api";
-import { KubeApi } from "../kube-api";
+import {IAffinity, WorkloadKubeObject} from "../workload-kube-object";
+import {autobind} from "../../utils";
+import {IMetrics, metricsApi} from "./metrics.api";
+import {KubeApi} from "../kube-api";
 
 export class PodsApi extends KubeApi<Pod> {
   async getTerminalSession(params: {
@@ -19,7 +19,7 @@ export class PodsApi extends KubeApi<Pod> {
     query?: IPodLogsQuery
   ): Promise<string> {
     const path = this.getUrl(params) + "/log";
-    return this.request.get(path, { query });
+    return this.request.get(path, {query});
   }
 
   getMetrics(
@@ -183,7 +183,14 @@ export interface IPodContainerStatus {
       reason: string;
     };
   };
-  lastState: {};
+  lastState: {
+    terminated?: {
+      containerID: string
+      finishedAt: string;
+      exitCode: number;
+      message: string;
+    };
+  };
   ready: boolean;
   restartCount: number;
   image: string;
@@ -269,7 +276,7 @@ export class Pod extends WorkloadKubeObject {
 
   getContainerStatuses(includeInitContainers = true) {
     const statuses: IPodContainerStatus[] = [];
-    const { containerStatuses, initContainerStatuses } = this.status;
+    const {containerStatuses, initContainerStatuses} = this.status;
     if (containerStatuses) {
       statuses.push(...containerStatuses);
     }
@@ -280,7 +287,7 @@ export class Pod extends WorkloadKubeObject {
   }
 
   getRestartsCount(): number {
-    const { containerStatuses } = this.status;
+    const {containerStatuses} = this.status;
     if (!containerStatuses) return 0;
     return containerStatuses.reduce(
       (count, item) => count + item.restartCount,
@@ -326,25 +333,43 @@ export class Pod extends WorkloadKubeObject {
   }
 
   // Returns pod phase or container error if occured
-  getStatusMessage() {
-    let message = "";
+  getStatusMessage(tips?: boolean) {
+    let result = "";
+    let tipsMessage = "";
     const statuses = this.getContainerStatuses(false); // not including initContainers
     if (statuses.length) {
       statuses.forEach((status) => {
-        const { state } = status;
+        const {state, lastState} = status;
         if (state.waiting) {
-          const { reason } = state.waiting;
-          message = reason ? reason : "Waiting";
+          const {reason, message} = state.waiting;
+          result = reason ? reason : "Waiting";
         }
         if (state.terminated) {
-          const { reason } = state.terminated;
-          message = reason ? reason : "Terminated";
+          const {reason} = state.terminated;
+          result = reason ? reason : "Terminated";
         }
+
+        if (lastState.terminated) {
+          const {message} = lastState.terminated;
+          tipsMessage = message;
+        }
+
       });
     }
-    if (this.getReason() === PodStatus.EVICTED) return "Evicted";
-    if (message) return message;
-    return this.getStatusPhase();
+
+    if (this.getReason() === PodStatus.EVICTED) {
+      result = "Evicted";
+    }
+    if (!result) {
+      result = this.getStatusPhase();
+    }
+    if (tips) {
+      let b = {} as any;
+      b.reason = result;
+      b.message = tipsMessage;
+      return b;
+    }
+    return result;
   }
 
   getStatusPhase() {
@@ -361,12 +386,12 @@ export class Pod extends WorkloadKubeObject {
 
   getSecrets(): string[] {
     return this.getVolumes()
-      .filter((vol) => vol.secret)
-      .map((vol) => vol.secret.secretName);
+    .filter((vol) => vol.secret)
+    .map((vol) => vol.secret.secretName);
   }
 
   getNodeSelectors(): string[] {
-    const { nodeSelector } = this.spec;
+    const {nodeSelector} = this.spec;
     if (!nodeSelector) return [];
     return Object.entries(nodeSelector).map((values) => values.join(": "));
   }
@@ -413,7 +438,7 @@ export class Pod extends WorkloadKubeObject {
     const probe = [];
     // HTTP Request
     if (httpGet) {
-      const { path, port, host, scheme } = httpGet;
+      const {path, port, host, scheme} = httpGet;
       probe.push(
         "http-get",
         `${scheme.toLowerCase()}://${host || ""}:${port || ""}${path || ""}`

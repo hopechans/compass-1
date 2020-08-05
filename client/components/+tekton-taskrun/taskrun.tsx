@@ -65,9 +65,7 @@ export class TaskRuns extends React.Component<Props> {
                   </span>
                 </div>
               </>
-            ) : (
-                null
-              )}
+            ) : null}
             {stepState.running ? (
               <>
                 <div className="title">
@@ -77,9 +75,7 @@ export class TaskRuns extends React.Component<Props> {
                   </span>
                 </div>
               </>
-            ) : (
-                null
-              )}
+            ) : null}
             {stepState.terminated ? (
               <>
                 <div className="title">
@@ -113,9 +109,7 @@ export class TaskRuns extends React.Component<Props> {
                   </span>
                 </div>
               </>
-            ) : (
-                null
-              )}
+            ) : null}
           </Fragment>
         </TooltipContent>
       );
