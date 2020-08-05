@@ -36,8 +36,8 @@ export class PathsDetails extends React.Component<Props> {
     return (
       <>
         <Paper elevation={3} style={{padding: 25}}>
-          <Grid container spacing={5}>
-            <Grid item xs={11}>
+          <Grid container spacing={5} alignItems="center" direction="row">
+            <Grid item xs={11} zeroMinWidth>
               <SubTitle title={"Path"}/>
               <Input
                 required={true}
@@ -48,7 +48,7 @@ export class PathsDetails extends React.Component<Props> {
                 value={this.value[index].backend}
                 onChange={value => this.value[index].backend = value}/>
             </Grid>
-            <Grid item xs style={{textAlign: "center"}}>
+            <Grid item xs style={{textAlign: "center"}} zeroMinWidth>
               <Icon
                 style={{margin: "0.8vw, 0.9vh"}}
                 small

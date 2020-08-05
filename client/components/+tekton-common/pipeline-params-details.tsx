@@ -51,16 +51,21 @@ export class PipelineParamsDetails extends React.Component<Props> {
     return (
       <>
         <br/>
-        <Grid container spacing={5}>
-          <Grid item xs={3}>
-            <Trans>Name</Trans>
+        <Grid container spacing={5} direction="row">
+          <Grid item xs={11} direction={"row"} zeroMinWidth>
+            <Grid container spacing={5} direction={"row"} zeroMinWidth>
+              <Grid item xs zeroMinWidth>
+                <Trans>Name</Trans>
+              </Grid>
+              <Grid item xs zeroMinWidth>
+                <Trans>Type</Trans>
+              </Grid>
+              <Grid item xs zeroMinWidth>
+                <Trans>Default</Trans>
+              </Grid>
+            </Grid>
           </Grid>
-          <Grid item xs={4}>
-            <Trans>Type</Trans>
-          </Grid>
-          <Grid item xs={3}>
-            <Trans>Default</Trans>
-          </Grid>
+          <Grid item xs zeroMinWidth/>
         </Grid>
         <br/>
       </>
@@ -70,34 +75,38 @@ export class PipelineParamsDetails extends React.Component<Props> {
   rForm(index: number, disable: boolean) {
     return (
       <>
-        <Grid container spacing={5}>
-          <Grid item xs={3}>
-            <Input
-              disabled={disable}
-              value={this.value[index].name}
-              onChange={(value) => (this.value[index].name = value)}
-            />
-          </Grid>
-          <Grid item xs={4}>
-            <Select
-              isDisabled={disable}
-              value={this.value[index].type}
-              options={this.Options}
-              onChange={(value) => {
-                let result = toJS(value);
-                this.value[index].type = result.value;
-              }}
-            />
-          </Grid>
-          <Grid item xs={3}>
-            <Input
-              disabled={disable}
-              value={this.value[index].default}
-              onChange={(value) => (this.value[index].default = value)}
-            />
+        <Grid container spacing={5} alignItems="center" direction="row">
+          <Grid item xs={11} direction={"row"} zeroMinWidth>
+            <Grid container spacing={5} direction={"row"} zeroMinWidth>
+              <Grid item xs zeroMinWidth>
+                <Input
+                  disabled={disable}
+                  value={this.value[index].name}
+                  onChange={(value) => (this.value[index].name = value)}
+                />
+              </Grid>
+              <Grid item xs zeroMinWidth>
+                <Select
+                  isDisabled={disable}
+                  value={this.value[index].type}
+                  options={this.Options}
+                  onChange={(value) => {
+                    let result = toJS(value);
+                    this.value[index].type = result.value;
+                  }}
+                />
+              </Grid>
+              <Grid item xs zeroMinWidth>
+                <Input
+                  disabled={disable}
+                  value={this.value[index].default}
+                  onChange={(value) => (this.value[index].default = value)}
+                />
+              </Grid>
+            </Grid>
           </Grid>
           {!disable ?
-            <Grid item xs>
+            <Grid item xs zeroMinWidth>
               <Icon
                 small
                 tooltip={_i18n._(t`Remove`)}

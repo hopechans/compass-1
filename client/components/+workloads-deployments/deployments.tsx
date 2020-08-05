@@ -42,13 +42,7 @@ export class Deployments extends React.Component<Props> {
   renderDeploymentName(deployment: Deployment) {
     const name = deployment.getName();
     return (
-      <Link
-        onClick={(event) => {
-          stopPropagation(event);
-          DeploymentScaleDialog.open(deployment);
-        }}
-        to={null}
-      >
+      <Link onClick={(event) => { stopPropagation(event); DeploymentScaleDialog.open(deployment) }} to={null}>
         <Tooltip title={name} placement="top-start">
           <span>{name}</span>
         </Tooltip>

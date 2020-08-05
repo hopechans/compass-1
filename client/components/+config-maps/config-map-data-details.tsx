@@ -8,6 +8,8 @@ import {Icon} from "../icon";
 import {t, Trans} from "@lingui/macro";
 import {Input} from "../input";
 import {Data} from "./common";
+import {stopPropagation} from "../../utils";
+import {Grid} from "@material-ui/core";
 
 interface Props<T = any> extends Partial<Props> {
   value?: T;
@@ -29,60 +31,67 @@ export class ConfigMapDataDetails extends React.Component<Props> {
     this.value.splice(index, 1);
   }
 
-  renderAdd() {
+  rData(index: number) {
     return (
-      <Icon
-        small
-        tooltip={_i18n._(t`Data`)}
-        material="edit"
-        onClick={(e) => {
-          this.add();
-          e.stopPropagation();
-        }}
-      />
+      <>
+        <Grid container spacing={5} direction={"row"} zeroMinWidth>
+          <Grid item xs={11} direction={"row"} zeroMinWidth>
+            <Grid container spacing={5} direction={"row"} zeroMinWidth>
+              <Grid item xs zeroMinWidth>
+                <Input
+                  required={true}
+                  placeholder={_i18n._(t`Key`)}
+                  value={this.value[index].key}
+                  onChange={value => this.value[index].key = value}
+                />
+              </Grid>
+              <Grid item xs zeroMinWidth>
+                <Input
+                  required={true}
+                  multiLine={true}
+                  multiple={true}
+                  placeholder={_i18n._(t`Value`)}
+                  value={this.value[index].value}
+                  onChange={value => this.value[index].value = value}
+                />
+              </Grid>
+            </Grid>
+          </Grid>
+          <Grid item xs zeroMinWidth>
+            <Icon
+              small
+              tooltip={_i18n._(t`Remove`)}
+              className="remove-icon"
+              material="clear"
+              onClick={(event) => {
+                this.remove(index);
+                stopPropagation(event)
+              }}
+            />
+          </Grid>
+        </Grid>
+      </>
     )
   }
 
   render() {
     return (
       <>
-
-        <SubTitle className="fields-title" title="Data">{this.renderAdd()}</SubTitle>
-        <div className="Data">
-          {this.value.map((item, index) => {
-            return (
-              <>
-                <br/>
-                <div key={index}>
-                  <Icon
-                    small
-                    tooltip={<Trans>Remove Data</Trans>}
-                    className="remove-icon"
-                    material="clear"
-                    onClick={(e) => {
-                      this.remove(index);
-                      e.stopPropagation();
-                    }}
-                  />
-                  <SubTitle title={"Key"}/>
-                  <Input
-                    required={true}
-                    value={this.value[index].key}
-                    onChange={value => this.value[index].key = value}
-                  />
-                  <SubTitle title={"Value"}/>
-                  <Input
-                    required={true}
-                    multiLine={true}
-                    multiple={true}
-                    value={this.value[index].value}
-                    onChange={value => this.value[index].value = value}
-                  />
-                </div>
-              </>
-            )
-          })}
-        </div>
+        <SubTitle
+          title={
+            <>
+              <Trans>Data</Trans>
+              &nbsp;&nbsp;
+              <Icon material={"edit"} className={"editIcon"} onClick={event => {
+                stopPropagation(event);
+                this.add()
+              }} small/>
+            </>
+          }>
+        </SubTitle>
+        {this.value.map((item, index) => {
+          return this.rData(index);
+        })}
       </>
     )
   }

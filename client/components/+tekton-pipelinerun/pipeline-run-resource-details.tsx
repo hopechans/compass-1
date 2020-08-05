@@ -1,22 +1,24 @@
-import { observer } from "mobx-react";
+import {observer} from "mobx-react";
 import React from "react";
-import { observable, toJS, ObservableSet } from "mobx";
-import { ActionMeta } from "react-select/src/types";
-import { Select, SelectOption } from "../select";
-import { Icon } from "../icon";
-import { t, Trans } from "@lingui/macro";
-import { PipelineResourceBinding, PipelineRef } from "../../api/endpoints";
-import { SubTitle } from "../layout/sub-title";
-import { _i18n } from "../../i18n";
-import { Input } from "../input";
-import { pipelineResourceStore } from "../+tekton-pipelineresource/pipelineresource.store";
-import { Grid } from "@material-ui/core";
+import {computed, observable} from "mobx";
+import {ActionMeta} from "react-select/src/types";
+import {Select} from "../select";
+import {Icon} from "../icon";
+import {t, Trans} from "@lingui/macro";
+import {PipelineResourceBinding, PipelineRef} from "../../api/endpoints";
+import {SubTitle} from "../layout/sub-title";
+import {_i18n} from "../../i18n";
+import {Input} from "../input";
+import {pipelineResourceStore} from "../+tekton-pipelineresource/pipelineresource.store";
+import {Grid, Paper} from "@material-ui/core";
+import {stopPropagation} from "../../utils";
 
 interface Props<T = any> extends Partial<Props> {
   value?: T;
   themeName?: "dark" | "light" | "outlined";
-  divider?: true;
+  disable?: boolean;
   namespace?: string;
+
   onChange?(option: T, meta?: ActionMeta<any>): void;
 }
 
@@ -31,6 +33,11 @@ export const pipelineRunResource: PipelineResourceBinding = {
 
 @observer
 export class PipelineRunResourceDetails extends React.Component<Props> {
+
+  static defaultProps = {
+    disable: false
+  }
+
   @observable value: PipelineResourceBinding[] = this.props.value || [];
   @observable namespace: string = this.props.namespace;
 
@@ -42,80 +49,40 @@ export class PipelineRunResourceDetails extends React.Component<Props> {
     this.value.splice(index, 1);
   };
 
-  get pipelineResouceOptions() {
+  @computed get pipelineResourceOptions() {
     return [
       ...pipelineResourceStore
-        .getAllByNs(this.namespace)
-        .map((item) => ({ value: item.getName() }))
-        .slice()
+      .getAllByNs(this.namespace)
+      .map((item) => (item.getName()))
     ];
   }
 
-  formatOptionLabel = (option: SelectOption) => {
-    const { value, label } = option;
-    return (
-      label || (
-        <>
-          <Icon small material="layers" />
-          {value}
-        </>
-      )
-    );
-  };
+  rResource(index: number, disable: boolean) {
 
-  render() {
     return (
-      <div className="Resource">
-        <SubTitle
-          className="fields-title"
-          title={<Trans>Pipeline Run Resources</Trans>}
-        >
-          <Icon
-            small
-            tooltip={_i18n._(t`Add Resource`)}
-            material="edit"
-            onClick={(e) => {
-              this.add();
-              e.stopPropagation();
-            }}
-          />
-        </SubTitle>
-
-        {this.value.map((item, index) => {
-          return (
-            <Grid container spacing={1}>
-              <Grid xs={12}>
-                <br />
-              </Grid>
-              <Grid xs={2}>
-                <SubTitle title={"Name"} />
-              </Grid>
-              <Grid xs={8}>
-                <Input
-                  placeholder={_i18n._("Name")}
-                  value={this.value[index]?.name}
-                  onChange={(value) => (this.value[index].name = value)}
-                />
-                <br />
-              </Grid>
-              <Grid xs={2} />
-              <Grid xs={2}>
-                <SubTitle title={"Resource Reference"} />
-              </Grid>
-              <Grid xs={8}>
-                <Select
-                  value={this.value[index]?.resourceRef?.name}
-                  options={this.pipelineResouceOptions}
-                  formatOptionLabel={this.formatOptionLabel}
-                  onChange={(value: string) => {
-                    const name: any = toJS(value);
-                    this.value[index].resourceRef.name = name.value;
-                  }}
-                />
-                <br />
-              </Grid>
-              <Grid xs={1} />
-              <Grid xs={1}>
+      <>
+        <br/>
+        <Paper elevation={3} style={{padding: 25}}>
+          <Grid container spacing={5} alignItems="center" direction="row">
+            <Grid item xs={11} zeroMinWidth>
+              <SubTitle title={"Name"}/>
+              <Input
+                disabled={disable}
+                placeholder={_i18n._("Name")}
+                value={this.value[index]?.name}
+                onChange={(value) => (this.value[index].name = value)}
+              />
+              <SubTitle title={"Resource Reference"}/>
+              <Select
+                value={this.value[index]?.resourceRef?.name}
+                options={this.pipelineResourceOptions}
+                onChange={(value) => {
+                  this.value[index].resourceRef.name = value.value;
+                }}
+              />
+            </Grid>
+            {!disable ?
+              <Grid item xs zeroMinWidth>
                 <Icon
                   small
                   tooltip={<Trans>Remove</Trans>}
@@ -126,11 +93,38 @@ export class PipelineRunResourceDetails extends React.Component<Props> {
                     e.stopPropagation();
                   }}
                 />
-              </Grid>
-            </Grid>
-          );
+              </Grid> : null}
+          </Grid>
+        </Paper>
+      </>
+    )
+  }
+
+  render() {
+
+    const {disable} = this.props;
+
+    return (
+      <>
+        <SubTitle
+          title={
+            <>
+              <Trans>Pipeline Run Resources</Trans>
+              {!disable ?
+                <>
+                  &nbsp;&nbsp;
+                  <Icon material={"edit"} className={"editIcon"} onClick={event => {
+                    stopPropagation(event);
+                    this.add()
+                  }} small/>
+                </> : null}
+            </>
+          }>
+        </SubTitle>
+        {this.value.map((item, index) => {
+          return this.rResource(index, disable);
         })}
-      </div>
+      </>
     );
   }
 }

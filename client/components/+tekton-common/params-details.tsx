@@ -9,6 +9,7 @@ import { Input } from "../input";
 import { observable } from "mobx";
 import { Params } from "./common";
 import {Grid} from "@material-ui/core";
+import {stopPropagation} from "../../utils";
 
 interface Props<T = any> extends Partial<Props> {
   value?: T;
@@ -37,53 +38,43 @@ export class ParamsDetails extends React.Component<Props> {
     this.value.splice(index, 1);
   };
 
-  renderAdd() {
-    return (
-      <Icon
-        small
-        tooltip={_i18n._(t`Params`)}
-        material="edit"
-        onClick={(e) => {
-          this.add();
-          e.stopPropagation();
-        }}
-      />
-    );
-  }
-
   rParams(index: number, disable: boolean) {
     return (
       <>
-        <Grid container spacing={5}>
-          <Grid item xs={5}>
-            <Input
-              className="item"
-              disabled={disable}
-              placeholder={_i18n._(t`Name`)}
-              title={this.value[index].name}
-              value={this.value[index].name}
-              onChange={(value) => {
-                this.value[index].name = value;
-              }}
-            />
-          </Grid>
-          <Grid item xs={5}>
-            <Input
-              className="item"
-              // disabled={disable}
-              placeholder={_i18n._(t`Value`)}
-              title={this.value[index].value}
-              value={this.value[index].value}
-              onChange={(value) => {
-                this.value[index].value = value;
-              }}
-            />
+        <Grid container spacing={5} alignItems="center" direction="row">
+          <Grid item xs={11} direction={"row"} zeroMinWidth>
+            <Grid container spacing={1} direction={"row"} zeroMinWidth>
+              <Grid item xs zeroMinWidth>
+                <Input
+                  className="item"
+                  disabled={disable}
+                  placeholder={_i18n._(t`Name`)}
+                  title={this.value[index].name}
+                  value={this.value[index].name}
+                  onChange={(value) => {
+                    this.value[index].name = value;
+                  }}
+                />
+              </Grid>
+              <Grid item xs zeroMinWidth>
+                <Input
+                  className="item"
+                  // disabled={disable}
+                  placeholder={_i18n._(t`Value`)}
+                  title={this.value[index].value}
+                  value={this.value[index].value}
+                  onChange={(value) => {
+                    this.value[index].value = value;
+                  }}
+                />
+              </Grid>
+            </Grid>
           </Grid>
           {!disable ? (
-            <Grid item xs>
+            <Grid item xs zeroMinWidth>
               <Icon
                 small
-                tooltip={<Trans>Remove Params</Trans>}
+                tooltip={<Trans>Remove</Trans>}
                 className="remove-icon"
                 material="clear"
                 onClick={(e) => {
@@ -102,16 +93,26 @@ export class ParamsDetails extends React.Component<Props> {
     const { disable } = this.props;
 
     return (
-      <div>
-        <SubTitle className="fields-title" title="Params">
-          {!disable ? this.renderAdd() : null}
+      <>
+        <SubTitle
+          title={
+            <>
+              <Trans>Params</Trans>
+              {!disable?
+                <>
+                  &nbsp;&nbsp;
+                  <Icon material={"edit"} className={"editIcon"} onClick={event => {
+                    stopPropagation(event);
+                    this.add()
+                  }} small/>
+                </>: null}
+            </>
+          }>
         </SubTitle>
-        <div className="params">
-          {this.value.map((item, index) => {
-            return this.rParams(index, disable);
-          })}
-        </div>
-      </div>
+        {this.value.map((item, index) => {
+          return this.rParams(index, disable);
+        })}
+      </>
     );
   }
 }

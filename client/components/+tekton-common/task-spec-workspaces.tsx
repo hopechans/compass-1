@@ -44,25 +44,28 @@ export class TaskSpecWorkSpaces extends React.Component<Props> {
   rWorkSpace(index: number) {
     return (
       <>
-        <Grid container spacing={5}>
-          <Grid item xs={5}>
-            <Input
-              placeholder={"Name"}
-              value={this.value[index].name}
-              onChange={(value) => (this.value[index].name = value)}
-            />
+        <Grid container spacing={5} direction={"row"} zeroMinWidth>
+          <Grid item xs={11} direction={"row"} zeroMinWidth>
+            <Grid container spacing={1} direction={"row"} zeroMinWidth>
+              <Grid item xs zeroMinWidth>
+                <Input
+                  placeholder={"Name"}
+                  value={this.value[index].name}
+                  onChange={(value) => (this.value[index].name = value)}
+                />
+              </Grid>
+              <Grid item xs zeroMinWidth>
+                <Input
+                  placeholder={"MountPath"}
+                  value={this.value[index].mountPath}
+                  onChange={(value) =>
+                    (this.value[index].mountPath = value)
+                  }
+                />
+              </Grid>
+            </Grid>
           </Grid>
-
-          <Grid item xs={5}>
-            <Input
-              placeholder={"MountPath"}
-              value={this.value[index].mountPath}
-              onChange={(value) =>
-                (this.value[index].mountPath = value)
-              }
-            />
-          </Grid>
-          <Grid item xs>
+          <Grid item xs zeroMinWidth>
             <Icon
               small
               tooltip={_i18n._(t`Remove`)}
@@ -94,11 +97,9 @@ export class TaskSpecWorkSpaces extends React.Component<Props> {
             </>
           }>
         </SubTitle>
-        <div className="Workspaces">
-          {this.value.map((item, index) => {
-            return this.rWorkSpace(index);
-          })}
-        </div>
+        {this.value.map((item, index) => {
+          return this.rWorkSpace(index);
+        })}
       </>
     );
   }

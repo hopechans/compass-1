@@ -51,8 +51,8 @@ export class ExcludeIPsDetails extends React.Component<Props> {
           {this.value.map((item, index) => {
             return (
               <div key={index}>
-                <Grid container spacing={5}>
-                  <Grid item xs={11}>
+                <Grid container spacing={5} alignItems="center" direction="row">
+                  <Grid item xs={11} zeroMinWidth>
                     <Input
                       className="item"
                       placeholder={_i18n._(t`IP`)}
@@ -63,7 +63,7 @@ export class ExcludeIPsDetails extends React.Component<Props> {
                       }}
                     />
                   </Grid>
-                  <Grid item xs>
+                  <Grid item xs zeroMinWidth>
                     <Icon
                       small
                       tooltip={<Trans>Remove IP</Trans>}

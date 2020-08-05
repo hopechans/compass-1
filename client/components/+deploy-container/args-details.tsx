@@ -34,8 +34,8 @@ export class ArgsDetails extends React.Component<ArgsProps> {
   rArgs(index: number) {
     return (
       <>
-        <Grid container spacing={1} alignItems={"center"} direction={"row"}>
-          <Grid item xs={11}>
+        <Grid container spacing={5} alignItems={"center"} direction={"row"}>
+          <Grid item xs={11} zeroMinWidth>
             <Input
               className="item"
               placeholder={_i18n._(t`Arguments`)}
@@ -46,7 +46,7 @@ export class ArgsDetails extends React.Component<ArgsProps> {
               }}
             />
           </Grid>
-          <Grid item xs>
+          <Grid item xs zeroMinWidth>
             <Icon
               small
               tooltip={_i18n._(t`Remove Arguments`)}

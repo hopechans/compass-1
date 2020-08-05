@@ -121,21 +121,23 @@ export class ConfigStoneDialog extends React.Component<Props> {
             <br/>
             {this.containers.map((item, index) => {
               return (
-                <SubTitle title={_i18n._(t`Image`) + '-' + index} children={
+                <>
+                  <SubTitle title={_i18n._(t`Image`) + '-' + index}/>
                   <Input
                     required={true}
                     placeholder={_i18n._(t`Request Images`)}
                     value={this.containers[index].image}
                     onChange={value => this.containers[index].image = value}
                   />
-                }/>
+                </>
               )
             })}
 
             <br/>
             {this.coordinates.map((item, index) => {
               return (
-                <SubTitle title={_i18n._(t`Group`) + '-' + this.coordinates[index].group} children={
+                <>
+                  <SubTitle title={_i18n._(t`Group`) + '-' + this.coordinates[index].group}/>
                   <Input
                     required={true}
                     placeholder={_i18n._(t`Request Replicas`)}
@@ -145,7 +147,7 @@ export class ConfigStoneDialog extends React.Component<Props> {
                     value={String(this.coordinates[index].replicas)}
                     onChange={value => this.coordinates[index].replicas = Number(value)}
                   />
-                }/>
+                </>
               )
             })}
           </WizardStep>

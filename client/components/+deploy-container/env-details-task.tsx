@@ -33,30 +33,34 @@ export class EvnVarDetails extends React.Component<EvnVarProps> {
   rEnv(index: number) {
     return (
       <>
-        <Grid container spacing={5}>
-          <Grid item xs={5}>
-            <Input
-              className="item"
-              placeholder={_i18n._(t`Name`)}
-              title={this.value[index].name}
-              value={this.value[index].name}
-              onChange={(value) => {
-                this.value[index].name = value;
-              }}
-            />
+        <Grid container spacing={5} direction={"row"} zeroMinWidth>
+          <Grid item xs={11} direction={"row"} zeroMinWidth>
+            <Grid container spacing={5} direction={"row"} zeroMinWidth>
+              <Grid item xs zeroMinWidth>
+                <Input
+                  className="item"
+                  placeholder={_i18n._(t`Name`)}
+                  title={this.value[index].name}
+                  value={this.value[index].name}
+                  onChange={(value) => {
+                    this.value[index].name = value;
+                  }}
+                />
+              </Grid>
+              <Grid item xs zeroMinWidth>
+                <Input
+                  className="item"
+                  placeholder={_i18n._(t`Value`)}
+                  title={this.value[index].value}
+                  value={this.value[index].value}
+                  onChange={(value) => {
+                    this.value[index].value = value;
+                  }}
+                />
+              </Grid>
+            </Grid>
           </Grid>
-          <Grid item xs={5}>
-            <Input
-              className="item"
-              placeholder={_i18n._(t`Value`)}
-              title={this.value[index].value}
-              value={this.value[index].value}
-              onChange={(value) => {
-                this.value[index].value = value;
-              }}
-            />
-          </Grid>
-          <Grid item xs>
+          <Grid item xs zeroMinWidth>
             <Icon
               small
               tooltip={_i18n._(t`Remove Command`)}

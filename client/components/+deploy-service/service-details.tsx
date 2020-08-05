@@ -63,8 +63,8 @@ export class DeployServiceDetails extends React.Component<Props> {
       <>
         <br/>
         <Paper elevation={3} style={{padding: 25}}>
-          <Grid container spacing={1}>
-            <Grid item xs={11}>
+          <Grid container spacing={5} alignItems="center" direction="row">
+            <Grid item xs={11} zeroMinWidth>
               <Grid>
                 <SubTitle title={<Trans>Name</Trans>}/>
                 <Input
@@ -86,8 +86,8 @@ export class DeployServiceDetails extends React.Component<Props> {
                 />
               </Grid>
               <br/>
-              <Grid container spacing={5}>
-                <Grid item xs>
+              <Grid container spacing={5} alignItems="center" direction="row">
+                <Grid item xs zeroMinWidth>
                   <SubTitle title={<Trans>Port</Trans>}/>
                   <Input
                     required={true}
@@ -98,7 +98,7 @@ export class DeployServiceDetails extends React.Component<Props> {
                     onChange={value => this.value.ports[index].port = value}
                   />
                 </Grid>
-                <Grid item xs>
+                <Grid item xs zeroMinWidth>
                   <SubTitle title={<Trans>TargetPort</Trans>}/>
                   <Input
                     required={true}
@@ -111,7 +111,7 @@ export class DeployServiceDetails extends React.Component<Props> {
                 </Grid>
               </Grid>
             </Grid>
-            <Grid item xs style={{textAlign: "center"}}>
+            <Grid item xs zeroMinWidth style={{textAlign: "center"}}>
               <Icon
                 small
                 tooltip={_i18n._(t`Remove Ports`)}

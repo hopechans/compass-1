@@ -1,4 +1,10 @@
 .PipelineRunDialog {
-  width: 800px;
-  height: 850px;
+  .Wizard {
+    width: 45vw;
+    height: 85vh;
+  }
+
+  .MuiPaper-root {
+    color: unset !important;
+  }
 }

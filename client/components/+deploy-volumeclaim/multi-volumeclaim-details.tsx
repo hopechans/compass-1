@@ -40,8 +40,8 @@ export class MultiVolumeClaimDetails extends React.Component<VolumeClaimTemplate
       <>
         <br/>
         <Paper elevation={3} style={{padding: 25}}>
-          <Grid container spacing={1}>
-            <Grid item xs={11}>
+          <Grid container spacing={5} alignItems="center" direction="row">
+            <Grid item xs={11} zeroMinWidth>
               <SubTitle title={<Trans>Name</Trans>}/>
               <Input
                 required={true}
@@ -59,7 +59,7 @@ export class MultiVolumeClaimDetails extends React.Component<VolumeClaimTemplate
                 onChange={value => this.value[index].spec.resources.requests.storage = value}
               />
             </Grid>
-            <Grid item xs style={{textAlign: "center"}}>
+            <Grid item xs zeroMinWidth style={{textAlign: "center"}}>
               <Icon
                 style={{margin: "0.8vw, 0.9vh"}}
                 small

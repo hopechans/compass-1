@@ -63,10 +63,10 @@ export class Graph extends React.Component<IProps, IState> {
     return (
       <div>
         <div hidden={open}>
-          <Grid container spacing={1}>
-            <Grid item xs={1} />
-            <Grid item xs={5} />
-            <Grid item xs={3} className="btn-group">
+          <Grid container spacing={5} alignItems="center" direction="row">
+            <Grid item xs={1} zeroMinWidth/>
+            <Grid item xs={5} zeroMinWidth/>
+            <Grid item xs={3} zeroMinWidth className="btn-group">
               <Button primary onClick={this.handleClick} hidden={showSave}>
                 <span>Save</span>
               </Button>

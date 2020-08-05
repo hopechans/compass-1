@@ -20,6 +20,7 @@ const theme = createMuiTheme({
 });
 
 export interface CollapseProps {
+  defaultExpanded?: boolean,
   useExpandIcon?: boolean,
   useDivider?: boolean,
   extraExpand?: React.ReactNode,
@@ -29,6 +30,7 @@ export interface CollapseProps {
 }
 
 const defaultProps: CollapseProps = {
+  defaultExpanded: true,
   useExpandIcon: true,
   useDivider: true,
   key: ""
@@ -39,11 +41,11 @@ export class Collapse extends React.Component<CollapseProps> {
   static defaultProps = defaultProps as object;
 
   render() {
-    const {key, useExpandIcon, useDivider, panelName, panelAction, extraExpand, children} = this.props;
+    const {key, useExpandIcon, useDivider, panelName, panelAction, defaultExpanded, extraExpand, children} = this.props;
 
     return (
       <ThemeProvider theme={theme}>
-        <Accordion key={key}>
+        <Accordion key={key} defaultExpanded={defaultExpanded}>
           <AccordionSummary
             expandIcon={
               <div>
