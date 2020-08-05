@@ -7,22 +7,21 @@ import { Dialog } from "../dialog";
 import { Wizard, WizardStep } from "../wizard";
 import { observer } from "mobx-react";
 import { Pipeline, PipelineTask, TektonGraph } from "../../api/endpoints";
-import { graphId, Graphs } from "../+tekton-graph/graphs";
+import { graphId, PipelineGraph } from "../+tekton-graph/graph-new";
 import { CopyTaskDialog } from "../+tekton-task/copy-task-dialog";
 import { PipelineSaveDialog } from "./pipeline-save-dialog";
 import { tektonGraphStore } from "../+tekton-graph/tekton-graph.store";
 import { pipelineStore } from "./pipeline.store";
 import { IKubeObjectMetadata } from "../../api/kube-object";
+import { defaultInitConfig } from "../+tekton-graph/common";
 
-interface Props extends Partial<Props> {
-
-}
+interface Props extends Partial<Props> {}
 
 @observer
 export class PipelineVisualDialog extends React.Component<Props> {
   @observable static isOpen = false;
   @observable static Data: Pipeline = null;
-  @observable graph: any = null;
+  @observable graph: PipelineGraph = null;
   @observable currentNode: any = null;
   @observable data: any = null;
 
@@ -41,24 +40,25 @@ export class PipelineVisualDialog extends React.Component<Props> {
 
       const width = anchor.scrollWidth + 300;
       const height = anchor.scrollHeight + 300;
-
-      this.graph = new Graphs(width, height);
-      this.graph.init();
+      const pipelineGraphConfig = defaultInitConfig(width, height);
+      this.graph = new PipelineGraph(pipelineGraphConfig);
+      // this.graph.init();
 
       let nodeSize = pipelineStore.getNodeSize(this.pipeline);
       if (nodeSize != null) {
         this.graph.changeSize(nodeSize.width, nodeSize.height);
       }
 
-      this.graph.instance.data(pipelineStore.getNodeData(this.pipeline));
       this.graph.bindClickOnNode((currentNode: any) => {
         this.currentNode = currentNode;
-        CopyTaskDialog.open(this.graph, this.currentNode, PipelineVisualDialog.Data.getNs());
+        CopyTaskDialog.open(
+          this.graph,
+          this.currentNode,
+          PipelineVisualDialog.Data.getNs()
+        );
       });
-
-      this.graph.bindMouseenter();
-      this.graph.bindMouseleave();
-      this.graph.render();
+      const nodeData = pipelineStore.getNodeData(this.pipeline);
+      this.graph.renderPipelineGraph(nodeData);
     }, 100);
   };
 
@@ -121,31 +121,41 @@ export class PipelineVisualDialog extends React.Component<Props> {
   }
 
   updateTektonGraph = async (data: string) => {
-
-    const graphName = this.pipeline.getName() + "-" + new Date().getTime().toString();
+    const graphName =
+      this.pipeline.getName() + "-" + new Date().getTime().toString();
     const tektonGraph: Partial<TektonGraph> = {
       metadata: {
         name: graphName,
         namespace: this.pipeline.getNs(),
-        labels: Object.fromEntries(new Map<string, string>().set("namespace", this.pipeline.getNs().split("-")[0])),
+        labels: Object.fromEntries(
+          new Map<string, string>().set(
+            "namespace",
+            this.pipeline.getNs().split("-")[0]
+          )
+        ),
       } as IKubeObjectMetadata,
       spec: {
         data: data,
         width: this.graph.width,
         height: this.graph.height,
-      }
+      },
     };
 
-    const newTektonGraph = await tektonGraphStore.create({ namespace: this.pipeline.getNs(), name: graphName }, { ...tektonGraph });
+    const newTektonGraph = await tektonGraphStore.create(
+      { namespace: this.pipeline.getNs(), name: graphName },
+      { ...tektonGraph }
+    );
 
-    this.pipeline.addAnnotation("fuxi.nip.io/tektongraphs", newTektonGraph.getName());
+    this.pipeline.addAnnotation(
+      "fuxi.nip.io/tektongraphs",
+      newTektonGraph.getName()
+    );
 
     await pipelineStore.update(this.pipeline, { ...this.pipeline });
   };
 
   save = async () => {
-
-    this.data = this.graph.instance.save();
+    this.data = this.graph.save();
 
     const data = JSON.stringify(this.data);
     let annotations = this.pipeline.metadata
@@ -157,7 +167,10 @@ export class PipelineVisualDialog extends React.Component<Props> {
 
     if (graphName != "") {
       try {
-        let tektonGraph = tektonGraphStore.getByName(graphName, this.pipeline.getNs());
+        let tektonGraph = tektonGraphStore.getByName(
+          graphName,
+          this.pipeline.getNs()
+        );
         if (tektonGraph.spec.data !== data) {
           await this.updateTektonGraph(data);
         }
@@ -202,7 +215,11 @@ export class PipelineVisualDialog extends React.Component<Props> {
   };
 
   render() {
-    const header = (<h5><Trans>Pipeline Visualization</Trans></h5>);
+    const header = (
+      <h5>
+        <Trans>Pipeline Visualization</Trans>
+      </h5>
+    );
 
     return (
       <Dialog
