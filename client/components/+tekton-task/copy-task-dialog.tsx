@@ -307,6 +307,7 @@ export class CopyTaskDialog extends React.Component<Props> {
           className="CopyAddDeployDialog"
           onOpen={this.onOpen}
           close={this.close}
+          pinned
         >
           <Wizard header={header} done={this.close}>
             <WizardStep contentClass="flex gaps column" next={this.handle}>
