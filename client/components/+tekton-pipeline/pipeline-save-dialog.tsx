@@ -162,6 +162,7 @@ export class PipelineSaveDialog extends React.Component<Props> {
         isOpen={PipelineSaveDialog.isOpen}
         close={this.close}
         onOpen={this.onOpen}
+        pinned
       >
         <Wizard header={header} done={this.close}>
           <WizardStep contentClass="flex gaps column" next={this.submit}>

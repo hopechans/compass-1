@@ -86,6 +86,7 @@ export class AddDeployDialog extends React.Component<Props> {
         className="AddDeployDialog"
         isOpen={AddDeployDialog.isOpen}
         close={this.close}
+        pinned
       >
         <Wizard className={"AddDeployWizard"} header={header} done={this.close}>
           <WizardStep className={"AddDeployWizardStep"} contentClass="flex gaps column" next={this.addDeployDialog}>
