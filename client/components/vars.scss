@@ -13,14 +13,14 @@ $margin: $unit;
 $radius: ceil($unit * .3);
 
 // Fonts
-$font-main: 'Nanum Gothic', 'Roboto', 'Helvetica', 'Arial', sans-serif !default;
+$font-main: 'Roboto', 'Helvetica', 'Arial', sans-serif !default;
 $font-monospace: Lucida Console, Monaco, Consolas, monospace;
 $font-size-small: floor(1.5 * $unit);
 $font-size: floor(1.75 * $unit);
 $font-size-big: floor(2 * $unit);
 $font-weight-thin: 300;
 $font-weight-normal: 400;
-$font-weight-bold: 500;
+$font-weight-bold: 600;
 
 // Z-index correlations
 $zIndex-sidebar-hover: 500;
