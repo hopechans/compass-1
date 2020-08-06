@@ -33,26 +33,14 @@ export class AppDetails extends React.Component<Props> {
     ]
   }
 
-  formatOptionLabel = (option: SelectOption) => {
-    const {showIcons} = this.props;
-    const {value, label} = option;
-    return label || (
-      <>
-        {showIcons && <Icon small material="layers"/>}
-        {value}
-      </>
-    );
-  }
-
   render() {
     return (
       <>
         <SubTitle title={<Trans>App Type</Trans>}/>
         <Select
-          formatOptionLabel={this.formatOptionLabel}
           options={this.typeOptions}
           value={this.value.type}
-          onChange={v => this.value.type = v}
+          onChange={v => this.value.type = v.value}
         />
         <SubTitle title={<Trans>App Name</Trans>}/>
         <Input
