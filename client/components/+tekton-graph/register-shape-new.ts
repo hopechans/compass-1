@@ -235,6 +235,22 @@ const setState = (group: Group, fill: string, text: string) => {
     fill: fill,
   });
 
+  if (text !== NodeStatus.Succeeded) {
+    shapestatus.animate(
+      {
+        // Magnifying and disappearing
+        r: 3,
+        opacity: 0.6,
+      },
+      {
+        duration: 2000,
+        easing: "easeCubic",
+        delay: 2000,
+        repeat: true, // repeat
+      }
+    ); // 2s delay
+  }
+
   shapeText.attr({
     text: text,
     fontStyle: "",
