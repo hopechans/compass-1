@@ -36,6 +36,8 @@ import { configStore } from "../../config.store";
 import { WorkspaceDeclaration as Workspace } from "../../api/endpoints/tekton-task.api";
 import { Collapse } from "../collapse";
 import { graphId, PipelineGraph } from "../+tekton-graph/graph-new";
+import { getNodeTaskName } from "../+tekton-graph/common";
+import { INode } from "@antv/g6/lib/interface/item";
 
 interface Props<T = any> extends Partial<Props> {
   value?: T;
@@ -90,54 +92,19 @@ export class CopyTaskDialog extends React.Component<Props> {
   @observable value: TaskResult = this.props.value || task;
   @observable static isOpen = false;
   @observable static graph: PipelineGraph;
-  @observable static node: any;
+  @observable static node: INode;
   @observable static data: any;
   @observable static namespace: string;
   @observable ifSwitch: boolean = false;
   @observable name: string;
   @observable change: boolean;
 
-  static open(graph: PipelineGraph, node: any, namespace: string) {
+  static open(graph: PipelineGraph, node: INode, namespace: string) {
     CopyTaskDialog.isOpen = true;
     CopyTaskDialog.namespace = namespace;
     this.graph = graph;
     this.node = node;
   }
-
-  /**
-   * 计算字符串的长度
-   * @param {string} str 指定的字符串
-   */
-  calcStrLen = (str: string) => {
-    var len = 0;
-    for (var i = 0; i < str.length; i++) {
-      if (str.charCodeAt(i) > 0 && str.charCodeAt(i) < 128) {
-        len++;
-      } else {
-        len += 2;
-      }
-    }
-    return len;
-  };
-
-  /**
-   * 计算显示的字符串
-   * @param {string} str 要裁剪的字符串
-   * @param {number} maxWidth 最大宽度
-   * @param {number} fontSize 字体大小
-   */
-  fittingString = (str: string, maxWidth: number, fontSize: number) => {
-    var fontWidth = fontSize * 1.3; //字号+边距
-    maxWidth = maxWidth * 2; // 需要根据自己项目调整
-    var width = this.calcStrLen(str) * fontWidth;
-    var ellipsis = "…";
-    if (width > maxWidth) {
-      var actualLen = Math.floor((maxWidth - 10) / fontWidth);
-      var result = str.substring(0, actualLen) + ellipsis;
-      return result;
-    }
-    return str;
-  };
 
   loadData = async (name: string, namespace: string) => {
     try {
@@ -158,10 +125,8 @@ export class CopyTaskDialog extends React.Component<Props> {
 
   onOpen = () => {
     try {
-      const group = CopyTaskDialog.node.getContainer();
-      let shape = group.get("children")[2];
-      const name = shape.attrs.text;
-      this.loadData(name, CopyTaskDialog.namespace);
+      const name = CopyTaskDialog.node.getModel()["taskName"] || "";
+      this.loadData(String(name), CopyTaskDialog.namespace);
     } catch (err) {
       Notifications.error(err);
     }
@@ -176,7 +141,6 @@ export class CopyTaskDialog extends React.Component<Props> {
   };
 
   handle = () => {
-    // event.stopPropagation();
     this.saveTask();
     CopyTaskDialog.graph.setTaskName(CopyTaskDialog.node, this.value.taskName);
   };
@@ -195,10 +159,6 @@ export class CopyTaskDialog extends React.Component<Props> {
     ];
 
     try {
-      // if (!this.ifSwitch) {
-      //   this.value.taskName = this.value.taskName;
-      // }
-
       const task = taskStore.getByName(
         this.value.taskName,
         CopyTaskDialog.namespace
@@ -360,8 +320,8 @@ export class CopyTaskDialog extends React.Component<Props> {
                     this.ifSwitch ? (
                       <SubTitle title={<Trans>Select module</Trans>} />
                     ) : (
-                      <SubTitle title={<Trans>Template configuration</Trans>} />
-                    )
+                        <SubTitle title={<Trans>Template configuration</Trans>} />
+                      )
                   }
                 />
               </FormGroup>

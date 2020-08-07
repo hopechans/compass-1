@@ -8,8 +8,7 @@ import {
   EdgeConfig,
 } from "@antv/g6/lib/types";
 import { INode } from "@antv/g6/lib/interface/item";
-import { IGraph } from "@antv/g6/lib/interface/graph";
-import Node from "@antv/g6/lib/item/node";
+import { toJS } from "mobx";
 
 export const graphId = "container";
 export const pipelineNode: string = "pipeline-node";
@@ -31,9 +30,9 @@ export enum NodeStatus {
   Timeout = "TaskRunTimeout",
 }
 
-export interface PipelineGraphOptions extends GraphOptions {}
+export interface PipelineGraphOptions extends GraphOptions { }
 
-export interface PipelineGraphConfig extends ModelConfig {}
+export interface PipelineGraphConfig extends ModelConfig { }
 
 export interface PipelineNodeConfig extends NodeConfig {
   role?: NodeRole;
@@ -44,11 +43,18 @@ export interface PipelineNodeConfig extends NodeConfig {
   subnode?: boolean;
 }
 
-export interface PipelineEdgeConfig extends EdgeConfig {}
+export interface PipelineEdgeConfig extends EdgeConfig { }
 
 export interface PipelineGraphData extends GraphData {
   nodes?: PipelineNodeConfig[];
   edges?: PipelineEdgeConfig[];
+}
+
+
+export function getNodeTaskName(node: Item): string {
+  const nodeCfg: PipelineNodeConfig = { id: node.getID() }
+  Object.assign(nodeCfg, toJS(node))
+  return nodeCfg.taskName || "none";
 }
 
 export function getGroupId(id: string): number {
@@ -155,6 +161,7 @@ export function subNodes(node: INode): INode[] {
       }) || []
   );
 }
+
 
 export function buildNodeConfig(
   id: string,
