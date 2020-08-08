@@ -1,9 +1,6 @@
 import { autobind } from "../../utils";
 import { KubeObject } from "../kube-object";
 import { KubeApi } from "../kube-api";
-import { toJS } from "mobx";
-import { toString } from "ip";
-
 
 export interface GraphNode {
   id: string, // 1-1 => group index

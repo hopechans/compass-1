@@ -16,7 +16,7 @@ import { ConfigSecretDialog } from "./config-secret-dialog";
 import { MenuItem } from "../menu";
 import { Icon } from "../icon";
 import { _i18n } from "../../i18n";
-import { observable, toJS } from "mobx";
+import { observable } from "mobx";
 import { namespaceStore } from "../+namespaces/namespace.store";
 import { useEffect, useState } from "react";
 import { Notifications } from "../notifications";

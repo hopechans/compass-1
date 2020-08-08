@@ -1,31 +1,42 @@
 import "./pipelinerun-visual-dialog.scss";
+import styles from "../wizard/wizard.scss";
 
 import React from "react";
-import { observable } from "mobx";
-import { Trans } from "@lingui/macro";
-import { Dialog } from "../dialog";
-import { Wizard, WizardStep } from "../wizard";
-import { observer } from "mobx-react";
-import { PipelineRun } from "../../api/endpoints";
-// import { graphId, Graphs, initData } from "../+tekton-graph/graphs";
-import { graphId, PipelineGraph } from "../+tekton-graph/graph-new";
-import { secondsToHms } from "../../api/endpoints";
-import { pipelineRunStore } from "./pipelinerun.store";
-import { TaskRunLogsDialog } from "../+tekton-taskrun/task-run-logs-dialog";
-import { defaultInitData, defaultInitConfig } from "../+tekton-graph/common";
+import {computed, observable, when} from "mobx";
+import {Trans} from "@lingui/macro";
+import {Dialog} from "../dialog";
+import {Wizard, WizardStep} from "../wizard";
+import {observer} from "mobx-react";
+import {PipelineRun} from "../../api/endpoints";
+import {graphId, PipelineGraph} from "../+tekton-graph/graph-new";
+import {secondsToHms} from "../../api/endpoints";
+import {pipelineRunStore} from "./pipelinerun.store";
+import {TaskRunLogsDialog} from "../+tekton-taskrun/task-run-logs-dialog";
+import {defaultInitData, defaultInitConfig} from "../+tekton-graph/common";
 
-const taskName = "taskName";
+const wizardSpacing = parseInt(styles.wizardSpacing, 10) * 2;
+const wizardContentMaxHeight = parseInt(styles.wizardContentMaxHeight);
 
-interface Props extends Partial<Props> {}
+interface Props extends Partial<Props> {
+}
 
 @observer
 export class PipelineRunVisualDialog extends React.Component<Props> {
   @observable static isOpen = false;
   @observable static Data: PipelineRun = null;
   @observable graph: PipelineGraph = null;
+  @observable pipelineGraphConfig: any = null;
+  @observable width: number = 0;
+  @observable height: number = 0;
+  @observable nodeData: any = null;
   @observable currentNode: any = null;
+  @observable initTimeout: any = null;
   @observable pendingTimeInterval: any = null;
   @observable updateTimeInterval: any = null;
+
+  componentDidMount() {
+    window.addEventListener("resize", this.onOpen);
+  }
 
   get pipelineRun() {
     return PipelineRunVisualDialog.Data;
@@ -37,84 +48,95 @@ export class PipelineRunVisualDialog extends React.Component<Props> {
   }
 
   showLogs(taskRunName: string, namespace: string) {
-    // let pod: Pod = podsStore.getByName(podName);
-    // let container: any = pod.getContainerStatuses();
-    // PodLogsDialog.open(pod, container);
     TaskRunLogsDialog.open(taskRunName, namespace);
   }
 
-  initGraph(nodeData: any) {
-    setTimeout(() => {
-      const anchor = document.getElementsByClassName("step-content")[0];
+  setSize() {
+    const maxXNodePoint = this.graph.getMaxXNodePoint();
+    const maxYNodePoint = this.graph.getMaxYNodePoint();
 
-      const width = anchor.scrollWidth - 50;
-      const height = anchor.scrollHeight - 60;
+    if (this.width < maxXNodePoint) {
+      this.width = maxXNodePoint;
+    }
+    if (wizardContentMaxHeight < maxYNodePoint) {
+      this.height = maxYNodePoint;
+    }
 
-      const pipelineGraphConfig = defaultInitConfig(width, height);
-      this.graph = new PipelineGraph(pipelineGraphConfig);
+    this.graph.changeSize(this.width, this.height);
+  }
 
-      let nodeSize = pipelineRunStore.getNodeSize(this.pipelineRun);
-      if (nodeSize != null) {
-        this.graph.changeSize(nodeSize.width, nodeSize.height);
+  initGraph() {
+    this.initTimeout = setTimeout(() => {
+      const anchor = document.getElementsByClassName("Wizard")[0];
+      this.width = anchor.clientWidth - wizardSpacing;
+      this.height = wizardContentMaxHeight - wizardSpacing;
+
+      if (this.nodeData === undefined || this.nodeData === "") {
+        this.nodeData = defaultInitData
       }
 
-      if (nodeData === undefined || nodeData === "") {
-        this.graph.data(defaultInitData);
+      if (this.graph == null) {
+        this.pipelineGraphConfig = defaultInitConfig(this.width, this.height);
+        this.graph = new PipelineGraph(this.pipelineGraphConfig);
+        this.graph.data(this.nodeData);
+
+        this.graph.bindClickOnNode((currentNode: any) => {
+          const name = currentNode.getModel()["taskName"] || "";
+          const names = pipelineRunStore.getTaskRunName(this.pipelineRun);
+          const currentTaskRunMap = pipelineRunStore.getTaskRun(names);
+          const currentTaskRun = currentTaskRunMap[name];
+          this.showLogs(currentTaskRun.getName(), currentTaskRun.getNs());
+        });
       } else {
-        this.graph.data(nodeData);
+        this.graph.clear();
+        this.graph.changeData(this.nodeData);
       }
-
-      this.graph.bindClickOnNode((currentNode: any) => {
-        const name = currentNode.getModel()["taskName"] || "";
-        const names = pipelineRunStore.getTaskRunName(this.pipelineRun);
-        const currentTaskRunMap = pipelineRunStore.getTaskRun(names);
-        const currentTaskRun = currentTaskRunMap[name];
-        this.showLogs(currentTaskRun.getName(), currentTaskRun.getNs());
-      });
 
       this.graph.render();
+      this.setSize();
+
     }, 100);
   }
 
-  renderGraphData(nodeData: any) {
+  renderGraphData = async () => {
     this.pendingTimeInterval = setInterval(() => {
       const names = this.pipelineRun.getTaskRunName();
       if (names.length > 0) {
         const currentTaskRunMap = pipelineRunStore.getTaskRun(names);
-        nodeData.nodes.map((item: any, index: number) => {
+        this.nodeData.nodes.map((item: any, index: number) => {
           const currentTaskRun = currentTaskRunMap[item.taskName];
           if (currentTaskRun !== undefined) {
             //should check when the pipeline-run status
-            nodeData.nodes[index].status =
+            this.nodeData.nodes[index].status =
               currentTaskRun.status.conditions[0].reason;
           } else {
-            nodeData.nodes[index].status = "Pending";
+            this.nodeData.nodes[index].status = "Pending";
           }
-          nodeData.nodes[index].showtime = true;
+          this.nodeData.nodes[index].showtime = true;
         });
 
         this.graph.clear();
-        this.graph.changeData(nodeData);
+        this.graph.changeData(this.nodeData);
       }
     }, 500);
   }
 
-  renderTimeInterval(nodeData: any) {
+  renderTimeInterval() {
     //Interval 1s update status and time in graph
     this.updateTimeInterval = setInterval(() => {
       const names = pipelineRunStore
-        .getByName(this.pipelineRun.getName())
-        .getTaskRunName();
+      .getByName(this.pipelineRun.getName())
+      .getTaskRunName();
       clearInterval(this.pendingTimeInterval);
       if (names.length > 0) {
         const currentTaskRunMap = pipelineRunStore.getTaskRun(names);
-        nodeData.nodes.map((item: any, index: number) => {
+        this.nodeData.nodes.map((item: any, index: number) => {
           //set current node status,just like:Failed Succeed... and so on.
 
           const currentTaskRun = currentTaskRunMap[item.taskName];
           if (currentTaskRun !== undefined) {
             //should get current node itme and update the time.
-            let currentItem = this.graph.findById(nodeData.nodes[index].id);
+            let currentItem = this.graph.findById(this.nodeData.nodes[index].id);
             //dynimic set the state: missing notreay
             if (currentTaskRun?.status?.conditions[0]?.reason == undefined) {
               return;
@@ -150,27 +172,40 @@ export class PipelineRunVisualDialog extends React.Component<Props> {
   }
 
   onOpen = async () => {
-    let nodeData = pipelineRunStore.getNodeData(this.pipelineRun);
-    this.initGraph(nodeData);
-    this.renderGraphData(nodeData);
-    this.renderTimeInterval(nodeData);
+    clearTimeout(this.initTimeout);
+    this.initTimeout = null;
+    clearInterval(this.pendingTimeInterval);
+    this.pendingTimeInterval = null;
+    clearInterval(this.updateTimeInterval);
+    this.updateTimeInterval = null;
+    this.nodeData = pipelineRunStore.getNodeData(this.pipelineRun);
+    await this.initGraph();
+    await this.renderGraphData();
+    await this.renderTimeInterval();
   };
 
   static close() {
     PipelineRunVisualDialog.isOpen = false;
   }
 
-  close = () => {
-    this.reset();
+  close = async () => {
+    await this.reset();
     PipelineRunVisualDialog.close();
   };
 
-  reset = () => {
+  reset = async () => {
+    if (this.graph) {
+      this.graph.clear();
+    }
     this.graph = null;
+    clearTimeout(this.initTimeout);
+    this.initTimeout = null;
     clearInterval(this.pendingTimeInterval);
     this.pendingTimeInterval = null;
     clearInterval(this.updateTimeInterval);
     this.updateTimeInterval = null;
+    this.width = 0;
+    this.height = 0;
   };
 
   render() {
@@ -193,7 +228,7 @@ export class PipelineRunVisualDialog extends React.Component<Props> {
             hideNextBtn={true}
             prevLabel={<Trans>Close</Trans>}
           >
-            <div className="container" id={graphId} />
+            <div className="container" id={graphId}/>
           </WizardStep>
         </Wizard>
       </Dialog>

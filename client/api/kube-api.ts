@@ -12,7 +12,6 @@ import {
 import { apiKube } from "./index";
 import { kubeWatchApi } from "./kube-watch-api";
 import { apiManager } from "./api-manager";
-import { toJS } from "mobx";
 
 const attachUri = "/attach/";
 
