@@ -11,14 +11,11 @@ import {
 import {observable, toJS} from "mobx";
 import {Dialog} from "../dialog";
 import {Wizard, WizardStep} from "../wizard";
-import {Trans, t} from "@lingui/macro";
+import {Trans} from "@lingui/macro";
 import {taskStore} from "./task.store";
-
 import {TaskResources, Task} from "../../api/endpoints";
 import {Notifications} from "../notifications";
-import {createMuiTheme} from "@material-ui/core";
 import {WorkspaceDeclaration as Workspace} from "../../api/endpoints/tekton-task.api";
-import {ThemeProvider} from "@material-ui/core/styles";
 import {SubTitle} from "../layout/sub-title";
 import {Input} from "../input";
 import {systemName} from "../input/input.validators";
@@ -28,21 +25,6 @@ import {Collapse} from "../collapse";
 interface Props<T = any> extends Partial<Props> {
   themeName?: "dark" | "light" | "outlined";
 }
-
-const theme = createMuiTheme({
-  overrides: {
-    MuiExpansionPanelDetails: {
-      root: {
-        display: "gird",
-      },
-    },
-    MuiPaper: {
-      root: {
-        color: "",
-      },
-    },
-  },
-});
 
 class Volume {
   name: string;
@@ -134,49 +116,55 @@ export class ConfigTaskDialog extends React.Component<Props> {
     const header = (<h5><Trans>Config Task</Trans></h5>);
 
     return (
-      <ThemeProvider theme={theme}>
-        <Dialog
-          isOpen={ConfigTaskDialog.isOpen}
-          className="ConfigTaskDialog"
-          onOpen={this.onOpen}
-          close={this.close}
-        >
-          <Wizard header={header} done={this.close}>
-            <WizardStep contentClass="flex gaps column" next={this.handle}>
-              <SubTitle title={<Trans>Task Name</Trans>}/>
-              <Input
-                required={true}
-                validators={systemName}
-                placeholder={_i18n._("Task Name")}
-                value={this.value.taskName}
-                onChange={(value) => (this.value.taskName = value)}
+      <Dialog
+        isOpen={ConfigTaskDialog.isOpen}
+        className="ConfigTaskDialog"
+        onOpen={this.onOpen}
+        close={this.close}
+      >
+        <Wizard header={header} done={this.close}>
+          <WizardStep contentClass="flex gaps column" next={this.handle}>
+            <SubTitle title={<Trans>Task Name</Trans>}/>
+            <Input
+              required={true}
+              validators={systemName}
+              placeholder={_i18n._("Task Name")}
+              value={this.value.taskName}
+              onChange={(value) => (this.value.taskName = value)}
+            />
+            <br/>
+            <TaskSpecWorkSpaces
+              value={this.value.workspace}
+              onChange={(value) => {
+                this.value.workspace = value
+              }}
+            />
+            <br/>
+            <PipelineParamsDetails
+              value={this.value.pipelineParams}
+              onChange={(value) => {
+                this.value.pipelineParams = value
+              }}
+            />
+            <br/>
+            <ResourcesDetail
+              value={this.value.resources}
+              onChange={(value) => {
+                this.value.resources = value
+              }}
+            />
+            <br/>
+            <Collapse panelName={<Trans>TaskStep</Trans>} key={"TaskStep"}>
+              <MultiTaskStepDetails
+                value={this.value.taskSteps}
+                onChange={(value) => {
+                  this.value.taskSteps = value
+                }}
               />
-              <br/>
-              <TaskSpecWorkSpaces
-                value={this.value.workspace}
-                onChange={(value) => { this.value.workspace = value}}
-              />
-              <br/>
-              <PipelineParamsDetails
-                value={this.value.pipelineParams}
-                onChange={(value) => { this.value.pipelineParams = value }}
-              />
-              <br/>
-              <ResourcesDetail
-                value={this.value.resources}
-                onChange={(value) => { this.value.resources = value }}
-              />
-              <br/>
-              <Collapse panelName={<Trans>TaskStep</Trans>} key={"TaskStep"}>
-                <MultiTaskStepDetails
-                  value={this.value.taskSteps}
-                  onChange={(value) => { this.value.taskSteps = value }}
-                />
-              </Collapse>
-            </WizardStep>
-          </Wizard>
-        </Dialog>
-      </ThemeProvider>
+            </Collapse>
+          </WizardStep>
+        </Wizard>
+      </Dialog>
     );
   }
 }

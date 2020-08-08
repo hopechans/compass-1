@@ -2,8 +2,8 @@ import { observer } from "mobx-react";
 import React from "react";
 import { observable } from "mobx";
 import { ActionMeta } from "react-select/src/types";
-import { TaskResources } from "client/api/endpoints/tekton-task.api";
 import { TaskResourceDetails } from "./task-resource-details";
+import {TaskResources} from "../../api/endpoints";
 
 interface Props<T = any> extends Partial<Props> {
   value?: T;

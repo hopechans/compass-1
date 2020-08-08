@@ -1,29 +1,42 @@
 import "./pipeline-visual-dialog.scss";
+import styles from "../wizard/wizard.scss";
 
 import React from "react";
-import { observable } from "mobx";
-import { Trans } from "@lingui/macro";
-import { Dialog } from "../dialog";
-import { Wizard, WizardStep } from "../wizard";
-import { observer } from "mobx-react";
-import { Pipeline, PipelineTask, TektonGraph } from "../../api/endpoints";
-import { graphId, PipelineGraph } from "../+tekton-graph/graph-new";
-import { CopyTaskDialog } from "../+tekton-task/copy-task-dialog";
-import { PipelineSaveDialog } from "./pipeline-save-dialog";
-import { tektonGraphStore } from "../+tekton-graph/tekton-graph.store";
-import { pipelineStore } from "./pipeline.store";
-import { IKubeObjectMetadata } from "../../api/kube-object";
-import { defaultInitConfig } from "../+tekton-graph/common";
+import {computed, intercept, observable, when} from "mobx";
+import {Trans} from "@lingui/macro";
+import {Dialog} from "../dialog";
+import {Wizard, WizardStep} from "../wizard";
+import {observer} from "mobx-react";
+import {Pipeline, PipelineTask, TektonGraph} from "../../api/endpoints";
+import {graphId, PipelineGraph} from "../+tekton-graph/graph-new";
+import {CopyTaskDialog} from "../+tekton-task/copy-task-dialog";
+import {PipelineSaveDialog} from "./pipeline-save-dialog";
+import {tektonGraphStore} from "../+tekton-graph/tekton-graph.store";
+import {pipelineStore} from "./pipeline.store";
+import {IKubeObjectMetadata} from "../../api/kube-object";
+import {defaultInitConfig, defaultInitData} from "../+tekton-graph/common";
 
-interface Props extends Partial<Props> {}
+const wizardSpacing = parseInt(styles.wizardSpacing, 10) * 2;
+const wizardContentMaxHeight = parseInt(styles.wizardContentMaxHeight);
+
+interface Props extends Partial<Props> {
+}
 
 @observer
 export class PipelineVisualDialog extends React.Component<Props> {
   @observable static isOpen = false;
   @observable static Data: Pipeline = null;
   @observable graph: PipelineGraph = null;
+  @observable width: number = 0;
+  @observable height: number = 0;
+  @observable nodeData: any = null;
   @observable currentNode: any = null;
-  @observable data: any = null;
+  @observable initTimeout: any = null;
+
+  componentDidMount() {
+    window.addEventListener("resize", this.onOpen);
+    window.addEventListener("changeNode", this.changeNode);
+  }
 
   get pipeline() {
     return PipelineVisualDialog.Data;
@@ -34,38 +47,63 @@ export class PipelineVisualDialog extends React.Component<Props> {
     PipelineVisualDialog.Data = obj;
   }
 
+  changeNode = async () => {
+    this.nodeData = this.graph.save();
+    this.setSize();
+  }
+
+  setSize() {
+    const maxXNodePoint = this.graph.getMaxXNodePoint();
+    const maxYNodePoint = this.graph.getMaxYNodePoint();
+
+    if (this.width < maxXNodePoint) {
+      this.width = maxXNodePoint;
+    }
+    if (wizardContentMaxHeight < maxYNodePoint) {
+      this.height = maxYNodePoint;
+    }
+
+    this.graph.changeSize(this.width, this.height);
+  }
+
   onOpen = async () => {
-    setTimeout(() => {
-      const anchor = document.getElementsByClassName("step-content")[0];
+    clearTimeout(this.initTimeout);
+    this.initTimeout = null;
 
-      const width = anchor.scrollWidth + 300;
-      const height = anchor.scrollHeight + 300;
-      const pipelineGraphConfig = defaultInitConfig(width, height);
-      this.graph = new PipelineGraph(pipelineGraphConfig);
-      // this.graph.init();
+    this.initTimeout = setTimeout(() => {
 
-      let nodeSize = pipelineStore.getNodeSize(this.pipeline);
-      if (nodeSize != null) {
-        this.graph.changeSize(nodeSize.width, nodeSize.height);
+      const anchor = document.getElementsByClassName("Wizard")[0];
+      this.width = anchor.clientWidth - wizardSpacing;
+      this.height = wizardContentMaxHeight - wizardSpacing;
+
+      if (this.graph == null) {
+        const pipelineGraphConfig = defaultInitConfig(this.width, this.height);
+        this.graph = new PipelineGraph(pipelineGraphConfig);
+
+        this.graph.bindClickOnNode((currentNode: any) => {
+          this.currentNode = currentNode;
+          CopyTaskDialog.open(
+            this.graph,
+            this.currentNode,
+            PipelineVisualDialog.Data.getNs()
+          );
+        });
       }
 
-      this.graph.bindClickOnNode((currentNode: any) => {
-        this.currentNode = currentNode;
-        CopyTaskDialog.open(
-          this.graph,
-          this.currentNode,
-          PipelineVisualDialog.Data.getNs()
-        );
-      });
-      const nodeData = pipelineStore.getNodeData(this.pipeline);
-      this.graph.renderPipelineGraph(nodeData);
+      if (this.nodeData == null) {
+        this.nodeData = pipelineStore.getNodeData(this.pipeline);
+      }
+
+      this.graph.renderPipelineGraph(this.nodeData);
+      this.setSize();
+
     }, 100);
   };
 
   //存取node{id,...} => <id,node>
   nodeToMap(): Map<string, any> {
     let items: Map<string, any> = new Map<string, any>();
-    this.data.nodes.map((item: any) => {
+    this.nodeData.nodes.map((item: any) => {
       const ids = item.id.split("-");
       if (items.get(ids[0]) === undefined) {
         items.set(ids[0], new Array<any>());
@@ -84,7 +122,7 @@ export class PipelineVisualDialog extends React.Component<Props> {
 
     let tmp = 1;
 
-    keys.map((item: any, index: number) => {
+    keys.map((item: any) => {
       let array = dataMap.get(item);
 
       if (tmp === 1) {
@@ -92,7 +130,7 @@ export class PipelineVisualDialog extends React.Component<Props> {
           let task: any = {};
           task.runAfter = [];
           task.name = item.taskName;
-          task.taskRef = { name: item.taskName };
+          task.taskRef = {name: item.taskName};
           task.params = [];
           task.resources = [];
           tasks.push(task);
@@ -103,7 +141,7 @@ export class PipelineVisualDialog extends React.Component<Props> {
           let task: any = {};
           task.runAfter = [];
           task.name = item.taskName;
-          task.taskRef = { name: item.taskName };
+          task.taskRef = {name: item.taskName};
           //set task runAfter
           dataMap.get(result.toString()).map((item: any) => {
             task.runAfter.push(item.taskName);
@@ -142,8 +180,8 @@ export class PipelineVisualDialog extends React.Component<Props> {
     };
 
     const newTektonGraph = await tektonGraphStore.create(
-      { namespace: this.pipeline.getNs(), name: graphName },
-      { ...tektonGraph }
+      {namespace: this.pipeline.getNs(), name: graphName},
+      {...tektonGraph}
     );
 
     this.pipeline.addAnnotation(
@@ -151,13 +189,13 @@ export class PipelineVisualDialog extends React.Component<Props> {
       newTektonGraph.getName()
     );
 
-    await pipelineStore.update(this.pipeline, { ...this.pipeline });
+    await pipelineStore.update(this.pipeline, {...this.pipeline});
   };
 
   save = async () => {
-    this.data = this.graph.save();
+    this.nodeData = this.graph.save();
 
-    const data = JSON.stringify(this.data);
+    const data = JSON.stringify(this.nodeData);
     let annotations = this.pipeline.metadata
       ? this.pipeline.metadata.annotations
       : undefined;
@@ -208,10 +246,17 @@ export class PipelineVisualDialog extends React.Component<Props> {
 
   close = () => {
     PipelineVisualDialog.close();
+    this.reset();
   };
 
   reset = () => {
-    this.data = null;
+    clearTimeout(this.initTimeout);
+    this.initTimeout = null;
+    this.nodeData = null;
+    if (this.graph) {
+      this.graph.destroy();
+      this.graph = null;
+    }
   };
 
   render() {
@@ -227,6 +272,7 @@ export class PipelineVisualDialog extends React.Component<Props> {
         className="PipelineVisualDialog"
         onOpen={this.onOpen}
         close={this.close}
+        pinned
       >
         <Wizard header={header} done={this.close}>
           <WizardStep
@@ -234,7 +280,7 @@ export class PipelineVisualDialog extends React.Component<Props> {
             nextLabel={<Trans>Save</Trans>}
             next={this.save}
           >
-            <div className={graphId} id={graphId} />
+            <div className={graphId} id={graphId}/>
           </WizardStep>
         </Wizard>
       </Dialog>

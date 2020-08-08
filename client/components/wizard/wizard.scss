@@ -82,3 +82,8 @@
     }
   }
 }
+
+:export {
+  wizardSpacing: #{$padding * 3};
+  wizardContentMaxHeight: #{80 * $unit};
+}
