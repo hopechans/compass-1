@@ -2,7 +2,7 @@ import "./pipeline-visual-dialog.scss";
 import styles from "../wizard/wizard.scss";
 
 import React from "react";
-import {computed, intercept, observable, when} from "mobx";
+import {observable} from "mobx";
 import {Trans} from "@lingui/macro";
 import {Dialog} from "../dialog";
 import {Wizard, WizardStep} from "../wizard";
@@ -14,7 +14,7 @@ import {PipelineSaveDialog} from "./pipeline-save-dialog";
 import {tektonGraphStore} from "../+tekton-graph/tekton-graph.store";
 import {pipelineStore} from "./pipeline.store";
 import {IKubeObjectMetadata} from "../../api/kube-object";
-import {defaultInitConfig, defaultInitData} from "../+tekton-graph/common";
+import {defaultInitConfig} from "../+tekton-graph/common";
 
 const wizardSpacing = parseInt(styles.wizardSpacing, 10) * 2;
 const wizardContentMaxHeight = parseInt(styles.wizardContentMaxHeight);
