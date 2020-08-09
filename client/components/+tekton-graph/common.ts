@@ -9,6 +9,11 @@ import {
 } from "@antv/g6/lib/types";
 import { INode } from "@antv/g6/lib/interface/item";
 import { toJS } from "mobx";
+import {
+  NodeStatus,
+  defaultNodeId,
+  defaultTaskName,
+} from "../+constant/tekton-constants";
 
 export const graphId = "container";
 export const pipelineNode: string = "pipeline-node";
@@ -20,19 +25,9 @@ export enum NodeRole {
   Second,
 }
 
-export enum NodeStatus {
-  Pending = "Pending",
-  Failed = "Failed",
-  Running = "Running",
-  Progress = "Progress",
-  Succeeded = "Succeeded",
-  Cancel = "TaskRunCancelled",
-  Timeout = "TaskRunTimeout",
-}
+export interface PipelineGraphOptions extends GraphOptions {}
 
-export interface PipelineGraphOptions extends GraphOptions { }
-
-export interface PipelineGraphConfig extends ModelConfig { }
+export interface PipelineGraphConfig extends ModelConfig {}
 
 export interface PipelineNodeConfig extends NodeConfig {
   role?: NodeRole;
@@ -43,17 +38,16 @@ export interface PipelineNodeConfig extends NodeConfig {
   subnode?: boolean;
 }
 
-export interface PipelineEdgeConfig extends EdgeConfig { }
+export interface PipelineEdgeConfig extends EdgeConfig {}
 
 export interface PipelineGraphData extends GraphData {
   nodes?: PipelineNodeConfig[];
   edges?: PipelineEdgeConfig[];
 }
 
-
 export function getNodeTaskName(node: Item): string {
-  const nodeCfg: PipelineNodeConfig = { id: node.getID() }
-  Object.assign(nodeCfg, toJS(node))
+  const nodeCfg: PipelineNodeConfig = { id: node.getID() };
+  Object.assign(nodeCfg, toJS(node));
   return nodeCfg.taskName || "none";
 }
 
@@ -162,7 +156,6 @@ export function subNodes(node: INode): INode[] {
   );
 }
 
-
 export function buildNodeConfig(
   id: string,
   x: number,
@@ -185,11 +178,11 @@ export function buildNodeConfig(
 }
 
 export const defaultInitGraphNode: PipelineNodeConfig = {
-  id: "1-1",
+  id: defaultNodeId,
   x: 20,
   y: 20,
   role: NodeRole.Primary,
-  taskName: "node-1-1",
+  taskName: defaultTaskName,
   anchorPoints: [
     [0, 0.5], // 左侧中间
     [1, 0.5], // 右侧中间
@@ -271,22 +264,3 @@ export function defaultInitConfig(
   };
   return defaultCfg;
 }
-
-export const setStatus = (statusName: string) => {
-  switch (statusName) {
-    case String(NodeStatus.Pending):
-    //draw pending status;
-    case String(NodeStatus.Progress):
-    //draw progress status
-    case String(NodeStatus.Cancel):
-    //draw cancel status
-    case String(NodeStatus.Failed):
-    //draw failed status
-    case String(NodeStatus.Running):
-    //draw running status
-    case String(NodeStatus.Succeeded):
-    //draw succeeded status
-    case String(NodeStatus.Timeout):
-    //draw timeout status
-  }
-};

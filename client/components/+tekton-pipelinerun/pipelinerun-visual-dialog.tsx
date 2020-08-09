@@ -2,23 +2,23 @@ import "./pipelinerun-visual-dialog.scss";
 import styles from "../wizard/wizard.scss";
 
 import React from "react";
-import {computed, observable, when} from "mobx";
-import {Trans} from "@lingui/macro";
-import {Dialog} from "../dialog";
-import {Wizard, WizardStep} from "../wizard";
-import {observer} from "mobx-react";
-import {PipelineRun} from "../../api/endpoints";
-import {graphId, PipelineGraph} from "../+tekton-graph/graph-new";
-import {secondsToHms} from "../../api/endpoints";
-import {pipelineRunStore} from "./pipelinerun.store";
-import {TaskRunLogsDialog} from "../+tekton-taskrun/task-run-logs-dialog";
-import {defaultInitData, defaultInitConfig} from "../+tekton-graph/common";
+import { computed, observable, when } from "mobx";
+import { Trans } from "@lingui/macro";
+import { Dialog } from "../dialog";
+import { Wizard, WizardStep } from "../wizard";
+import { observer } from "mobx-react";
+import { PipelineRun } from "../../api/endpoints";
+import { graphId, PipelineGraph } from "../+tekton-graph/graph-new";
+import { secondsToHms } from "../../api/endpoints";
+import { pipelineRunStore } from "./pipelinerun.store";
+import { TaskRunLogsDialog } from "../+tekton-taskrun/task-run-logs-dialog";
+import { defaultInitData, defaultInitConfig } from "../+tekton-graph/common";
+import { defaultTaskName, NodeStatus } from "../+constant/tekton-constants";
 
 const wizardSpacing = parseInt(styles.wizardSpacing, 10) * 2;
 const wizardContentMaxHeight = parseInt(styles.wizardContentMaxHeight);
 
-interface Props extends Partial<Props> {
-}
+interface Props extends Partial<Props> {}
 
 @observer
 export class PipelineRunVisualDialog extends React.Component<Props> {
@@ -72,7 +72,7 @@ export class PipelineRunVisualDialog extends React.Component<Props> {
       this.height = wizardContentMaxHeight - wizardSpacing;
 
       if (this.nodeData === undefined || this.nodeData === "") {
-        this.nodeData = defaultInitData
+        this.nodeData = defaultInitData;
       }
 
       if (this.graph == null) {
@@ -81,7 +81,7 @@ export class PipelineRunVisualDialog extends React.Component<Props> {
         this.graph.data(this.nodeData);
 
         this.graph.bindClickOnNode((currentNode: any) => {
-          const name = currentNode.getModel()["taskName"] || "";
+          const name = currentNode.getModel()[defaultTaskName] || "";
           const names = pipelineRunStore.getTaskRunName(this.pipelineRun);
           const currentTaskRunMap = pipelineRunStore.getTaskRun(names);
           const currentTaskRun = currentTaskRunMap[name];
@@ -94,7 +94,6 @@ export class PipelineRunVisualDialog extends React.Component<Props> {
 
       this.graph.render();
       this.setSize();
-
     }, 100);
   }
 
@@ -110,7 +109,7 @@ export class PipelineRunVisualDialog extends React.Component<Props> {
             this.nodeData.nodes[index].status =
               currentTaskRun.status.conditions[0].reason;
           } else {
-            this.nodeData.nodes[index].status = "Pending";
+            this.nodeData.nodes[index].status = NodeStatus.Pending;
           }
           this.nodeData.nodes[index].showtime = true;
         });
@@ -119,14 +118,14 @@ export class PipelineRunVisualDialog extends React.Component<Props> {
         this.graph.changeData(this.nodeData);
       }
     }, 500);
-  }
+  };
 
   renderTimeInterval() {
     //Interval 1s update status and time in graph
     this.updateTimeInterval = setInterval(() => {
       const names = pipelineRunStore
-      .getByName(this.pipelineRun.getName())
-      .getTaskRunName();
+        .getByName(this.pipelineRun.getName())
+        .getTaskRunName();
       clearInterval(this.pendingTimeInterval);
       if (names.length > 0) {
         const currentTaskRunMap = pipelineRunStore.getTaskRun(names);
@@ -136,7 +135,9 @@ export class PipelineRunVisualDialog extends React.Component<Props> {
           const currentTaskRun = currentTaskRunMap[item.taskName];
           if (currentTaskRun !== undefined) {
             //should get current node itme and update the time.
-            let currentItem = this.graph.findById(this.nodeData.nodes[index].id);
+            let currentItem = this.graph.findById(
+              this.nodeData.nodes[index].id
+            );
             //dynimic set the state: missing notreay
             if (currentTaskRun?.status?.conditions[0]?.reason == undefined) {
               return;
@@ -228,7 +229,7 @@ export class PipelineRunVisualDialog extends React.Component<Props> {
             hideNextBtn={true}
             prevLabel={<Trans>Close</Trans>}
           >
-            <div className="container" id={graphId}/>
+            <div className="container" id={graphId} />
           </WizardStep>
         </Wizard>
       </Dialog>

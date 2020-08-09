@@ -5,12 +5,7 @@ import { apiManager } from "../../api/api-manager";
 
 @autobind()
 export class PipelineResourceStore extends KubeObjectStore<PipelineResource> {
-  api = pipelineResourceApi
-  // @observable metrics: IPodMetrics = null;
-
-  // reset() {
-  //   this.metrics = null;
-  // }
+  api = pipelineResourceApi;
 }
 
 export const pipelineResourceStore = new PipelineResourceStore();

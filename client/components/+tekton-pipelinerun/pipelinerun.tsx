@@ -14,7 +14,7 @@ import { observable } from "mobx";
 import { taskRunStore } from "../+tekton-taskrun";
 import { TooltipContent } from "../tooltip";
 import { StatusBrick } from "../status-brick";
-import {cssNames, stopPropagation} from "../../utils";
+import { cssNames, stopPropagation } from "../../utils";
 import { MenuItem } from "../menu";
 import { Icon } from "../icon";
 import { Notifications } from "../notifications";
@@ -30,6 +30,7 @@ import { IKubeObjectMetadata } from "../../api/kube-object";
 import { advanceSecondsToHms } from "../../api/endpoints";
 import { configStore } from "../../config.store";
 import { Link } from "react-router-dom";
+import { PipelineStatus } from "../+constant/tekton-constants";
 
 enum sortBy {
   name = "name",
@@ -39,7 +40,7 @@ enum sortBy {
   age = "age",
 }
 
-interface Props extends RouteComponentProps { }
+interface Props extends RouteComponentProps {}
 
 @observer
 export class PipelineRuns extends React.Component<Props> {
@@ -121,7 +122,13 @@ export class PipelineRuns extends React.Component<Props> {
   renderPipelineName(pipelineRun: PipelineRun) {
     const name = pipelineRun.getName();
     return (
-      <Link onClick={(event) => { stopPropagation(event); PipelineRunVisualDialog.open(pipelineRun) }} to={null}>
+      <Link
+        onClick={(event) => {
+          stopPropagation(event);
+          PipelineRunVisualDialog.open(pipelineRun);
+        }}
+        to={null}
+      >
         <Tooltip title={name} placement="top-start">
           <span>{name}</span>
         </Tooltip>
@@ -129,7 +136,10 @@ export class PipelineRuns extends React.Component<Props> {
     );
   }
 
-  renderPipelineDuration(startTime: string | number, completionTime: string | number) {
+  renderPipelineDuration(
+    startTime: string | number,
+    completionTime: string | number
+  ) {
     if (completionTime == "" || completionTime == undefined) {
       return;
     }
@@ -142,7 +152,10 @@ export class PipelineRuns extends React.Component<Props> {
   renderPipelineStatus(pipelineRun: PipelineRun) {
     let status = pipelineRun?.status?.conditions[0]?.reason;
     if (status !== undefined) {
-      if (status === "Succeeded" || status === "Completed") {
+      if (
+        status === PipelineStatus.Succeeded ||
+        status === PipelineStatus.Completed
+      ) {
         return (
           <Icon
             small={true}
@@ -151,12 +164,15 @@ export class PipelineRuns extends React.Component<Props> {
           />
         );
       }
-      if (status === "Running" || status == "Started") {
+      if (
+        status === PipelineStatus.Running ||
+        status == PipelineStatus.Started
+      ) {
         return (
           <Icon material="loop" small={true} className="pipelineRun-Running" />
         );
       }
-      if (status === "PipelineRunCancelled") {
+      if (status === PipelineStatus.PipelineRunCancelled) {
         return (
           <Icon
             material="cancel"
@@ -183,26 +199,52 @@ export class PipelineRuns extends React.Component<Props> {
           isClusterScoped
           className="PipelineRuns"
           store={pipelineRunStore}
-          dependentStores={[pipelineStore, taskRunStore, tektonGraphStore, podsStore, eventStore]}
+          dependentStores={[
+            pipelineStore,
+            taskRunStore,
+            tektonGraphStore,
+            podsStore,
+            eventStore,
+          ]}
           sortingCallbacks={{
             [sortBy.name]: (pipelineRun: PipelineRun) => pipelineRun.getName(),
-            [sortBy.namespace]: (pipelineRun: PipelineRun) => pipelineRun.getNs(),
-            [sortBy.ownernamespace]: (pipelineRun: PipelineRun) => pipelineRun.getOwnerNamespace(),
-            [sortBy.reason]: (pipelineRun: PipelineRun) => pipelineRun.getErrorReason(),
-            [sortBy.age]: (pipelineRun: PipelineRun) => pipelineRun.getAge(false),
+            [sortBy.namespace]: (pipelineRun: PipelineRun) =>
+              pipelineRun.getNs(),
+            [sortBy.ownernamespace]: (pipelineRun: PipelineRun) =>
+              pipelineRun.getOwnerNamespace(),
+            [sortBy.reason]: (pipelineRun: PipelineRun) =>
+              pipelineRun.getErrorReason(),
+            [sortBy.age]: (pipelineRun: PipelineRun) =>
+              pipelineRun.getAge(false),
           }}
           searchFilters={[
             (pipelineRun: PipelineRun) => pipelineRun.getSearchFields(),
           ]}
           renderHeaderTitle={<Trans>PipelineRuns</Trans>}
           renderTableHeader={[
-            { title: <Trans>Name</Trans>, className: "name", sortBy: sortBy.name },
-            { title: <Trans>Namespace</Trans>, className: "namespace", sortBy: sortBy.namespace },
-            { title: <Trans>OwnerNamespace</Trans>, className: "ownernamespace", sortBy: sortBy.ownernamespace },
+            {
+              title: <Trans>Name</Trans>,
+              className: "name",
+              sortBy: sortBy.name,
+            },
+            {
+              title: <Trans>Namespace</Trans>,
+              className: "namespace",
+              sortBy: sortBy.namespace,
+            },
+            {
+              title: <Trans>OwnerNamespace</Trans>,
+              className: "ownernamespace",
+              sortBy: sortBy.ownernamespace,
+            },
             { title: "", className: "event" },
             { title: "", className: "reason" },
             { title: <Trans>Tasks</Trans>, className: "tasks" },
-            { title: <Trans>Created</Trans>, className: "age", sortBy: sortBy.age },
+            {
+              title: <Trans>Created</Trans>,
+              className: "age",
+              sortBy: sortBy.age,
+            },
             { title: <Trans>Duration</Trans>, className: "Duration" },
             { title: "Status", className: "status" },
           ]}
@@ -210,8 +252,13 @@ export class PipelineRuns extends React.Component<Props> {
             this.renderPipelineName(pipelineRun),
             pipelineRun.getNs(),
             pipelineRun.getOwnerNamespace(),
-            <KubeEventIcon namespace={configStore.getOpsNamespace()} object={pipelineRun} />,
-            pipelineRun.hasIssues() && (<PipelineRunIcon object={pipelineRun.status.conditions[0]} />),
+            <KubeEventIcon
+              namespace={configStore.getOpsNamespace()}
+              object={pipelineRun}
+            />,
+            pipelineRun.hasIssues() && (
+              <PipelineRunIcon object={pipelineRun.status.conditions[0]} />
+            ),
             this.renderTasks(pipelineRun),
             `${pipelineRun.getAge()}  ago`,
             pipelineRun.getDuration() ?? "",
@@ -234,11 +281,12 @@ export function PipelineRunMenu(props: KubeObjectMenuProps<PipelineRun>) {
     <KubeObjectMenu {...props}>
       <MenuItem
         onClick={() => {
-          //Cancel
           object.spec.status = "PipelineRunCancelled";
           try {
             pipelineRunStore.update(object, { ...object });
-            Notifications.ok(<>PipelineRun {object.getName()} cancel succeeded</>);
+            Notifications.ok(
+              <>PipelineRun {object.getName()} cancel succeeded</>
+            );
           } catch (err) {
             Notifications.error(err);
           }
@@ -282,7 +330,9 @@ export function PipelineRunMenu(props: KubeObjectMenuProps<PipelineRun>) {
               { ...newPipelineRun }
             );
 
-            Notifications.ok(<>PipelineRun: {pipelineRun.getName()} rerun succeeded</>);
+            Notifications.ok(
+              <>PipelineRun: {pipelineRun.getName()} rerun succeeded</>
+            );
           } catch (err) {
             Notifications.error(err);
           }
