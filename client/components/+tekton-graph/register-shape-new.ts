@@ -3,12 +3,16 @@ import { Item } from "@antv/g6/lib/types";
 import { Group, IShape } from "@antv/g-canvas/lib";
 import {
   PipelineGraphConfig,
-  NodeStatus,
   pipelineNode,
   NodeRole,
   hasRightNeighborNode,
   hasSubNode,
 } from "./common";
+import {
+  NodeStatus,
+  NodeStatusColor,
+  defaultTaskName,
+} from "../+constant/tekton-constants";
 import { INode } from "@antv/g6/lib/interface/item";
 
 /**
@@ -72,7 +76,7 @@ function drawBase(cfg: PipelineGraphConfig, group: Group): IShape {
 
   // 标题
   group.addShape("text", {
-    labels: "taskName",
+    labels: defaultTaskName,
     attrs: {
       y: 20,
       x: 5,
@@ -132,32 +136,32 @@ const drawTextShape = (group: Group, name: string, text: string) => {
 function drawNodeStatus(cfg: PipelineGraphConfig, group: Group): IShape {
   switch (cfg.status) {
     case NodeStatus.Pending:
-      drawStatus(group, "#ffc12f", NodeStatus.Pending);
+      drawStatus(group, NodeStatusColor.Pending, NodeStatus.Pending);
       return drawTextShape(group, NodeStatus.Pending, "Pending.");
 
     case NodeStatus.Running:
-      drawStatus(group, "#20d867", NodeStatus.Running);
+      drawStatus(group, NodeStatusColor.Running, NodeStatus.Running);
       //status for text
       return drawTextShape(group, NodeStatus.Running, "Running.");
 
     case NodeStatus.Progress:
-      drawStatus(group, "#20d867", NodeStatus.Running);
+      drawStatus(group, NodeStatusColor.Progress, NodeStatus.Running);
       return drawTextShape(group, NodeStatus.Progress, "In progress.");
 
     case NodeStatus.Cancel:
-      drawStatus(group, "#3296fa", "cancel");
+      drawStatus(group, NodeStatusColor.Cancel, "cancel");
       //status for text
       return drawTextShape(group, NodeStatus.Cancel, "Cancel.");
 
     case NodeStatus.Succeeded:
       // set status
-      drawStatus(group, "#20d867", NodeStatus.Succeeded);
+      drawStatus(group, NodeStatusColor.Succeeded, NodeStatus.Succeeded);
       //status for text
       return drawTextShape(group, NodeStatus.Succeeded, "Succeed.");
 
     case NodeStatus.Timeout:
       // set status
-      drawStatus(group, "#f02b2b", "timeout");
+      drawStatus(group, NodeStatusColor.Timeout, "timeout");
       //status for text
       return drawTextShape(group, NodeStatus.Timeout, "Timeout.");
 
@@ -359,32 +363,32 @@ G6.registerNode(pipelineNode, {
     }
 
     if (name === NodeStatus.Running) {
-      setState(group, "#3296fa", "Running. ");
+      setState(group, NodeStatusColor.Running, `${NodeStatus.Running}. `);
       return;
     }
 
     if (name === NodeStatus.Pending) {
-      setState(group, "#ffc12f", "Pendding. ");
+      setState(group, NodeStatusColor.Pending, `${NodeStatus.Pending}. `);
       return;
     }
 
     if (name === NodeStatus.Succeeded) {
-      setState(group, "#20d867", "Succeed. ");
+      setState(group, NodeStatusColor.Succeeded, `${NodeStatus.Succeeded}. `);
       return;
     }
 
     if (name === NodeStatus.Failed) {
-      setState(group, "#ffc12f", "Succeed. ");
+      setState(group, NodeStatusColor.Failed, `${NodeStatus.Failed}. `);
       return;
     }
 
     if (name === NodeStatus.Cancel) {
-      setState(group, "#3296fa", "Cancel. ");
+      setState(group, NodeStatusColor.Cancel, `${NodeStatus.Cancel}. `);
       return;
     }
 
     if (name === NodeStatus.Timeout) {
-      setState(group, "#f02b2b", "Timeout. ");
+      setState(group, NodeStatusColor.Timeout, `${NodeStatus.Timeout}. `);
       return;
     }
   },
