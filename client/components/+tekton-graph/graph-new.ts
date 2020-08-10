@@ -1,7 +1,7 @@
 import "./register-shape-new";
-import {Graph} from "@antv/g6";
-import {Item, IAlgorithmCallbacks} from "@antv/g6/lib/types";
-import {INode, IEdge} from "@antv/g6/lib/interface/item";
+import { Graph } from "@antv/g6";
+import { Item, IAlgorithmCallbacks } from "@antv/g6/lib/types";
+import { INode, IEdge } from "@antv/g6/lib/interface/item";
 import {
   PipelineGraphOptions,
   PipelineGraphData,
@@ -16,10 +16,11 @@ import {
   groupNodes,
   hasRightNeighborNode,
 } from "./common";
-import {Algorithm} from "@antv/g6";
-import {IGraph} from "@antv/g6/lib/interface/graph";
+import { Algorithm } from "@antv/g6";
+import { IGraph } from "@antv/g6/lib/interface/graph";
+import { maxBy } from "lodash";
 
-const {depthFirstSearch} = Algorithm;
+const { depthFirstSearch } = Algorithm;
 export const graphId = "container";
 
 declare type SearchAlgorithm0 = (graph: IGraph) => void;
@@ -44,49 +45,57 @@ export class PipelineGraph extends Graph {
     search: SearchAlgorithm0 | SearchAlgorithm1
   ) {
     search(this, id, {
-      enter: ({current, previous}) => {
+      enter: ({ current, previous }) => {
         console.log("current==>", current, "previous=>", previous);
       },
-      leave: ({current, previous}) => {
+      leave: ({ current, previous }) => {
         // 遍历完节点的回调
       },
     });
   }
 
   getMaxXNodePoint(): number {
-    return this.getNodes()
-    ?.sort((a: INode, b: INode): number => {
-      if (a.getID() < b.getID()) {
-        return 1;
-      }
-      if (a.getID() > b.getID()) {
-        return -1;
-      }
-      return 0;
-    })[0].getModel().x + spacingX * 1.01 || 0;
+    return (
+      this.getNodes()
+        ?.sort((a: INode, b: INode): number => {
+          if (a.getID() < b.getID()) {
+            return 1;
+          }
+          if (a.getID() > b.getID()) {
+            return -1;
+          }
+          return 0;
+        })[0]
+        .getModel().x +
+        spacingX * 1.01 || 0
+    );
   }
 
   getMaxYNodePoint(): number {
-    return this.getNodes()
-    ?.sort((a: INode, b: INode): number => {
-      if (getIndexId(a.getID()) < getIndexId(b.getID())) {
-        return 1;
-      }
-      if (getIndexId(a.getID()) > getIndexId(b.getID())) {
-        return -1;
-      }
-      return 0;
-    })[0].getModel().y + spacingY * 1.5 || 0
+    return (
+      this.getNodes()
+        ?.sort((a: INode, b: INode): number => {
+          if (getIndexId(a.getID()) < getIndexId(b.getID())) {
+            return 1;
+          }
+          if (getIndexId(a.getID()) > getIndexId(b.getID())) {
+            return -1;
+          }
+          return 0;
+        })[0]
+        .getModel().y +
+        spacingY * 1.5 || 0
+    );
   }
 
   bindClickOnNode(cb: (node: Item) => void): void {
     this.on("node:click", (evt: any) => {
-      const {item} = evt;
+      const { item } = evt;
       const shape = evt.target.cfg.name;
       const node = item as INode;
       const sourceId = node.getID();
       const model = (item as Item).getModel();
-      const {x, y} = model;
+      const { x, y } = model;
       const point = this.getCanvasByPoint(x, y);
 
       if (shape === "right-plus") {
@@ -99,6 +108,7 @@ export class PipelineGraph extends Graph {
           const groupNodeSortList = groupNodes(
             this.findById(targetId) as INode
           );
+
           targetId = [
             nextGroup,
             String(
@@ -118,7 +128,7 @@ export class PipelineGraph extends Graph {
           nodeLayoutIndex
         );
 
-        window.dispatchEvent(new Event('changeNode'));
+        window.dispatchEvent(new Event("changeNode"));
         return;
       }
 
@@ -127,7 +137,7 @@ export class PipelineGraph extends Graph {
         this.moveNode(node);
         this.removeNode(source);
 
-        window.dispatchEvent(new Event('changeNode'));
+        window.dispatchEvent(new Event("changeNode"));
         return;
       }
 
@@ -143,7 +153,7 @@ export class PipelineGraph extends Graph {
       return;
     }
     this.removeItem(node.getID());
-    window.dispatchEvent(new Event('changeNode'));
+    window.dispatchEvent(new Event("changeNode"));
   }
 
   private addNode(
@@ -176,23 +186,23 @@ export class PipelineGraph extends Graph {
 
     if (nodeIndexId > 1) {
       this.getNodes()
-      ?.find((node: INode) => {
-        return node.getID() === getPrimaryNodeId(targetId);
-      })
-      ?.getNeighbors()
-      ?.map((pnode: INode) => {
-        if (getIndexId(pnode.getID()) === 1) {
-          this.addItem("edge", {
-            source: targetId,
-            target: pnode.getID(),
-            type: "cubic-horizontal",
-            style: {
-              stroke: "#959DA5",
-              lineWidth: 2,
-            },
-          });
-        }
-      });
+        ?.find((node: INode) => {
+          return node.getID() === getPrimaryNodeId(targetId);
+        })
+        ?.getNeighbors()
+        ?.map((pnode: INode) => {
+          if (getIndexId(pnode.getID()) === 1) {
+            this.addItem("edge", {
+              source: targetId,
+              target: pnode.getID(),
+              type: "cubic-horizontal",
+              style: {
+                stroke: "#959DA5",
+                lineWidth: 2,
+              },
+            });
+          }
+        });
     } else {
       this.getNodes()?.map((node: INode) => {
         if (getGroupId(node.getID()) === getGroupId(targetId) - 1) {
@@ -223,21 +233,20 @@ export class PipelineGraph extends Graph {
         getGroupId(needUpdateNode.getID()) === getGroupId(node.getID()) &&
         getIndexId(needUpdateNode.getID()) > getIndexId(node.getID())
       ) {
-
         needUpdateNode.updatePosition({
           x: needUpdateNode.getModel().x,
           y: needUpdateNode.getModel().y - spacingY,
         });
 
         const needUpdateEdgeCfg = needUpdateNode
-        .getEdges()
-        ?.map((edge: IEdge) => {
-          return {
-            id: edge.getID(),
-            source: edge.getModel().source,
-            target: edge.getModel().target,
-          };
-        });
+          .getEdges()
+          ?.map((edge: IEdge) => {
+            return {
+              id: edge.getID(),
+              source: edge.getModel().source,
+              target: edge.getModel().target,
+            };
+          });
 
         if (needUpdateEdgeCfg === undefined || needUpdateEdgeCfg.length === 0) {
           return;
@@ -262,12 +271,12 @@ export class PipelineGraph extends Graph {
   }
 
   setTaskName(node: Item, taskName: string): void {
-    const cfg: Partial<PipelineNodeConfig> = {taskName: taskName};
+    const cfg: Partial<PipelineNodeConfig> = { taskName: taskName };
     this.updateItem(node, cfg);
   }
 
   setNodeRole(node: Item, role: NodeRole): void {
-    const cfg: Partial<PipelineNodeConfig> = {role: role};
+    const cfg: Partial<PipelineNodeConfig> = { role: role };
     this.updateItem(node, cfg);
   }
 
