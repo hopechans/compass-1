@@ -140,11 +140,28 @@ export default () => {
         },
         {
           test: /\.(jpg|png|svg|map|ico)$/,
-          use: 'file-loader?name=assets/[name]-[hash:6].[ext]'
+          use: [
+            {
+              loader: 'file-loader',
+              options:{
+                name:'assets/[name]-[hash:6].[ext]',
+                esModule:false
+              }
+            },
+          ],
+         
         },
         {
           test: /\.(ttf|eot|woff2?)$/,
-          use: 'file-loader?name=fonts/[name].[ext]'
+          use: [
+            {
+              loader: 'file-loader',
+              options:{
+                name:'assets/fonts/[name].[ext]',
+                esModule:false
+              }
+            },
+          ],
         },
         {
           test: /\.ya?ml$/,
