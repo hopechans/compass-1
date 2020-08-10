@@ -105,19 +105,22 @@ export function groupNodes(node: INode): INode[] {
     node
       .getNeighbors()
       ?.find((item: INode) => {
-        if (getGroupId(node.getID()) === getGroupId(item.getID()) + 1) {
+        if (
+          getGroupId(node.getID()) == getGroupId(item.getID()) + 1 &&
+          getIndexId(item.getID()) === 1
+        ) {
           return item;
         }
       })
       ?.getNeighbors()
       ?.filter((groupItem: INode) => {
-        return getGroupId(node.getID()) === getGroupId(groupItem.getID());
+        return getGroupId(node.getID()) == getGroupId(groupItem.getID());
       })
       ?.sort((a: INode, b: INode): number => {
-        if (a.getID() > b.getID()) {
+        if (getIndexId(a.getID()) > getIndexId(b.getID())) {
           return 1;
         }
-        if (a.getID() < b.getID()) {
+        if (getIndexId(a.getID()) < getIndexId(b.getID())) {
           return -1;
         }
         return 0;

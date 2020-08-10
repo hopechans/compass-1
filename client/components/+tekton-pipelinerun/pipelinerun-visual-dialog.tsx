@@ -13,7 +13,7 @@ import { secondsToHms } from "../../api/endpoints";
 import { pipelineRunStore } from "./pipelinerun.store";
 import { TaskRunLogsDialog } from "../+tekton-taskrun/task-run-logs-dialog";
 import { defaultInitData, defaultInitConfig } from "../+tekton-graph/common";
-import { defaultTaskName, NodeStatus } from "../+constant/tekton-constants";
+import { taskName, NodeStatus } from "../+constant/tekton-constants";
 
 const wizardSpacing = parseInt(styles.wizardSpacing, 10) * 2;
 const wizardContentMaxHeight = parseInt(styles.wizardContentMaxHeight);
@@ -81,7 +81,7 @@ export class PipelineRunVisualDialog extends React.Component<Props> {
         this.graph.data(this.nodeData);
 
         this.graph.bindClickOnNode((currentNode: any) => {
-          const name = currentNode.getModel()[defaultTaskName] || "";
+          const name = currentNode.getModel()[taskName] || "";
           const names = pipelineRunStore.getTaskRunName(this.pipelineRun);
           const currentTaskRunMap = pipelineRunStore.getTaskRun(names);
           const currentTaskRun = currentTaskRunMap[name];
