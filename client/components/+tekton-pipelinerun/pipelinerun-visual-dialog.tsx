@@ -2,7 +2,7 @@ import "./pipelinerun-visual-dialog.scss";
 import styles from "../wizard/wizard.scss";
 
 import React from "react";
-import { computed, observable, when } from "mobx";
+import { observable } from "mobx";
 import { Trans } from "@lingui/macro";
 import { Dialog } from "../dialog";
 import { Wizard, WizardStep } from "../wizard";
@@ -65,7 +65,7 @@ export class PipelineRunVisualDialog extends React.Component<Props> {
     this.graph.changeSize(this.width, this.height);
   }
 
-  initGraph() {
+  initGraph = async () => {
     this.initTimeout = setTimeout(() => {
       const anchor = document.getElementsByClassName("Wizard")[0];
       this.width = anchor.clientWidth - wizardSpacing;
@@ -120,7 +120,7 @@ export class PipelineRunVisualDialog extends React.Component<Props> {
     }, 500);
   };
 
-  renderTimeInterval() {
+  renderTimeInterval = async () => {
     //Interval 1s update status and time in graph
     this.updateTimeInterval = setInterval(() => {
       const names = pipelineRunStore
