@@ -33,7 +33,7 @@ import { WorkspaceDeclaration as Workspace } from "../../api/endpoints/tekton-ta
 import { Collapse } from "../collapse";
 import { PipelineGraph } from "../+tekton-graph/graph-new";
 import { INode } from "@antv/g6/lib/interface/item";
-import { defaultTaskName } from "../+constant/tekton-constants";
+import { taskName } from "../+constant/tekton-constants";
 
 interface Props<T = any> extends Partial<Props> {
   value?: T;
@@ -106,7 +106,7 @@ export class CopyTaskDialog extends React.Component<Props> {
 
   onOpen = () => {
     try {
-      const name = CopyTaskDialog.node.getModel()[defaultTaskName] || "";
+      const name = CopyTaskDialog.node.getModel()[taskName] || "";
       this.loadData(String(name), CopyTaskDialog.namespace);
     } catch (err) {
       Notifications.error(err);
