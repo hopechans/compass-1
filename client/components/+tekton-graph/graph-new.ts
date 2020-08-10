@@ -58,10 +58,10 @@ export class PipelineGraph extends Graph {
     return (
       this.getNodes()
         ?.sort((a: INode, b: INode): number => {
-          if (a.getID() < b.getID()) {
+          if (getGroupId(a.getID()) < getGroupId(b.getID())) {
             return 1;
           }
-          if (a.getID() > b.getID()) {
+          if (getGroupId(a.getID()) > getGroupId(b.getID())) {
             return -1;
           }
           return 0;
@@ -84,7 +84,7 @@ export class PipelineGraph extends Graph {
           return 0;
         })[0]
         .getModel().y +
-        spacingY * 1.5 || 0
+        spacingY * 1.4 || 0
     );
   }
 
