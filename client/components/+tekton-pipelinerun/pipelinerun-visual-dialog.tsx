@@ -197,8 +197,8 @@ export class PipelineRunVisualDialog extends React.Component<Props> {
   reset = async () => {
     if (this.graph) {
       this.graph.clear();
+      this.graph = null;
     }
-    this.graph = null;
     clearTimeout(this.initTimeout);
     this.initTimeout = null;
     clearInterval(this.pendingTimeInterval);

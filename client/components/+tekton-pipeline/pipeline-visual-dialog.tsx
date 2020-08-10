@@ -245,18 +245,21 @@ export class PipelineVisualDialog extends React.Component<Props> {
   }
 
   close = () => {
-    PipelineVisualDialog.close();
     this.reset();
+    PipelineVisualDialog.close();
   };
 
   reset = () => {
+    if (this.graph) {
+      this.graph.clear();
+      this.graph = null;
+    }
     clearTimeout(this.initTimeout);
     this.initTimeout = null;
     this.nodeData = null;
-    if (this.graph) {
-      this.graph.destroy();
-      this.graph = null;
-    }
+    this.currentNode = null;
+    this.width = 0;
+    this.height = 0;
   };
 
   render() {
