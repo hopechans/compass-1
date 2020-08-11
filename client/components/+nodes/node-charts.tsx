@@ -19,24 +19,40 @@ export const NodeCharts = observer(() => {
 
   if (!metrics) return null;
   if (isMetricsEmpty(metrics)) return <NoMetrics/>;
-
-  const values = Object.values(metrics).map(metric =>
-    normalizeMetrics(metric).data.result[0].values
+  const values = Object.values(metrics).map(metric =>{
+    return normalizeMetrics(metric).data.result[0].values 
+  }
   );
-  const [
-    memoryUsage,
-    memoryRequests,
-    memoryLimits,
-    memoryCapacity,
-    cpuUsage,
-    cpuRequests,
+
+  const [ 
+    cpuCapacity, 
     cpuLimits,
-    cpuCapacity,
-    podUsage,
-    podCapacity,
+    cpuRequests, 
+    cpuUsage, 
     fsSize,
-    fsUsage
-  ] = values;
+    fsUsage, 
+    memoryCapacity,
+    memoryLimits, 
+    memoryRequests, 
+    memoryUsage, 
+    podCapacity,
+    podUsage
+  ] = values
+
+  // const [
+  //   memoryUsage,
+  //   memoryRequests,
+  //   memoryLimits,
+  //   memoryCapacity,
+  //   cpuUsage,
+  //   cpuRequests,
+  //   cpuLimits,
+  //   cpuCapacity,
+  //   podUsage,
+  //   podCapacity,
+  //   fsSize,
+  //   fsUsage
+  // ] = values;
 
   const datasets = [
     // CPU

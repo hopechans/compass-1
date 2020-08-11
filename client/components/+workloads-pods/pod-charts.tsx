@@ -28,21 +28,37 @@ export const PodCharts = observer(() => {
   if (isMetricsEmpty(metrics)) return <NoMetrics/>;
 
   const options = tabId == 0 ? cpuOptions : memoryOptions;
-  const values = Object.values(metrics).map(metric =>
-    normalizeMetrics(metric).data.result[0].values
+  const values = Object.values(metrics).map(metric =>{
+    return normalizeMetrics(metric).data.result[0].values
+  }
+   
   );
-  const [
-    cpuUsage,
-    cpuRequests,
-    cpuLimits,
-    memoryUsage,
-    memoryRequests,
-    memoryLimits,
-    fsUsage,
-    networkReceive,
-    networkTransit
-  ] = values;
 
+  const [
+    cpuLimits, 
+    cpuRequests, 
+    cpuUsage, 
+    fsUsage, 
+    memoryLimits,
+    memoryRequests, 
+    memoryUsage, 
+    networkReceive, 
+    networkTransit
+  ] = values
+
+  // const [
+  //   cpuUsage,
+  //   cpuRequests,
+  //   cpuLimits,
+  //   memoryUsage,
+  //   memoryRequests,
+  //   memoryLimits,
+  //   fsUsage,
+  //   networkReceive,
+  //   networkTransit
+  // ] = values;
+
+  
   const datasets = [
     // CPU
     [
