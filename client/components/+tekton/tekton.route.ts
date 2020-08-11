@@ -29,8 +29,12 @@ export const taskRunRoute: RouteProps = {
 };
 
 export const opsSecretRoute: RouteProps = {
-  path: "/ops-secret"
-}
+  path: "/ops-secret",
+};
+
+export const tektonStoreRoute: RouteProps = {
+  path: "/tekton-store",
+};
 
 export const webHookRoute: RouteProps = {
   path: "/webhook",
@@ -42,5 +46,6 @@ export const pipelineRunURL = buildURL(pipelineRunRoute.path);
 export const pipelineResourceURL = buildURL(pipelineResourceRoute.path);
 export const taskURL = buildURL(taskRoute.path);
 export const taskRunURL = buildURL(taskRunRoute.path);
-export const opsSecretURL = buildURL(opsSecretRoute.path)
+export const opsSecretURL = buildURL(opsSecretRoute.path);
+export const tektonStoreURL = buildURL(tektonStoreRoute.path);
 export const webHookURL = buildURL(webHookRoute.path)
