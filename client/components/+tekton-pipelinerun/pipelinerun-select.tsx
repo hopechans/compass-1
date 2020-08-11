@@ -1,12 +1,12 @@
 import React from "react";
 import {computed} from "mobx";
 import {observer} from "mobx-react";
-import {t, Trans} from "@lingui/macro";
+import {t} from "@lingui/macro";
 import {Select, SelectOption, SelectProps} from "../select";
 import {cssNames, noop} from "../../utils";
 import {Icon} from "../icon";
-import {tenantDepartmentStore} from "./department.store";
 import {_i18n} from "../../i18n";
+import {pipelineRunStore} from "./pipelinerun.store";
 
 interface Props extends SelectProps {
   showIcons?: boolean;
@@ -19,18 +19,18 @@ const defaultProps: Partial<Props> = {
   showIcons: true,
   showClusterOption: false,
   get clusterOptionLabel() {
-    return _i18n._(t`Department`);
+    return _i18n._(t`PipelineRun`);
   },
 };
 
 @observer
-export class BaseDepartmentSelect extends React.Component<Props> {
+export class PipelineRunSelect extends React.Component<Props> {
   static defaultProps = defaultProps as object;
   private unsubscribe = noop;
 
   async componentDidMount() {
-    if (!tenantDepartmentStore.isLoaded) await tenantDepartmentStore.loadAll();
-    this.unsubscribe = tenantDepartmentStore.subscribe();
+    if (!pipelineRunStore.isLoaded) await pipelineRunStore.loadAll();
+    this.unsubscribe = pipelineRunStore.subscribe();
   }
 
   componentWillUnmount() {
@@ -39,7 +39,7 @@ export class BaseDepartmentSelect extends React.Component<Props> {
 
   @computed get options(): SelectOption[] {
     const {customizeOptions, showClusterOption, clusterOptionLabel} = this.props;
-    let options: SelectOption[] = tenantDepartmentStore.items.map(item => ({value: item.getName()}));
+    let options: SelectOption[] = pipelineRunStore.items.map(item => ({value: item.getName()}));
     options = customizeOptions ? customizeOptions(options) : options;
     if (showClusterOption) {
       options.unshift({value: null, label: clusterOptionLabel});
@@ -62,8 +62,8 @@ export class BaseDepartmentSelect extends React.Component<Props> {
     const {className, showIcons, showClusterOption, clusterOptionLabel, customizeOptions, ...selectProps} = this.props;
     return (
       <Select
-        className={cssNames("BaseDepartmentSelect", className)}
-        menuClass="BaseDepartmentSelect"
+        className={cssNames("PipelineRunSelect", className)}
+        menuClass="PipelineRunSelect"
         formatOptionLabel={this.formatOptionLabel}
         options={this.options}
         {...selectProps}

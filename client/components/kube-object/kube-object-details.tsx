@@ -75,7 +75,8 @@ export class KubeObjectDetails extends React.Component {
         kind == "StatefulSet" || kind == "Stone" || kind == "Injector" || kind == "Water" || kind == "Workloads" ||
         kind == "Field" || kind == "Form" || kind == "Page" ||
         kind == "Pipeline" || kind == "PipelineRun" || kind == "PipelineResource" || kind == "Task" || kind == "TaskRun" ||
-        kind == "BaseUser" || kind == "BaseRole" || kind == "BaseDepartment" || kind == "BaseRoleUser"
+        kind == "BaseUser" || kind == "BaseRole" || kind == "BaseDepartment" || kind == "BaseRoleUser" ||
+        kind == "TektonWebHook"
       ) {
         isCrdInstanceLocal = false;
       }

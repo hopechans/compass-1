@@ -7,21 +7,20 @@ import {namespaceStore} from "../+namespaces/namespace.store";
 import {Pipelines} from "../+tekton-pipeline";
 import {PipelineRuns} from "../+tekton-pipelinerun";
 import {PipelineResources} from "../+tekton-pipelineresource";
-import {
-  pipelineURL,
-  pipelineRoute,
-  pipelineRunURL,
-  pipelineRunRoute,
-  pipelineResourceURL,
-  pipelineResourceRoute,
-  taskURL,
-  taskRoute,
-  taskRunURL,
-  taskRunRoute, opsSecretURL, opsSecretRoute,
-} from "./tekton.route";
 import {Tasks} from "../+tekton-task";
 import {TaskRuns} from "../+tekton-taskrun";
 import {OpsSecrets} from "../+tekton-ops-secret";
+import {WebHook} from "../+tekton-webhook";
+
+import {
+  pipelineURL, pipelineRoute,
+  pipelineRunURL, pipelineRunRoute,
+  pipelineResourceURL, pipelineResourceRoute,
+  taskURL, taskRoute,
+  taskRunURL, taskRunRoute,
+  opsSecretURL, opsSecretRoute,
+  webHookURL, webHookRoute
+} from "./tekton.route";
 
 interface Props extends RouteComponentProps {
 }
@@ -66,6 +65,12 @@ export class Tekton extends React.Component<Props> {
         url: opsSecretURL({query}),
         path: opsSecretRoute.path,
       },
+      {
+        title: <Trans>WebHook</Trans>,
+        component: WebHook,
+        url: webHookURL({query}),
+        path: webHookRoute.path,
+      }
     ];
   }
 
