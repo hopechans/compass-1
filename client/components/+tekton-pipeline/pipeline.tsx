@@ -5,7 +5,7 @@ import { observer } from "mobx-react";
 import { observable } from "mobx";
 import { RouteComponentProps } from "react-router";
 import { Trans } from "@lingui/macro";
-import { Pipeline, pipelineApi } from "../../api/endpoints";
+import { Pipeline, pipelineApi, PipelineTask, Task } from "../../api/endpoints";
 import { pipelineStore } from "./pipeline.store";
 import { KubeObjectMenu, KubeObjectMenuProps } from "../kube-object";
 import { KubeObjectListLayout } from "../kube-object";
@@ -27,7 +27,8 @@ import { PipelineVisualDialog } from "./pipeline-visual-dialog";
 import { tektonGraphStore } from "../+tekton-graph/tekton-graph.store";
 import { Link } from "react-router-dom";
 import Tooltip from "@material-ui/core/Tooltip";
-import {stopPropagation} from "../../utils";
+import { stopPropagation } from "../../utils";
+import { AddTektonStoreDialog, PipelineEntity } from "../+tekton-store";
 
 enum sortBy {
   name = "name",
@@ -38,7 +39,7 @@ enum sortBy {
   age = "age",
 }
 
-interface Props extends RouteComponentProps { }
+interface Props extends RouteComponentProps {}
 
 @observer
 export class Pipelines extends React.Component<Props> {
@@ -50,7 +51,13 @@ export class Pipelines extends React.Component<Props> {
   renderPipelineName(pipeline: Pipeline) {
     const name = pipeline.getName();
     return (
-      <Link onClick={(event) => { stopPropagation(event); PipelineVisualDialog.open(pipeline) }} to={null}>
+      <Link
+        onClick={(event) => {
+          stopPropagation(event);
+          PipelineVisualDialog.open(pipeline);
+        }}
+        to={null}
+      >
         <Tooltip title={name} placement="top-start">
           <span>{name}</span>
         </Tooltip>
@@ -69,7 +76,8 @@ export class Pipelines extends React.Component<Props> {
           sortingCallbacks={{
             [sortBy.name]: (pipeline: Pipeline) => pipeline.getName(),
             [sortBy.namespace]: (pipeline: Pipeline) => pipeline.getNs(),
-            [sortBy.ownernamespace]: (pipeline: Pipeline) => pipeline.getOwnerNamespace(),
+            [sortBy.ownernamespace]: (pipeline: Pipeline) =>
+              pipeline.getOwnerNamespace(),
             [sortBy.age]: (pipeline: Pipeline) => pipeline.getAge(false),
             [sortBy.tasks]: (pipeline: Pipeline) => pipeline.getTasks().length,
           }}
@@ -121,6 +129,7 @@ export class Pipelines extends React.Component<Props> {
         <AddPipelineDialog />
         <PipelineSaveDialog />
         <PipelineRunDialog />
+        <AddTektonStoreDialog />
       </>
     );
   }
@@ -143,6 +152,32 @@ export function PipelineMenu(props: KubeObjectMenuProps<Pipeline>) {
         />
         <span className="title">
           <Trans>Run</Trans>
+        </span>
+      </MenuItem>
+
+      <MenuItem
+        onClick={() => {
+          const pipeline = object as Pipeline;
+          let tasks: Task[] = [];
+          pipeline.getTasks().map((task: PipelineTask) => {
+            const t: Task = taskStore.getByName(task.name);
+            tasks.push(t);
+          });
+          const pipelineEntity: PipelineEntity = {
+            pipelineData: JSON.stringify(pipeline),
+            taskData: JSON.stringify(tasks),
+          };
+          //if pipeline and task will upload
+          const resourcePipeline = "pipeline";
+          AddTektonStoreDialog.open(
+            JSON.stringify(pipelineEntity),
+            resourcePipeline
+          );
+        }}
+      >
+        <Icon material="cloud_upload" title={"Upload"} interactive={toolbar} />
+        <span className="title">
+          <Trans>UploadStore</Trans>
         </span>
       </MenuItem>
     </KubeObjectMenu>

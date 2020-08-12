@@ -29,3 +29,5 @@ export enum PipelineStatus {
   Started = "Started",
   PipelineRunCancelled = "PipelineRunCancelled",
 }
+
+export const tektonStoreNamespace = "tekton-store";

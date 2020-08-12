@@ -1,18 +1,21 @@
 import "./task.scss";
 
 import React from "react";
-import {observer} from "mobx-react";
-import {RouteComponentProps} from "react-router";
-import {Trans} from "@lingui/macro";
-import {taskApi, Task} from "../../api/endpoints";
-import {taskStore} from "./task.store";
-import {KubeObjectMenu, KubeObjectMenuProps} from "../kube-object";
-import {KubeObjectListLayout} from "../kube-object";
-import {apiManager} from "../../api/api-manager";
-import {Link} from "react-router-dom";
+import { observer } from "mobx-react";
+import { RouteComponentProps } from "react-router";
+import { Trans } from "@lingui/macro";
+import { taskApi, Task } from "../../api/endpoints";
+import { taskStore } from "./task.store";
+import { KubeObjectMenu, KubeObjectMenuProps } from "../kube-object";
+import { KubeObjectListLayout } from "../kube-object";
+import { apiManager } from "../../api/api-manager";
+import { Link } from "react-router-dom";
 import Tooltip from "@material-ui/core/Tooltip";
-import {ConfigTaskDialog} from "./config-task-dialog";
-import {stopPropagation} from "../../utils";
+import { ConfigTaskDialog } from "./config-task-dialog";
+import { stopPropagation } from "../../utils";
+import { MenuItem } from "../menu";
+import { AddTektonStoreDialog } from "../+tekton-store";
+import { Icon } from "../icon";
 
 enum sortBy {
   name = "name",
@@ -22,17 +25,20 @@ enum sortBy {
   age = "age",
 }
 
-interface Props extends RouteComponentProps {
-
-}
+interface Props extends RouteComponentProps {}
 
 @observer
 export class Tasks extends React.Component<Props> {
-
   renderTaskName(task: Task) {
     const name = task.getName();
     return (
-      <Link onClick={(event) => { stopPropagation(event); ConfigTaskDialog.open(task) }} to={null}>
+      <Link
+        onClick={(event) => {
+          stopPropagation(event);
+          ConfigTaskDialog.open(task);
+        }}
+        to={null}
+      >
         <Tooltip title={name} placement="top-start">
           <span>{name}</span>
         </Tooltip>
@@ -71,7 +77,7 @@ export class Tasks extends React.Component<Props> {
               className: "ownernamespace",
               sortBy: sortBy.ownernamespace,
             },
-            {title: <Trans>Age</Trans>, className: "age", sortBy: sortBy.age},
+            { title: <Trans>Age</Trans>, className: "age", sortBy: sortBy.age },
           ]}
           renderTableContents={(task: Task) => [
             this.renderTaskName(task),
@@ -80,17 +86,33 @@ export class Tasks extends React.Component<Props> {
             task.getAge(),
           ]}
           renderItemMenu={(item: Task) => {
-            return <TaskMenu object={item}/>;
+            return <TaskMenu object={item} />;
           }}
         />
-        <ConfigTaskDialog/>
+        <ConfigTaskDialog />
+        <AddTektonStoreDialog />
       </>
     );
   }
 }
 
 export function TaskMenu(props: KubeObjectMenuProps<Task>) {
-  return <KubeObjectMenu {...props} />;
+  const { object, toolbar } = props;
+  return (
+    <KubeObjectMenu {...props}>
+      <MenuItem
+        onClick={() => {
+          const resourcePipeline = "task";
+          AddTektonStoreDialog.open(JSON.stringify(object), resourcePipeline);
+        }}
+      >
+        <Icon material="cloud_upload" title={"Upload"} interactive={toolbar} />
+        <span className="title">
+          <Trans>UploadStore</Trans>
+        </span>
+      </MenuItem>
+    </KubeObjectMenu>
+  );
 }
 
-apiManager.registerViews(taskApi, {Menu: TaskMenu});
+apiManager.registerViews(taskApi, { Menu: TaskMenu });

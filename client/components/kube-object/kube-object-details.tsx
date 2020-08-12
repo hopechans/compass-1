@@ -1,6 +1,6 @@
-import "./kube-object-details.scss"
+import "./kube-object-details.scss";
 
-import React from "react"
+import React from "react";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { computed, observable, reaction } from "mobx";
 import { Trans } from "@lingui/macro";
@@ -23,7 +23,7 @@ export class KubeObjectDetails extends React.Component {
   @observable.ref loadingError: React.ReactNode;
 
   @computed get path() {
-    return getDetails()
+    return getDetails();
   }
 
   @computed get object() {
@@ -38,27 +38,34 @@ export class KubeObjectDetails extends React.Component {
   }
 
   @disposeOnUnmount
-  loader = reaction(() => [
-    this.path,
-    this.object, // resource might be updated via watch-event or from already opened details
-    crdStore.items.length, // crd stores initialized after loading
-  ], async () => {
-    this.loadingError = ""
-    const { path, object } = this;
-    if (!object) {
-      const store = apiManager.getStore(path);
-      if (store) {
-        this.isLoading = true
-        try {
-          await store.loadFromPath(path)
-        } catch (err) {
-          this.loadingError = <Trans>Resource loading has failed: <b>{err.toString()}</b></Trans>
-        } finally {
-          this.isLoading = false
+  loader = reaction(
+    () => [
+      this.path,
+      this.object, // resource might be updated via watch-event or from already opened details
+      crdStore.items.length, // crd stores initialized after loading
+    ],
+    async () => {
+      this.loadingError = "";
+      const { path, object } = this;
+      if (!object) {
+        const store = apiManager.getStore(path);
+        if (store) {
+          this.isLoading = true;
+          try {
+            await store.loadFromPath(path);
+          } catch (err) {
+            this.loadingError = (
+              <Trans>
+                Resource loading has failed: <b>{err.toString()}</b>
+              </Trans>
+            );
+          } finally {
+            this.isLoading = false;
+          }
         }
       }
     }
-  })
+  );
 
   render() {
     const { object, isLoading, loadingError, isCrdInstance } = this;
@@ -72,17 +79,31 @@ export class KubeObjectDetails extends React.Component {
       apiComponents = apiManager.getViews(selfLink);
       //  ingore nuwa/fuxi/tekton use crd details
       if (
-        kind == "StatefulSet" || kind == "Stone" || kind == "Injector" || kind == "Water" || kind == "Workloads" ||
-        kind == "Field" || kind == "Form" || kind == "Page" ||
-        kind == "Pipeline" || kind == "PipelineRun" || kind == "PipelineResource" || kind == "Task" || kind == "TaskRun" ||
-        kind == "BaseUser" || kind == "BaseRole" || kind == "BaseDepartment" || kind == "BaseRoleUser" ||
+        kind == "StatefulSet" ||
+        kind == "Stone" ||
+        kind == "Injector" ||
+        kind == "Water" ||
+        kind == "Workloads" ||
+        kind == "Field" ||
+        kind == "Form" ||
+        kind == "Page" ||
+        kind == "Pipeline" ||
+        kind == "PipelineRun" ||
+        kind == "PipelineResource" ||
+        kind == "Task" ||
+        kind == "TaskRun" ||
+        kind == "BaseUser" ||
+        kind == "BaseRole" ||
+        kind == "BaseDepartment" ||
+        kind == "BaseRoleUser" ||
+        kind == "TektonStore" ||
         kind == "TektonWebHook"
       ) {
         isCrdInstanceLocal = false;
       }
       if (isCrdInstanceLocal) {
-        apiComponents.Details = CrdResourceDetails
-        apiComponents.Menu = CrdResourceMenu
+        apiComponents.Details = CrdResourceDetails;
+        apiComponents.Menu = CrdResourceMenu;
       }
     }
     return (
@@ -90,13 +111,18 @@ export class KubeObjectDetails extends React.Component {
         className="KubeObjectDetails flex column"
         open={isOpen}
         title={title}
-        toolbar={apiComponents && apiComponents.Menu && <apiComponents.Menu object={object} toolbar />}
+        toolbar={
+          apiComponents &&
+          apiComponents.Menu && <apiComponents.Menu object={object} toolbar />
+        }
         onClose={hideDetails}
       >
         {isLoading && <Spinner center />}
         {loadingError && <div className="box center">{loadingError}</div>}
-        {apiComponents && apiComponents.Details && <apiComponents.Details object={object} />}
+        {apiComponents && apiComponents.Details && (
+          <apiComponents.Details object={object} />
+        )}
       </Drawer>
-    )
+    );
   }
 }

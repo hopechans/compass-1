@@ -2,18 +2,38 @@ import { autobind } from "../../utils";
 import { KubeObject } from "../kube-object";
 import { KubeApi } from "../kube-api";
 
+export interface TektonStoreSpec {
+  tektonresourcetype: string;
+  data: string;
+  author: string;
+  forks: number;
+  paramsdescription: string;
+}
 @autobind()
 export class TektonStore extends KubeObject {
   static kind = "TektonStore";
 
-  spec: {
-    tektonresourcetype: string;
-    data: string;
-    author: string;
-    forks: number;
-    paramsdescription: string;
-    subreference: string;
-  };
+  spec: TektonStoreSpec;
+
+  getType(): string {
+    return this.spec?.tektonresourcetype || "";
+  }
+
+  getData(): string {
+    return this.spec?.data || "";
+  }
+
+  getAuthor(): string {
+    return this.spec?.author || "";
+  }
+
+  getForks(): number {
+    return this.spec?.forks || 0;
+  }
+
+  getParamsDescription(): string {
+    return this.spec?.paramsdescription || "";
+  }
 
   getOwnerNamespace(): string {
     if (this.metadata.labels == undefined) {
