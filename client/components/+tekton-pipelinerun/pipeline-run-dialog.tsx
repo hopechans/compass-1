@@ -91,8 +91,9 @@ export class PipelineRunDialog extends React.Component<Props> {
     this.value.pipelineRef.name = this.pipeline.getName();
     this.value.name = this.pipeline.getName() + "-" + Math.round(new Date().getTime() / 1000);
     this.value.namespace = this.pipeline.getNs();
+
     //fill the  resources
-    this.pipeline.spec.resources.map((item: any, index: number) => {
+    this.pipeline.spec?.resources.map((item: any, index: number) => {
       let resources: PipelineResourceBinding = {
         name: item.name,
         resourceRef: { name: "" },
@@ -100,7 +101,7 @@ export class PipelineRunDialog extends React.Component<Props> {
       this.value.resources.push(resources);
     });
 
-    this.pipeline.spec.params.map((item: any, index: number) => {
+    this.pipeline.spec?.params.map((item: any, index: number) => {
       let params: Param = {
         name: item.name,
         value: ''
@@ -125,7 +126,7 @@ export class PipelineRunDialog extends React.Component<Props> {
       const graph = await tektonGraphStore.create(
         {
           name: "run-" + this.pipeline.getName() + "-" + new Date().getTime().toString(),
-          namespace: configStore.getOpsNamespace(),
+          namespace: this.pipeline.getNs(),
           labels: new Map<string, string>().set("namespace", this.pipeline.getValueFromLabels("namespace")),
         },
         {
