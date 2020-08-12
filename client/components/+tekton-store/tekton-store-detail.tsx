@@ -52,28 +52,37 @@ export class TektonStoreDetail extends React.Component<Props> {
             sortBy: sortBy.namespace,
           },
           {
-            title: <Trans>OwnerNamespace</Trans>,
-            className: "ownernamespace",
-            sortBy: sortBy.ownernamespace,
+            title: <Trans>Type</Trans>,
+            className: "type",
+          },
+          {
+            title: <Trans>Author</Trans>,
+            className: "author",
+          },
+          {
+            title: <Trans>Forks</Trans>,
+            className: "forks",
           },
           { title: <Trans>Age</Trans>, className: "age", sortBy: sortBy.age },
         ]}
         renderTableContents={(tektonStore: TektonStore) => [
           tektonStore.getName(),
           tektonStore.getNs(),
-          tektonStore.getOwnerNamespace(),
+          tektonStore.getType(),
+          tektonStore.getAuthor(),
+          tektonStore.getForks(),
           tektonStore.getAge(),
         ]}
         renderItemMenu={(item: TektonStore) => {
-          return <TaskRunMenu object={item} />;
+          return <TektonStoreMenu object={item} />;
         }}
       />
     );
   }
 }
 
-export function TaskRunMenu(props: KubeObjectMenuProps<TektonStore>) {
+export function TektonStoreMenu(props: KubeObjectMenuProps<TektonStore>) {
   return <KubeObjectMenu {...props} />;
 }
 
-apiManager.registerViews(tektonStoreApi, { Menu: TaskRunMenu });
+apiManager.registerViews(tektonStoreApi, { Menu: TektonStoreMenu });
