@@ -167,7 +167,7 @@ export function PipelineMenu(props: KubeObjectMenuProps<Pipeline>) {
             pipelineData: JSON.stringify(pipeline),
             taskData: JSON.stringify(tasks),
           };
-          //if pipeline and task will upload
+
           const resourcePipeline = "pipeline";
           AddTektonStoreDialog.open(
             JSON.stringify(pipelineEntity),

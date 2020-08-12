@@ -13,13 +13,17 @@ import { Notifications } from "../notifications";
 import { tektonStore } from "./taskstore.store";
 import { tektonStoreNamespace } from "../+constant";
 import store from "store";
-import { string } from "yargs";
 
 interface Props extends DialogProps {}
 
 export interface PipelineEntity {
   pipelineData: string;
   taskData: string;
+}
+
+export enum ResourceType {
+  Task = "task",
+  Pipeline = "pipeline",
 }
 
 @observer
@@ -31,7 +35,6 @@ export class AddTektonStoreDialog extends React.Component<Props> {
   @observable name: string = "";
   @observable forks: number = 0;
   @observable paramsDescription = "";
-  @observable subReference = "";
 
   static open(data: string, resourceType: string) {
     AddTektonStoreDialog.isOpen = true;
@@ -58,7 +61,6 @@ export class AddTektonStoreDialog extends React.Component<Props> {
     this.name = "";
     this.forks = 0;
     this.paramsDescription = "";
-    this.subReference = "";
   }
 
   addTektonStore = () => {
@@ -73,11 +75,11 @@ export class AddTektonStoreDialog extends React.Component<Props> {
         },
         {
           spec: {
-            tektonresourcetype: resourceType,
+            tektonResourceType: resourceType,
             data: data,
             author: author,
             forks: this.forks,
-            paramsdescription: this.paramsDescription,
+            paramsDescription: this.paramsDescription,
           },
         }
       );
@@ -124,7 +126,6 @@ export class AddTektonStoreDialog extends React.Component<Props> {
               placeholder={_i18n._(t`Author`)}
               disabled={true}
               value={AddTektonStoreDialog.author}
-              // onChange={(value) => (this.author = value)}
             />
             <SubTitle title={<Trans>Forks</Trans>} />
             <Input

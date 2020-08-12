@@ -3,11 +3,11 @@ import { KubeObject } from "../kube-object";
 import { KubeApi } from "../kube-api";
 
 export interface TektonStoreSpec {
-  tektonresourcetype: string;
+  tektonResourceType: string;
   data: string;
   author: string;
   forks: number;
-  paramsdescription: string;
+  paramsDescription: string;
 }
 @autobind()
 export class TektonStore extends KubeObject {
@@ -16,7 +16,7 @@ export class TektonStore extends KubeObject {
   spec: TektonStoreSpec;
 
   getType(): string {
-    return this.spec?.tektonresourcetype || "";
+    return this.spec?.tektonResourceType || "";
   }
 
   getData(): string {
@@ -32,7 +32,7 @@ export class TektonStore extends KubeObject {
   }
 
   getParamsDescription(): string {
-    return this.spec?.paramsdescription || "";
+    return this.spec?.paramsDescription || "";
   }
 
   getOwnerNamespace(): string {

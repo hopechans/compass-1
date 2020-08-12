@@ -7,7 +7,7 @@ import { namespaceStore } from "../+namespaces/namespace.store";
 import { Pipelines } from "../+tekton-pipeline";
 import { PipelineRuns } from "../+tekton-pipelinerun";
 import { PipelineResources } from "../+tekton-pipelineresource";
-import {WebHook} from "../+tekton-webhook";
+import { WebHook } from "../+tekton-webhook";
 import {
   pipelineURL,
   pipelineRoute,
@@ -24,12 +24,12 @@ import {
   tektonStoreRoute,
   tektonStoreURL,
   webHookURL,
-  webHookRoute
+  webHookRoute,
 } from "./tekton.route";
 import { Tasks } from "../+tekton-task";
 import { TaskRuns } from "../+tekton-taskrun";
 import { OpsSecrets } from "../+tekton-ops-secret";
-import { TektonStoreDetail } from "../+tekton-store";
+import { TektonStoreLayout } from "../+tekton-store";
 
 interface Props extends RouteComponentProps {}
 
@@ -40,51 +40,51 @@ export class Tekton extends React.Component<Props> {
       {
         title: <Trans>Pipeline</Trans>,
         component: Pipelines,
-        url: pipelineURL({query}),
+        url: pipelineURL({ query }),
         path: pipelineRoute.path,
       },
       {
         title: <Trans>PipelineRun</Trans>,
         component: PipelineRuns,
-        url: pipelineRunURL({query}),
+        url: pipelineRunURL({ query }),
         path: pipelineRunRoute.path,
       },
       {
         title: <Trans>PipelineResource</Trans>,
         component: PipelineResources,
-        url: pipelineResourceURL({query}),
+        url: pipelineResourceURL({ query }),
         path: pipelineResourceRoute.path,
       },
       {
         title: <Trans>Task</Trans>,
         component: Tasks,
-        url: taskURL({query}),
+        url: taskURL({ query }),
         path: taskRoute.path,
       },
       {
         title: <Trans>TaskRun</Trans>,
         component: TaskRuns,
-        url: taskRunURL({query}),
+        url: taskRunURL({ query }),
         path: taskRunRoute.path,
       },
       {
         title: <Trans>Config</Trans>,
         component: OpsSecrets,
-        url: opsSecretURL({query}),
+        url: opsSecretURL({ query }),
         path: opsSecretRoute.path,
       },
       {
-        title: <Trans>Store</Trans>,
-        component: TektonStoreDetail,
+        title: <Trans>TektonStore</Trans>,
+        component: TektonStoreLayout,
         url: tektonStoreURL({ query }),
         path: tektonStoreRoute.path,
       },
       {
         title: <Trans>WebHook</Trans>,
         component: WebHook,
-        url: webHookURL({query}),
+        url: webHookURL({ query }),
         path: webHookRoute.path,
-      }
+      },
     ];
   }
 
@@ -96,7 +96,7 @@ export class Tekton extends React.Component<Props> {
           {tabRoutes.map((route, index) => (
             <Route key={index} {...route} />
           ))}
-          <Redirect to={tabRoutes[0].url}/>
+          <Redirect to={tabRoutes[0].url} />
         </Switch>
       </MainLayout>
     );
