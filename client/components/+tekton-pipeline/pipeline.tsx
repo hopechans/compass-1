@@ -5,7 +5,12 @@ import { observer } from "mobx-react";
 import { observable } from "mobx";
 import { RouteComponentProps } from "react-router";
 import { Trans } from "@lingui/macro";
-import { Pipeline, pipelineApi, PipelineTask, Task } from "../../api/endpoints";
+import {
+  Pipeline,
+  pipelineApi,
+  PipelineTask,
+  Task,
+} from "../../api/endpoints";
 import { pipelineStore } from "./pipeline.store";
 import { KubeObjectMenu, KubeObjectMenuProps } from "../kube-object";
 import { KubeObjectListLayout } from "../kube-object";
@@ -29,6 +34,7 @@ import { Link } from "react-router-dom";
 import Tooltip from "@material-ui/core/Tooltip";
 import { stopPropagation } from "../../utils";
 import { AddTektonStoreDialog, PipelineEntity } from "../+tekton-store";
+import { TektonGraph } from "../../api/endpoints/tekton-graph.api";
 
 enum sortBy {
   name = "name",
@@ -39,7 +45,7 @@ enum sortBy {
   age = "age",
 }
 
-interface Props extends RouteComponentProps {}
+interface Props extends RouteComponentProps { }
 
 @observer
 export class Pipelines extends React.Component<Props> {
@@ -159,13 +165,18 @@ export function PipelineMenu(props: KubeObjectMenuProps<Pipeline>) {
         onClick={() => {
           const pipeline = object as Pipeline;
           let tasks: Task[] = [];
+          const graphName = pipeline.getGraphName();
+          let graph: TektonGraph = tektonGraphStore.getByName(graphName);
+
           pipeline.getTasks().map((task: PipelineTask) => {
             const t: Task = taskStore.getByName(task.name);
             tasks.push(t);
           });
+
           const pipelineEntity: PipelineEntity = {
             pipelineData: JSON.stringify(pipeline),
             taskData: JSON.stringify(tasks),
+            graphData: JSON.stringify(graph),
           };
 
           const resourcePipeline = "pipeline";
