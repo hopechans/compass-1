@@ -19,6 +19,7 @@ interface Props extends DialogProps {}
 export interface PipelineEntity {
   pipelineData: string;
   taskData: string;
+  graphData: string;
 }
 
 export enum ResourceType {

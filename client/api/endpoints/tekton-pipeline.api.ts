@@ -125,6 +125,10 @@ export class Pipeline extends KubeObject {
   spec: PipelineSpec;
   status: {};
 
+  constructor(data: any) {
+    super(data);
+  }
+
   getTasks(): PipelineTask[] {
     return this.spec.tasks || [];
   }
@@ -136,6 +140,11 @@ export class Pipeline extends KubeObject {
     return this.metadata.labels.namespace != undefined
       ? this.metadata.labels.namespace
       : "";
+  }
+
+  getGraphName() {
+    let annotations = this.metadata ? this.metadata.annotations : undefined;
+    return annotations ? annotations["fuxi.nip.io/tektongraphs"] : "";
   }
 
   getTaskSet() {

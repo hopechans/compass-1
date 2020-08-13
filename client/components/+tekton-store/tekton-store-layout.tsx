@@ -7,8 +7,7 @@ import {
   TektonStore,
   Task,
   Pipeline,
-  taskApi,
-  pipelineApi,
+  PipelineTask,
 } from "../../api/endpoints";
 import { KubeObjectMenu, KubeObjectMenuProps } from "../kube-object";
 import { KubeObjectListLayout } from "../kube-object";
@@ -21,6 +20,12 @@ import { taskStore } from "../+tekton-task/task.store";
 import { pipelineStore } from "../+tekton-pipeline/pipeline.store";
 import { PipelineEntity, ResourceType } from "./add-tekton-store-dailog";
 import { Notifications } from "../notifications";
+import {
+  TektonGraph,
+  GraphData,
+} from "../../api/endpoints/tekton-graph.api";
+import { tektonGraphStore } from "../+tekton-graph/tekton-graph.store";
+import { IKubeObjectMetadata } from "client/api/kube-object";
 
 enum sortBy {
   name = "name",
@@ -28,7 +33,7 @@ enum sortBy {
   age = "age",
 }
 
-interface Props extends RouteComponentProps {}
+interface Props extends RouteComponentProps { }
 
 @observer
 export class TektonStoreLayout extends React.Component<Props> {
@@ -38,7 +43,7 @@ export class TektonStoreLayout extends React.Component<Props> {
         isClusterScoped
         className="TektonStores"
         store={tektonStore}
-        dependentStores={[taskStore, pipelineStore]} // other
+        dependentStores={[taskStore, pipelineStore, tektonGraphStore]} // other
         sortingCallbacks={{
           [sortBy.name]: (tektonStore: TektonStore) => tektonStore.getName(),
           [sortBy.namespace]: (tektonStore: TektonStore) => tektonStore.getNs(),
@@ -89,46 +94,111 @@ export class TektonStoreLayout extends React.Component<Props> {
   }
 }
 
-const createTaskResource = (taskData: Task) => {
-  const taskName = `${taskData.metadata.name}-fork`;
-  try {
-    taskApi.create(
-      {
-        name: taskName,
-        namespace: configStore.getOpsNamespace(),
-        labels: new Map<string, string>().set(
-          "namespace",
-          configStore.getDefaultNamespace()
-        ),
-      },
-      {
-        spec: taskData.spec,
-      }
-    );
-  } catch (e) {
-    Notifications.error(<>Fork task {taskName} failed</>);
-  }
-};
-
-const createPipelineResource = (pipelineData: Pipeline) => {
-  const pipelineName = `${pipelineData.metadata.name}-fork`;
-  pipelineApi.create(
-    {
-      name: pipelineName,
-      namespace: configStore.getOpsNamespace(),
-      labels: new Map<string, string>().set(
-        "namespace",
-        configStore.getDefaultNamespace()
-      ),
-    },
-    {
-      spec: pipelineData.spec,
-    }
-  );
-};
-
 export function TektonStoreMenu(props: KubeObjectMenuProps<TektonStore>) {
   const { object, toolbar } = props;
+  const createTaskResource = (taskData: Task) => {
+    const taskName = taskData.metadata.name;
+    try {
+      taskStore.create(
+        {
+          name: taskName,
+          namespace: configStore.getOpsNamespace(),
+          labels: new Map<string, string>().set(
+            "namespace",
+            configStore.getDefaultNamespace()
+          ),
+        },
+        {
+          spec: taskData.spec,
+        }
+      );
+    } catch (e) {
+      Notifications.error(<>Fork task {taskName} failed</>);
+    }
+  };
+
+  const createPipelineResource = (
+    pipelineData: Partial<Pipeline>,
+    graphDataName: string
+  ) => {
+
+    pipelineData.metadata = {
+      name: pipelineData.getName() + "-" + new Date().getTime().toString(),
+      namespace: configStore.getOpsNamespace(),
+      labels: Object.fromEntries(new Map<string, string>().set(
+        "namespace",
+        configStore.getDefaultNamespace()
+      )),
+      annotations: Object.fromEntries(new Map<string, string>().set(
+        "fuxi.nip.io/tektongraphs",
+        graphDataName,
+      )),
+    } as IKubeObjectMetadata;
+
+    pipelineStore.apply(pipelineData as Pipeline, { ...pipelineData });
+
+  };
+
+  const createGraphData = (graphData: TektonGraph) => {
+    tektonGraphStore.create(
+      {
+        namespace: configStore.getOpsNamespace(),
+        name: graphData.metadata.name,
+      },
+      { ...graphData }
+    );
+  };
+
+  const getPipelineTasks = (nodes: any): PipelineTask[] => {
+    let items: Map<string, any> = new Map<string, any>();
+    nodes.map((item: any) => {
+      const ids = item.id.split("-");
+      if (items.get(ids[0]) === undefined) {
+        items.set(ids[0], new Array<any>());
+      }
+      items.get(ids[0]).push(item);
+    });
+
+    const dataMap = items;
+    let keys = Array.from(dataMap.keys());
+
+    let tasks: PipelineTask[] = [];
+
+    let tmp = 1;
+
+    keys.map((item: any) => {
+      let array = dataMap.get(item);
+
+      if (tmp === 1) {
+        array.map((item: any) => {
+          let task: any = {};
+          task.runAfter = [];
+          task.name = item.taskName;
+          task.taskRef = { name: item.taskName };
+          tasks.push(task);
+        });
+      } else {
+        let result = tmp - 1;
+        array.map((item: any) => {
+          let task: any = {};
+          task.runAfter = [];
+          task.name = item.taskName;
+          task.taskRef = { name: item.taskName };
+          //set task runAfter
+          dataMap.get(result.toString()).map((item: any) => {
+            task.runAfter.push(item.taskName);
+          });
+
+          tasks.push(task);
+        });
+      }
+
+      tmp++;
+    });
+
+    return tasks;
+  };
+
   return (
     <KubeObjectMenu {...props}>
       <MenuItem
@@ -144,14 +214,34 @@ export function TektonStoreMenu(props: KubeObjectMenuProps<TektonStore>) {
             if (resourceType === ResourceType.Pipeline) {
               const pipelineEntity: PipelineEntity = JSON.parse(data);
               const taskData: Task[] = JSON.parse(pipelineEntity.taskData);
-              const pipelineData: Pipeline = JSON.parse(
-                pipelineEntity.pipelineData
+              const graphData: TektonGraph = JSON.parse(
+                pipelineEntity.graphData
               );
-              taskData.map((t) => {
-                createTaskResource(t);
+
+
+              const pipelineData: Partial<Pipeline> = new Pipeline(JSON.parse(pipelineEntity.pipelineData));
+
+
+              let taskMap: any = new Map<string, string>();
+              taskData.map((t, index) => {
+                const name = t.metadata.name;
+                taskData[index].metadata.name =
+                  t.metadata.name + "-" + new Date().getTime().toString();
+                taskMap[name] = taskData[index].metadata.name;
+                createTaskResource(taskData[index]);
+              });
+              let newGraphData: GraphData = JSON.parse(graphData.spec.data);
+              let nodes = newGraphData.nodes;
+              nodes.map((node: any, index: number) => {
+                nodes[index].taskName = taskMap[node.taskName];
               });
 
-              createPipelineResource(pipelineData);
+              graphData.spec.data = JSON.stringify(newGraphData);
+              createGraphData(graphData);
+
+              const tasks = getPipelineTasks(nodes);
+              pipelineData.spec.tasks = tasks;
+              createPipelineResource(pipelineData, graphData.metadata.name);
             }
 
             if (resourceType === ResourceType.Task) {
@@ -159,7 +249,6 @@ export function TektonStoreMenu(props: KubeObjectMenuProps<TektonStore>) {
               createTaskResource(taskData);
             }
 
-            //and then inrc forks
             tektonStoreEntity.spec.forks = tektonStoreEntity.spec.forks + 1;
             tektonStore.update(tektonStoreEntity, { ...tektonStoreEntity });
             Notifications.ok(<>Fork succeeded</>);

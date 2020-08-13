@@ -3,26 +3,26 @@ import { KubeObject } from "../kube-object";
 import { KubeApi } from "../kube-api";
 
 export interface GraphNode {
-  id: string, // 1-1 => group index
-  x: number,
-  y: number,
-  taskName: string,
+  id: string; // 1-1 => group index
+  x: number;
+  y: number;
+  taskName: string;
   type: string;
   size: number[];
 
   linkPoints?: {
-    left?: boolean,
-    right?: boolean,
-    top?: boolean,
-    bottom?: boolean,
-    size: number,
+    left?: boolean;
+    right?: boolean;
+    top?: boolean;
+    bottom?: boolean;
+    size: number;
   };
 
   style: {
     hover: {
-      fillOpacity: number,
-      lineWidth: number,
-    }
+      fillOpacity: number;
+      lineWidth: number;
+    };
   };
   depth: number;
 }
@@ -33,29 +33,29 @@ export interface GraphEdge {
   target: string;
   type: string;
   style: {
-    stroke: string,
-    lineWidth: number,
-  },
+    stroke: string;
+    lineWidth: number;
+  };
   startPoint: {
-    x: number,
-    y: number,
-    index: number,
-    anchorIndex: number,
+    x: number;
+    y: number;
+    index: number;
+    anchorIndex: number;
   };
   endPoint: {
-    x: number,
-    y: number,
-    index: number,
-    anchorIndex: number,
-  },
+    x: number;
+    y: number;
+    index: number;
+    anchorIndex: number;
+  };
   depth: number;
 }
 
 export interface GraphData {
   nodes?: GraphNode[];
   edges?: GraphEdge[];
-  combos?: [],
-  groups?: [],
+  combos?: [];
+  groups?: [];
 }
 
 @autobind()
@@ -70,41 +70,55 @@ export class TektonGraph extends KubeObject {
 
   get graph() {
     let graphData: GraphData;
-    return Object.assign(this.spec.data, graphData)
+    return Object.assign(this.spec.data, graphData);
   }
 
   setpSave(graphData: GraphData) {
-    this.spec.data = JSON.stringify(graphData)
+    this.spec.data = JSON.stringify(graphData);
   }
 
   getGraphNodes(): GraphNode[] {
-    if (this.graph != undefined) { return this.graph.nodes }
-    return []
+    if (this.graph != undefined) {
+      return this.graph.nodes;
+    }
+    return [];
   }
 
   getGraphEdges(): GraphEdge[] {
-    if (this.graph != undefined) { return this.graph.edges }
-    return []
+    if (this.graph != undefined) {
+      return this.graph.edges;
+    }
+    return [];
+  }
+
+  addNodesBeforeClearNodes(nodes: GraphNode[]) {
+    this.graph.nodes = nodes;
   }
 
   addNode(node: GraphNode): void {
-    this.graph.nodes.push(node)
-    this.setpSave(this.graph)
+    this.graph.nodes.push(node);
+    this.setpSave(this.graph);
   }
 
   removeNode(id: string): void {
-    this.graph.nodes.splice(this.graph.nodes.findIndex(node => node.id = id), 1)
-    this.setpSave(this.graph)
+    this.graph.nodes.splice(
+      this.graph.nodes.findIndex((node) => (node.id = id)),
+      1
+    );
+    this.setpSave(this.graph);
   }
 
   addEdge(edge: GraphEdge): void {
-    this.graph.edges.push(edge)
-    this.setpSave(this.graph)
+    this.graph.edges.push(edge);
+    this.setpSave(this.graph);
   }
 
   removeEdge(id: string): void {
-    this.graph.edges.splice(this.graph.nodes.findIndex(node => node.id = id), 1)
-    this.setpSave(this.graph)
+    this.graph.edges.splice(
+      this.graph.nodes.findIndex((node) => (node.id = id)),
+      1
+    );
+    this.setpSave(this.graph);
   }
 }
 
