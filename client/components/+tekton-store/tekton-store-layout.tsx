@@ -26,6 +26,8 @@ import {
 } from "../../api/endpoints/tekton-graph.api";
 import { tektonGraphStore } from "../+tekton-graph/tekton-graph.store";
 import { IKubeObjectMetadata } from "client/api/kube-object";
+import { graphAnnotationKey } from '../+constant/tekton-constants'
+import { task } from "../+tekton-task/config-task-dialog";
 
 enum sortBy {
   name = "name",
@@ -130,7 +132,7 @@ export function TektonStoreMenu(props: KubeObjectMenuProps<TektonStore>) {
         configStore.getDefaultNamespace()
       )),
       annotations: Object.fromEntries(new Map<string, string>().set(
-        "fuxi.nip.io/tektongraphs",
+        graphAnnotationKey,
         graphDataName,
       )),
     } as IKubeObjectMetadata;
@@ -164,12 +166,12 @@ export function TektonStoreMenu(props: KubeObjectMenuProps<TektonStore>) {
 
     let tasks: PipelineTask[] = [];
 
-    let tmp = 1;
+    let index = 1;
 
     keys.map((item: any) => {
       let array = dataMap.get(item);
 
-      if (tmp === 1) {
+      if (index === 1) {
         array.map((item: any) => {
           let task: any = {};
           task.runAfter = [];
@@ -178,7 +180,7 @@ export function TektonStoreMenu(props: KubeObjectMenuProps<TektonStore>) {
           tasks.push(task);
         });
       } else {
-        let result = tmp - 1;
+        let result = index - 1;
         array.map((item: any) => {
           let task: any = {};
           task.runAfter = [];
@@ -193,7 +195,7 @@ export function TektonStoreMenu(props: KubeObjectMenuProps<TektonStore>) {
         });
       }
 
-      tmp++;
+      index++;
     });
 
     return tasks;
@@ -233,14 +235,22 @@ export function TektonStoreMenu(props: KubeObjectMenuProps<TektonStore>) {
               let newGraphData: GraphData = JSON.parse(graphData.spec.data);
               let nodes = newGraphData.nodes;
               nodes.map((node: any, index: number) => {
-                nodes[index].taskName = taskMap[node.taskName];
+                const name = taskMap[node.taskName];
+                nodes[index].taskName = name;
               });
 
               graphData.spec.data = JSON.stringify(newGraphData);
               createGraphData(graphData);
 
-              const tasks = getPipelineTasks(nodes);
-              pipelineData.spec.tasks = tasks;
+              let tasks = getPipelineTasks(nodes);
+
+              pipelineData.spec.tasks.map((pt, index) => {
+                const newTaskName = taskMap[pt.name];
+                const task = tasks.find(x => x.name == newTaskName);
+                pipelineData.spec.tasks[index].name = task.name;
+                pipelineData.spec.tasks[index].runAfter = task.runAfter;
+              });
+
               createPipelineResource(pipelineData, graphData.metadata.name);
             }
 
