@@ -2,19 +2,20 @@ import "./pipeline-visual-dialog.scss";
 import styles from "../wizard/wizard.scss";
 
 import React from "react";
-import {observable} from "mobx";
-import {Trans} from "@lingui/macro";
-import {Dialog} from "../dialog";
-import {Wizard, WizardStep} from "../wizard";
-import {observer} from "mobx-react";
-import {Pipeline, PipelineTask, TektonGraph} from "../../api/endpoints";
-import {graphId, PipelineGraph} from "../+tekton-graph/graph-new";
-import {CopyTaskDialog} from "../+tekton-task/copy-task-dialog";
-import {PipelineSaveDialog} from "./pipeline-save-dialog";
-import {tektonGraphStore} from "../+tekton-graph/tekton-graph.store";
-import {pipelineStore} from "./pipeline.store";
-import {IKubeObjectMetadata} from "../../api/kube-object";
-import {defaultInitConfig} from "../+tekton-graph/common";
+import { observable } from "mobx";
+import { Trans } from "@lingui/macro";
+import { Dialog } from "../dialog";
+import { Wizard, WizardStep } from "../wizard";
+import { observer } from "mobx-react";
+import { Pipeline, PipelineTask, TektonGraph } from "../../api/endpoints";
+import { graphId, PipelineGraph } from "../+tekton-graph/graph-new";
+import { CopyTaskDialog } from "../+tekton-task/copy-task-dialog";
+import { PipelineSaveDialog } from "./pipeline-save-dialog";
+import { tektonGraphStore } from "../+tekton-graph/tekton-graph.store";
+import { pipelineStore } from "./pipeline.store";
+import { IKubeObjectMetadata } from "../../api/kube-object";
+import { defaultInitConfig } from "../+tekton-graph/common";
+import { graphAnnotationKey } from '../+constant/tekton-constants'
 
 const wizardSpacing = parseInt(styles.wizardSpacing, 10) * 2;
 const wizardContentMaxHeight = parseInt(styles.wizardContentMaxHeight);
@@ -130,7 +131,7 @@ export class PipelineVisualDialog extends React.Component<Props> {
           let task: any = {};
           task.runAfter = [];
           task.name = item.taskName;
-          task.taskRef = {name: item.taskName};
+          task.taskRef = { name: item.taskName };
           task.params = [];
           task.resources = [];
           tasks.push(task);
@@ -141,7 +142,7 @@ export class PipelineVisualDialog extends React.Component<Props> {
           let task: any = {};
           task.runAfter = [];
           task.name = item.taskName;
-          task.taskRef = {name: item.taskName};
+          task.taskRef = { name: item.taskName };
           //set task runAfter
           dataMap.get(result.toString()).map((item: any) => {
             task.runAfter.push(item.taskName);
@@ -180,16 +181,16 @@ export class PipelineVisualDialog extends React.Component<Props> {
     };
 
     const newTektonGraph = await tektonGraphStore.create(
-      {namespace: this.pipeline.getNs(), name: graphName},
-      {...tektonGraph}
+      { namespace: this.pipeline.getNs(), name: graphName },
+      { ...tektonGraph }
     );
 
     this.pipeline.addAnnotation(
-      "fuxi.nip.io/tektongraphs",
+      graphAnnotationKey,
       newTektonGraph.getName()
     );
 
-    await pipelineStore.update(this.pipeline, {...this.pipeline});
+    await pipelineStore.update(this.pipeline, { ...this.pipeline });
   };
 
   save = async () => {
@@ -200,7 +201,7 @@ export class PipelineVisualDialog extends React.Component<Props> {
       ? this.pipeline.metadata.annotations
       : undefined;
     const graphName = annotations
-      ? annotations["fuxi.nip.io/tektongraphs"]
+      ? annotations[graphAnnotationKey]
       : "";
 
     if (graphName != "") {
@@ -283,7 +284,7 @@ export class PipelineVisualDialog extends React.Component<Props> {
             nextLabel={<Trans>Save</Trans>}
             next={this.save}
           >
-            <div className={graphId} id={graphId}/>
+            <div className={graphId} id={graphId} />
           </WizardStep>
         </Wizard>
       </Dialog>

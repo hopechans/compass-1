@@ -31,3 +31,5 @@ export enum PipelineStatus {
 }
 
 export const tektonStoreNamespace = "tekton-store";
+
+export const graphAnnotationKey = "fuxi.nip.io/tektongraphs";
