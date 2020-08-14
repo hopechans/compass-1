@@ -14,7 +14,7 @@ export enum NodeStatus {
 
 export enum NodeStatusColor {
   Pending = "#ffc12f",
-  Failed = "#ffc12f",
+  Failed = "red",
   Running = "#3296fa",
   Progress = "#3296fa",
   Succeeded = "#20d867",
