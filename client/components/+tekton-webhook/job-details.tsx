@@ -1,6 +1,6 @@
 import {observer} from "mobx-react";
 import React from "react";
-import {observable} from "mobx";
+import {computed, observable} from "mobx";
 import {ArgsDetails} from "../+deploy-container";
 import {createMuiTheme, Grid, Paper, ThemeProvider} from "@material-ui/core";
 import {Input} from "../input";
@@ -39,11 +39,8 @@ interface JobProps<T = any> extends Partial<JobProps> {
 
 @observer
 export class JobDetails extends React.Component<JobProps> {
-  @observable static value: Job[] = [];
 
-  get value() {
-    return this.props.value || [];
-  }
+  @observable value: Job[] = this.props.value || [];
 
   add = () => {
     this.value.push(job);
@@ -69,6 +66,11 @@ export class JobDetails extends React.Component<JobProps> {
   }
 
   rJobs(index: number) {
+
+    if (this.value[index].args == undefined) {
+      this.value[index].args = [];
+    }
+
     return (
       <>
         <br/>

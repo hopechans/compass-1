@@ -21,7 +21,7 @@ interface ArgsProps<T = any> extends Partial<ArgsProps> {
 @observer
 export class ArgsDetails extends React.Component<ArgsProps> {
 
-  @computed get value() {
+  @computed get value(): string[] {
     return this.props.value || args;
   }
 

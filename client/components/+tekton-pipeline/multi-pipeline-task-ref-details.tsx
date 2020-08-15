@@ -1,6 +1,6 @@
 import { observer } from "mobx-react";
 import React from "react";
-import {computed, observable} from "mobx";
+import {computed} from "mobx";
 import { ActionMeta } from "react-select/src/types";
 import { Collapse } from "../collapse";
 import { PipelineTask } from "../../api/endpoints";
@@ -12,7 +12,6 @@ interface Props<T = any> extends Partial<Props> {
   value?: T;
   themeName?: "dark" | "light" | "outlined";
   namespace?: string;
-  divider?: boolean;
   disable?: boolean;
 
   onChange?(value: T, meta?: ActionMeta<any>): void;
@@ -21,7 +20,6 @@ interface Props<T = any> extends Partial<Props> {
 @observer
 export class MultiPipelineTaskStepDetails extends React.Component<Props> {
   static defaultProps = {
-    divider: false,
     disable: false,
     namespace: "",
   }
