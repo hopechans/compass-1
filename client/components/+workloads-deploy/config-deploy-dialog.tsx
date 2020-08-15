@@ -43,18 +43,19 @@ export class ConfigDeployDialog extends React.Component<Props> {
     ConfigDeployDialog.isOpen = false;
   }
 
-  close = () => {
+  close = async () => {
     ConfigDeployDialog.close();
+    await this.reset();
   }
 
-  reset = () => {
+  reset = async () => {
     this.app = app;
     this.service = deployService;
     this.containers = [container];
     this.volumeClaims = [];
   }
 
-  onOpen = () => {
+  onOpen = async () => {
     this.app = {
       name: this.deploy.spec.appName,
       type: this.deploy.spec.resourceType
@@ -80,11 +81,10 @@ export class ConfigDeployDialog extends React.Component<Props> {
             volumeClaims: JSON.stringify(volumeClaims),
           },
         });
-      this.reset();
+      await this.close();
       Notifications.ok(
         <>Deploy {app.name} save succeeded</>
       );
-      this.close();
     } catch (err) {
       Notifications.error(err);
     }

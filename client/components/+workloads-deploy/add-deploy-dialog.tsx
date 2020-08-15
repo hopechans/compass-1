@@ -36,11 +36,12 @@ export class AddDeployDialog extends React.Component<Props> {
     AddDeployDialog.isOpen = false;
   }
 
-  close = () => {
+  close = async () => {
     AddDeployDialog.close();
+    await this.reset();
   }
 
-  reset = () => {
+  reset = async () => {
     this.app = app;
     this.service = deployService;
     this.containers = [container];
@@ -68,11 +69,11 @@ export class AddDeployDialog extends React.Component<Props> {
             volumeClaims: JSON.stringify(volumeClaims),
           },
         });
-      this.reset();
+
       Notifications.ok(
         <>Deploy {name} succeeded</>
       );
-      this.close();
+      await this.close();
     } catch (err) {
       Notifications.error(err);
     }
