@@ -2,54 +2,68 @@ import get from "lodash/get";
 import { WorkloadKubeObject } from "../workload-kube-object";
 import { autobind } from "../../utils";
 import { KubeApi } from "../kube-api";
+import moment from "moment";
+import { advanceFormatDuration } from "../../utils";
 
 @autobind()
 export class Deploy extends WorkloadKubeObject {
-    static kind = "Workloads"
+  static kind = "Workloads";
 
-    spec: {
-        // 这里需要优化,引用到外部的interface
-        appName: string,  // the app name
-        resourceType: string;
-        metadata: string; // the field record array container configuration
-        service?: string;
-        volumeClaims?: string;
+  spec: {
+    // 这里需要优化,引用到外部的interface
+    appName: string; // the app name
+    resourceType: string;
+    metadata: string; // the field record array container configuration
+    service?: string;
+    volumeClaims?: string;
+  };
+
+  status: {};
+
+  getOwnerNamespace(): string {
+    return get(this, "metadata.labels.namespace");
+  }
+
+  getAppName() {
+    return get(this, "spec.appName");
+  }
+
+  getResourceType() {
+    return get(this, "spec.resourceType");
+  }
+
+  getGenerateTimestamp() {
+    if (this.metadata && this.metadata.creationTimestamp) {
+      return this.metadata.creationTimestamp;
     }
+    return "";
+  }
 
-    status: {}
-
-    getOwnerNamespace(): string {
-        return get(this, "metadata.labels.namespace")
+  getCreated(humanize = true, compact = true, fromNow = false) {
+    if (fromNow) {
+      return moment(this.metadata.creationTimestamp).fromNow();
     }
-
-    getAppName() {
-        return get(this, "spec.appName")
+    const diff =
+      new Date().getTime() -
+      new Date(this.metadata.creationTimestamp).getTime();
+    if (humanize) {
+      return advanceFormatDuration(diff, compact);
     }
+    return diff;
+  }
 
-    getResourceType() {
-        return get(this, "spec.resourceType")
-    }
+  getObject() {
+    return get(this, "spec.metadata");
+  }
 
-    getGenerateTimestamp() {
-        if (this.metadata && this.metadata.creationTimestamp) {
-            return this.metadata.creationTimestamp;
-        }
-        return ""
-    }
-
-    getObject() {
-        return get(this, "spec.metadata");
-    }
-
-    setMetadata(metadata: string) {
-        this.spec.metadata = metadata;
-    }
-
+  setMetadata(metadata: string) {
+    this.spec.metadata = metadata;
+  }
 }
 
 export const deployApi = new KubeApi({
-    kind: Deploy.kind,
-    apiBase: "/apis/fuxi.nip.io/v1/workloads",
-    isNamespaced: true,
-    objectConstructor: Deploy,
+  kind: Deploy.kind,
+  apiBase: "/apis/fuxi.nip.io/v1/workloads",
+  isNamespaced: true,
+  objectConstructor: Deploy,
 });
