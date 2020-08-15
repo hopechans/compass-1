@@ -1,6 +1,6 @@
 import {observer} from "mobx-react";
 import React from "react";
-import {observable} from "mobx";
+import {computed, observable} from "mobx";
 import {Select} from "../select";
 import {SubTitle} from "../layout/sub-title";
 import {Input} from "../input";
@@ -19,14 +19,18 @@ interface Props<T = any> extends Partial<Props> {
   themeName?: "dark" | "light" | "outlined";
   divider?: true;
 
-  onChange?(option: T, meta?: ActionMeta<any>): void;
+  onChange?(value: T, meta?: ActionMeta<any>): void;
 }
 
 @observer
 export class BaseDetails extends React.Component<Props> {
 
-  @observable value: Base = this.props.value || base
+  // @observable value: Base = this.props.value || base;
   @observable namespace: string = '';
+  @computed get value(): Base {
+    return this.props.value || base;
+  }
+
 
   get selectOptions() {
     return [
@@ -96,28 +100,26 @@ export class BaseDetails extends React.Component<Props> {
         <br/>
         <Grid container spacing={5} alignItems="center" direction="row">
           <Grid item xs zeroMinWidth>
-            <SubTitle title={<Trans>Limit CPU</Trans>} children={
-              <Input
-                required={true}
-                placeholder={_i18n._(t`Limit CPU`)}
-                type="number"
-                validators={isNumber}
-                value={this.value.resource.limits.cpu}
-                onChange={value => this.value.resource.limits.cpu = value}
-              />
-            }/>
+            <SubTitle title={<Trans>Limit CPU</Trans>}/>
+            <Input
+              required={true}
+              placeholder={_i18n._(t`Limit CPU`)}
+              type="number"
+              validators={isNumber}
+              value={this.value.resource.limits.cpu}
+              onChange={value => this.value.resource.limits.cpu = value}
+            />
           </Grid>
           <Grid item xs zeroMinWidth>
-            <SubTitle title={<Trans>Limit Memory</Trans>} children={
-              <Input
-                required={true}
-                placeholder={_i18n._(t`Limit Memory`)}
-                type="number"
-                validators={isNumber}
-                value={this.value.resource.limits.memory}
-                onChange={value => this.value.resource.limits.memory = value}
-              />
-            }/>
+            <SubTitle title={<Trans>Limit Memory</Trans>}/>
+            <Input
+              required={true}
+              placeholder={_i18n._(t`Limit Memory`)}
+              type="number"
+              validators={isNumber}
+              value={this.value.resource.limits.memory}
+              onChange={value => this.value.resource.limits.memory = value}
+            />
           </Grid>
         </Grid>
       </>
@@ -130,28 +132,26 @@ export class BaseDetails extends React.Component<Props> {
         <br/>
         <Grid container spacing={5} alignItems="center" direction="row">
           <Grid item xs zeroMinWidth>
-            <SubTitle title={<Trans>Required CPU</Trans>} children={
-              <Input
-                required={true}
-                placeholder={_i18n._(t`Required CPU`)}
-                type="number"
-                validators={isNumber}
-                value={this.value.resource.requests.cpu}
-                onChange={value => this.value.resource.requests.cpu = value}
-              />
-            }/>
+            <SubTitle title={<Trans>Required CPU</Trans>}/>
+            <Input
+              required={true}
+              placeholder={_i18n._(t`Required CPU`)}
+              type="number"
+              validators={isNumber}
+              value={this.value.resource.requests.cpu}
+              onChange={value => this.value.resource.requests.cpu = value}
+            />
           </Grid>
           <Grid item xs zeroMinWidth>
-            <SubTitle title={<Trans>Required Memory</Trans>} children={
-              <Input
-                required={true}
-                placeholder={_i18n._(t`Require Memory`)}
-                type="number"
-                validators={isNumber}
-                value={this.value.resource.requests.memory}
-                onChange={value => this.value.resource.requests.memory = value}
-              />
-            }/>
+            <SubTitle title={<Trans>Required Memory</Trans>} />
+            <Input
+              required={true}
+              placeholder={_i18n._(t`Require Memory`)}
+              type="number"
+              validators={isNumber}
+              value={this.value.resource.requests.memory}
+              onChange={value => this.value.resource.requests.memory = value}
+            />
           </Grid>
         </Grid>
       </>

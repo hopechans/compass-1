@@ -8,7 +8,7 @@ import {
   taskStep,
   resources, TaskSpecWorkSpaces, PipelineParamsDetails, ResourcesDetail, MultiTaskStepDetails,
 } from "../+tekton-common";
-import {observable, toJS} from "mobx";
+import {computed, observable, toJS} from "mobx";
 import {Dialog} from "../dialog";
 import {Wizard, WizardStep} from "../wizard";
 import {Trans} from "@lingui/macro";
@@ -59,15 +59,15 @@ export class ConfigTaskDialog extends React.Component<Props> {
   @observable change: boolean;
 
   static open(task: Task) {
-    ConfigTaskDialog.Data = task;
     ConfigTaskDialog.isOpen = true;
+    ConfigTaskDialog.Data = task;
   }
 
   get task() {
     return ConfigTaskDialog.Data;
   }
 
-  onOpen = () => {
+  onOpen = async () => {
     this.value.taskName = this.task.metadata.name;
     this.value.resources = this.task.getResources();
     this.value.taskSteps = this.task.getSteps();
@@ -83,10 +83,6 @@ export class ConfigTaskDialog extends React.Component<Props> {
 
   close = () => {
     ConfigTaskDialog.close();
-  };
-
-  handle = () => {
-    this.saveTask();
   };
 
   saveTask = async () => {
@@ -107,7 +103,6 @@ export class ConfigTaskDialog extends React.Component<Props> {
       Notifications.ok(<>Task {this.value.taskName} save succeeded</>);
       this.close();
     } catch (err) {
-      this.value.taskName = "";
       Notifications.error(err);
     }
   };
@@ -121,9 +116,10 @@ export class ConfigTaskDialog extends React.Component<Props> {
         className="ConfigTaskDialog"
         onOpen={this.onOpen}
         close={this.close}
+        pinned
       >
         <Wizard header={header} done={this.close}>
-          <WizardStep contentClass="flex gaps column" next={this.handle}>
+          <WizardStep contentClass="flex gaps column" next={this.saveTask}>
             <SubTitle title={<Trans>Task Name</Trans>}/>
             <Input
               required={true}

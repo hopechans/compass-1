@@ -1,6 +1,6 @@
 import {observer} from "mobx-react";
 import React from "react";
-import {observable} from "mobx";
+import {computed, observable} from "mobx";
 import {SubTitle} from "../layout/sub-title";
 import {_i18n} from "../../i18n";
 import {ActionMeta} from "react-select/src/types";
@@ -17,14 +17,18 @@ interface Props<T = any> extends Partial<Props> {
   value?: T;
   themeName?: "dark" | "light" | "outlined";
 
-  onChange?(option: T, meta?: ActionMeta<any>): void;
+  onChange?(value: T, meta?: ActionMeta<any>): void;
 }
 
 @observer
 export class TlsDetails extends React.Component<Props> {
 
-  @observable value: Tls[] = this.props.value || [tls];
+  // @observable value: Tls[] = this.props.value || [tls];
   @observable namespace: string = "";
+
+  @computed get value(): Tls[] {
+    return this.props.value || [tls];
+  }
 
   add = () => {
     this.value.push(tls);

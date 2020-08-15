@@ -1,13 +1,13 @@
-import { ActionMeta } from "react-select/src/types";
-import { observer } from "mobx-react";
+import {ActionMeta} from "react-select/src/types";
+import {observer} from "mobx-react";
 import React from "react";
-import { SubTitle } from "../layout/sub-title";
-import { Icon } from "../icon";
-import { _i18n } from "../../i18n";
-import { t, Trans } from "@lingui/macro";
-import { Input } from "../input";
-import { observable } from "mobx";
-import { Params } from "./common";
+import {SubTitle} from "../layout/sub-title";
+import {Icon} from "../icon";
+import {_i18n} from "../../i18n";
+import {t, Trans} from "@lingui/macro";
+import {Input} from "../input";
+import {observable} from "mobx";
+import {Params} from "./common";
 import {Grid} from "@material-ui/core";
 import {stopPropagation} from "../../utils";
 
@@ -16,7 +16,7 @@ interface Props<T = any> extends Partial<Props> {
   themeName?: "dark" | "light" | "outlined";
   disable?: boolean;
 
-  onChange?(option: T, meta?: ActionMeta<any>): void;
+  onChange?(value: T, meta?: ActionMeta<any>): void;
 }
 
 @observer
@@ -25,7 +25,11 @@ export class ParamsDetails extends React.Component<Props> {
     disable: false,
   };
 
-  @observable value: Params[] = this.props.value || [];
+  @observable static value: Params[] = [];
+
+  get value() {
+    return this.props.value || [];
+  }
 
   add = () => {
     this.value.push({
@@ -90,7 +94,7 @@ export class ParamsDetails extends React.Component<Props> {
   }
 
   render() {
-    const { disable } = this.props;
+    const {disable} = this.props;
 
     return (
       <>
@@ -98,18 +102,18 @@ export class ParamsDetails extends React.Component<Props> {
           title={
             <>
               <Trans>Params</Trans>
-              {!disable?
+              {!disable ?
                 <>
                   &nbsp;&nbsp;
                   <Icon material={"edit"} className={"editIcon"} onClick={event => {
                     stopPropagation(event);
                     this.add()
                   }} small/>
-                </>: null}
+                </> : null}
             </>
           }>
         </SubTitle>
-        {this.value.map((item, index) => {
+        {this.value.map((item: any, index: number) => {
           return this.rParams(index, disable);
         })}
       </>

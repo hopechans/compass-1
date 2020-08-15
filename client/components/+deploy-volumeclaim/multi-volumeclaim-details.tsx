@@ -1,10 +1,8 @@
 import {observer} from "mobx-react";
 import React from "react";
-import {observable} from "mobx";
+import {computed, observable} from "mobx";
 import {ActionMeta} from "react-select/src/types";
-import {Button} from "../button";
 import {Icon} from "../icon";
-import {Collapse} from "../collapse"
 import {volumeClaim, VolumeClaimTemplate} from "./common";
 import {_i18n} from "../../i18n";
 import {t, Trans} from "@lingui/macro";
@@ -19,13 +17,16 @@ export interface VolumeClaimTemplateProps<T = any> extends Partial<VolumeClaimTe
   themeName?: "dark" | "light" | "outlined";
   divider?: true;
 
-  onChange?(option: T, meta?: ActionMeta<any>): void;
+  onChange?(value: T, meta?: ActionMeta<any>): void;
 }
 
 @observer
 export class MultiVolumeClaimDetails extends React.Component<VolumeClaimTemplateProps> {
 
-  @observable value: VolumeClaimTemplate[] = this.props.value || [volumeClaim]
+  // @observable value: VolumeClaimTemplate[] = this.props.value || [volumeClaim]
+  @computed get value(): VolumeClaimTemplate[] {
+    return this.props.value || [volumeClaim];
+  }
 
   add = () => {
     this.value.push(volumeClaim)
@@ -94,7 +95,7 @@ export class MultiVolumeClaimDetails extends React.Component<VolumeClaimTemplate
             </>
           }>
         </SubTitle>
-        {this.value.map((item, index) => {
+        {this.value.map((item: any, index: number) => {
           return (
             this.rVolumeClaim(index)
           )

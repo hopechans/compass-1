@@ -7,15 +7,17 @@ import { Icon } from "../icon";
 import { _i18n } from "../../i18n"
 import { RouteComponentProps } from "react-router";
 import { t, Trans } from "@lingui/macro";
-import { Deploy, deployApi } from "../../api/endpoints";
+import {Deploy, deployApi, Pipeline} from "../../api/endpoints";
 import { KubeObjectMenu, KubeObjectMenuProps } from "../kube-object";
-import { MainLayout } from "../layout/main-layout";
 import { KubeObjectListLayout } from "../kube-object";
 import { DeployDialog, AddDeployDialog } from "../+workloads-deploy";
 import { IDeployWorkloadsParams } from "../+workloads"
 import { apiManager } from "../../api/api-manager";
 import { deployStore } from "./deploy.store";
 import { ConfigDeployDialog } from "./config-deploy-dialog";
+import {Link} from "react-router-dom";
+import {stopPropagation} from "../../utils";
+import Tooltip from "@material-ui/core/Tooltip";
 
 enum sortBy {
   templateName = "templateName",

@@ -6,62 +6,31 @@ import {Icon} from "../icon";
 import {_i18n} from "../../i18n";
 import {t, Trans} from "@lingui/macro";
 import {Input} from "../input";
-import {observable} from "mobx";
+import {computed, observable, toJS} from "mobx";
 import {args} from "./common";
 import {Grid} from "@material-ui/core";
-import {stopPropagation} from "../../utils";
+import {autobind, stopPropagation} from "../../utils";
 
 interface ArgsProps<T = any> extends Partial<ArgsProps> {
   value?: T;
   themeName?: "dark" | "light" | "outlined";
 
-  onChange?(option: T, meta?: ActionMeta<any>): void;
+  onChange?(value: T): void;
 }
 
 @observer
 export class ArgsDetails extends React.Component<ArgsProps> {
 
-  @observable value: string[] = this.props.value || args;
+  @computed get value() {
+    return this.props.value || args;
+  }
 
   add = () => {
-    this.value.push("");
+    this.props.value.push("");
   }
 
   remove = (index: number) => {
-    this.value.splice(index, 1);
-  }
-
-  rArgs(index: number) {
-    return (
-      <>
-        <Grid container spacing={5} alignItems={"center"} direction={"row"}>
-          <Grid item xs={11} zeroMinWidth>
-            <Input
-              className="item"
-              placeholder={_i18n._(t`Arguments`)}
-              title={this.value[index]}
-              value={this.value[index]}
-              onChange={value => {
-                this.value[index] = value
-              }}
-            />
-          </Grid>
-          <Grid item xs zeroMinWidth>
-            <Icon
-              small
-              tooltip={_i18n._(t`Remove Arguments`)}
-              className="remove-icon"
-              material="clear"
-              onClick={(event) => {
-                this.remove(index);
-                stopPropagation(event);
-              }}
-            />
-          </Grid>
-        </Grid>
-        <br/>
-      </>
-    )
+    this.props.value.splice(index, 1);
   }
 
   render() {
@@ -74,17 +43,40 @@ export class ArgsDetails extends React.Component<ArgsProps> {
               <Trans>Arguments</Trans>
               &nbsp;&nbsp;
               <Icon material={"edit"} className={"editIcon"} onClick={event => {
+                this.add();
                 stopPropagation(event);
-                this.add()
               }} small/>
             </>
           }>
         </SubTitle>
-        <div className="Args">
-          {this.value.map((item, index) => {
-            return this.rArgs(index)
-          })}
-        </div>
+        {this.value.map((item: any, index: number) => {
+          return (
+            <Grid container spacing={5} alignItems={"center"} direction={"row"}>
+              <Grid item xs={11} zeroMinWidth>
+                <Input
+                  className="item"
+                  placeholder={_i18n._(t`Arguments`)}
+                  title={this.value[index]}
+                  value={this.value[index]}
+                  onChange={value => {
+                    this.value[index] = value
+                  }}
+                />
+              </Grid>
+              <Grid item xs zeroMinWidth>
+                <Icon
+                  small
+                  tooltip={_i18n._(t`Remove`)}
+                  className="remove-icon"
+                  material="clear"
+                  onClick={(event) => {
+                    this.remove(index);
+                  }}
+                />
+              </Grid>
+            </Grid>
+          )
+        })}
       </>
     )
   }

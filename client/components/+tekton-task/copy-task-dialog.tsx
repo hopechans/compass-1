@@ -1,6 +1,6 @@
 import "./copy-task-dialog.scss";
 
-import { observer } from "mobx-react";
+import {observer} from "mobx-react";
 import React from "react";
 import {
   PipelineParamsDetails,
@@ -12,34 +12,33 @@ import {
   resources,
   TaskSpecWorkSpaces,
 } from "../+tekton-common";
-import { observable, toJS } from "mobx";
-import { Dialog } from "../dialog";
-import { Wizard, WizardStep } from "../wizard";
-import { Trans } from "@lingui/macro";
-import { ActionMeta } from "react-select/src/types";
-import { SubTitle } from "../layout/sub-title";
-import { Input } from "../input";
-import { _i18n } from "../../i18n";
-import { taskStore } from "./task.store";
+import {computed, observable, toJS} from "mobx";
+import {Dialog} from "../dialog";
+import {Wizard, WizardStep} from "../wizard";
+import {Trans} from "@lingui/macro";
+import {ActionMeta} from "react-select/src/types";
+import {SubTitle} from "../layout/sub-title";
+import {Input} from "../input";
+import {_i18n} from "../../i18n";
+import {taskStore} from "./task.store";
 import FormGroup from "@material-ui/core/FormGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Switch from "@material-ui/core/Switch";
-import { Select } from "../select";
-import { TaskResources } from "../../api/endpoints";
-import { Notifications } from "../notifications";
-import { systemName } from "../input/input.validators";
-import { configStore } from "../../config.store";
-import { WorkspaceDeclaration as Workspace } from "../../api/endpoints/tekton-task.api";
-import { Collapse } from "../collapse";
-import { PipelineGraph } from "../+tekton-graph/graph-new";
-import { INode } from "@antv/g6/lib/interface/item";
-import { taskName } from "../+constant/tekton-constants";
+import {Select} from "../select";
+import {TaskResources} from "../../api/endpoints";
+import {Notifications} from "../notifications";
+import {systemName} from "../input/input.validators";
+import {configStore} from "../../config.store";
+import {WorkspaceDeclaration as Workspace} from "../../api/endpoints/tekton-task.api";
+import {Collapse} from "../collapse";
+import {PipelineGraph} from "../+tekton-graph/graph-new";
+import {INode} from "@antv/g6/lib/interface/item";
+import {taskName} from "../+constant";
 
 interface Props<T = any> extends Partial<Props> {
   value?: T;
 
-  onChange?(option: T, meta?: ActionMeta<any>): void;
-
+  onChange?(value: T, meta?: ActionMeta<any>): void;
   themeName?: "dark" | "light" | "outlined";
 }
 
@@ -70,7 +69,12 @@ export const task: TaskResult = {
 
 @observer
 export class CopyTaskDialog extends React.Component<Props> {
+
   @observable value: TaskResult = this.props.value || task;
+  // @computed get value(): TaskResult {
+  //   return this.props.value || task;
+  // }
+
   @observable static isOpen = false;
   @observable static graph: PipelineGraph;
   @observable static node: INode;
@@ -104,10 +108,10 @@ export class CopyTaskDialog extends React.Component<Props> {
     }
   };
 
-  onOpen = () => {
+  onOpen = async () => {
     try {
       const name = CopyTaskDialog.node.getModel()[taskName] || "";
-      this.loadData(String(name), CopyTaskDialog.namespace);
+      await this.loadData(String(name), CopyTaskDialog.namespace);
     } catch (err) {
       Notifications.error(err);
     }
@@ -121,13 +125,13 @@ export class CopyTaskDialog extends React.Component<Props> {
     CopyTaskDialog.close();
   };
 
-  handle = () => {
-    this.saveTask();
+  handle = async () => {
+    await this.saveTask();
     CopyTaskDialog.graph.setTaskName(CopyTaskDialog.node, this.value.taskName);
   };
 
-  saveTask = () => {
-    const parms = toJS(this.value.pipelineParams);
+  saveTask = async () => {
+    const params = toJS(this.value.pipelineParams);
     const resources = toJS(this.value.resources);
     const steps = toJS(this.value.taskSteps);
     const workspaces = toJS(this.value.workspace);
@@ -145,7 +149,7 @@ export class CopyTaskDialog extends React.Component<Props> {
         CopyTaskDialog.namespace
       );
       if (task === undefined) {
-        taskStore.create(
+        await taskStore.create(
           {
             name: this.value.taskName,
             namespace: configStore.getOpsNamespace(),
@@ -156,7 +160,7 @@ export class CopyTaskDialog extends React.Component<Props> {
           },
           {
             spec: {
-              params: parms,
+              params: params,
               resources: resources,
               steps: steps,
               volumes: volumes,
@@ -167,17 +171,16 @@ export class CopyTaskDialog extends React.Component<Props> {
       } else {
         if (!this.ifSwitch) {
           task.metadata.name = this.value.taskName;
-          task.spec.params = parms;
+          task.spec.params = params;
           task.spec.resources = resources;
           task.spec.workspaces = workspaces;
           task.spec.steps = steps;
-          taskStore.apply(task, { ...task });
+          await taskStore.apply(task, {...task});
         }
       }
       Notifications.ok(<>Task {this.value.taskName} save succeeded</>);
       this.close();
     } catch (err) {
-      this.value.taskName = "";
       Notifications.error(err);
     }
   };
@@ -188,8 +191,8 @@ export class CopyTaskDialog extends React.Component<Props> {
 
   get taskOptions() {
     const options = taskStore
-      .getAllByNs(CopyTaskDialog.namespace)
-      .map((item) => item.getName());
+    .getAllByNs(CopyTaskDialog.namespace)
+    .map((item) => item.getName());
     return [...options];
   }
 
@@ -211,7 +214,7 @@ export class CopyTaskDialog extends React.Component<Props> {
   rSwitch() {
     return (
       <div hidden={this.ifSwitch}>
-        <SubTitle title={<Trans>Task Name</Trans>} />
+        <SubTitle title={<Trans>Task Name</Trans>}/>
         <Input
           required={true}
           validators={systemName}
@@ -219,28 +222,28 @@ export class CopyTaskDialog extends React.Component<Props> {
           value={this.value.taskName}
           onChange={(value) => (this.value.taskName = value)}
         />
-        <br />
+        <br/>
         <TaskSpecWorkSpaces
           value={this.value.workspace}
           onChange={(value) => {
             this.value.workspace = value;
           }}
         />
-        <br />
+        <br/>
         <PipelineParamsDetails
           value={this.value.pipelineParams}
           onChange={(value) => {
             this.value.pipelineParams = value;
           }}
         />
-        <br />
+        <br/>
         <ResourcesDetail
           value={this.value.resources}
           onChange={(value) => {
             this.value.resources = value;
           }}
         />
-        <br />
+        <br/>
         <Collapse panelName={<Trans>TaskStep</Trans>} key={"TaskStep"}>
           <MultiTaskStepDetails
             value={this.value.taskSteps}
@@ -281,11 +284,9 @@ export class CopyTaskDialog extends React.Component<Props> {
                   />
                 }
                 label={
-                  this.ifSwitch ? (
-                    <SubTitle title={<Trans>Select module</Trans>} />
-                  ) : (
-                    <SubTitle title={<Trans>Template configuration</Trans>} />
-                  )
+                  this.ifSwitch ?
+                    <SubTitle title={<Trans>Select module</Trans>}/> :
+                    <SubTitle title={<Trans>Template configuration</Trans>}/>
                 }
               />
             </FormGroup>

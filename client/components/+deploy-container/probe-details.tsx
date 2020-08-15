@@ -1,7 +1,7 @@
 import React from "react";
 import {ActionMeta} from "react-select/src/types";
 import {observer} from "mobx-react";
-import {observable} from "mobx";
+import {computed, observable} from "mobx";
 import {SubTitle} from "../layout/sub-title";
 import {Icon} from "../icon";
 import {_i18n} from "../../i18n";
@@ -17,7 +17,7 @@ interface Props<T = any> extends Partial<Props> {
   themeName?: "dark" | "light" | "outlined";
   className?: string
 
-  onChange?(option: T, meta?: ActionMeta<any>): void;
+  onChange?(value: T, meta?: ActionMeta<any>): void;
 }
 
 @observer
@@ -27,7 +27,10 @@ export class ProbeDetails extends React.Component<Props> {
     className: "Probe"
   }
 
-  @observable value: Probe = this.props.value || liveProbe;
+  // @observable value: Probe = this.props.value || liveProbe;
+  @computed get value(): Probe {
+    return this.props.value || liveProbe;
+  }
 
   get selectOptions() {
     return [

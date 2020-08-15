@@ -2,11 +2,13 @@ import {KubeObjectDetailsProps} from "../kube-object";
 import {observer} from "mobx-react";
 import React from "react";
 import {KubeObjectMeta} from "../kube-object/kube-object-meta";
-import {DrawerItem, DrawerItemLabels} from "../drawer";
+import {DrawerItem, DrawerTitle} from "../drawer";
 import {Trans} from "@lingui/macro";
 import {KubeEventDetails} from "../+events/kube-event-details";
 import {apiManager} from "../../api/api-manager";
 import {TektonWebHook, tektonWebHookApi} from "../../api/endpoints/tekton-webhook.api";
+import {_i18n} from "../../i18n";
+import {Table, TableCell, TableHead, TableRow} from "../table";
 
 interface Props extends KubeObjectDetailsProps<TektonWebHook> {
 }
@@ -26,13 +28,29 @@ export class WebHookDetails extends React.Component<Props> {
         <DrawerItem name={<Trans>Git Address</Trans>}>
           {tektonWebHook.spec.git}
         </DrawerItem>
-        <DrawerItem name={<Trans>Branch</Trans>}>
-          {tektonWebHook.spec.branch}
-        </DrawerItem>
-        <DrawerItem name={<Trans>PipelineRun</Trans>} >
-          {tektonWebHook.spec.pipeline_run}
-        </DrawerItem>
-        <DrawerItemLabels name={<Trans>Args</Trans>} labels={tektonWebHook.spec.args} />
+        <DrawerTitle title={_i18n._(`Job`)}/>
+        <Table
+          className="box grow"
+        >
+          <TableHead>
+            <TableCell className="branch"><Trans>Branch</Trans></TableCell>
+            <TableCell className="pipelineRun">PipelineRun</TableCell>
+            <TableCell className="args"><Trans>Args</Trans></TableCell>
+          </TableHead>
+          {
+            tektonWebHook.spec.jobs?.map(item => {
+              return (
+                <TableRow
+                  nowrap
+                >
+                  <TableCell className="branch">{item.branch}</TableCell>
+                  <TableCell className="pipelineRun">{item.pipeline_run}</TableCell>
+                  <TableCell className="targetPath">{item.args?.map(item => <><span>{item}</span><br/></>)}</TableCell>
+                </TableRow>
+              )
+            })
+          }
+        </Table>
         <KubeEventDetails object={tektonWebHook}/>
       </div>
     )

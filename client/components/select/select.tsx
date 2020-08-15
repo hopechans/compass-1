@@ -31,7 +31,7 @@ export interface SelectProps<T = any> extends ReactSelectProps<T>, CreatableProp
   menuClass?: string;
   isCreatable?: boolean;
   autoConvertOptions?: boolean; // to internal format (i.e. {value: T, label: string}[]), not working with groups
-  onChange?(option: T, meta?: ActionMeta<any>): void;
+  onChange?(value: T, meta?: ActionMeta<any>): void;
 }
 
 @observer

@@ -1,12 +1,11 @@
 import {observer} from "mobx-react";
 import React from "react";
-import {observable} from "mobx";
+import {computed, observable} from "mobx";
 import {Input} from "../input";
 import {ActionMeta} from "react-select/src/types";
 import {SubTitle} from "../layout/sub-title";
 import {Icon} from "../icon";
-import {t, Trans} from "@lingui/macro";
-import {_i18n} from "../../i18n";
+import {Trans} from "@lingui/macro";
 import {WorkspacePipelineDeclaration} from "../../api/endpoints";
 import {Grid} from "@material-ui/core";
 import {stopPropagation} from "../../utils";
@@ -15,7 +14,7 @@ interface Props<T = any> extends Partial<Props> {
   value?: T;
   themeName?: "dark" | "light" | "outlined";
 
-  onChange?(option: T, meta?: ActionMeta<any>): void;
+  onChange?(value: T, meta?: ActionMeta<any>): void;
 }
 
 export const workspacePipelineDeclaration: WorkspacePipelineDeclaration = {
@@ -25,7 +24,11 @@ export const workspacePipelineDeclaration: WorkspacePipelineDeclaration = {
 
 @observer
 export class PipelineWorkspaces extends React.Component<Props> {
-  @observable value: WorkspacePipelineDeclaration[] = this.props.value || [];
+
+  // @observable value: WorkspacePipelineDeclaration[] = this.props.value || [];
+  @computed get value(): WorkspacePipelineDeclaration[] {
+    return this.props.value || [];
+  }
 
   add = () => {
     this.value.push(workspacePipelineDeclaration);
@@ -51,7 +54,7 @@ export class PipelineWorkspaces extends React.Component<Props> {
           }>
         </SubTitle>
 
-        {this.value.map((item, index) => {
+        {this.value.map((item: any, index: number) => {
           return (
             <>
               <Grid container spacing={5} alignItems="center" direction="row">

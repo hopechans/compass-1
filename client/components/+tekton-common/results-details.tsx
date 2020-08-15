@@ -1,6 +1,6 @@
 import {observer} from "mobx-react";
 import React from "react";
-import {observable} from "mobx";
+import {computed, observable} from "mobx";
 import {Input} from "../input";
 import {ActionMeta} from "react-select/src/types";
 import {result, Result} from "./common";
@@ -13,13 +13,16 @@ interface Props<T = any> extends Partial<Props> {
   value?: T;
   themeName?: "dark" | "light" | "outlined";
 
-  onChange?(option: T, meta?: ActionMeta<any>): void;
+  onChange?(value: T, meta?: ActionMeta<any>): void;
 }
 
 @observer
 export class ResultsDetails extends React.Component<Props> {
 
-  @observable value: Result[] = this.props.value || []
+  // @observable value: Result[] = this.props.value || [];
+  @computed get value(): Result[] {
+    return this.props.value || [];
+  }
 
   add = () => {
     this.value.push(result);
@@ -48,7 +51,7 @@ export class ResultsDetails extends React.Component<Props> {
       <div>
         <SubTitle className="fields-title" title="Results">{this.renderAdd()}</SubTitle>
         <div className="Results">
-          {this.value.map((item, index) => {
+          {this.value.map((item: any, index: number) => {
             return (
               <div>
                 <div key={index}>

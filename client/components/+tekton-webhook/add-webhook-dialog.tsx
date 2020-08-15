@@ -10,11 +10,11 @@ import {SubTitle} from "../layout/sub-title";
 import {Input} from "../input";
 import {isUrl, systemName} from "../input/input.validators";
 import {_i18n} from "../../i18n";
-import {PipelineRunSelect} from "../+tekton-pipelinerun/pipelinerun-select";
-import {ArgsDetails} from "../+deploy-container";
 import {configStore} from "../../config.store";
 import {Notifications} from "../notifications";
 import {tektonWebHookStore} from "./webhook.store";
+import {Job} from "../../api/endpoints/tekton-webhook.api";
+import {JobDetails} from "./job-details";
 
 interface Props extends DialogProps {
 }
@@ -24,10 +24,9 @@ export class AddWebhookDialog extends React.Component<Props> {
 
   @observable static isOpen = false;
   @observable name: string = "";
+  @observable secret: string = "";
   @observable git: string = "";
-  @observable branch: string = "";
-  @observable pipelineRun: string = "";
-  @observable args: string[] = [];
+  @observable jobs: Job[] = [];
 
   static open() {
     AddWebhookDialog.isOpen = true;
@@ -43,10 +42,9 @@ export class AddWebhookDialog extends React.Component<Props> {
 
   reset() {
     this.name = "";
+    this.secret = "";
     this.git = "";
-    this.branch = "";
-    this.pipelineRun = "";
-    this.args = [];
+    this.jobs = [];
   }
 
   addWebHook = async () => {
@@ -58,17 +56,16 @@ export class AddWebhookDialog extends React.Component<Props> {
         },
         {
           spec: {
+            secret: this.secret,
             git: this.git,
-            branch: this.branch,
-            pipeline_run: this.pipelineRun,
-            args: this.args,
+            jobs: this.jobs,
           },
         });
       Notifications.ok(
         <>WebHook {name} succeeded</>
       );
-      this.reset();
       this.close();
+      this.reset();
     } catch (err) {
       Notifications.error(err);
     }
@@ -84,14 +81,21 @@ export class AddWebhookDialog extends React.Component<Props> {
         close={this.close}
         pinned
       >
-        <Wizard className={"AddWebhookWizard"} header={header} done={this.close}>
-          <WizardStep className={"AddWebhookWizardStep"} contentClass="flex gaps column" next={this.addWebHook}>
+        <Wizard header={header} done={this.close}>
+          <WizardStep contentClass="flex gaps column" next={this.addWebHook}>
             <SubTitle title={<Trans>Name</Trans>}/>
             <Input
               validators={systemName}
               placeholder={_i18n._(t`Name`)}
               value={this.name}
               onChange={value => this.name = value}
+            />
+            <SubTitle title={<Trans>Secret</Trans>}/>
+            <Input
+              type={"password"}
+              placeholder={_i18n._(t`Secret`)}
+              value={this.secret}
+              onChange={value => this.secret = value}
             />
             <SubTitle title={<Trans>Git Address</Trans>}/>
             <Input
@@ -100,15 +104,7 @@ export class AddWebhookDialog extends React.Component<Props> {
               value={this.git}
               onChange={value => this.git = value}
             />
-            <SubTitle title={<Trans>Branch</Trans>}/>
-            <Input
-              placeholder={_i18n._(t`Branch`)}
-              value={this.branch}
-              onChange={value => this.branch = value}
-            />
-            <SubTitle title={<Trans>PipelineRun</Trans>}/>
-            <PipelineRunSelect value={this.pipelineRun} onChange={value => this.pipelineRun = value.value}/>
-            <ArgsDetails value={this.args} onChange={value => this.args = value}/>
+            <JobDetails value={this.jobs} onChange={value => this.jobs = value}/>
           </WizardStep>
         </Wizard>
       </Dialog>

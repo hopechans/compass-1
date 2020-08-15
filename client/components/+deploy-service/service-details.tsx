@@ -4,15 +4,15 @@ import React from "react";
 import {observer} from "mobx-react";
 import {SubTitle} from "../layout/sub-title";
 import {t, Trans} from "@lingui/macro";
-import {Select, SelectOption} from "../select";
+import {Select} from "../select";
 import {Icon} from "../icon";
 import {_i18n} from "../../i18n";
 import {Input} from "../input";
 import {isNumber} from "../input/input.validators";
-import {observable} from "mobx";
+import {computed, observable} from "mobx";
 import {deployPort, deployService, Service} from "./common";
 import {ActionMeta} from "react-select/src/types";
-import {Tab, Tabs, AppBar, Paper, Badge, Divider, Grid, FormControlLabel, Switch} from "@material-ui/core";
+import {Paper, Grid} from "@material-ui/core";
 import {stopPropagation} from "../../utils";
 
 interface TabPanelProps {
@@ -26,14 +26,17 @@ export interface Props<T = any> extends Partial<Props> {
   showIcons?: boolean;
   themeName?: "dark" | "light" | "outlined";
 
-  onChange?(option: T, meta?: ActionMeta<any>): void;
+  onChange?(value: T, meta?: ActionMeta<any>): void;
 }
 
 @observer
 export class DeployServiceDetails extends React.Component<Props> {
 
-  @observable value: Service = this.props.value || deployService;
+  // @observable value: Service = this.props.value || deployService;
   @observable Index: number = 0;
+  @computed get value(): Service {
+    return this.props.value || deployService;
+  }
 
   get typeOptions() {
     return [
@@ -154,7 +157,7 @@ export class DeployServiceDetails extends React.Component<Props> {
             </>
           }>
         </SubTitle>
-        {this.value.ports.map((item, index) => {
+        {this.value.ports.map((item: any, index: number) => {
           return this.rPorts(index)
         })}
       </>
