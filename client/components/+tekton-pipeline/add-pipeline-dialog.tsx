@@ -29,9 +29,9 @@ export class AddPipelineDialog extends React.Component<Props> {
     AddPipelineDialog.isOpen = false;
   }
 
-  close = () => {
-    this.value = "";
+  close = async () => {
     AddPipelineDialog.close();
+    this.value = "";
   };
 
   submit = async () => {
@@ -50,7 +50,7 @@ export class AddPipelineDialog extends React.Component<Props> {
           },
         }
       );
-      this.close();
+      await this.close();
     } catch (err) {
       Notifications.error(err);
     }

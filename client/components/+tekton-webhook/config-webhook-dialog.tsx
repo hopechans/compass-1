@@ -46,15 +46,15 @@ export class ConfigWebhookDialog extends React.Component<Props> {
     ConfigWebhookDialog.isOpen = false;
   }
 
-  reset() {
+  reset = async () => {
     this.secret = "";
     this.git = "";
     this.jobs = [];
   }
 
-  close = () => {
+  close = async () => {
     ConfigWebhookDialog.close();
-    this.reset();
+    await this.reset();
   }
 
   updateWebHook = async () => {
@@ -67,7 +67,7 @@ export class ConfigWebhookDialog extends React.Component<Props> {
       Notifications.ok(
         <>WebHook {name} succeeded</>
       );
-      this.close();
+      await this.close();
     } catch (err) {
       Notifications.error(err);
     }

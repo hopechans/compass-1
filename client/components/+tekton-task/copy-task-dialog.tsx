@@ -121,8 +121,14 @@ export class CopyTaskDialog extends React.Component<Props> {
     CopyTaskDialog.isOpen = false;
   }
 
-  close = () => {
+  reset = async () => {
+    this.value = task;
+    this.name = "";
+  }
+
+  close = async () => {
     CopyTaskDialog.close();
+    await this.reset();
   };
 
   handle = async () => {
@@ -179,7 +185,7 @@ export class CopyTaskDialog extends React.Component<Props> {
         }
       }
       Notifications.ok(<>Task {this.value.taskName} save succeeded</>);
-      this.close();
+      await this.close();
     } catch (err) {
       Notifications.error(err);
     }

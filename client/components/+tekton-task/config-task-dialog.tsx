@@ -67,6 +67,7 @@ export class ConfigTaskDialog extends React.Component<Props> {
     return ConfigTaskDialog.Data;
   }
 
+
   onOpen = async () => {
     this.value.taskName = this.task.metadata.name;
     this.value.resources = this.task.getResources();
@@ -81,8 +82,13 @@ export class ConfigTaskDialog extends React.Component<Props> {
     ConfigTaskDialog.isOpen = false;
   }
 
-  close = () => {
+  reset = async () => {
+    this.value = task;
+  }
+
+  close = async () => {
     ConfigTaskDialog.close();
+    await this.reset();
   };
 
   saveTask = async () => {
@@ -101,7 +107,7 @@ export class ConfigTaskDialog extends React.Component<Props> {
 
       await taskStore.update(this.task, {...this.task});
       Notifications.ok(<>Task {this.value.taskName} save succeeded</>);
-      this.close();
+      await this.close();
     } catch (err) {
       Notifications.error(err);
     }
