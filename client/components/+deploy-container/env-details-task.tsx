@@ -6,7 +6,7 @@ import {Icon} from "../icon";
 import {_i18n} from "../../i18n";
 import {t, Trans} from "@lingui/macro";
 import {Input} from "../input";
-import {observable} from "mobx";
+import {computed, observable} from "mobx";
 import {envVar, EnvVar} from "./common";
 import {Grid} from "@material-ui/core";
 import {stopPropagation} from "../../utils";
@@ -15,12 +15,16 @@ interface EvnVarProps<T = any> extends Partial<EvnVarProps> {
   value?: T;
   themeName?: "dark" | "light" | "outlined";
 
-  onChange?(option: T, meta?: ActionMeta<any>): void;
+  onChange?(value: T, meta?: ActionMeta<any>): void;
 }
 
 @observer
 export class EvnVarDetails extends React.Component<EvnVarProps> {
-  @observable value: EnvVar[] = this.props.value || [];
+
+  // @observable value: EnvVar[] = this.props.value || [];
+  @computed get value(): EnvVar[] {
+    return this.props.value || [];
+  }
 
   add = () => {
     this.value.push(envVar);
@@ -63,7 +67,7 @@ export class EvnVarDetails extends React.Component<EvnVarProps> {
           <Grid item xs zeroMinWidth>
             <Icon
               small
-              tooltip={_i18n._(t`Remove Command`)}
+              tooltip={_i18n._(t`Remove`)}
               className="remove-icon"
               material="clear"
               onClick={(event) => {
@@ -92,11 +96,9 @@ export class EvnVarDetails extends React.Component<EvnVarProps> {
             </>
           }>
         </SubTitle>
-        <div className="envs">
-          {this.value.map((item, index) => {
-            return this.rEnv(index);
-          })}
-        </div>
+        {this.value.map((item: any, index: number) => {
+          return this.rEnv(index);
+        })}
       </>
     );
   }

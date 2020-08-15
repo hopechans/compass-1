@@ -1,6 +1,6 @@
 import {observer} from "mobx-react";
 import React from "react";
-import {observable} from "mobx";
+import {computed, observable} from "mobx";
 import {Input} from "../input";
 import {ActionMeta} from "react-select/src/types";
 import {WorkspaceDeclaration as Workspace} from "../../api/endpoints/tekton-task.api";
@@ -15,7 +15,7 @@ interface Props<T = any> extends Partial<Props> {
   value?: T;
   themeName?: "dark" | "light" | "outlined";
 
-  onChange?(option: T, meta?: ActionMeta<any>): void;
+  onChange?(value: T, meta?: ActionMeta<any>): void;
 }
 
 export const workspaces: Workspace = {
@@ -27,7 +27,11 @@ export const workspaces: Workspace = {
 
 @observer
 export class TaskSpecWorkSpaces extends React.Component<Props> {
-  @observable value: Workspace[] = this.props.value || [];
+
+  // @observable value: Workspace[] = this.props.value || [];
+  @computed get value(): Workspace[] {
+    return this.props.value || [];
+  }
 
   get typeOptions() {
     return ["true", "false"];
@@ -97,7 +101,7 @@ export class TaskSpecWorkSpaces extends React.Component<Props> {
             </>
           }>
         </SubTitle>
-        {this.value.map((item, index) => {
+        {this.value.map((item: any, index: number) => {
           return this.rWorkSpace(index);
         })}
       </>

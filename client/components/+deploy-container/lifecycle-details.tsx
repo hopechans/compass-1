@@ -1,7 +1,7 @@
 import {ActionMeta} from "react-select/src/types";
 import {observer} from "mobx-react";
 import React from "react";
-import {observable} from "mobx";
+import {computed, observable} from "mobx";
 import {SubTitle} from "../layout/sub-title";
 import {Icon} from "../icon";
 import {_i18n} from "../../i18n";
@@ -16,13 +16,16 @@ interface Props<T = any> extends Partial<Props> {
   value?: T;
   themeName?: "dark" | "light" | "outlined";
 
-  onChange?(option: T, meta?: ActionMeta<any>): void;
+  onChange?(value: T, meta?: ActionMeta<any>): void;
 }
 
 @observer
 export class LifeCycleDetails extends React.Component<Props> {
 
-  @observable value: LifeCycle = this.props.value || lifeCycle
+  // @observable value: LifeCycle = this.props.value || lifeCycle
+  @computed get value(): LifeCycle {
+    return this.props.value || lifeCycle;
+  }
 
   get selectOptions() {
     return [

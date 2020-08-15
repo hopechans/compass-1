@@ -9,15 +9,14 @@ import {ProbeDetails} from "./probe-details";
 import {LifeCycleDetails} from "./lifecycle-details";
 import {ArgsDetails} from "./args-details";
 import {observable} from "mobx";
-import {container} from "./common";
+import {Container, container} from "./common";
 import {VolumeMountDetails} from "./volume-mount";
-import {Paper} from "@material-ui/core";
 
 interface Props<T = any> extends Partial<Props> {
   value?: T;
   themeName?: "dark" | "light" | "outlined";
 
-  onChange?(option: T, meta?: ActionMeta<any>): void;
+  onChange?(value: T, meta?: ActionMeta<any>): void;
 
   args?: boolean;
   base?: boolean;
@@ -43,13 +42,15 @@ export class ContainerDetails extends React.Component<Props> {
     volumeMounts: true,
   }
 
+  @observable static value: Container = container;
   private theme = this.props.themeName || themeStore.activeTheme.type;
 
-  @observable value = this.props.value || container
+  get value() {
+    return this.props.value || container;
+  }
 
   render() {
     const {base, commands, args, environment, readyProbe, liveProbe, lifeCycle, volumeMounts} = this.props;
-
     return (
       <>
         {base ?

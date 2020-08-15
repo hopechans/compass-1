@@ -10,11 +10,10 @@ import {SubTitle} from "../layout/sub-title";
 import {Input} from "../input";
 import {isUrl} from "../input/input.validators";
 import {_i18n} from "../../i18n";
-import {PipelineRunSelect} from "../+tekton-pipelinerun/pipelinerun-select";
-import {ArgsDetails} from "../+deploy-container";
 import {Notifications} from "../notifications";
 import {tektonWebHookStore} from "./webhook.store";
-import {TektonWebHook} from "../../api/endpoints/tekton-webhook.api";
+import {Job, TektonWebHook} from "../../api/endpoints/tekton-webhook.api";
+import {JobDetails} from "./job-details";
 
 interface Props extends DialogProps {
 }
@@ -24,10 +23,9 @@ export class ConfigWebhookDialog extends React.Component<Props> {
 
   @observable static isOpen = false;
   @observable static Data: TektonWebHook = null;
+  @observable secret: string = "";
   @observable git: string = "";
-  @observable branch: string = "";
-  @observable pipelineRun: string = "";
-  @observable args: string[] = [];
+  @observable jobs: Job[] = [];
 
   static open(webhook: TektonWebHook) {
     ConfigWebhookDialog.isOpen = true;
@@ -39,11 +37,9 @@ export class ConfigWebhookDialog extends React.Component<Props> {
   }
 
   onOpen = async () => {
+    this.secret = this.webhook.spec?.secret || "";
     this.git = this.webhook.spec?.git || "";
-    this.branch = this.webhook.spec?.branch || "";
-    console.log(this.webhook.spec.pipeline_run);
-    this.pipelineRun = this.webhook.spec?.pipeline_run || "";
-    this.args = this.webhook.spec?.args || [];
+    this.jobs = this.webhook.spec?.jobs || [];
   }
 
   static close() {
@@ -51,24 +47,21 @@ export class ConfigWebhookDialog extends React.Component<Props> {
   }
 
   reset() {
+    this.secret = "";
     this.git = "";
-    this.branch = "";
-    this.pipelineRun = "";
-    this.args = [];
+    this.jobs = [];
   }
 
   close = () => {
-    this.reset();
     ConfigWebhookDialog.close();
+    this.reset();
   }
 
   updateWebHook = async () => {
     try {
-
+      this.webhook.spec.secret = this.secret;
       this.webhook.spec.git = this.git;
-      this.webhook.spec.branch = this.branch;
-      this.webhook.spec.pipeline_run = this.pipelineRun;
-      this.webhook.spec.args = this.args;
+      this.webhook.spec.jobs = this.jobs;
 
       await tektonWebHookStore.update(this.webhook, {...this.webhook});
       Notifications.ok(
@@ -93,6 +86,13 @@ export class ConfigWebhookDialog extends React.Component<Props> {
       >
         <Wizard className={"ConfigWebhookWizard"} header={header} done={this.close}>
           <WizardStep className={"ConfigWebhookWizardStep"} contentClass="flex gaps column" next={this.updateWebHook}>
+            <SubTitle title={<Trans>Secret</Trans>}/>
+            <Input
+              type={"password"}
+              placeholder={_i18n._(t`Secret`)}
+              value={this.secret}
+              onChange={value => this.secret = value}
+            />
             <SubTitle title={<Trans>Git Address</Trans>}/>
             <Input
               validators={isUrl}
@@ -100,15 +100,7 @@ export class ConfigWebhookDialog extends React.Component<Props> {
               value={this.git}
               onChange={value => this.git = value}
             />
-            <SubTitle title={<Trans>Branch</Trans>}/>
-            <Input
-              placeholder={_i18n._(t`Branch`)}
-              value={this.branch}
-              onChange={value => this.branch = value}
-            />
-            <SubTitle title={<Trans>PipelineRun</Trans>}/>
-            <PipelineRunSelect value={this.pipelineRun} onChange={value => this.pipelineRun = value.value}/>
-            <ArgsDetails value={this.args} onChange={value => this.args = value}/>
+            <JobDetails value={this.jobs} onChange={value => this.jobs = value}/>
           </WizardStep>
         </Wizard>
       </Dialog>

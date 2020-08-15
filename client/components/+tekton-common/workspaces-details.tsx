@@ -1,6 +1,6 @@
 import { observer } from "mobx-react";
 import React from "react";
-import { observable } from "mobx";
+import {computed, observable} from "mobx";
 import { Input } from "../input";
 import { ActionMeta } from "react-select/src/types";
 import { workspace, Workspace } from "./common";
@@ -13,12 +13,16 @@ interface Props<T = any> extends Partial<Props> {
   value?: T;
   themeName?: "dark" | "light" | "outlined";
 
-  onChange?(option: T, meta?: ActionMeta<any>): void;
+  onChange?(value: T, meta?: ActionMeta<any>): void;
 }
 
 @observer
 export class WorkspacesDetails extends React.Component<Props> {
-  @observable value: Workspace[] = this.props.value || [];
+
+  // @observable value: Workspace[] = this.props.value || [];
+  @computed get value(): Workspace[] {
+    return this.props.value || [];
+  }
 
   add = () => {
     this.value.push(workspace);
@@ -49,7 +53,7 @@ export class WorkspacesDetails extends React.Component<Props> {
           {this.renderAdd()}
         </SubTitle>
         <div className="Workspaces">
-          {this.value.map((item, index) => {
+          {this.value.map((item: any, index: number) => {
             return (
               <>
                 <div key={index}>

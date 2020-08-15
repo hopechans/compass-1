@@ -1,6 +1,6 @@
 import {observer} from "mobx-react";
 import React from "react";
-import {observable} from "mobx";
+import {computed, observable} from "mobx";
 import {ActionMeta} from "react-select/src/types";
 import {Collapse} from "../collapse";
 import {Button} from "../button";
@@ -14,13 +14,16 @@ interface Props<T = any> extends Partial<Props> {
   value?: T;
   themeName?: "dark" | "light" | "outlined";
 
-  onChange?(option: T, meta?: ActionMeta<any>): void;
+  onChange?(value: T, meta?: ActionMeta<any>): void;
 }
 
 @observer
 export class MultiRuleDetails extends React.Component<Props> {
 
-  @observable value: Rule[] = this.props.value || []
+  // @observable value: Rule[] = this.props.value || [];
+  @computed get value(): Rule[] {
+    return this.props.value || [];
+  }
 
   add() {
     this.value.push(rule)

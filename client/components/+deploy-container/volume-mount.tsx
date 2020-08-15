@@ -5,7 +5,7 @@ import {Icon} from "../icon";
 import {_i18n} from "../../i18n";
 import {t, Trans} from "@lingui/macro";
 import {Input} from "../input";
-import {observable} from "mobx";
+import {computed, observable} from "mobx";
 import {VolumeMounts, volumeMount, volumeMounts} from "./common";
 import {Grid} from "@material-ui/core";
 import {stopPropagation} from "../../utils";
@@ -15,13 +15,16 @@ interface ArgsProps<T = any> extends Partial<ArgsProps> {
   value?: T;
   themeName?: "dark" | "light" | "outlined";
 
-  onChange?(option: T, meta?: ActionMeta<any>): void;
+  onChange?(value: T, meta?: ActionMeta<any>): void;
 }
 
 @observer
 export class VolumeMountDetails extends React.Component<ArgsProps> {
 
-  @observable value: VolumeMounts = this.props.value || volumeMounts;
+  // @observable value: VolumeMounts = this.props.value || volumeMounts;
+  @computed get value(): VolumeMounts {
+    return this.props.value || volumeMounts;
+  }
 
   add = () => {
     this.value.items.push(volumeMount);
@@ -88,11 +91,9 @@ export class VolumeMountDetails extends React.Component<ArgsProps> {
             }} small/>
           </>
         }/>
-        <div className="volumeMounts">
-          {this.value.items.map((item, index) => {
-            return this.rVolumeMounts(index)
-          })}
-        </div>
+        {this.value.items.map((item: any, index: number) => {
+          return this.rVolumeMounts(index)
+        })}
       </>
     )
   }

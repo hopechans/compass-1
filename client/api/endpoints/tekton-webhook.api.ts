@@ -2,15 +2,26 @@ import {autobind} from "../../utils";
 import {KubeObject} from "../kube-object";
 import {KubeApi} from "../kube-api";
 
+export interface Job {
+  branch: string;
+  pipeline_run: string;
+  args: string[];
+}
+
+export const job: Job = {
+  branch: "",
+  pipeline_run: "",
+  args: []
+}
+
 @autobind()
 export class TektonWebHook extends KubeObject {
   static kind = "TektonWebHook";
 
   spec: {
+    secret: string;
     git: string;
-    branch: string;
-    pipeline_run: string;
-    args: string[];
+    jobs: Job[];
   };
 
 }

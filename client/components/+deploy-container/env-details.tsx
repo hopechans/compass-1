@@ -7,7 +7,7 @@ import {_i18n} from "../../i18n";
 import {t, Trans} from "@lingui/macro";
 import {Select} from "../select";
 import {Input} from "../input";
-import {observable} from "mobx";
+import {computed, observable} from "mobx";
 import {environment, Environment} from "./common";
 import {SecretsSelect} from "../+config-secrets/secrets-select";
 import {NamespaceSelect} from "../+namespaces/namespace-select";
@@ -21,14 +21,18 @@ interface Props<T = any> extends Partial<Props> {
   value?: T;
   themeName?: "dark" | "light" | "outlined";
 
-  onChange?(option: T, meta?: ActionMeta<any>): void;
+  onChange?(value: T, meta?: ActionMeta<any>): void;
 }
 
 @observer
 export class EnvironmentDetails extends React.Component<Props> {
 
-  @observable value: Environment[] = this.props.value || environment;
+  // @observable value: Environment[] = this.props.value || environment;
   @observable namespace: string = "";
+
+  @computed get value(): Environment[] {
+    return this.props.value || environment;
+  }
 
   get selectOptions() {
     return [
@@ -186,7 +190,7 @@ export class EnvironmentDetails extends React.Component<Props> {
           }>
         </SubTitle>
         <div className="Environment">
-          {this.value.map((item, index) => {
+          {this.value.map((item: any, index: number) => {
             return (
               <>
                 <br/>

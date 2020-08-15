@@ -5,7 +5,7 @@ import {
   PipelineWorkspaces,
   PipelineResourceDetails,
 } from "../+tekton-common";
-import { observable } from "mobx";
+import {computed, observable} from "mobx";
 import { ActionMeta } from "react-select/src/types";
 import { SubTitle } from "../layout/sub-title";
 import { Input } from "../input";
@@ -16,8 +16,7 @@ import { systemName } from "../input/input.validators";
 
 interface Props<T = any> extends Partial<Props> {
   value?: T;
-
-  onChange?(option: T, meta?: ActionMeta<any>): void;
+  onChange?(value: T, meta?: ActionMeta<any>): void;
 
   themeName?: "dark" | "light" | "outlined";
 }
@@ -36,7 +35,11 @@ export const pipeline: PipelineResult = {
 
 @observer
 export class PipelineSaveDetails extends React.Component<Props> {
+
   @observable value: PipelineResult = this.props.value || pipeline;
+  // @computed get value(): PipelineResult {
+  //   return this.props.value || pipeline;
+  // }
 
   render() {
     return (

@@ -19,7 +19,7 @@ interface Props<T = any> extends Partial<Props> {
   disable?: boolean;
   namespace?: string;
 
-  onChange?(option: T, meta?: ActionMeta<any>): void;
+  onChange?(value: T, meta?: ActionMeta<any>): void;
 }
 
 export const pipelineRef: PipelineRef = {
@@ -37,9 +37,12 @@ export class PipelineRunResourceDetails extends React.Component<Props> {
   static defaultProps = {
     disable: false
   }
-
-  @observable value: PipelineResourceBinding[] = this.props.value || [];
+  // @observable value: PipelineResourceBinding[] = this.props.value || [];
   @observable namespace: string = this.props.namespace;
+
+  @computed get value(): PipelineResourceBinding[] {
+    return this.props.value || [];
+  }
 
   add = () => {
     this.value.push(pipelineRunResource);

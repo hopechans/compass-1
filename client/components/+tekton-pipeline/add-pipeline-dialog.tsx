@@ -30,6 +30,7 @@ export class AddPipelineDialog extends React.Component<Props> {
   }
 
   close = () => {
+    this.value = "";
     AddPipelineDialog.close();
   };
 

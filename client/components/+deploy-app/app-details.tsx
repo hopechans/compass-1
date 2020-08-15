@@ -7,7 +7,7 @@ import {Select, SelectOption} from "../select";
 import {Input} from "../input";
 import {_i18n} from "../../i18n";
 import {Icon} from "../icon";
-import {observable} from "mobx";
+import {computed, observable} from "mobx";
 import {app, App} from "./common";
 import {systemName} from "../input/input.validators";
 
@@ -16,13 +16,16 @@ interface Props<T = any> extends Partial<Props> {
   value?: T;
   themeName?: "dark" | "light" | "outlined";
 
-  onChange?(option: T, meta?: ActionMeta<any>): void;
+  onChange?(value: T, meta?: ActionMeta<any>): void;
 }
 
 @observer
 export class AppDetails extends React.Component<Props> {
 
-  @observable value: App = this.props.value || app;
+  // @observable value: App = this.props.value || app;
+  @computed get value(): App {
+    return this.props.value || app;
+  }
 
   get typeOptions() {
     return [

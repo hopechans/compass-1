@@ -2,7 +2,7 @@ import "./pipeline-save-dialog.scss";
 
 import { observer } from "mobx-react";
 import React from "react";
-import { observable } from "mobx";
+import {computed, observable} from "mobx";
 import { ActionMeta } from "react-select/src/types";
 import { Trans } from "@lingui/macro";
 import { Dialog } from "../dialog";
@@ -19,14 +19,18 @@ interface Props<T = any> extends Partial<Props> {
   value?: T;
   themeName?: "dark" | "light" | "outlined";
 
-  onChange?(option: T, meta?: ActionMeta<any>): void;
+  onChange?(value: T, meta?: ActionMeta<any>): void;
 }
 
 @observer
 export class PipelineSaveDialog extends React.Component<Props> {
   @observable static isOpen = false;
   @observable static Data: Pipeline;
+
   @observable value: PipelineResult = this.props.value || pipeline;
+  // @computed get value(): PipelineResult {
+  //   return this.props.value || pipeline;
+  // }
 
   static open(pipeline: Pipeline) {
     PipelineSaveDialog.isOpen = true;
@@ -168,9 +172,7 @@ export class PipelineSaveDialog extends React.Component<Props> {
           <WizardStep contentClass="flex gaps column" next={this.submit}>
             <PipelineSaveDetails
               value={this.value}
-              onChange={(value) => {
-                this.value = value.value;
-              }}
+              onChange={value => { this.value = value.value }}
             />
           </WizardStep>
         </Wizard>

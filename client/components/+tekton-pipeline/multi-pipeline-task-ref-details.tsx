@@ -1,6 +1,6 @@
 import { observer } from "mobx-react";
 import React from "react";
-import { observable } from "mobx";
+import {computed, observable} from "mobx";
 import { ActionMeta } from "react-select/src/types";
 import { Collapse } from "../collapse";
 import { PipelineTask } from "../../api/endpoints";
@@ -15,7 +15,7 @@ interface Props<T = any> extends Partial<Props> {
   divider?: boolean;
   disable?: boolean;
 
-  onChange?(option: T, meta?: ActionMeta<any>): void;
+  onChange?(value: T, meta?: ActionMeta<any>): void;
 }
 
 @observer
@@ -26,7 +26,10 @@ export class MultiPipelineTaskStepDetails extends React.Component<Props> {
     namespace: "",
   }
 
-  @observable value: PipelineTask[] = this.props.value || [];
+  // @observable value: PipelineTask[] = this.props.value || [];
+  @computed get value(): PipelineTask[] {
+    return this.props.value || [];
+  }
 
   add() {
     this.value.push(pipelineTask);
@@ -57,7 +60,7 @@ export class MultiPipelineTaskStepDetails extends React.Component<Props> {
     };
 
     return (
-      <div>
+      <>
         {this.value.length > 0 ? (
           this.value.map((item, index) => {
             return (
@@ -76,7 +79,7 @@ export class MultiPipelineTaskStepDetails extends React.Component<Props> {
           })
         ) : null
         }
-      </div>
+      </>
     );
   }
 }

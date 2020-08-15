@@ -6,7 +6,7 @@ import {Icon} from "../icon";
 import {_i18n} from "../../i18n";
 import {t, Trans} from "@lingui/macro";
 import {Input} from "../input";
-import {observable} from "mobx";
+import {computed, observable} from "mobx";
 import {commands} from "./common";
 import {Grid} from "@material-ui/core";
 import {stopPropagation} from "../../utils";
@@ -15,13 +15,16 @@ interface Props<T = any> extends Partial<Props> {
   value?: T;
   themeName?: "dark" | "light" | "outlined";
 
-  onChange?(option: T, meta?: ActionMeta<any>): void;
+  onChange?(value: T, meta?: ActionMeta<any>): void;
 }
 
 @observer
 export class CommandDetails extends React.Component<Props> {
 
-  @observable value: string[] = this.props.value || commands;
+  // @observable value: string[] = commands;
+  @computed get value(): string[] {
+    return this.props.value || commands;
+  }
 
   add = () => {
     this.value.push("");
@@ -79,11 +82,9 @@ export class CommandDetails extends React.Component<Props> {
             </>
           }>
         </SubTitle>
-        <div className="command">
-          {this.value.map((item, index) => {
-            return this.rCommand(index);
-          })}
-        </div>
+        {this.value.map((item: any, index: number) => {
+          return this.rCommand(index);
+        })}
       </>
     )
   }

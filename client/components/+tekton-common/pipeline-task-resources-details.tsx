@@ -1,6 +1,6 @@
 import {observer} from "mobx-react";
 import React from "react";
-import {observable} from "mobx";
+import {computed, observable} from "mobx";
 import {ActionMeta} from "react-select/src/types";
 import {Icon} from "../icon";
 import {t, Trans} from "@lingui/macro";
@@ -17,7 +17,7 @@ interface Props<T = any> extends Partial<Props> {
   title?: string;
   disable?: boolean;
 
-  onChange?(option: T, meta?: ActionMeta<any>): void;
+  onChange?(value: T, meta?: ActionMeta<any>): void;
 }
 
 export const pipelineTaskInputResource: PipelineTaskInputResource = {
@@ -33,7 +33,10 @@ export class PipelineTaskInputResourceDetail extends React.Component<Props> {
     disable: false
   };
 
-  @observable value: PipelineTaskInputResource[] = this.props.value || [];
+  // @observable value: PipelineTaskInputResource[] = this.props.value || [];
+  @computed get value(): PipelineTaskInputResource[] {
+    return this.props.value || [];
+  }
 
   add = () => {
     this.value.push(pipelineTaskInputResource);
@@ -120,7 +123,7 @@ export class PipelineTaskInputResourceDetail extends React.Component<Props> {
           }>
         </SubTitle>
         {this.value.length > 0 ? this.rTab() : null}
-        {this.value.map((item, index) => {
+        {this.value.map((item: any, index: number) => {
           return this.rForm(index, disable)
         })}
       </>

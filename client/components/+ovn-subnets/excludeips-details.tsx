@@ -6,7 +6,7 @@ import {Icon} from "../icon";
 import {_i18n} from "../../i18n";
 import {t, Trans} from "@lingui/macro";
 import {Input} from "../input";
-import {observable} from "mobx";
+import {computed, observable} from "mobx";
 import {Grid} from "@material-ui/core";
 import {stopPropagation} from "../../utils";
 
@@ -15,13 +15,16 @@ interface Props<T = any> extends Partial<Props> {
   themeName?: "dark" | "light" | "outlined";
   divider?: true;
 
-  onChange?(option: T, meta?: ActionMeta<any>): void;
+  onChange?(value: T, meta?: ActionMeta<any>): void;
 }
 
 @observer
 export class ExcludeIPsDetails extends React.Component<Props> {
 
-  @observable value: string[] = this.props.value || [];
+  // @observable value: string[] = this.props.value || [];
+  @computed get value(): string[] {
+    return this.props.value || [];
+  }
 
   add = () => {
     this.value.push("");

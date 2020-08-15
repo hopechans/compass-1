@@ -1,6 +1,6 @@
 import {observer} from "mobx-react";
 import React from "react";
-import {observable} from "mobx";
+import {computed, observable} from "mobx";
 import {Input} from "../input";
 import {ActionMeta} from "react-select/src/types";
 import {SubTitle} from "../layout/sub-title";
@@ -14,7 +14,7 @@ interface Props<T = any> extends Partial<Props> {
   value?: T;
   themeName?: "dark" | "light" | "outlined";
 
-  onChange?(option: T, meta?: ActionMeta<any>): void;
+  onChange?(value: T, meta?: ActionMeta<any>): void;
 }
 
 export const workspacePipelineTaskBinding: WorkspacePipelineTaskBinding = {
@@ -24,7 +24,11 @@ export const workspacePipelineTaskBinding: WorkspacePipelineTaskBinding = {
 
 @observer
 export class PipelineTaskWorkSpaces extends React.Component<Props> {
-  @observable value: WorkspacePipelineTaskBinding[] = this.props.value || [];
+
+  // @observable value: WorkspacePipelineTaskBinding[] = this.props.value || [];
+  @computed get value(): WorkspacePipelineTaskBinding[] {
+    return this.props.value || [];
+  }
 
   add = () => {
     this.value.push(workspacePipelineTaskBinding);
@@ -50,7 +54,7 @@ export class PipelineTaskWorkSpaces extends React.Component<Props> {
             </>
           }>
         </SubTitle>
-        {this.value.map((item, index) => {
+        {this.value.map((item: any, index: number) => {
           return (
             <div>
               <div key={index}>

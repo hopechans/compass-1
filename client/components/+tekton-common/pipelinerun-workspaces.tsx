@@ -1,6 +1,6 @@
 import {observer} from "mobx-react";
 import React from "react";
-import {observable} from "mobx";
+import {computed, observable} from "mobx";
 import {Input} from "../input";
 import {ActionMeta} from "react-select/src/types";
 import {SubTitle} from "../layout/sub-title";
@@ -16,7 +16,7 @@ interface Props<T = any> extends Partial<Props> {
   themeName?: "dark" | "light" | "outlined";
   disable?: boolean
 
-  onChange?(option: T, meta?: ActionMeta<any>): void;
+  onChange?(value: T, meta?: ActionMeta<any>): void;
 }
 
 export const pvc: PersistentVolumeClaimVolumeSource = {
@@ -37,7 +37,10 @@ export class PipelineRunWorkspaces extends React.Component<Props> {
     disable: false
   }
 
-  @observable value: WorkspaceBinding[] = this.props.value || [];
+  // @observable value: WorkspaceBinding[] = this.props.value || [];
+  @computed get value(): WorkspaceBinding[] {
+    return this.props.value || [];
+  }
 
   add = () => {
     this.value.push(workspaceBinding);
@@ -119,11 +122,9 @@ export class PipelineRunWorkspaces extends React.Component<Props> {
             </>
           }>
         </SubTitle>
-        <div className="Workspaces">
-          {this.value.map((item, index) => {
-            return this.rWorkspaces(index);
-          })}
-        </div>
+        {this.value.map((item: any, index: number) => {
+          return this.rWorkspaces(index);
+        })}
       </>
     );
   }

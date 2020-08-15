@@ -1,6 +1,6 @@
 import {observer} from "mobx-react";
 import React from "react";
-import {observable} from "mobx";
+import {computed, observable} from "mobx";
 import {SubTitle} from "../layout/sub-title";
 import {Input} from "../input";
 import {_i18n} from "../../i18n";
@@ -14,15 +14,20 @@ interface Props<T = any> extends Partial<Props> {
   value?: T;
   themeName?: "dark" | "light" | "outlined";
 
-  onChange?(option: T, meta?: ActionMeta<any>): void;
+  onChange?(value: T, meta?: ActionMeta<any>): void;
 }
 
 @observer
 export class BackendDetails extends React.Component<Props> {
 
-  static defaultProps = {value: backend}
-  @observable value: Backend = this.props.value || backend
+  static defaultProps = {
+    value: backend
+  }
+  // @observable value: Backend = this.props.value || backend;
   @observable namespace: string = "";
+  @computed get value(): Backend{
+    return this.props.value || backend;
+  }
 
   render() {
     return (

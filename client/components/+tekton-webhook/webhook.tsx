@@ -16,14 +16,11 @@ import {_i18n} from "../../i18n";
 import {Link} from "react-router-dom";
 import {stopPropagation} from "../../utils";
 import Tooltip from "@material-ui/core/Tooltip";
-import {WebHookDetails} from "./webhook-details";
 
 enum sortBy {
   name = "name",
   namespace = "namespace",
   git = "git",
-  branch = "branch",
-  pipelineRun = "pipelineRun",
   age = "age",
 }
 
@@ -61,8 +58,6 @@ export class WebHook extends React.Component<Props> {
             [sortBy.name]: (tektonWebHook: TektonWebHook) => tektonWebHook.getName(),
             [sortBy.namespace]: (tektonWebHook: TektonWebHook) => tektonWebHook.getNs(),
             [sortBy.git]: (tektonWebHook: TektonWebHook) => tektonWebHook.spec.git || "",
-            [sortBy.branch]: (tektonWebHook: TektonWebHook) => tektonWebHook.spec.branch || "",
-            [sortBy.pipelineRun]: (tektonWebHook: TektonWebHook) => tektonWebHook.spec.pipeline_run || "",
             [sortBy.age]: (tektonWebHook: TektonWebHook) => tektonWebHook.getAge(false),
           }}
           searchFilters={[
@@ -86,16 +81,6 @@ export class WebHook extends React.Component<Props> {
               sortBy: sortBy.git,
             },
             {
-              title: <Trans>Branch</Trans>,
-              className: "branch",
-              sortBy: sortBy.branch,
-            },
-            {
-              title: <Trans>PipelineRun</Trans>,
-              className: "pipelineRun",
-              sortBy: sortBy.pipelineRun,
-            },
-            {
               title: <Trans>Age</Trans>,
               className: "age",
               sortBy: sortBy.age
@@ -105,8 +90,6 @@ export class WebHook extends React.Component<Props> {
             this.renderWebHookeName(tektonWebHook),
             tektonWebHook.getNs(),
             tektonWebHook.spec.git || "",
-            tektonWebHook.spec.branch || "",
-            tektonWebHook.spec.pipeline_run || "",
             tektonWebHook.getAge(),
           ]}
           renderItemMenu={(item: TektonWebHook) => {

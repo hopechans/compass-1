@@ -1,6 +1,6 @@
 import {observer} from "mobx-react";
 import React from "react";
-import {observable, toJS} from "mobx";
+import {computed, observable, toJS} from "mobx";
 import {ActionMeta} from "react-select/src/types";
 import {_i18n} from "../../i18n";
 import {
@@ -28,7 +28,7 @@ interface Props<T = any> extends Partial<Props> {
   divider?: true;
   disable?: boolean;
 
-  onChange?(option: T, meta?: ActionMeta<any>): void;
+  onChange?(value: T, meta?: ActionMeta<any>): void;
 }
 
 export const taskRef: TaskRef = {
@@ -61,8 +61,12 @@ export class PipelineTaskDetail extends React.Component<Props> {
     disable: false,
     namespace: "",
   };
-  @observable value: PipelineTask = this.props.value || pipelineTask;
+  // @observable value: PipelineTask = this.props.value || pipelineTask;
   @observable tasks = observable.array<String>([], {deep: false});
+
+  @computed get value(): PipelineTask {
+    return this.props.value || pipelineTask;
+  }
 
   get taskOptions() {
     return [

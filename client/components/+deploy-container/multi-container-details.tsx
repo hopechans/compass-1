@@ -6,15 +6,14 @@ import {Collapse} from "../collapse";
 import {ContainerDetails} from "./container-details";
 import {observable} from "mobx";
 import {container, Container} from "./common";
-import {_i18n} from "../../i18n";
-import {t, Trans} from "@lingui/macro";
+import {Trans} from "@lingui/macro";
 import {Icon} from "../icon";
 
 interface Props<T = any> extends Partial<Props> {
   value?: T;
   themeName?: "dark" | "light" | "outlined";
 
-  onChange?(option: T, meta?: ActionMeta<any>): void;
+  onChange?(value: T, meta?: ActionMeta<any>): void;
 
   base?: boolean;
   commands?: boolean;
@@ -41,56 +40,59 @@ export class MultiContainerDetails extends React.Component<Props> {
     volumeClaims: true,
   }
 
-  @observable value: Container[] = this.props.value || [container];
+  @observable static value: Container[] = [container];
+
+  get value() {
+    return this.props.value || [container];
+  }
 
   add() {
     this.value.push(container);
   }
 
   remove(index: number) {
-    this.value.splice(index, 1)
+    this.value.splice(index, 1);
+  }
+
+  genExtra = (index: number) => {
+    if (this.value.length > 1) {
+      return (
+        <Icon
+          material={"delete_outline"}
+          style={{color: '#ff4d4f'}}
+          onClick={(event) => {
+            this.remove(index);
+            event.preventDefault();
+            event.stopPropagation();
+          }}
+        />
+      )
+    }
+    return null
+  }
+
+  rContainerDetails(index: number) {
+    return (
+      <Collapse panelName={<Trans>Container</Trans>} extraExpand={this.genExtra(index)}>
+        <ContainerDetails
+          args={true} base={true} commands={true} environment={true}
+          liveProbe={true} lifeCycle={true} volumeMounts={true} readyProbe={true}
+          value={this.value[index]}
+          onChange={value => this.value[index] = value}
+        />
+      </Collapse>
+    )
   }
 
   render() {
-
-    const genExtra = (index: number) => {
-      if (this.value.length > 1) {
-        return (
-          <Icon
-            material={"delete_outline"}
-            style={{color: '#ff4d4f'}}
-            onClick={(event) => {
-              this.remove(index);
-              event.preventDefault();
-              event.stopPropagation();
-            }}
-          />
-        )
-      }
-      return null
-    }
-
     return (
       <>
         <Button primary onClick={() => this.add()}>
-          <span>{_i18n._(t`Add Container`)}</span>
+          <Trans>Add Container</Trans>
         </Button>
         <br/>
         <br/>
-        {this.value.map((item, index) => {
-          return (
-            <Collapse panelName={<Trans>Container</Trans>} extraExpand={genExtra(index)} key={"container" + index}>
-              <ContainerDetails
-                args={true} base={true} commands={true} environment={true}
-                liveProbe={true} lifeCycle={true} volumeMounts={true} readyProbe={true}
-                value={this.value[index]}
-                onChange={(value: any) => {
-                  this.value[index] = value
-                }}
-              />
-            </Collapse>
-          )
-        })}
+        {this.value.map((item: any, index: number) =>  this.rContainerDetails(index))}
       </>
     )
   }

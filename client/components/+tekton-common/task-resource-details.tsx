@@ -1,6 +1,6 @@
 import {observer} from "mobx-react";
 import React from "react";
-import {observable} from "mobx";
+import {computed, observable} from "mobx";
 import {ActionMeta} from "react-select/src/types";
 import {Select} from "../select";
 import {Icon} from "../icon";
@@ -19,14 +19,17 @@ interface Props<T = any> extends Partial<Props> {
   divider?: true;
   title?: string;
 
-  onChange?(option: T, meta?: ActionMeta<any>): void;
+  onChange?(value: T, meta?: ActionMeta<any>): void;
 }
 
 @observer
 export class TaskResourceDetails extends React.Component<Props> {
   static defaultProps = {title: "Pipeline Resources"};
 
-  @observable value: TaskResource[] = this.props.value || [];
+  // @observable value: TaskResource[] = this.props.value || [];
+  @computed get value(): TaskResource[] {
+    return this.props.value || [];
+  }
 
   add = () => {
     this.value.push(taskResources);
@@ -131,7 +134,7 @@ export class TaskResourceDetails extends React.Component<Props> {
           }>
         </SubTitle>
         {this.value.length > 0 ? this.rTab() : null}
-        {this.value.map((item, index) => {
+        {this.value.map((item: any, index: number) => {
           return this.rForm(index);
         })}
       </div>

@@ -6,7 +6,7 @@ import {Icon} from "../icon";
 import {_i18n} from "../../i18n";
 import {t, Trans} from "@lingui/macro";
 import {Input} from "../input";
-import {observable} from "mobx";
+import {computed, observable} from "mobx";
 import {Stack} from "../../api/endpoints";
 import {Select} from "../select";
 import {stopPropagation} from "../../utils";
@@ -41,14 +41,20 @@ interface Props<T = any> extends Partial<Props> {
   themeName?: "dark" | "light" | "outlined";
   name?: string
 
-  onChange?(option: T, meta?: ActionMeta<any>): void;
+  onChange?(value: T, meta?: ActionMeta<any>): void;
 }
 
 @observer
 export class StackDetails extends React.Component<Props> {
 
-  static defaultProps: { name: "Git" }
-  @observable value: Stack[] = this.props.value || [];
+  static defaultProps: {
+    name: "Git"
+  }
+  // @observable value: Stack[] = this.props.value || [];
+
+  @computed get value(): Stack[] {
+    return this.props.value || [];
+}
 
   add = () => {
     this.value.push(stack);

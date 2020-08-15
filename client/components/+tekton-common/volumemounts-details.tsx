@@ -1,6 +1,6 @@
 import {observer} from "mobx-react";
 import React from "react";
-import {observable} from "mobx";
+import {computed, observable} from "mobx";
 import {Input} from "../input";
 import {ActionMeta} from "react-select/src/types";
 import {volumeMount, VolumeMount} from "./common";
@@ -13,13 +13,16 @@ interface Props<T = any> extends Partial<Props> {
   value?: T;
   themeName?: "dark" | "light" | "outlined";
 
-  onChange?(option: T, meta?: ActionMeta<any>): void;
+  onChange?(value: T, meta?: ActionMeta<any>): void;
 }
 
 @observer
 export class VolumeMountsDetails extends React.Component<Props> {
 
-  @observable value: VolumeMount[] = this.props.value || []
+  // @observable value: VolumeMount[] = this.props.value || [];
+  @computed get value(): VolumeMount[] {
+    return this.props.value || [];
+  }
 
   add = () => {
     this.value.push(volumeMount);
@@ -48,7 +51,7 @@ export class VolumeMountsDetails extends React.Component<Props> {
       <div>
         <SubTitle className="fields-title" title="VolumeMounts">{this.renderAdd()}</SubTitle>
         <div className="VolumeMounts">
-          {this.value.map((item, index) => {
+          {this.value.map((item: any, index: number) => {
             return (
               <div>
                 <div key={index}>

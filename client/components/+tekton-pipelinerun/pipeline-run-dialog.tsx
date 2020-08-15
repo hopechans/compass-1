@@ -1,7 +1,7 @@
 import "./pipeline-run-dialog.scss";
 import { observer } from "mobx-react";
 import React from "react";
-import { observable } from "mobx";
+import {computed, observable} from "mobx";
 import { SubTitle } from "../layout/sub-title";
 import { Input } from "../input";
 import { _i18n } from "../../i18n";
@@ -34,7 +34,7 @@ interface Props<T = any> extends Partial<Props> {
   value?: T;
   themeName?: "dark" | "light" | "outlined";
   namespace?: string;
-  onChange?(option: T, meta?: ActionMeta<any>): void;
+  onChange?(value: T, meta?: ActionMeta<any>): void;
 }
 
 export interface PipelineRunResult {
@@ -65,7 +65,11 @@ export class PipelineRunDialog extends React.Component<Props> {
   @observable static isOpen = false;
   @observable static pipelineData: Pipeline = null;
   @observable graph: any = null;
-  @observable value: PipelineRunResult = this.props.value || pipelineRunResult;
+  // @observable value: PipelineRunResult = this.props.value || pipelineRunResult;
+
+  @computed get value(): PipelineRunResult {
+    return this.props.value || pipelineRunResult;
+  }
 
   static open(pipeline: Pipeline) {
     PipelineRunDialog.isOpen = true;

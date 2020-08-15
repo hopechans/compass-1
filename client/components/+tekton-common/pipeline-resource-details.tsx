@@ -1,6 +1,6 @@
 import {observer} from "mobx-react";
 import React from "react";
-import {observable} from "mobx";
+import {computed, observable} from "mobx";
 import {ActionMeta} from "react-select/src/types";
 import {Select, SelectOption} from "../select";
 import {Icon} from "../icon";
@@ -16,7 +16,7 @@ interface Props<T = any> extends Partial<Props> {
   themeName?: "dark" | "light" | "outlined";
   disable?: boolean
 
-  onChange?(option: T, meta?: ActionMeta<any>): void;
+  onChange?(value: T, meta?: ActionMeta<any>): void;
 }
 
 @observer
@@ -26,7 +26,11 @@ export class PipelineResourceDetails extends React.Component<Props> {
     disable: false,
   }
 
-  @observable value: PipelineResources[] = this.props.value || [];
+  // @observable value: PipelineResources[] = this.props.value || [];
+
+  @computed get value(): PipelineResources[] {
+    return this.props.value || [];
+  }
 
   add = () => {
     this.value.push(pipelineResources);
@@ -127,7 +131,7 @@ export class PipelineResourceDetails extends React.Component<Props> {
           }>
         </SubTitle>
         {this.value.length > 0 ? this.rTab() : null}
-        {this.value.map((item, index) => {
+        {this.value.map((item: any, index: number) => {
           return this.rForm(index, disable);
         })}
       </>
