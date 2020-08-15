@@ -37,7 +37,7 @@ export const tektonStoreRoute: RouteProps = {
 };
 
 export const webHookRoute: RouteProps = {
-  path: "/webhook",
+  path: "/tekton-webhook",
 }
 
 export const tektonURL = buildURL(pipelineRoute.path);
