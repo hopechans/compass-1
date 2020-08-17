@@ -148,7 +148,7 @@ export function TektonStoreMenu(props: KubeObjectMenuProps<TektonStore>) {
         namespace: configStore.getOpsNamespace(),
         name: graphData.metadata.name,
       },
-      { ...graphData }
+      { spec: graphData.spec }
     );
   };
 
