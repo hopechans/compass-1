@@ -143,12 +143,15 @@ export function TektonStoreMenu(props: KubeObjectMenuProps<TektonStore>) {
   };
 
   const createGraphData = (graphData: TektonGraph) => {
+    const name = graphData.metadata.name;
+    const ns = configStore.getOpsNamespace();
+    const spec = graphData.spec;
     tektonGraphStore.create(
       {
-        namespace: configStore.getOpsNamespace(),
-        name: graphData.metadata.name,
+        namespace: ns,
+        name: name,
       },
-      { spec: graphData.spec }
+      { spec: spec }
     );
   };
 
