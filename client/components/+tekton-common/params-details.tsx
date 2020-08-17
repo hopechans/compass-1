@@ -1,15 +1,15 @@
-import {ActionMeta} from "react-select/src/types";
-import {observer} from "mobx-react";
+import { ActionMeta } from "react-select/src/types";
+import { observer } from "mobx-react";
 import React from "react";
-import {SubTitle} from "../layout/sub-title";
-import {Icon} from "../icon";
-import {_i18n} from "../../i18n";
-import {t, Trans} from "@lingui/macro";
-import {Input} from "../input";
-import {observable} from "mobx";
-import {Params} from "./common";
-import {Grid} from "@material-ui/core";
-import {stopPropagation} from "../../utils";
+import { SubTitle } from "../layout/sub-title";
+import { Icon } from "../icon";
+import { _i18n } from "../../i18n";
+import { t, Trans } from "@lingui/macro";
+import { Input } from "../input";
+import { observable, computed } from "mobx";
+import { Params } from "./common";
+import { Grid } from "@material-ui/core";
+import { stopPropagation } from "../../utils";
 
 interface Props<T = any> extends Partial<Props> {
   value?: T;
@@ -25,11 +25,11 @@ export class ParamsDetails extends React.Component<Props> {
     disable: false,
   };
 
-  @observable static value: Params[] = [];
+  @observable value: Params[] = this.props.value || [];
 
-  get value() {
-    return this.props.value || [];
-  }
+  // @computed get value() {
+  //   return this.props.value || [];
+  // }
 
   add = () => {
     this.value.push({
@@ -83,7 +83,6 @@ export class ParamsDetails extends React.Component<Props> {
                 material="clear"
                 onClick={(e) => {
                   this.remove(index);
-                  e.stopPropagation();
                 }}
               />
             </Grid>
@@ -94,7 +93,7 @@ export class ParamsDetails extends React.Component<Props> {
   }
 
   render() {
-    const {disable} = this.props;
+    const { disable } = this.props;
 
     return (
       <>
@@ -108,7 +107,7 @@ export class ParamsDetails extends React.Component<Props> {
                   <Icon material={"edit"} className={"editIcon"} onClick={event => {
                     stopPropagation(event);
                     this.add()
-                  }} small/>
+                  }} small />
                 </> : null}
             </>
           }>

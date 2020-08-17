@@ -142,8 +142,8 @@ export function TektonStoreMenu(props: KubeObjectMenuProps<TektonStore>) {
 
   };
 
-  const createGraphData = (graphData: TektonGraph) => {
-    const name = graphData.metadata.name;
+  const createGraphData = (graphData: TektonGraph): string => {
+    const name = graphData.metadata.name + new Date().getTime().toString();
     const ns = configStore.getOpsNamespace();
     const spec = graphData.spec;
     tektonGraphStore.create(
@@ -153,6 +153,7 @@ export function TektonStoreMenu(props: KubeObjectMenuProps<TektonStore>) {
       },
       { spec: spec }
     );
+    return name;
   };
 
   const getPipelineTasks = (nodes: any): PipelineTask[] => {
@@ -244,7 +245,7 @@ export function TektonStoreMenu(props: KubeObjectMenuProps<TektonStore>) {
               });
 
               graphData.spec.data = JSON.stringify(newGraphData);
-              createGraphData(graphData);
+              const graphName = createGraphData(graphData);
 
               let tasks = getPipelineTasks(nodes);
 
@@ -257,7 +258,7 @@ export function TektonStoreMenu(props: KubeObjectMenuProps<TektonStore>) {
                 pipelineData.spec.tasks[index].runAfter = task.runAfter;
               });
 
-              createPipelineResource(pipelineData, graphData.metadata.name);
+              createPipelineResource(pipelineData, graphName);
             }
 
             if (resourceType === ResourceType.Task) {
