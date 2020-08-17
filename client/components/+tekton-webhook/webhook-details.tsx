@@ -28,6 +28,9 @@ export class WebHookDetails extends React.Component<Props> {
         <DrawerItem name={<Trans>Git Address</Trans>}>
           {tektonWebHook.spec.git}
         </DrawerItem>
+        <DrawerItem name={<Trans>Uniform Resource Identifier</Trans>}>
+          {"/webhook/gitea/namespaces/" + tektonWebHook.getNs() + "/tektonwebhooks/" + tektonWebHook.getName()}
+        </DrawerItem>
         <DrawerTitle title={_i18n._(`Job`)}/>
         <Table
           className="box grow"
