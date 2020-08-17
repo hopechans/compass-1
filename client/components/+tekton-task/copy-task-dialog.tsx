@@ -102,6 +102,8 @@ export class CopyTaskDialog extends React.Component<Props> {
         this.value.pipelineParams = task.getParams();
         this.value.taskName = task.getName();
         this.value.namespace = task.getNs();
+      } else {
+        this.reset()
       }
     } catch (err) {
       return err;
@@ -126,16 +128,18 @@ export class CopyTaskDialog extends React.Component<Props> {
     this.name = "";
   }
 
+
   close = async () => {
     CopyTaskDialog.close();
   };
 
-  handle = () => {
-    this.saveTask();
-    CopyTaskDialog.graph.setTaskName(CopyTaskDialog.node, this.value.taskName);
+  handle = async () => {
+    await this.saveTask();
+    const name = this.value.taskName;
+    CopyTaskDialog.graph.setTaskName(CopyTaskDialog.node, name);
   };
 
-  saveTask = () => {
+  saveTask = async () => {
     const params = toJS(this.value.pipelineParams);
     const resources = toJS(this.value.resources);
     const steps = toJS(this.value.taskSteps);

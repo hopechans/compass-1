@@ -1,17 +1,18 @@
-import {observer} from "mobx-react";
+import { observer } from "mobx-react";
 import React from "react";
-import {computed, observable} from "mobx";
-import {ActionMeta} from "react-select/src/types";
-import {Select} from "../select";
-import {Icon} from "../icon";
-import {t, Trans} from "@lingui/macro";
-import {PipelineResourceBinding, PipelineRef} from "../../api/endpoints";
-import {SubTitle} from "../layout/sub-title";
-import {_i18n} from "../../i18n";
-import {Input} from "../input";
-import {pipelineResourceStore} from "../+tekton-pipelineresource/pipelineresource.store";
-import {Grid, Paper} from "@material-ui/core";
-import {stopPropagation} from "../../utils";
+import { computed, observable } from "mobx";
+import { ActionMeta } from "react-select/src/types";
+import { Select } from "../select";
+import { Icon } from "../icon";
+import { t, Trans } from "@lingui/macro";
+import { PipelineResourceBinding, PipelineRef } from "../../api/endpoints";
+import { SubTitle } from "../layout/sub-title";
+import { _i18n } from "../../i18n";
+import { Input } from "../input";
+import { pipelineResourceStore } from "../+tekton-pipelineresource/pipelineresource.store";
+import { Grid, Paper } from "@material-ui/core";
+import { stopPropagation } from "../../utils";
+import { configStore } from "../../config.store";
 
 interface Props<T = any> extends Partial<Props> {
   value?: T;
@@ -55,8 +56,8 @@ export class PipelineRunResourceDetails extends React.Component<Props> {
   @computed get pipelineResourceOptions() {
     return [
       ...pipelineResourceStore
-      .getAllByNs(this.namespace)
-      .map((item) => (item.getName()))
+        .getAllByNs(configStore.getOpsNamespace())
+        .map((item) => (item.getName()))
     ];
   }
 
@@ -64,18 +65,18 @@ export class PipelineRunResourceDetails extends React.Component<Props> {
 
     return (
       <>
-        <br/>
-        <Paper elevation={3} style={{padding: 25}}>
+        <br />
+        <Paper elevation={3} style={{ padding: 25 }}>
           <Grid container spacing={5} alignItems="center" direction="row">
             <Grid item xs={11} zeroMinWidth>
-              <SubTitle title={"Name"}/>
+              <SubTitle title={"Name"} />
               <Input
                 disabled={disable}
                 placeholder={_i18n._("Name")}
                 value={this.value[index]?.name}
                 onChange={(value) => (this.value[index].name = value)}
               />
-              <SubTitle title={"Resource Reference"}/>
+              <SubTitle title={"Resource Reference"} />
               <Select
                 value={this.value[index]?.resourceRef?.name}
                 options={this.pipelineResourceOptions}
@@ -105,7 +106,7 @@ export class PipelineRunResourceDetails extends React.Component<Props> {
 
   render() {
 
-    const {disable} = this.props;
+    const { disable } = this.props;
 
     return (
       <>
@@ -119,7 +120,7 @@ export class PipelineRunResourceDetails extends React.Component<Props> {
                   <Icon material={"edit"} className={"editIcon"} onClick={event => {
                     stopPropagation(event);
                     this.add()
-                  }} small/>
+                  }} small />
                 </> : null}
             </>
           }>
