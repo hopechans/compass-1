@@ -8,6 +8,7 @@ import {
   Task,
   Pipeline,
   PipelineTask,
+  TaskRef,
 } from "../../api/endpoints";
 import { KubeObjectMenu, KubeObjectMenuProps } from "../kube-object";
 import { KubeObjectListLayout } from "../kube-object";
@@ -147,7 +148,7 @@ export function TektonStoreMenu(props: KubeObjectMenuProps<TektonStore>) {
         namespace: configStore.getOpsNamespace(),
         name: graphData.metadata.name,
       },
-      { ...graphData }
+      { spec: graphData.spec }
     );
   };
 
@@ -247,7 +248,9 @@ export function TektonStoreMenu(props: KubeObjectMenuProps<TektonStore>) {
               pipelineData.spec.tasks.map((pt, index) => {
                 const newTaskName = taskMap[pt.name];
                 const task = tasks.find(x => x.name == newTaskName);
+
                 pipelineData.spec.tasks[index].name = task.name;
+                pipelineData.spec.tasks[index].taskRef = task.taskRef;
                 pipelineData.spec.tasks[index].runAfter = task.runAfter;
               });
 
