@@ -30,6 +30,15 @@ interface Props extends RouteComponentProps {
 @observer
 export class WebHook extends React.Component<Props> {
 
+  renderUri(tektonWebHook: TektonWebHook) {
+    const uri = "/webhook/gitea/namespaces/" + tektonWebHook.getNs() + "/tektonwebhooks/" + tektonWebHook.getName();
+    return (
+      <Tooltip title={uri} placement="top-start" >
+        <span>{uri}</span>
+      </Tooltip>
+    )
+  }
+
   renderWebHookeName(tektonWebHook: TektonWebHook) {
     const name = tektonWebHook.getName();
     return (
@@ -81,6 +90,10 @@ export class WebHook extends React.Component<Props> {
               sortBy: sortBy.git,
             },
             {
+              title: <Trans>Uniform Resource Identifier</Trans>,
+              className: "uri",
+            },
+            {
               title: <Trans>Age</Trans>,
               className: "age",
               sortBy: sortBy.age
@@ -90,6 +103,7 @@ export class WebHook extends React.Component<Props> {
             this.renderWebHookeName(tektonWebHook),
             tektonWebHook.getNs(),
             tektonWebHook.spec.git || "",
+            this.renderUri(tektonWebHook),
             tektonWebHook.getAge(),
           ]}
           renderItemMenu={(item: TektonWebHook) => {
