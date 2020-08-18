@@ -121,12 +121,12 @@ export class PipelineVisualDialog extends React.Component<Props> {
 
     let tasks: PipelineTask[] = [];
 
-    let tmp = 1;
+    let index = 1;
 
-    keys.map((item: any) => {
-      let array = dataMap.get(item);
+    keys.map((i: any) => {
+      let array = dataMap.get(String(index));
 
-      if (tmp === 1) {
+      if (index === 1) {
         array.map((item: any) => {
           let task: any = {};
           task.runAfter = [];
@@ -137,7 +137,7 @@ export class PipelineVisualDialog extends React.Component<Props> {
           tasks.push(task);
         });
       } else {
-        let result = tmp - 1;
+        let result = index - 1;
         array.map((item: any) => {
           let task: any = {};
           task.runAfter = [];
@@ -153,7 +153,7 @@ export class PipelineVisualDialog extends React.Component<Props> {
         });
       }
 
-      tmp++;
+      index++;
     });
 
     return tasks;
@@ -220,14 +220,18 @@ export class PipelineVisualDialog extends React.Component<Props> {
       await this.updateTektonGraph(data);
     }
 
-    const pipelineTasks = this.pipeline.spec.tasks;
+
+    const pipelineTasks = this.pipeline.spec.tasks
+    //sort the tasks in pipeline
     if (pipelineTasks === undefined) {
       this.pipeline.spec.tasks = [];
-      this.pipeline.spec.tasks.push(...this.getPipelineTasks());
+      const pipelineTasks = this.getPipelineTasks()
+      this.pipeline.spec.tasks.push(...pipelineTasks);
     } else {
       if (pipelineTasks.length == this.getPipelineTasks().length) {
         this.pipeline.spec.tasks = [];
-        this.pipeline.spec.tasks.push(...this.getPipelineTasks());
+        const pipelineTasks = this.getPipelineTasks()
+        this.pipeline.spec.tasks.push(...pipelineTasks);
       } else {
         this.getPipelineTasks().map((task) => {
           const t = pipelineTasks.find((x) => x.name == task.name);

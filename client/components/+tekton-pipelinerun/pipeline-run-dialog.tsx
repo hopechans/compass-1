@@ -1,7 +1,7 @@
 import "./pipeline-run-dialog.scss";
 import { observer } from "mobx-react";
 import React from "react";
-import {computed, observable} from "mobx";
+import { computed, observable } from "mobx";
 import { SubTitle } from "../layout/sub-title";
 import { Input } from "../input";
 import { _i18n } from "../../i18n";
@@ -29,6 +29,7 @@ import {
 } from "../+tekton-common";
 import { tektonGraphStore } from "../+tekton-graph/tekton-graph.store";
 import { IKubeObjectMetadata } from "../../api/kube-object";
+import { namespace } from "store";
 
 interface Props<T = any> extends Partial<Props> {
   value?: T;
@@ -65,6 +66,7 @@ export class PipelineRunDialog extends React.Component<Props> {
   @observable static isOpen = false;
   @observable static pipelineData: Pipeline = null;
   @observable graph: any = null;
+  // @observable nameSpace: string = "";
   // @observable value: PipelineRunResult = this.props.value || pipelineRunResult;
 
   @computed get value(): PipelineRunResult {
@@ -97,7 +99,8 @@ export class PipelineRunDialog extends React.Component<Props> {
     this.value.namespace = this.pipeline.getNs();
 
     //fill the  resources
-    this.pipeline.spec?.resources.map((item: any, index: number) => {
+
+    this.pipeline.spec?.resources?.map((item: any, index: number) => {
       let resources: PipelineResourceBinding = {
         name: item.name,
         resourceRef: { name: "" },
@@ -105,7 +108,7 @@ export class PipelineRunDialog extends React.Component<Props> {
       this.value.resources.push(resources);
     });
 
-    this.pipeline.spec?.params.map((item: any, index: number) => {
+    this.pipeline.spec?.params?.map((item: any, index: number) => {
       let params: Param = {
         name: item.name,
         value: ''
@@ -208,17 +211,19 @@ export class PipelineRunDialog extends React.Component<Props> {
             <br />
             <ParamsDetails
               value={this.value?.params}
+              disable={true}
               onChange={(value) => { this.value.params = value }}
             />
             <PipelineRunResourceDetails
               disable={true}
               value={this.value?.resources}
-              namespace={this.value?.namespace}
+              // namespace={this.value?.namespace}
               onChange={(value) => { this.value.resources = value; }}
             />
             <br />
             <PipelineRunWorkspaces
               value={this.value?.workspces}
+              disable={true}
               onChange={(value) => { this.value.workspces = value; }}
             />
           </WizardStep>
