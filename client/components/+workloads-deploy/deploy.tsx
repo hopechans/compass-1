@@ -31,9 +31,20 @@ enum sortBy {
 interface Props extends RouteComponentProps<IDeployWorkloadsParams> {
 }
 
+
+export function deployNameRender(deploy: Deploy) {
+  const name = deploy.getName();
+  return (
+    <Link onClick={(event) => { stopPropagation(event); ConfigDeployDialog.open(deploy) }} to={null}>
+      <Tooltip title={name} placement="top-start">
+        <span>{name}</span>
+      </Tooltip>
+    </Link>
+  );
+}
+
 @observer
 export class Deploys extends React.Component<Props> {
-
   render() {
     return (
       <>
@@ -68,7 +79,8 @@ export class Deploys extends React.Component<Props> {
               { title: <Trans>Age</Trans>, className: "age", sortBy: sortBy.age },
             ]}
           renderTableContents={(deploy: Deploy) => [
-            deploy.getAppName(),
+            // deploy.getAppName(),
+            deployNameRender(deploy),
             deploy.getName(),
             deploy.getOwnerNamespace(),
             deploy.getResourceType(),
