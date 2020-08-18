@@ -173,8 +173,8 @@ export function TektonStoreMenu(props: KubeObjectMenuProps<TektonStore>) {
 
     let index = 1;
 
-    keys.map((item: any) => {
-      let array = dataMap.get(item);
+    keys.map((i: any) => {
+      let array = dataMap.get(String(index));
 
       if (index === 1) {
         array.map((item: any) => {
