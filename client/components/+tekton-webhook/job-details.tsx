@@ -1,7 +1,6 @@
 import {observer} from "mobx-react";
 import React from "react";
-import {computed, observable} from "mobx";
-import {ArgsDetails} from "../+deploy-container";
+import {observable} from "mobx";
 import {createMuiTheme, Grid, Paper, ThemeProvider} from "@material-ui/core";
 import {Input} from "../input";
 import {_i18n} from "../../i18n";
@@ -14,6 +13,7 @@ import {PipelineRunSelect} from "../+tekton-pipelinerun/pipelinerun-select";
 import {Job, job} from "../../api/endpoints/tekton-webhook.api";
 import {configStore} from "../../config.store";
 import {pipelineRunStore} from "../+tekton-pipelinerun/pipelinerun.store";
+import {ParamsDetails} from "../+tekton-common";
 
 const theme = createMuiTheme({
   overrides: {
@@ -67,8 +67,8 @@ export class JobDetails extends React.Component<JobProps> {
 
   rJobs(index: number) {
 
-    if (this.value[index].args == undefined) {
-      this.value[index].args = [];
+    if (this.value[index].params == undefined) {
+      this.value[index].params = [];
     }
 
     return (
@@ -88,7 +88,7 @@ export class JobDetails extends React.Component<JobProps> {
                 value={this.value[index].pipeline_run}
                 options={this.options}
                 onChange={value => this.value[index].pipeline_run = value.value}/>
-              <ArgsDetails value={this.value[index].args} onChange={value => this.value[index].args = value}/>
+              <ParamsDetails value={this.value[index].params} onChange={value => this.value[index].params = value}/>
             </Grid>
             <Grid item xs zeroMinWidth>
               <Icon
