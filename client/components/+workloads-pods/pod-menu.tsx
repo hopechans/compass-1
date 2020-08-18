@@ -100,7 +100,7 @@ export class PodMenu extends React.Component<Props> {
           title={_i18n._(t`Pod Debug shell`)}
         />
         <span className="title">
-          <Trans>Shell</Trans>
+          <Trans>Debug Shell</Trans>
         </span>
         {containers.length > 1 && (
           <>

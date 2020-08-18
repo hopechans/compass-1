@@ -67,6 +67,9 @@ export class DeployDialog extends React.Component<Props> {
         this.reset();
         this.close();
       })
+      Notifications.ok(
+        <>Deploy {data.appName} to namespace {data.namespace} succeeded</>
+      );
     } catch (err) {
       Notifications.error(err);
     }
