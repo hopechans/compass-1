@@ -111,7 +111,7 @@ export function ServiceMenu(props: KubeObjectMenuProps<Service>) {
     <KubeObjectMenu {...props}>
       <MenuItem onClick={() => ConfigServiceDialog.open(object)}>
         <Icon material="toc" title={"config"} interactive={toolbar}/>
-        <span className="config"><Trans>Config</Trans></span>
+        <span className="title"><Trans>Config</Trans></span>
       </MenuItem>
     </KubeObjectMenu>
   )
