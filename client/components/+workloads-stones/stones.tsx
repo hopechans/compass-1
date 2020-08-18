@@ -11,7 +11,7 @@ import {nodesStore} from "../+nodes/nodes.store";
 import {eventStore} from "../+events/event.store";
 import {KubeObjectMenu, KubeObjectMenuProps} from "../kube-object";
 import {KubeObjectListLayout} from "../kube-object";
-import {IStatefulSetsRouteParams} from "../+workloads";
+import {IStatefulSetsRouteParams, IStonesRouteParams} from "../+workloads";
 import {apiManager} from "../../api/api-manager";
 import {enhanceStatefulSetStore} from "../+workloads-enhancestatefulsets/enhancestatefulset.store";
 import {MenuItem} from "../menu";
@@ -31,7 +31,7 @@ enum sortBy {
   age = "age",
 }
 
-interface Props extends RouteComponentProps<IStatefulSetsRouteParams> {
+interface Props extends RouteComponentProps<IStonesRouteParams> {
 }
 
 @observer

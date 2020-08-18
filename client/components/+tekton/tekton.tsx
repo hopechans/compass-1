@@ -74,7 +74,7 @@ export class Tekton extends React.Component<Props> {
         path: opsSecretRoute.path,
       },
       {
-        title: <Trans>TektonStore</Trans>,
+        title: <Trans>Store</Trans>,
         component: TektonStoreLayout,
         url: tektonStoreURL({ query }),
         path: tektonStoreRoute.path,

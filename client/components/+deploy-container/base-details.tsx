@@ -43,7 +43,6 @@ export class BaseDetails extends React.Component<Props> {
   get selectImageAddressOptions() {
     return [
       "public",
-      "internal",
       "private",
     ]
   }
