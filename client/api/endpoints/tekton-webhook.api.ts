@@ -1,17 +1,18 @@
 import {autobind} from "../../utils";
 import {KubeObject} from "../kube-object";
 import {KubeApi} from "../kube-api";
+import {Params} from "../../components/+tekton-common";
 
 export interface Job {
   branch: string;
   pipeline_run: string;
-  args: string[];
+  params: Params[];
 }
 
 export const job: Job = {
   branch: "",
   pipeline_run: "",
-  args: []
+  params: [],
 }
 
 @autobind()
