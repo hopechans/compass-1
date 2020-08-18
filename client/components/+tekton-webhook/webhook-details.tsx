@@ -38,7 +38,7 @@ export class WebHookDetails extends React.Component<Props> {
           <TableHead>
             <TableCell className="branch"><Trans>Branch</Trans></TableCell>
             <TableCell className="pipelineRun">PipelineRun</TableCell>
-            <TableCell className="args"><Trans>Params</Trans></TableCell>
+            <TableCell className="args"><Trans>Params (Key / Value)</Trans></TableCell>
           </TableHead>
           {
             tektonWebHook.spec.jobs?.map(item => {
@@ -48,7 +48,7 @@ export class WebHookDetails extends React.Component<Props> {
                 >
                   <TableCell className="branch">{item.branch}</TableCell>
                   <TableCell className="pipelineRun">{item.pipeline_run}</TableCell>
-                  <TableCell className="targetPath">{item.params?.map(item => <><span>{item}</span><br/></>)}</TableCell>
+                  <TableCell className="targetPath">{item.params?.map(item => <><span>{item.name} / {item.value}</span><br/></>)}</TableCell>
                 </TableRow>
               )
             })
