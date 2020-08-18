@@ -61,13 +61,8 @@ export class IPs extends React.Component<Props> {
 
 export function IPMenu(props: KubeObjectMenuProps<IP>) {
 
-    const {object, toolbar} = props;
-
     return (
-        <>
-            <KubeObjectMenu {...props}>
-            </KubeObjectMenu>
-        </>
+       <KubeObjectMenu {...props} />
     )
 }
 
